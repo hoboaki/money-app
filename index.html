@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Manage Built-in Extensions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="./external/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- <script src="./external/bootstrap/js/bootstrap.min.js"></script> -->
+    <!-- <link href="./node_modules/editable-grid/less/grid.less" rel="stylesheet/less" type="text/css" /> -->
+    <!-- <script src="./external/less.js/less.min.js"/> -->
+    <link href="./external/editable-grid/editable_grid.min.css" rel="stylesheet"/>
+    <style>
+      .titleBar {
+        -webkit-user-select: none;
+        -webkit-app-region: drag;
+        -webkit-margin-before: 0px;
+        -webkit-margin-after: 0px;
+        background: #444; /* @todo アクティブ・非アクティブで色を変える */
+        text-align: center;
+        vertical-align: middle;
+        height: 1.8em; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        color: #CCC;
+        font-size: 9pt;
+      }
+
+      body {
+        margin: 0px;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: 10pt;
+        -webkit-app-region: drag; 
+        -webkit-user-select: none;
+      }
+
+      code {
+        font-family: 'Menlo', 'Courier New', 'Courier', monospace;
+      }
+
+      ul {
+        padding-left: 1em;
+      }
+
+      li {
+        list-style: none;
+        padding: 0.3em 0;
+      }
+
+      label {
+        margin-right: 1em;
+      }
+
+      form {
+        padding: 0.3em 0 0.3em 0.3em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="titleBar" class="titleBar"><div>Title Text</div></div>
+    <div id="menu"></div>
+    <div id="content"></div>
+    <script>
+      // You can also require other files to run in this process
+      require('./content.js')
+    </script>
+  </body>
+
+</html>
