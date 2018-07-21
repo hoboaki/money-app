@@ -1,7 +1,7 @@
 {
   "name": "MoneyApp",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "app.js",
   "scripts": {
     "start": "electron .",
     "package-macos": "electron-packager . MoneyApp --platform=darwin --arch=x64 --overwrite",

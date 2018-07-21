@@ -15,7 +15,7 @@ function createWindow () {
   //mainWindow.setMenuBarVisibility(false);
 
   // and load the index.html of the app.
-  mainWindow.loadFile('src/index.html')
+  mainWindow.loadFile('app/main.html')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -51,6 +51,7 @@ app.on('activate', function () {
   }
 })
 
+// For Debug
 if (process.env.NODE_ENV==='development') {
   app.on('browser-window-focus', (event, focusedWindow) => {
     globalShortcut.register(
