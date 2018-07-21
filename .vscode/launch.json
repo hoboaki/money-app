@@ -6,8 +6,8 @@
         "type": "node",
         "request": "launch",
         "env": {"NODE_ENV": "development"},
-        "cwd": "${workspaceRoot}/ElectronTest/HelloWorld",
-        "runtimeExecutable": "${workspaceRoot}/ElectronTest/HelloWorld/node_modules/.bin/electron",
+        "cwd": "${workspaceRoot}",
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
         "runtimeArgs": [
             "--remote-debugging-port=9223",
             "."
@@ -22,7 +22,7 @@
           "type": "chrome",
           "request": "attach",
           "port": 9223,
-          "webRoot": "${workspaceRoot}/ElectronTest/HelloWorld",
+          "webRoot": "${workspaceRoot}",
           "timeout": 30000
       }
     ],
