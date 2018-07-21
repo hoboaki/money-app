@@ -17,16 +17,21 @@
         -webkit-app-region: drag;
         -webkit-margin-before: 0px;
         -webkit-margin-after: 0px;
-        background: #444; /* @todo アクティブ・非アクティブで色を変える */
-        text-align: center;
-        vertical-align: middle;
-        height: 1.8em; 
-        display: flex;
-        justify-content: center;
+        color: #505050;
+      }
+      .titleBarBg {
+        background: linear-gradient(#F7F7F7, #D7D7D7); /* @todo アクティブ・非アクティブで色を変える */
+      }
+      .titleBarTitle {
+        height: 1.8em;
         align-items: center;
-        
-        color: #CCC;
-        font-size: 9pt;
+        justify-content: center;
+        display: flex;
+        font-size: 10pt;
+      }
+      .titleBarToolBar {
+        text-align: left;
+        font-size: 8pt;
       }
 
       body {
@@ -61,7 +66,10 @@
   </head>
 
   <body>
-    <div id="titleBar" class="titleBar"><div>Title Text</div></div>
+    <div class="titleBarn titleBarBg">
+      <div class="titleBar titleBarTitle"><div>&#X1F427; ファイル名 - MoneyApp</div></div>
+      <div class="titleBar titleBarToolBar">ボタンたち</div>
+    </div>
     <div id="menu"></div>
     <div id="content"></div>
     <script>
