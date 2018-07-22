@@ -23,8 +23,26 @@ body {
 }
 
 .tool-bar {
+  align-items: center;
   background: #f9f9f9;
   border-bottom: 1px solid #e1e1e1;
-  font-size: 13pt;
+  display: flex;
+  height: 40px;
+  padding-left: 2px;
+  padding-right: 2px;
   text-align: left;
+}
+.tool-bar-btn {
+  align-items: center;
+  background: transparent;
+  border-radius: 5px;
+  border: 0px;
+  box-shadow: 0px;
+  display: flex;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+.tool-bar-btn:hover {
+  background: #e1e1e1;
 }
