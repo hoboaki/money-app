@@ -1,0 +1,9 @@
+# CSS
+[*.css]
+indent_style: space
+indent_size: 2
+
+# JS
+[*.js]
+indent_style: space
+indent_size: 2
