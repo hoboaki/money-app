@@ -12,34 +12,35 @@
     <!-- <script src="./external/less.js/less.min.js"/> -->
     <link href="./external/editable-grid/editable_grid.min.css" rel="stylesheet"/>
     <style>
-      .titleBar {
-        -webkit-user-select: none;
-        -webkit-app-region: drag;
-        -webkit-margin-before: 0px;
-        -webkit-margin-after: 0px;
-        color: #505050;
-      }
-      .titleBarBg {
-        background: linear-gradient(#F7F7F7, #D7D7D7); /* @todo アクティブ・非アクティブで色を変える */
-      }
-      .titleBarTitle {
-        height: 1.8em;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        font-size: 10pt;
-      }
-      .titleBarToolBar {
-        text-align: left;
-        font-size: 8pt;
-      }
-
       body {
         margin: 0px;
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        font-size: 10pt;
-        -webkit-app-region: drag; 
         -webkit-user-select: none;
+      }
+
+      .title-bar {
+        -webkit-app-region: drag;
+        -webkit-margin-after: 0px;
+        -webkit-margin-before: 0px;
+        -webkit-user-select: none;
+        color: #bababa;
+      }
+      .title-bar-bg {
+        background: #252525;
+      }
+      .title-bar-title {
+        align-items: center;
+        display: flex;
+        font-size: 10pt;
+        height: 1.8em;
+        justify-content: center;
+      }
+
+      .tool-bar {
+        background: #f9f9f9;
+        border-bottom: 1px solid #e1e1e1;
+        font-size: 13pt;
+        text-align: left;
       }
 
       code {
@@ -66,12 +67,13 @@
   </head>
 
   <body>
-    <div class="titleBarn titleBarBg">
-      <div class="titleBar titleBarTitle"><div>&#X1F427; ファイル名 - MoneyApp</div></div>
-      <div class="titleBar titleBarToolBar">ボタンたち</div>
+    <div class="title-bar title-bar-bg">
+      <div class="title-bar title-bar-title"><div>&#X1f427; ファイル名 - MoneyApp</div></div>
     </div>
-    <div id="menu"></div>
-    <div id="content"></div>
+    <div class="tool-bar">
+        &#X25b6;
+    </div>
+    <div id="content">コンテンツ</div>
     <script>
       // You can also require other files to run in this process
       require('./main.js')
