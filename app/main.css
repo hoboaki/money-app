@@ -1,3 +1,7 @@
+/*
+https://material.io/tools/color/#!/?view.left=0&view.right=0&primary.color=424242&secondary.color=FAFAFA
+*/
+
 body {
   margin: 0px;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -12,7 +16,7 @@ body {
   color: #bababa;
 }
 .title-bar-bg {
-  background: #252525;
+  background: #1b1b1b;
 }
 .title-bar-title {
   align-items: center;
@@ -24,8 +28,8 @@ body {
 
 .tool-bar {
   align-items: center;
-  background: #f9f9f9;
-  border-bottom: 1px solid #e1e1e1;
+  background: #424242;
+  color: #ffffff;
   display: flex;
   height: 40px;
   padding-left: 2px;
@@ -44,5 +48,5 @@ body {
   width: 36px;
 }
 .tool-bar-btn:hover {
-  background: #e1e1e1;
+  background: #6d6d6d;
 }

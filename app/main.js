@@ -17,7 +17,7 @@ window.onload = function() {
         menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
         
         document.getElementById('titleBar').addEventListener('contextmenu', function (e) {
-            e.preventDefault();
+            e.preventDefault(); 
             menu.popup(remote.getCurrentWindow());
         }, false);
     }
