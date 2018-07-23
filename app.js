@@ -27,6 +27,13 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  mainWindow.on('focus', function () {
+    mainWindow.webContents.send('app-message', 'focus');
+  })
+  mainWindow.on('blur', function () {
+    mainWindow.webContents.send('app-message', 'blur');
+  })
 }
 
 // This method will be called when Electron has finished
