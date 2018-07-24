@@ -14,11 +14,11 @@ window.onload = function() {
     ipcRenderer.on('app-message', (event, msg) => {
         switch (msg) {
             case 'focus':
-                $('#inactiveScreen').removeClass("inactive-effect-screen-blur");
+                $('#titleBar').addClass("title-bar-bg-active");
                 break;
                 
             case 'blur':
-                $('#inactiveScreen').addClass("inactive-effect-screen-blur");
+                $('#titleBar').removeClass("title-bar-bg-active");
                 break;
         }
     });

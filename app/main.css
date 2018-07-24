@@ -8,18 +8,6 @@ body {
   -webkit-user-select: none;
 }
 
-.inactive-effect-screen {
-  position: fixed;
-  top: 0;
-  left:	0;
-  height:	100%;
-  width: 100%;
-  z-index: 1;
-}
-.inactive-effect-screen-blur {
-  opacity: 0.5
-}
-
 .title-bar {
   -webkit-app-region: drag;
   -webkit-margin-after: 0px;
@@ -28,6 +16,9 @@ body {
   color: #bababa;
 }
 .title-bar-bg {
+  background: #606060;
+}
+.title-bar-bg-active {
   background: #1b1b1b;
 }
 .title-bar-title {
