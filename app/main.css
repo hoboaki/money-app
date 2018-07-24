@@ -9,6 +9,19 @@ body {
   -webkit-user-select: none;
 }
 
+.layout-top-to-bottom {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+.layout-left-to-right {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
 .title-bar {
   -webkit-app-region: drag;
   -webkit-margin-after: 0px;
@@ -28,12 +41,6 @@ body {
   font-size: 10pt;
   height: 1.8em;
   justify-content: center;
-}
-
-.layout-horizontal {
-  display: flex;
-  height: 100%;
-  width: 100%;
 }
 
 .tool-bar {
