@@ -21,6 +21,12 @@ body {
   height: 100%;
   width: 100%;
 }
+.layout-right-to-left {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 100%;
+  width: 100%;
+}
 
 .title-bar {
   -webkit-app-region: drag;
@@ -86,3 +92,58 @@ body {
 .page-active {
   display: block;
 }
+
+.page-sheet-header {
+  align-items: center;
+  background: #c7c7c7;
+  color: #424242;
+  display: flex;
+  flex-direction: row;
+  font-size: 9pt;
+  height: 40px;
+  justify-content: center;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+  width: 100%;
+}
+.page-sheet-body {
+  background: red;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.page-sheet-cell-unit-select {
+  display:block;
+  margin-right: 8px;
+  outline: none;
+  width: 80px;
+}
+.page-sheet-move-btn {
+  background: #424242;
+  border: 0px;
+  color: #bababa;
+  display:block;
+  height: 30px;
+  outline: none;
+  padding: 2px;
+  width: 48px;
+}
+.page-sheet-move-prev-btn {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  margin-right: 1px;
+}
+.page-sheet-move-next-btn {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;  
+  margin-left: 1px;
+}
+.page-sheet-zoom-div {
+  width: 120px;
+}
+.page-sheet-zoom-label {
+  margin-right: 4px;
+}
+

@@ -26,10 +26,42 @@
             <button id="sidebarBtnFind" class="sidebar-btn" title="レコードの検索"><i class="material-icons md-36 md-dark">search</i></button>
             <button id="sidebarBtnAccount" class="sidebar-btn" title="口座管理"><i class="material-icons md-36 md-dark">account_balance</i></button>
         </div>
-        <div id="content">
-          <div id="pageSheet" class="page page-sheet">スプレッドシート</div>
-          <div id="pageFind" class="page page-find">検索</div>
-          <div id="pageAccount" class="page page-table">口座管理</div>
+        <div class="content">
+          
+          <!-- ----------------------------------------------------------- -->
+          <!-- ページ：スプレッドシート -->
+          <div id="pageSheet" class="page page-sheet layout-top-to-bottom page-active">
+            <div class="page-sheet-header">
+              <select id="pageSheetCellUnit" class="page-sheet-cell-unit-select">
+                  <option value=”day”>日</option>
+                  <option value=”month”>月</option>
+                  <option value=”year”>年</option>
+              </select>
+              <button id="pageSheetMovePrev" class="page-sheet-move-btn page-sheet-move-prev-btn"><i class="material-icons md-16 md-dark">chevron_left</i></button>
+              <button id="pageSheetMoveToday" class="page-sheet-move-btn page-sheet-move-today-btn">今日</button>
+              <button id="pageSheetMoveNext" class="page-sheet-move-btn page-sheet-move-next-btn"><i class="material-icons md-16 md-dark">chevron_right</i></button>
+              <div class="layout-right-to-left">
+                <div class="layout-top-to-bottom">
+                  <span class="page-sheet-zoom-label">水平ズーム:</span>
+                  <div class="page-sheet-zoom-div"><input id="pageSheetZoomSlider" type="range" value="1" min="1" max="100" step="1"/></div>
+                </div>
+                <div style="width: 100%"></div>
+              </div>
+            </div>
+            <div class="page-sheet-body">aaa
+            </div>
+          </div>
+          
+          <!-- ----------------------------------------------------------- -->
+          <!-- ページ：検索 -->
+          <div id="pageFind" class="page page-find">
+          </div>
+          
+          <!-- ----------------------------------------------------------- -->
+          <!-- ページ：口座 -->
+          <div id="pageAccount" class="page page-table">
+
+          </div>
         </div>
         <script>
           // You can also require other files to run in this process
