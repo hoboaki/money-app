@@ -90,7 +90,7 @@ body {
   width: 100%;
 }
 .page-active {
-  display: block;
+  display: flex;
 }
 
 .page-sheet-header {
@@ -99,7 +99,6 @@ body {
   color: #424242;
   display: flex;
   flex-direction: row;
-  font-size: 9pt;
   height: 40px;
   justify-content: center;
   padding-bottom: 4px;
@@ -128,7 +127,10 @@ body {
   height: 30px;
   outline: none;
   padding: 2px;
-  width: 48px;
+  width: 56px;
+}
+.page-sheet-move-btn:hover {
+  color: #ffffff;
 }
 .page-sheet-move-prev-btn {
   border-top-left-radius: 12px;
@@ -144,6 +146,7 @@ body {
   width: 120px;
 }
 .page-sheet-zoom-label {
+  font-size: 8pt;
   margin-right: 4px;
 }
 
