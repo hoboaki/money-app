@@ -25,16 +25,17 @@ window.onload = function() {
 
     // ページ切替
     let activePageKey = null;
-    function activatePage(aId)
-    {
+    function activatePage(aId) {
         // 現在表示しているページを非アクティブに。
         if (activePageKey != null) {
             $(`#page${activePageKey}`).removeClass('page-active');
+            $(`#sidebarBtn${activePageKey}`).removeClass('sidebar-btn-active');
             activePageKey = null;
         }
 
         // ページをアクティブ化
         activePageKey = aId;
+        $(`#sidebarBtn${activePageKey}`).addClass('sidebar-btn-active');
         $(`#page${activePageKey}`).addClass('page-active');
     }
 
