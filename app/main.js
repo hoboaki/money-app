@@ -22,5 +22,34 @@ window.onload = function() {
                 break;
         }
     });
+
+    // ページ切替
+    let activePageKey = null;
+    function activatePage(aId)
+    {
+        // 現在表示しているページを非アクティブに。
+        if (activePageKey != null) {
+            $(`#page${activePageKey}`).removeClass('page-active');
+            activePageKey = null;
+        }
+
+        // ページをアクティブ化
+        activePageKey = aId;
+        $(`#page${activePageKey}`).addClass('page-active');
+    }
+
+    // サイドナビボタンに機能を登録
+    $('#sidebarBtnSheet').click(function(){
+        activatePage('Sheet');
+    });
+    $('#sidebarBtnFind').click(function(){
+        activatePage('Find');
+    });
+    $('#sidebarBtnAccount').click(function(){
+        activatePage('Account');
+    });
+
+    // 初期ページ表示
+    activatePage('Sheet');
 }
 

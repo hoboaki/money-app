@@ -22,11 +22,15 @@
       </div>
       <div class="layout-left-to-right">
         <div class="tool-bar layout-top-to-bottom">
-            <button class="tool-bar-btn" title="ホーム"><i class="material-icons md-36 md-dark">home</i></button>
-            <button class="tool-bar-btn" title="レコードの検索"><i class="material-icons md-36 md-dark">search</i></button>
-            <button class="tool-bar-btn" title="口座管理"><i class="material-icons md-36 md-dark">account_balance</i></button>
+            <button id="sidebarBtnSheet" class="tool-bar-btn" title="ホーム"><i class="material-icons md-36 md-dark">home</i></button>
+            <button id="sidebarBtnFind" class="tool-bar-btn" title="レコードの検索"><i class="material-icons md-36 md-dark">search</i></button>
+            <button id="sidebarBtnAccount" class="tool-bar-btn" title="口座管理"><i class="material-icons md-36 md-dark">account_balance</i></button>
         </div>
-        <div id="content" style="width: 100%; height: 100%; background: red;">コンテンツ</div>
+        <div id="content">
+          <div id="pageSheet" class="page page-sheet">スプレッドシート</div>
+          <div id="pageFind" class="page page-find">検索</div>
+          <div id="pageAccount" class="page page-table">口座管理</div>
+        </div>
         <script>
           // You can also require other files to run in this process
           require('./main.js')
