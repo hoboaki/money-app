@@ -43,7 +43,7 @@ body {
   justify-content: center;
 }
 
-.tool-bar {
+.sidebar {
   align-items: center;
   background: #424242;
   color: #bababa;
@@ -55,7 +55,7 @@ body {
   text-align: center;
   width: 50px;
 }
-.tool-bar-btn {
+.sidebar-btn {
   align-items: center;
   background: transparent;
   border: 0px;
@@ -66,7 +66,7 @@ body {
   padding: 0px;
   width: 100%;
 }
-.tool-bar-btn:hover {
+.sidebar-btn:hover {
   color: #ffffff;
 }
 
