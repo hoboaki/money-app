@@ -107,12 +107,6 @@ body {
   padding-top: 4px;
   width: 100%;
 }
-.page-sheet-body {
-  background: #ffffff;
-  display: block;
-  height: 100%;
-  width: 100%;
-}
 .page-sheet-cell-unit-select {
   display:block;
   margin-right: 8px;
@@ -150,34 +144,66 @@ body {
   font-size: 8pt;
   margin-right: 4px;
 }
-.page-sheet-table {
-  font-size: 9.5pt;
+
+.page-sheet-body {
+  background: #ffffff;
+  display: block;
+  height: 100%;
   width: 100%;
 }
-.page-sheet-table-column {
+.page-sheet-table {
+  font-size: 9.0pt;
+  width: 100%;
+}
+.page-sheet-table-colhead {
   background: #9ea7aa;
   color: rgba(0, 0, 0, 0.73);
+  text-align: center;
 }
-.page-sheet-table-header-root {
-  background: #b0bec5;
+.page-sheet-table-rowhead {
   color: rgba(0, 0, 0, 0.43);
 }
+.page-sheet-table-colhead-account-name {
+  width: 160px;
+}
+.page-sheet-table-rowhead-account-name {
+  width: 140px;
+}
+.page-sheet-table-colhead-account-category,
+.page-sheet-table-rowhead-account-category {
+  text-align: center;
+  width: 20px;
+}
+.page-sheet-table-colhead-carried,
+.page-sheet-table-colhead-balance,
+.page-sheet-table-rowhead-carried,
+.page-sheet-table-rowhead-balance {
+  width: 100px;
+}
+.page-sheet-table-rowhead-carried,
+.page-sheet-table-rowhead-balance {
+  text-align: right;
+}
+.page-sheet-table-colhead-cell,
+.page-sheet-table-cell {
+  width: 100px;
+}
+.page-sheet-table-cell {
+  text-align: right;
+}
+.page-sheet-table-cell {
+  color: rgba(0, 0, 0, 0.90);
+}
+.page-sheet-table-rowhead-root,
 .page-sheet-table-cell-root {
   background: #b0bec5;
 }
-.page-sheet-table-opener-space {
+.page-sheet-table-opener-space,
+.page-sheet-table-rowhead-account {
   width: 20px;
   background: #e2f1f8;
 }
-.page-sheet-table-header-account {
-  background: #e2f1f8;
-  color: rgba(0, 0, 0, 0.43);
-}
-.page-sheet-table-cell-odd {
-  background: #e2f1f8;
-  color: rgba(0, 0, 0, 0.90);
-}
+.page-sheet-table-cell-odd,
 .page-sheet-table-cell-even {
   background: #e2f1f8;
-  color: rgba(0, 0, 0, 0.90);
 }
