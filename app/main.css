@@ -1,5 +1,5 @@
 /*
-https://material.io/tools/color/#!/?view.left=0&view.right=0&primary.color=424242&secondary.color=FAFAFA
+https://material.io/tools/color/#!/?view.left=1&view.right=0&primary.color=424242&secondary.color=B0BEC5
 */
 
 body {
@@ -39,7 +39,7 @@ body {
   background: #606060;
 }
 .title-bar-bg-active {
-  background: #252525;
+  background: #1b1b1b;
 }
 .title-bar-title {
   align-items: center;
@@ -95,7 +95,7 @@ body {
 
 .page-sheet-header {
   align-items: center;
-  background: #c7c7c7;
+  background: #6d6d6d;
   color: #424242;
   display: flex;
   flex-direction: row;
@@ -108,7 +108,7 @@ body {
   width: 100%;
 }
 .page-sheet-body {
-  background: red;
+  background: #ffffff;
   display: block;
   height: 100%;
   width: 100%;
@@ -146,7 +146,38 @@ body {
   width: 120px;
 }
 .page-sheet-zoom-label {
+  color: rgba(255, 255, 255, 0.61);
   font-size: 8pt;
   margin-right: 4px;
 }
-
+.page-sheet-table {
+  font-size: 9.5pt;
+  width: 100%;
+}
+.page-sheet-table-column {
+  background: #9ea7aa;
+  color: rgba(0, 0, 0, 0.73);
+}
+.page-sheet-table-header-root {
+  background: #b0bec5;
+  color: rgba(0, 0, 0, 0.43);
+}
+.page-sheet-table-cell-root {
+  background: #b0bec5;
+}
+.page-sheet-table-opener-space {
+  width: 20px;
+  background: #e2f1f8;
+}
+.page-sheet-table-header-account {
+  background: #e2f1f8;
+  color: rgba(0, 0, 0, 0.43);
+}
+.page-sheet-table-cell-odd {
+  background: #e2f1f8;
+  color: rgba(0, 0, 0, 0.90);
+}
+.page-sheet-table-cell-even {
+  background: #e2f1f8;
+  color: rgba(0, 0, 0, 0.90);
+}
