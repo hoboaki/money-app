@@ -28,12 +28,23 @@ body {
   width: 100%;
 }
 
+.gutter {
+  background-color: #6d6d6d;
+}
+.gutter.gutter-horizontal {
+  cursor: ew-resize;
+}
+.gutter.gutter-vertical {
+  cursor: ns-resize;
+}
+
 .title-bar {
   -webkit-app-region: drag;
   -webkit-margin-after: 0px;
   -webkit-margin-before: 0px;
   -webkit-user-select: none;
   color: #bababa;
+  height: 22px;
 }
 .title-bar-bg {
   background: #606060;
@@ -44,7 +55,7 @@ body {
 .title-bar-title {
   align-items: center;
   display: flex;
-  font-size: 10pt;
+  font-size: 9pt;
   height: 1.8em;
   justify-content: center;
 }

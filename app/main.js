@@ -8,6 +8,7 @@ window.onload = function() {
     const MenuItem = remote.MenuItem;
     const formatters = require('./external/editable-grid/formatters');    
     const datepicker = require('date-selector');
+    const Split = require('split.js')
     datepicker();
 
     // コールバック登録
@@ -52,5 +53,19 @@ window.onload = function() {
 
     // 初期ページ表示
     activatePage('Sheet');
+
+    // スプリッター設定
+    Split(['#pageSheetBodyTop', '#pageSheetBodyBottom'], {
+        sizes: [25, 75],
+        minSize: 200,
+        gutterSize: 8,
+        direction: 'vertical',
+        elementStyle: function (dimension, size, gutterSize) {
+            let reservedHeight = 44; // タイトルバー + ヘッダーエリア
+            return {
+                'height': `calc(${size}% - ${gutterSize}px - ${reservedHeight}px)`
+            }
+        }
+    });
 }
 
