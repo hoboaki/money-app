@@ -30,11 +30,15 @@ body {
 
 .gutter {
   background-color: #6d6d6d;
+  background-repeat: no-repeat;
+  background-position: 50%;
 }
 .gutter.gutter-horizontal {
+  background-image: url('image/grips/vertical.png');
   cursor: ew-resize;
 }
 .gutter.gutter-vertical {
+  background-image: url('image/grips/horizontal.png');
   cursor: ns-resize;
 }
 
