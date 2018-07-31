@@ -9,7 +9,12 @@ window.onload = function() {
     const formatters = require('./external/editable-grid/formatters');    
     const datepicker = require('date-selector');
     const Split = require('split.js')
+    const Model = require('./model.js');
+    const SampleDoc = require('./sample-doc.js');
     datepicker();
+
+    // ドキュメント用意    
+    var doc = new SampleDoc.Create();
 
     // コールバック登録
     ipcRenderer.on('app-message', (event, msg) => {
