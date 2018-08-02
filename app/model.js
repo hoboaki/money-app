@@ -1,11 +1,19 @@
 /// @file
 /// ドキュメントモデルに関わるクラス定義。
+///  〜Data はファイル読み書き用のクラス。
 
 //------------------------------------------------------------------------------
 /// 口座。
 let Account = function() {
     this.name = ""; ///< 口座名。
     this.kind = AccountKind.Invalid; ///< 種類。
+    this.initialAmount = 0.0; ///< 初期金額。
+};
+
+let AccountData = function() {
+    this.id = 0; ///< Id。
+    this.name = ""; ///< 口座名。
+    this.kind = ""; ///< 種類。
     this.initialAmount = 0.0; ///< 初期金額。
 };
 
@@ -33,6 +41,25 @@ let AccountKind = {
 //------------------------------------------------------------------------------
 /// カテゴリ。
 let Category = function() {
+    this.id = 0; ///< Id。
+    this.name = ""; ///< カテゴリ名。
+    this.parent = null; ///< 親 Category の参照。null ならルート。
+    this.childs = []; ///< 子 Category の配列。
+    this.kind = CategoryKind.Invalid; ///< カテゴリの種類。
+};
+
+let CategoryData = function() {
+    this.name = ""; ///< カテゴリ名。
+    this.parent = 0; ///< 親カテゴリのId。0 ならルート。
+    this.kind = ""; ///< カテゴリの種類。
+};
+
+//------------------------------------------------------------------------------
+/// カテゴリの種類。
+let CategoryKind = {
+    Invalid: 0, ///< 無効値。
+    Income: 1, ///< 入金。
+    Outgo: 2, ///< 出金。
 };
 
 //------------------------------------------------------------------------------
@@ -42,24 +69,126 @@ let YearMonthDayDate = function() {
 };
 
 //------------------------------------------------------------------------------
-/// 入出金レコード。
+/// 入出金レコード共通データ。
 let Record = function() {
     this.date = new YearMonthDayDate(); ///< 入出金発生日付。
     this.memo = ""; ///< メモ。
+};
+
+let RecordData = function() {
+    this.date = ""; ///< 入出金発生日付。
+    this.memo = ""; ///< メモ。
+};
+
+/// 入金レコード。
+let RecordIncome = function() {
+    Record.call(this);
+    this.amount = 0; ///< 金額。(入金がプラス・出金がマイナス)
+    this.category = null; ///< 入金カテゴリ。
+    this.account = null; ///< 口座。
+}
+
+let RecordIncomeData = function() {
+    RecordData.call(this);
+    this.amount = 0; ///< 金額。(入金がプラス・出金がマイナス)
+    this.category = 0; ///< 入金カテゴリId。
+    this.account = 0; ///< 口座Id。
+}
+
+/// 出金レコード。
+let RecordOutgo = function() {
+    Record.call(this);
+    this.amount = 0; ///< 金額。(出金がプラス・入金がマイナス)
+    this.category = null; ///< カテゴリ。
+    this.account = null; ///< 口座。
+}
+
+let RecordOutgoData = function() {
+    RecordData.call(this);
+    this.amount = 0; ///< 金額。(出金がプラス・入金がマイナス)
+    this.category = 0; ///< 出金カテゴリId。
+    this.account = 0; ///< 口座Id。
+}
+
+/// 資金移動レコード。
+let RecordTransfer = function() {
+    Record.call(this);
     this.amount = 0; ///< 金額。
-    this.categoryId = 0; ///< カテゴリId。
-    this.accountId = 0; ///< 口座Id。
+    this.accountFrom = null; ///< 送金元口座。
+    this.accountTo = null; ///< 送金先口座。
+}
+
+let RecordTransferData = function() {
+    RecordData.call(this);
+    this.amount = 0; ///< 金額。
+    this.accountFrom = 0; ///< 送金元口座Id。amount が加算される。
+    this.accountTo = 0; ///< 送金先口座Id。amount が減算される。
+}
+
+//------------------------------------------------------------------------------
+/// 入出金レコードの種類。
+let RecordKind = {
+    Invalid: 0, ///< 無効値。
+    Income: 1, ///< 入金。
+    Outgo: 2, ///< 出金。
+    Transfer: 3, ///< 資金移動。
 };
 
 //------------------------------------------------------------------------------
-/// ドキュメント。ビルトイン型の名前かぶりを配慮して省略形に。
-let Doc = function() {
+/// ドキュメント。
+/// @param aData DocData オブジェクト。
+/// @details クラス名はビルトイン型の名前かぶりを配慮して省略形にしました。
+let Doc = function(aData) {
+    // 変数定義
     this.accounts = {}; ///< 口座Idがキーの口座ハッシュ。
-    this.categories = {}; ///< カテゴリIdがキーのカテゴリハッシュ。
+    this.income = new function() {
+        this.categories = {}; ///< 入金カテゴリIdがキーの入金カテゴリハッシュ。
+        this.record = {}; ///< 入金レコードIdがキーの入金レコード。
+    };
+    this.outgo = new function() {
+        this.categories = {}; ///< 出金カテゴリIdがキーの出金カテゴリハッシュ。
+        this.record = {}; ///< 出金レコードIdがキーの出金レコード。
+    };
+    this.transfer = new function() {
+        this.record = {}; ///< 資金移動レコードIdがキーの資金移動レコード。
+    };
     this.records = []; ///< 全レコード。
+    this.nextId = new function() { ///< 次に使用するId。
+        this.account = 1;
+        this.income = new function() {
+            category = 1;
+            record = 1;
+        };
+        this.outgo = new function() {
+            category = 1;
+            record = 1;
+        };
+        this.transfer = new function() {
+            record = 1;
+        };
+    };
+
+    // 引数を使って初期化
+    // ...
+};
+
+let DocData = function() {
+    this.accounts = []; ///< 全口座。
+    this.income = new function() {
+        this.categories = []; ///< 入金カテゴリの配列。
+        this.records = []; ///< 入金レコードの配列。
+    };
+    this.outgo = new function() {
+        this.categories = []; ///< 出金カテゴリの配列。
+        this.records = []; ///< 出金レコードの配列。
+    };
+    this.transfer = new function() {
+        this.records = []; ///< 資金移動レコードの配列。
+    };
 };
 
 /// 口座の追加。
+/// @return 追加した口座のキー。
 Doc.prototype.accountAdd = function(aName, aKind, aInitialAmount) {
     // オブジェクト作成
     let account = new Account();
@@ -67,12 +196,10 @@ Doc.prototype.accountAdd = function(aName, aKind, aInitialAmount) {
     account.kind = aKind;
     account.initialAmount = aInitialAmount;
     
-    // 最大 Id 値 + 1 を Id とする。
-    let maxKey = 0;
-    for (key in this.accounts) {
-        maxKey = Math.max(key, maxKey);
-    }
-    this.accounts[maxKey + 1] = account;
+    let key = this.nextId.account
+    this.nextId.account++;
+    this.accounts[key] = account;
+    return key;
 };
 
 /// エクスポート。
