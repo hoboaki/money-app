@@ -9,7 +9,15 @@ module.exports = {
         doc.accountAdd("PPPカード", Model.AccountKind.LiabilitiesCard, 0);
         doc.accountAdd("キングカード", Model.AccountKind.LiabilitiesCard, 0);
         
-        console.log(JSON.stringify(doc));
+        // test
+        if (true) {
+            console.log(JSON.stringify(doc));
+            let dupDoc = new Model.Doc();
+            let data = doc.exportData();
+            console.log(data);
+            dupDoc.importData(data);
+            console.log(JSON.stringify(doc));
+        }
 
         return doc;
     },

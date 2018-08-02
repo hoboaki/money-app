@@ -7,14 +7,14 @@
 let Account = function() {
     this.name = ""; ///< 口座名。
     this.kind = AccountKind.Invalid; ///< 種類。
-    this.initialAmount = 0.0; ///< 初期金額。
+    this.initialAmount = 0.0; ///< 初期金額。プラスが貯蓄。マイナスが負債。
 };
 
 let AccountData = function() {
     this.id = 0; ///< Id。
     this.name = ""; ///< 口座名。
     this.kind = ""; ///< 種類。
-    this.initialAmount = 0.0; ///< 初期金額。
+    this.initialAmount = 0.0; ///< 初期金額。プラスが貯蓄。マイナスが負債。
 };
 
 //------------------------------------------------------------------------------
@@ -136,9 +136,8 @@ let RecordKind = {
 
 //------------------------------------------------------------------------------
 /// ドキュメント。
-/// @param aData DocData オブジェクト。
 /// @details クラス名はビルトイン型の名前かぶりを配慮して省略形にしました。
-let Doc = function(aData) {
+let Doc = function() {
     // 変数定義
     this.accounts = {}; ///< 口座Idがキーの口座ハッシュ。
     this.income = new function() {
@@ -167,9 +166,6 @@ let Doc = function(aData) {
             record = 1;
         };
     };
-
-    // 引数を使って初期化
-    // ...
 };
 
 let DocData = function() {
@@ -187,6 +183,57 @@ let DocData = function() {
     };
 };
 
+/// データをインポート。（初期化直後のオブジェクトに使用することを想定）
+/// @param aData DocData オブジェクト。
+Doc.prototype.importData = function(aData) {
+    // enum 変換
+    let enumKeyToInt = function(aText, aEnumType) {
+        let val = aEnumType[aText];
+        if (val != null) {
+            return aEnumType[aText];
+        }
+        throw `Error: Not found key '${aText}' in '${aEnumType}'.`;
+    };
+
+    //  口座
+    let accountIdDict = {}; // Data内Id → オブジェクトId 変換テーブル
+    for (let data of aData.accounts) {
+        console.log(data);
+        this.accountAdd(data.name, enumKeyToInt(data.kind, AccountKind), data.initialAmount);
+    }
+}
+
+/// データにエクスポート。
+/// @return DocData オブジェクト。
+Doc.prototype.exportData = function() {
+    // enum 変換
+    let enumValToKey = function(aVal, aEnumType) {
+        for(key in aEnumType) {
+            if (aEnumType[key] == aVal) {
+                return key;
+            }
+        }
+        throw `Error: Not found val '${aVal}' in '${aEnumType}'.`;
+    };
+
+    //　結果オブジェクト
+    let result = new DocData();
+
+    // 口座    
+    for (let key in this.accounts) {
+        let src = this.accounts[key];
+        let data = new AccountData();
+        data.id = key;
+        data.name = src.name;
+        data.kind = enumValToKey(src.kind, AccountKind);
+        data.initialAmount = src.initialAmount;
+        result.accounts.push(data);
+    }
+
+    // 結果を返す
+    return result;
+}
+
 /// 口座の追加。
 /// @return 追加した口座のキー。
 Doc.prototype.accountAdd = function(aName, aKind, aInitialAmount) {
@@ -196,7 +243,8 @@ Doc.prototype.accountAdd = function(aName, aKind, aInitialAmount) {
     account.kind = aKind;
     account.initialAmount = aInitialAmount;
     
-    let key = this.nextId.account
+    // 追加
+    let key = this.nextId.account;
     this.nextId.account++;
     this.accounts[key] = account;
     return key;
