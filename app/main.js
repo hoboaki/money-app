@@ -14,7 +14,7 @@ window.onload = function() {
     datepicker();
 
     // テスト実行
-    SampleDoc.Test();
+    window.setTimeout(function(){SampleDoc.Test();}, 2000); // 接続してからテストして欲しいので一定時間待つ。
 
     // ドキュメント用意    
     var doc = new SampleDoc.Create();
