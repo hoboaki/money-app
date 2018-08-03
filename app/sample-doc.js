@@ -26,7 +26,7 @@ module.exports = {
             let data0 = doc0.exportData();
             doc1.importData(data0);
             let data1 = doc1.exportData();
-            if (JSON.stringify(data0) != (JSON.stringify(data1)) {
+            if (JSON.stringify(data0) != JSON.stringify(data1)) {
                 throw "Error: Doc to DocData test failed."
             }
         }
