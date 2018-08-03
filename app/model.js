@@ -271,7 +271,6 @@ Doc.prototype.importData = function(aData) {
     //  口座
     let accountIdDict = {}; // Data内Id → オブジェクトId 変換テーブル
     for (let data of aData.accounts) {
-        console.log(data);
         this.accountAdd(data.name, enumKeyToInt(data.kind, AccountKind), data.initialAmount);
     }
 }

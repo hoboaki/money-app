@@ -13,6 +13,9 @@ window.onload = function() {
     const SampleDoc = require('./sample-doc.js');
     datepicker();
 
+    // テスト実行
+    SampleDoc.Test();
+
     // ドキュメント用意    
     var doc = new SampleDoc.Create();
 
