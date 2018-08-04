@@ -61,5 +61,5 @@ typings/
 .next
 
 # other
-./public/index.js
-./public/index.js.map
+public/index.js
+public/index.js.map
