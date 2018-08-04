@@ -14,7 +14,7 @@ module.exports = {
     devtool: 'source-map',
     // 出力先設定 __dirname は node でのカレントディレクトリのパスが格納される変数
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(__dirname, 'public'),
         filename: 'index.js'
     },
     // ファイルタイプ毎の処理を記述する
