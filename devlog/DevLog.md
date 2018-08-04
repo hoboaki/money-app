@@ -2,6 +2,9 @@
 
 ## 2018-08-05 React + TypeScript 構成に乗換開始
 
+静的型付けのために TypeScript に変更する。
+ついでにHTML出力も楽したいので React に変更してみる。
+
 参考。
 https://qiita.com/EBIHARA_kenji/items/25e59f7132b96cb886f3
 
