@@ -19,27 +19,30 @@ module.exports = {
     },
     // ファイルタイプ毎の処理を記述する
     module: {
-        rules: [{
-            // 正規表現で指定する
-            // 拡張子 .ts または .tsx の場合
-            test: /\.tsx?$/,
-            // ローダーの指定
-            // TypeScript をコンパイルする
-            use: 'ts-loader'
-        }, {
-            // 拡張子 .ts または .tsx の場合
-            test: /\.tsx?$/,
-            // 事前処理
-            enforce: 'pre',
-            // TypeScript をコードチェックする
-            loader: 'tslint-loader',
-            // 定義ファイル
-            options: {
-                configFile: './tslint.json',
-                // airbnb というJavaScriptスタイルガイドに従うには下記が必要
-                typeCheck: true,
-            },
-        }],
+        rules: [
+            {
+                // 正規表現で指定する
+                // 拡張子 .ts または .tsx の場合
+                test: /\.tsx?$/,
+                // ローダーの指定
+                // TypeScript をコンパイルする
+                use: 'ts-loader'
+            }, 
+            {
+                // 拡張子 .ts または .tsx の場合
+                test: /\.tsx?$/,
+                // 事前処理
+                enforce: 'pre',
+                // TypeScript をコードチェックする
+                loader: 'tslint-loader',
+                // 定義ファイル
+                options: {
+                    configFile: './tslint.json',
+                    // airbnb というJavaScriptスタイルガイドに従うには下記が必要
+                    typeCheck: true,
+                },
+            }
+        ],
     },
    // 処理対象のファイルを記載する
     resolve: {
