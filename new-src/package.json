@@ -1,7 +1,7 @@
 {
   "name": "MoneyApp",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "main.js",
   "license": "MIT",
   "dependencies": {
     "react": "^16.4.2",
