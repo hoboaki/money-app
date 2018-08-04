@@ -2,11 +2,17 @@
 
 ## 2018-08-05 React + TypeScript 構成に乗換開始
 
+(この日より前の記録はこの日に書きました)
+
 静的型付けのために TypeScript に変更する。
 ついでにHTML出力も楽したいので React に変更してみる。
 
-参考。
+- スケルトン作成参考
 https://qiita.com/EBIHARA_kenji/items/25e59f7132b96cb886f3
+- css の import 対応参考
+https://qiita.com/Quramy/items/a5d8967cdbd1b8575130
+- App コンポーネントコード参考
+https://github.com/azu/react-typescript-startup
 
 ## 2018-08-04 js でデータモデル作成きつくなってきた
 
