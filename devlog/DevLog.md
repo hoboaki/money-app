@@ -1,5 +1,16 @@
 # 開発記録
 
+## 2018-08-05 render 内で配列を指定する際は key が必要
+
+SideBar の render 内で配列を出力したら下記のエラーが出た。
+
+```Warning: Each child in an array or iterator should have a unique "key" prop.```
+
+こちらのサイトに解説がありました。 https://qiita.com/koba04/items/a4d23245d246c53cd49d
+
+配列の要素（今回だと SideBarBtn）に key={ユニークなキー} を追加することで対処。
+
+
 ## 2018-08-05 TypeScript 内で ipcRenderer 使おうとしたら固まる
 
 target が node になっていたのが原因でした。electron-renderer に変えることで対処。
