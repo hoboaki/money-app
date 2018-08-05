@@ -26,6 +26,8 @@
   },
   "scripts": {
     "build": "tcm ts && webpack",
-    "start": "electron ./"
+    "start": "electron ./",
+    "watch-css": "tcm --watch ts",
+    "watch": "webpack --watch"
   }
 }
