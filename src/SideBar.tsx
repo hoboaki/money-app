@@ -16,13 +16,16 @@ class SideBar extends React.Component {
     );
     return (
       <div className={rootClass}>
-        <SideBarBtn pageId="sheet" title="ホーム" iconName="home" />
-        <SideBarBtn pageId="sheet" title="レコードの検索" iconName="search" />
-        <SideBarBtn pageId="sheet" title="口座管理" iconName="account_balance" />
+        <SideBarBtn onClicked={() => {this.print('Sheet');}} title="ホーム" iconName="home" />
+        <SideBarBtn onClicked={() => {this.print('Find');}} title="レコードの検索" iconName="search" />
+        <SideBarBtn onClicked={() => {this.print('Account');}} title="口座管理" iconName="account_balance" />
       </div>
     );
   }
 
+  print(text: string) {
+    global.console.log(text);
+  }
 }
 
 export default SideBar;

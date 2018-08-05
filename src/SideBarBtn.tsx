@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as Styles from './SideBarBtn.css';
 
 interface IProps {
-  pageId: string;
+  onClicked: (() => void) 
   title: string;
   iconName: string;
 }
@@ -31,7 +31,7 @@ class SideBarBtn extends React.Component<IProps, IState> {
       'md-dark',
     );
     return (
-      <button className={rootClass} title={this.props.title}><i className={iconClass}>{this.props.iconName}</i></button>
+      <button className={rootClass} onClick={this.props.onClicked} title={this.props.title}><i className={iconClass}>{this.props.iconName}</i></button>
     );
   }
 
