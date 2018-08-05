@@ -14,6 +14,8 @@ https://qiita.com/Quramy/items/a5d8967cdbd1b8575130
 - App コンポーネントコード参考
 https://github.com/azu/react-typescript-startup
 
+watch コマンドも整備。
+
 ## 2018-08-04 js でデータモデル作成きつくなってきた
 
 静的型付けが欲しい…！
