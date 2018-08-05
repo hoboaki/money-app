@@ -5,6 +5,7 @@ import SideBar from './SideBar';
 import TitleBar from './TitleBar';
 
 interface IState {
+  currentPageId: string;
   isActive: boolean;
 }
 
@@ -12,6 +13,7 @@ class App extends React.Component<any, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
+      currentPageId: '',
       isActive: true,
     };
   }
@@ -31,6 +33,9 @@ class App extends React.Component<any, IState> {
         }
       });
     };
+
+    // ページ有効化
+    this.activatePage("Sheet");
   }
 
   public render() {
@@ -38,10 +43,27 @@ class App extends React.Component<any, IState> {
       <div className={StylesLayout.TopToBottom}>
         <TitleBar isActive={this.state.isActive}/>
         <div className={StylesLayout.LeftToRight}>
-          <SideBar />
+          <SideBar
+            onBtnClicked={(pageId) => {this.onPageBtnClicked(pageId); }}
+            currentPageId={this.state.currentPageId}
+            />
         </div>
       </div>
     );
+  }
+
+  private onPageBtnClicked(pageId: string) {
+    // 変更がなければ何もしない
+    if (this.state.currentPageId === pageId) {
+      return;
+    }
+
+    // ページの有効化
+    this.activatePage(pageId);
+  }
+
+  private activatePage(pageId: string) {
+    this.setState({currentPageId: pageId});
   }
 }
 

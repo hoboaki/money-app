@@ -4,8 +4,13 @@ import * as StylesLayout from './Layout.css';
 import * as Styles from './SideBar.css';
 import SideBarBtn from './SideBarBtn';
 
-class SideBar extends React.Component {
-  public constructor(props: any) {
+interface IProps {
+  currentPageId: string;
+  onBtnClicked: ((pageId: string) => void);
+}
+
+class SideBar extends React.Component<IProps, any> {
+  public constructor(props: IProps) {
     super(props);
   }
 
@@ -16,15 +21,18 @@ class SideBar extends React.Component {
     );
     return (
       <div className={rootClass}>
-        <SideBarBtn onClicked={() => {this.print('Sheet');}} title="ホーム" iconName="home" />
-        <SideBarBtn onClicked={() => {this.print('Find');}} title="レコードの検索" iconName="search" />
-        <SideBarBtn onClicked={() => {this.print('Account');}} title="口座管理" iconName="account_balance" />
+        <SideBarBtn onClicked={() => {this.onClicked('Sheet'); }} isActive={this.props.currentPageId === 'Sheet'}
+          title="ホーム" iconName="home" />
+        <SideBarBtn onClicked={() => {this.onClicked('Find'); }} isActive={this.props.currentPageId === 'Find'}
+          title="レコードの検索" iconName="search" />
+        <SideBarBtn onClicked={() => {this.onClicked('Account'); }} isActive={this.props.currentPageId === 'Account'}
+          title="口座管理" iconName="account_balance" />
       </div>
     );
   }
 
-  print(text: string) {
-    global.console.log(text);
+  private onClicked(pageId: string) {
+    this.props.onBtnClicked(pageId);
   }
 }
 

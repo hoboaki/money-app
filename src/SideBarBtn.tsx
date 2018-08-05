@@ -3,27 +3,21 @@ import * as React from 'react';
 import * as Styles from './SideBarBtn.css';
 
 interface IProps {
-  onClicked: (() => void) 
+  onClicked: (() => void);
   title: string;
   iconName: string;
-}
-
-interface IState {
   isActive: boolean;
 }
 
-class SideBarBtn extends React.Component<IProps, IState> {
+class SideBarBtn extends React.Component<IProps> {
   public constructor(props: IProps) {
     super(props);
-    this.state = {
-      isActive: false,
-    };
   }
 
   public render() {
     const rootClass = ClassNames(
       Styles.Root,
-      {[Styles.RootActive]: this.state.isActive},
+      {[Styles.RootActive]: this.props.isActive},
     );
     const iconClass = ClassNames(
       'material-icons',
@@ -31,7 +25,12 @@ class SideBarBtn extends React.Component<IProps, IState> {
       'md-dark',
     );
     return (
-      <button className={rootClass} onClick={this.props.onClicked} title={this.props.title}><i className={iconClass}>{this.props.iconName}</i></button>
+      <button
+        className={rootClass}
+        onClick={this.props.onClicked}
+        title={this.props.title}>
+        <i className={iconClass}>{this.props.iconName}</i>
+      </button>
     );
   }
 
