@@ -25,9 +25,9 @@
     "webpack-cli": "^3.1.0"
   },
   "scripts": {
-    "build": "tcm ts && webpack",
+    "build": "tcm src && webpack",
     "start": "electron ./",
-    "watch-css": "tcm --watch ts",
+    "watch-css": "tcm --watch src",
     "watch": "webpack --watch"
   }
 }

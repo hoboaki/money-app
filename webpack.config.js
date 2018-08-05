@@ -4,7 +4,7 @@ module.exports = {
     // node.js で動作することを指定する
     target: 'node',
     // 起点となるファイル
-    entry: './ts/index.tsx',
+    entry: './src/index.tsx',
     // webpack watch したときに差分ビルドができる
     cache: true,
     // development は、 source map file を作成、再ビルド時間の短縮などの設定となる
