@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     // node.js で動作することを指定する
-    target: 'node',
+    target: 'electron-renderer',
     // 起点となるファイル
     entry: './src/index.tsx',
     // webpack watch したときに差分ビルドができる
