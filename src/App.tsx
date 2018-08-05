@@ -35,7 +35,7 @@ class App extends React.Component<any, IState> {
     };
 
     // ページ有効化
-    this.activatePage("Sheet");
+    this.activatePage('Sheet');
   }
 
   public render() {

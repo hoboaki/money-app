@@ -19,14 +19,25 @@ class SideBar extends React.Component<IProps, any> {
       Styles.Root,
       StylesLayout.TopToBottom,
     );
+
+    const btnInfos = [];
+    btnInfos.push({pageId: 'Sheet', title: 'ホーム', iconName: 'home'});
+    btnInfos.push({pageId: 'Find', title: 'レコードの検索', iconName: 'search'});
+    btnInfos.push({pageId: 'Account', title: '口座管理', iconName: 'account_balance'});
+
+    const btns = [];
+    for (const btnInfo of btnInfos) {
+      btns.push(<SideBarBtn
+        onClicked={() => {this.onClicked(btnInfo.pageId); }}
+        isActive={this.props.currentPageId === btnInfo.pageId}
+        title={btnInfo.title}
+        iconName={btnInfo.iconName}
+        />);
+    }
+
     return (
       <div className={rootClass}>
-        <SideBarBtn onClicked={() => {this.onClicked('Sheet'); }} isActive={this.props.currentPageId === 'Sheet'}
-          title="ホーム" iconName="home" />
-        <SideBarBtn onClicked={() => {this.onClicked('Find'); }} isActive={this.props.currentPageId === 'Find'}
-          title="レコードの検索" iconName="search" />
-        <SideBarBtn onClicked={() => {this.onClicked('Account'); }} isActive={this.props.currentPageId === 'Account'}
-          title="口座管理" iconName="account_balance" />
+        {btns}
       </div>
     );
   }
