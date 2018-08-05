@@ -1,0 +1,17 @@
+.Root {
+  align-items: center;
+  background: transparent;
+  border: 0px;
+  display: flex;
+  height: 50px;
+  justify-content: center;
+  outline: none;
+  padding: 0px;
+  width: 100%;
+}
+.Root:hover {
+  color: #ffffff;
+}
+.RootActive {
+  color: #ffffff;
+}

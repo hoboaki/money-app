@@ -1,6 +1,7 @@
 import {ipcRenderer as IpcRenderer} from 'electron';
 import * as React from 'react';
 import * as StylesLayout from './Layout.css';
+import SideBar from './SideBar';
 import TitleBar from './TitleBar';
 
 interface IState {
@@ -36,6 +37,9 @@ class App extends React.Component<any, IState> {
     return (
       <div className={StylesLayout.TopToBottom}>
         <TitleBar isActive={this.state.isActive}/>
+        <div className={StylesLayout.LeftToRight}>
+          <SideBar />
+        </div>
       </div>
     );
   }
