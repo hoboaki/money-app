@@ -1,0 +1,10 @@
+/*
+https://material.io/tools/color/#!/?view.left=1&view.right=0&primary.color=424242&secondary.color=B0BEC5
+*/
+
+body {
+  margin: 0px;
+  height: 100vh;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  -webkit-user-select: none;
+}
