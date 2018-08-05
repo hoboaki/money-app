@@ -1,11 +1,12 @@
 import * as React from 'react';
-import * as styles from './App.css';
+import * as StylesLayout from './Layout.css';
+import TitleBar from './TitleBar';
 
 class App extends React.Component {
   public render() {
     return (
-      <div className={styles.App}>
-        <h1>Hello Money App</h1>
+      <div className={StylesLayout.TopToBottom}>
+        <TitleBar />
       </div>
     );
   }

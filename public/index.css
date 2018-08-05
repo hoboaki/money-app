@@ -2,9 +2,25 @@
 https://material.io/tools/color/#!/?view.left=1&view.right=0&primary.color=424242&secondary.color=B0BEC5
 */
 
+/** Body */
 body {
   margin: 0px;
   height: 100vh;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   -webkit-user-select: none;
+}
+
+/** Split.js 用 */
+.gutter {
+  background-color: #6d6d6d;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+.gutter.gutter-horizontal {
+  background-image: url('image/grips/vertical.png');
+  cursor: ew-resize;
+}
+.gutter.gutter-vertical {
+  background-image: url('image/grips/horizontal.png');
+  cursor: ns-resize;
 }
