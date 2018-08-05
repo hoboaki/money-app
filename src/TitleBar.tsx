@@ -2,24 +2,20 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as Styles from './TitleBar.css';
 
-interface IState {
+interface IProps {
   isActive: boolean;
 }
 
-class TitleBar extends React.Component<any, IState> {
-  public constructor(props: any) {
+class TitleBar extends React.Component<IProps, any> {
+  public constructor(props: IProps) {
     super(props);
-    this.state = {
-      isActive: true,
-    };
-    global.console.log(this);
   }
 
   public render() {
     const rootClass = ClassNames(
       Styles.Base,
       Styles.Bg,
-      {[Styles.BgActive]: this.state.isActive},
+      {[Styles.BgActive]: this.props.isActive},
     );
     const titleClass = ClassNames(Styles.Base, Styles.Title);
     return (
