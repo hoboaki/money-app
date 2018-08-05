@@ -1,5 +1,17 @@
 # 開発記録
 
+## 2018-08-05 TypeScript 内で ipcRenderer 使おうとしたら固まる
+
+target が node になっていたのが原因でした。electron-renderer に変えることで対処。
+
+- https://github.com/electron/electron/issues/8846
+
+## 2018-08-05 setInterval のコールバック関数の this ではまる
+
+setInterval の中で this.setState() しようとしたらうまくいかなかったのはこれが原因。
+
+- http://js.studio-kingdom.com/javascript/window/set_interval
+
 ## 2018-08-05 React + TypeScript 構成に乗換開始
 
 (この日より前の記録はこの日に書きました)
