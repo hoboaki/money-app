@@ -1,6 +1,8 @@
 import {ipcRenderer as IpcRenderer} from 'electron';
 import * as React from 'react';
 import * as StylesLayout from './Layout.css';
+import * as ModelDocRoot from './Model/Doc/Root';
+import * as ModelRoot from './Model/Root';
 import PageStyle from './Page.css';
 import PageSheet from './PageSheet';
 import SideBar from './SideBar';
