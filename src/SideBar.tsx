@@ -28,6 +28,7 @@ class SideBar extends React.Component<IProps, any> {
     const btns = [];
     for (const btnInfo of btnInfos) {
       btns.push(<SideBarBtn
+        key={btnInfo.pageId}
         onClicked={() => {this.onClicked(btnInfo.pageId); }}
         isActive={this.props.currentPageId === btnInfo.pageId}
         title={btnInfo.title}

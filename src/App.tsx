@@ -1,6 +1,8 @@
 import {ipcRenderer as IpcRenderer} from 'electron';
 import * as React from 'react';
 import * as StylesLayout from './Layout.css';
+import PageSheet from './PageSheet';
+import PageSheetBody from './PageSheetBody';
 import SideBar from './SideBar';
 import TitleBar from './TitleBar';
 
@@ -35,10 +37,17 @@ class App extends React.Component<any, IState> {
     };
 
     // ページ有効化
-    this.activatePage('Sheet');
+    this.activatePage(PageSheet.PageId);
   }
 
   public render() {
+    let pageContent = <div/>;
+    switch (this.state.currentPageId) {
+      case PageSheet.PageId:
+        pageContent = <PageSheet />;
+        break;
+    }
+
     return (
       <div className={StylesLayout.TopToBottom}>
         <TitleBar isActive={this.state.isActive}/>
@@ -47,6 +56,7 @@ class App extends React.Component<any, IState> {
             onBtnClicked={(pageId) => {this.onPageBtnClicked(pageId); }}
             currentPageId={this.state.currentPageId}
             />
+          {pageContent}
         </div>
       </div>
     );
