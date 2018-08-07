@@ -48,7 +48,7 @@ class Root {
           if (accountId == null) {
               throw `Error: Invalid account value(${data.account}) in income record.`;
           }
-          r.incomeRecordAdd(YearMonthDayDate.FromText(data.date), data.memo, accountId, categoryId, data.amount);
+          r.incomeRecordAdd(YearMonthDayDate.FromText(data.date), data.memo, r.accounts[accountId], r.income.categories[categoryId], data.amount);
         }
     }
 
