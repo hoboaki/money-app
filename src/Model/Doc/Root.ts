@@ -1,10 +1,10 @@
 import Account from "./Account";
 import Category from "./Category";
-import RecordIncome from "../RecordIncome";
+import RecordIncome from "./RecordIncome";
 import RecordOutgo from "./RecordOutgo";
-import RecordTransfer from "../RecordTransfer";
+import RecordTransfer from "./RecordTransfer";
 
-/// ドキュメントルートデータ版。
+/// ドキュメントルートデータ。
 class Root {
   accounts: Account[] = []; ///< 全口座。
   

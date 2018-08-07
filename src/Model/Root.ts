@@ -1,11 +1,163 @@
 import Account from './Account'
+import AccountKind from './AccountKind'
 import Category from './Category'
+import DocAccount from './Doc/Account'
+import DocCategory from './Doc/Category'
+import DocRecordIncome from './Doc/RecordIncome'
+import DocRoot from './Doc/Root'
 import RecordIncome from './RecordIncome';
 import RecordOutgo from './RecordOutgo';
 import RecordTransfer from './RecordTransfer';
+import YearMonthDayDate from './YearMonthDate';
 
 /// ドキュメントルート。
 class Root {
+  /// DocRoot から作成。
+  public static FromDoc(aDoc: DocRoot)
+  {
+    // 結果
+    let r = new Root();
+
+    //  口座
+    let accountIdDict: {[key: number]: number} = {}; // Data内Id → オブジェクトId 変換テーブル
+    for (let data of aDoc.accounts) {
+      let key = r.accountAdd(data.name, AccountKind[data.kind], data.initialAmount);
+      accountIdDict[data.id] = key;
+    }
+
+    // 入金
+    {
+        let categoryIdDict: {[key: number]: number} = {}; // Data内Id -> オブジェクトId 変換テーブル
+        for (let data of aDoc.income.categories) {
+          let parentId = 0;
+          if (data.parent != 0) {
+              parentId = categoryIdDict[data.parent];
+              if (parentId == null) {
+                  throw `Error: Invalid parent value(${data.parent}) in income category (id: '${data.id}').`;
+              }
+          }
+          let key = r.incomeCategoryAdd(data.name, r.income.categories[parentId]);
+          categoryIdDict[data.id] = key;
+        }
+        for (let data of aDoc.income.records) {
+          let categoryId = categoryIdDict[data.category];
+          if (categoryId == null) {
+              throw `Error: Invalid category value(${data.category}) in income record.`;
+          }
+          let accountId = accountIdDict[data.account];
+          if (accountId == null) {
+              throw `Error: Invalid account value(${data.account}) in income record.`;
+          }
+          r.incomeRecordAdd(YearMonthDayDate.FromText(data.date), data.memo, accountId, categoryId, data.amount);
+        }
+    }
+
+    return r;
+  }
+
+  /// ドキュメントルートデータにエクスポート。
+  public toDoc() {
+    //　結果オブジェクト
+    let result = new DocRoot();
+
+    // 口座    
+    for (let key in this.accounts) {
+      let src = this.accounts[key];
+      let data = new DocAccount();
+      data.id = src.id;
+      data.name = src.name;
+      data.kind = AccountKind[src.kind];
+      data.initialAmount = src.initialAmount;
+      result.accounts.push(data);
+    }
+
+    // 入金
+    {
+      // カテゴリ
+      for (let key in this.income.categories) {
+        let src = this.income.categories[key];
+        let data = new DocCategory();
+        data.id = src.id;
+        data.name = src.name;
+        if (src.parent != null) {
+          data.parent = src.parent.id;
+        }
+        result.income.categories.push(data);
+      }
+
+      // レコード
+      for (let key in this.income.records) {
+        let src = this.income.records[key];
+        let data = new DocRecordIncome();
+        data.date = src.date.toText();
+        data.memo = src.memo;
+        data.amount = src.amount;
+        data.category = src.category.id;
+        data.account = src.account.id;
+        result.income.records.push(data);
+      }
+    }
+
+    // 結果を返す
+    return result;
+  }
+
+  /// 口座追加。
+  /// @return {number} 追加した口座のId。
+  public accountAdd(aName: string, aKind: AccountKind, aInitialAmount: number) {
+    // オブジェクト作成
+    let obj = new Account();
+    obj.name = aName;
+    obj.kind = aKind;
+    obj.initialAmount = aInitialAmount;
+    
+    // 追加
+    obj.id = this.nextId.account;
+    this.nextId.account++;
+    this.accounts[obj.id] = obj;
+    return obj.id;
+  }
+
+  /// 入金カテゴリ追加。
+  /// @return {number} 追加したカテゴリのId。
+  public incomeCategoryAdd (aName: string, aParent: Category | null) {
+    // オブジェクト作成
+    let obj = new Category();
+    obj.name = aName;
+    if (aParent != null) {
+        obj.parent = this.income.categories[aParent.id];
+        global.console.assert(obj.parent != null);
+    }
+    
+    // 追加
+    obj.id = this.nextId.income.category;
+    this.nextId.income.category++;
+    this.income.categories[obj.id] = obj;
+    return obj.id;
+  };
+
+  /// 入金レコードの追加。
+  /// @return {number} 追加したレコードのId。
+  public incomeRecordAdd (
+    aDate: YearMonthDayDate, 
+    aMemo: string, 
+    aAccount: Account, 
+    aCategory: Category, 
+    aAmount: number
+  ) {
+    // オブジェクト作成
+    let obj = new RecordIncome(aAccount, aCategory);
+    obj.date = aDate;
+    obj.memo = aMemo;
+    obj.amount = aAmount;
+    
+    // 追加
+    obj.id = this.nextId.income.record;
+    this.nextId.income.record++;
+    this.income.records[obj.id] = obj;
+    return obj.id;
+  };
+
   /// 口座Idがキーの口座ハッシュ。
   accounts: {[key: number]: Account} = {};
   
