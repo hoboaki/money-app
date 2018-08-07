@@ -1,6 +1,6 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
-import * as Styles from './TitleBar.css';
+import * as Style from './TitleBar.css';
 
 interface IProps {
   isActive: boolean;
@@ -13,11 +13,11 @@ class TitleBar extends React.Component<IProps, any> {
 
   public render() {
     const rootClass = ClassNames(
-      Styles.Base,
-      Styles.Bg,
-      {[Styles.BgActive]: this.props.isActive},
+      Style.Base,
+      Style.Bg,
+      {[Style.BgActive]: this.props.isActive},
     );
-    const titleClass = ClassNames(Styles.Base, Styles.Title);
+    const titleClass = ClassNames(Style.Base, Style.Title);
     return (
       <div id="titleBar" className={rootClass}>
         <div className={titleClass}><div>{'\uD83D\uDC27'} ファイル名 - MoneyApp</div></div>

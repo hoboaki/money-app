@@ -1,7 +1,7 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
-import * as StylesLayout from './Layout.css';
-import * as Styles from './SideBar.css';
+import * as LayoutStyle from './Layout.css';
+import * as Style from './SideBar.css';
 import SideBarBtn from './SideBarBtn';
 
 interface IProps {
@@ -16,8 +16,8 @@ class SideBar extends React.Component<IProps, any> {
 
   public render() {
     const rootClass = ClassNames(
-      Styles.Root,
-      StylesLayout.TopToBottom,
+      Style.Root,
+      LayoutStyle.TopToBottom,
     );
 
     const btnInfos = [];

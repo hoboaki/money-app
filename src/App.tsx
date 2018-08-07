@@ -1,7 +1,7 @@
 import {ipcRenderer as IpcRenderer} from 'electron';
 import * as React from 'react';
 import * as StylesLayout from './Layout.css';
-import StylesPage from './Page.css';
+import PageStyle from './Page.css';
 import PageSheet from './PageSheet';
 import SideBar from './SideBar';
 import TitleBar from './TitleBar';
@@ -41,7 +41,7 @@ class App extends React.Component<any, IState> {
   }
 
   public render() {
-    let pageContent = <div className={StylesPage.Base}/>;
+    let pageContent = <div className={PageStyle.Base}/>;
     switch (this.state.currentPageId) {
       case PageSheet.PageId:
         pageContent = <PageSheet />;

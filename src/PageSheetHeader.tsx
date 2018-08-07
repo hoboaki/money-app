@@ -1,23 +1,23 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
-import * as StylesLayout from './Layout.css';
-import * as Styles from './PageSheetHeader.css';
+import * as LayoutStyle from './Layout.css';
+import * as Style from './PageSheetHeader.css';
 
 class PageSheetHeader extends React.Component<any, any> {
   public render() {
     const rootClass = ClassNames(
-      Styles.Root,
+      Style.Root,
     );
     const movePrevBtnClass = ClassNames(
-      Styles.MoveBtn,
-      Styles.MovePrevBtn,
+      Style.MoveBtn,
+      Style.MovePrevBtn,
     );
     const moveTodayBtnClass = ClassNames(
-      Styles.MoveBtn,
+      Style.MoveBtn,
     );
     const moveNextBtnClass = ClassNames(
-      Styles.MoveBtn,
-      Styles.MoveNextBtn,
+      Style.MoveBtn,
+      Style.MoveNextBtn,
     );
     const iconClass = ClassNames(
       'material-icons',
@@ -26,7 +26,7 @@ class PageSheetHeader extends React.Component<any, any> {
     );
     return (
       <div className={rootClass}>
-        <select className={Styles.CellUnitSelect}>
+        <select className={Style.CellUnitSelect}>
             <option value="day">日</option>
             <option value="month">月</option>
             <option value="year">年</option>
@@ -34,10 +34,10 @@ class PageSheetHeader extends React.Component<any, any> {
         <button className={movePrevBtnClass}><i className={iconClass}>chevron_left</i></button>
         <button className={moveTodayBtnClass}>今日</button>
         <button className={moveNextBtnClass}><i className={iconClass}>chevron_right</i></button>
-        <div className={StylesLayout.RightToLeft}>
-          <div className={StylesLayout.TopToBottom} style={{width: 'auto'}}>
-            <span className={Styles.ZoomLabel}>水平ズーム:</span>
-            <div className={Styles.ZoomDiv}><input type="range" value="1" min="1" max="100" step="1"/></div>
+        <div className={LayoutStyle.RightToLeft}>
+          <div className={LayoutStyle.TopToBottom} style={{width: 'auto'}}>
+            <span className={Style.ZoomLabel}>水平ズーム:</span>
+            <div className={Style.ZoomDiv}><input type="range" value="1" min="1" max="100" step="1"/></div>
           </div>
           <div style={{width: '100%'}}/>
         </div>

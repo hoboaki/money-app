@@ -1,7 +1,7 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
-import * as StylesLayout from './Layout.css';
-import * as StylesPage from './Page.css';
+import * as LayoutStyle from './Layout.css';
+import * as PageStyle from './Page.css';
 import PageSheetBody from './PageSheetBody';
 import PageSheetHeader from './PageSheetHeader';
 
@@ -10,8 +10,8 @@ class PageSheet extends React.Component<any, any> {
 
   public render() {
     const rootClass = ClassNames(
-      StylesPage.Base,
-      StylesLayout.TopToBottom,
+      PageStyle.Base,
+      LayoutStyle.TopToBottom,
     );
     return (
       <div className={rootClass}>
