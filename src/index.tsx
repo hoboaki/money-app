@@ -1,7 +1,7 @@
 // インポート。
 import React from 'react';
 import ReactDom from 'react-dom';
-import App from './App';
+import MainWindow from './MainWindow';
 
 // 全 css ファイルを require して watch 対応。
 function requireAll(r: any) {
@@ -12,7 +12,7 @@ requireAll((require as any).context('./', true, /\.css$/));
 // 描画
 const container = document.getElementById('contents');
 ReactDom.render(
-  <App/>,
+  <MainWindow/>,
   container,
 );
 

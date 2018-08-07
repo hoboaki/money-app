@@ -11,7 +11,7 @@ interface IState {
   isActive: boolean;
 }
 
-class App extends React.Component<any, IState> {
+class MainWindow extends React.Component<any, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -77,4 +77,4 @@ class App extends React.Component<any, IState> {
   }
 }
 
-export default App;
+export default MainWindow;
