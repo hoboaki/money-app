@@ -1,24 +1,24 @@
 # 開発記録
 
-## vscode で行末空白の自動削除
+## 2018-08-08 vscode で行末空白の自動削除
 
 lint 先生にめっちゃ怒られたので設定しました。
 
 https://qiita.com/iwata-n@github/items/39dc0e4391277589878b
 
-## vscode 上で tslint の結果がみたい
+## 2018-08-08 vscode 上で tslint の結果がみたい
 
 ないわけはないだろうと検索したらやっぱりありました。ありがたやー。
 
 https://hi1280.hatenablog.com/entry/2017/07/23/235031
 
-## 2018-08-09 enum キー文字列を parse して enum 値に変換
+## 2018-08-08 enum キー文字列を parse して enum 値に変換
 
 value の型が number な enum のキー文字列を渡して enum 値に変換するコード。なかなか検索してもでてこず時間かかりました。
 
 ```ts
 // enum デシリアライズ
-const enumPraseAccounntKind = (targetKey: string): AccountKind => {
+const enumPraseAccountKind = (targetKey: string): AccountKind => {
     for (const key in AccountKind) {
     if (key === targetKey) {
         return (+AccountKind[key]) as AccountKind;
