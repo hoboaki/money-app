@@ -119,6 +119,9 @@ class Root {
 
     // 口座
     for (const key in this.accounts) {
+      if (!this.accounts.hasOwnProperty(key)) {
+        continue;
+      }
       const src = this.accounts[key];
       const data = new DataAccount();
       data.id = src.id;
@@ -132,6 +135,9 @@ class Root {
     {
       // カテゴリ
       for (const key in this.income.categories) {
+        if (!this.income.categories.hasOwnProperty(key)) {
+          continue;
+        }
         const src = this.income.categories[key];
         const data = new DataCategory();
         data.id = src.id;
@@ -144,6 +150,9 @@ class Root {
 
       // レコード
       for (const key in this.income.records) {
+        if (!this.income.records.hasOwnProperty(key)) {
+          continue;
+        }
         const src = this.income.records[key];
         const data = new DataRecordIncome();
         data.date = src.date.toText();
