@@ -10,9 +10,9 @@ class RecordOutgo extends Record {
     this.category = category;
   }
   
-  account: Account; ///< 口座。
-  category: Category; ///< カテゴリ。
-  amount: number = 0; ///< 金額。(出金がプラス・入金がマイナス)
+  account: Account; // 口座。
+  category: Category; // カテゴリ。
+  amount: number = 0; // 金額。(出金がプラス・入金がマイナス)
 }
 
 export default RecordOutgo;

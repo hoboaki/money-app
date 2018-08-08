@@ -1,10 +1,10 @@
-import Account from './Account'
-import AccountKind from './AccountKind'
-import Category from './Category'
-import DataAccount from './Data/Account'
-import DataCategory from './Data/Category'
-import DataRecordIncome from './Data/RecordIncome'
-import DataRoot from './Data/Root'
+import Account from './Account';
+import AccountKind from './AccountKind';
+import Category from './Category';
+import DataAccount from './Data/Account';
+import DataCategory from './Data/Category';
+import DataRecordIncome from './Data/RecordIncome';
+import DataRoot from './Data/Root';
 import RecordIncome from './RecordIncome';
 import RecordOutgo from './RecordOutgo';
 import RecordTransfer from './RecordTransfer';
@@ -13,17 +13,16 @@ import YearMonthDayDate from './YearMonthDayDate';
 /// ドキュメントルート。
 class Root {
   /// DataRoot から作成。
-  public static FromData(aData: DataRoot)
-  {
+  public static FromData(aData: DataRoot) {
     // enum デシリアライズ
     const enumPraseAccounntKind = (targetKey: string): AccountKind => {
       for (const key in AccountKind) {
-        if (key == targetKey) {
-          return (+AccountKind[key]) as AccountKind;          
+        if (key === targetKey) {
+          return (+AccountKind[key]) as AccountKind;
         }
       }
-      throw `Error: Not found key named '${targetKey}'.`;
-    }
+      throw new Error(`Error: Not found key named '${targetKey}'.`);
+    };
 
     // 結果
     const r = new Root();
@@ -41,10 +40,10 @@ class Root {
         const categoryIdDict: {[key: number]: number} = {}; // Data内Id -> オブジェクトId 変換テーブル
         for (const data of aData.income.categories) {
           let parentId = 0;
-          if (data.parent != 0) {
+          if (data.parent !== 0) {
               parentId = categoryIdDict[data.parent];
               if (parentId == null) {
-                  throw `Error: Invalid parent value(${data.parent}) in income category (id: '${data.id}').`;
+                  throw new Error(`Error: Invalid parent value(${data.parent}) in income category (id: '${data.id}').`);
               }
           }
           const key = r.incomeCategoryAdd(data.name, r.income.categories[parentId]);
@@ -53,33 +52,80 @@ class Root {
         for (const data of aData.income.records) {
           const categoryId = categoryIdDict[data.category];
           if (categoryId == null) {
-              throw `Error: Invalid category value(${data.category}) in income record.`;
+              throw new Error(`Error: Invalid category value(${data.category}) in income record.`);
           }
           const accountId = accountIdDict[data.account];
           if (accountId == null) {
-              throw `Error: Invalid account value(${data.account}) in income record.`;
+              throw new Error(`Error: Invalid account value(${data.account}) in income record.`);
           }
-          r.incomeRecordAdd(YearMonthDayDate.FromText(data.date), data.memo, r.accounts[accountId], r.income.categories[categoryId], data.amount);
+          r.incomeRecordAdd(
+            YearMonthDayDate.FromText(data.date),
+            data.memo,
+            r.accounts[accountId],
+            r.income.categories[categoryId],
+            data.amount,
+          );
         }
     }
 
     return r;
   }
 
+  /// 口座Idがキーの口座ハッシュ。
+  public accounts: {[key: number]: Account} = {};
+
+  /// 入金。
+  public income: {
+    categories: {[key: number]: Category}; // 入金カテゴリIdがキーの入金カテゴリハッシュ。
+    records: {[key: number]: RecordIncome}; // 入金レコードIdがキーの入金レコード。
+  } = {categories: {}, records: {}};
+
+  /// 送金。
+  public outgo: {
+    categories: {[key: number]: Category}; // 出金カテゴリIdがキーの出金カテゴリハッシュ。
+    records: {[key: number]: RecordOutgo}; // 出金レコードIdがキーの出金レコード。
+  } = {categories: {}, records: {}};
+
+  /// 資金移動。
+  public transfer: {
+    records: {[key: number]: RecordTransfer}; // 資金移動レコードIdがキーの資金移動レコード。
+  } = {records: {}};
+
+  /// 次に使用するId。
+  private nextId: {
+    account: number;
+    income: {
+      category: number;
+      record: number;
+    };
+    outgo: {
+      category: number;
+      record: number;
+    };
+    transfer: {
+      record: number;
+    };
+  } = {
+    account: 1,
+    income: {category: 1, record: 1},
+    outgo: {category: 1, record: 1},
+    transfer: {record: 1},
+  };
+
   /// ドキュメントルートデータにエクスポート。
   public toData() {
-    //　結果オブジェクト
+    // 結果オブジェクト
     const result = new DataRoot();
 
-    // 口座    
+    // 口座
     for (const key in this.accounts) {
       const src = this.accounts[key];
       const data = new DataAccount();
       data.id = src.id;
       data.name = src.name;
       data.kind = AccountKind[src.kind];
-      data.initialAmount = src.initialAmount;
       result.accounts.push(data);
+      data.initialAmount = src.initialAmount;
     }
 
     // 入金
@@ -121,7 +167,7 @@ class Root {
     obj.name = aName;
     obj.kind = aKind;
     obj.initialAmount = aInitialAmount;
-    
+
     // 追加
     obj.id = this.nextId.account;
     this.nextId.account++;
@@ -131,7 +177,7 @@ class Root {
 
   /// 入金カテゴリ追加。
   /// @return {number} 追加したカテゴリのId。
-  public incomeCategoryAdd (aName: string, aParent: Category | null) {
+  public incomeCategoryAdd(aName: string, aParent: Category | null) {
     // オブジェクト作成
     const obj = new Category();
     obj.name = aName;
@@ -139,76 +185,36 @@ class Root {
         obj.parent = this.income.categories[aParent.id];
         global.console.assert(obj.parent != null);
     }
-    
+
     // 追加
     obj.id = this.nextId.income.category;
     this.nextId.income.category++;
     this.income.categories[obj.id] = obj;
     return obj.id;
-  };
+  }
 
   /// 入金レコードの追加。
   /// @return {number} 追加したレコードのId。
-  public incomeRecordAdd (
-    aDate: YearMonthDayDate, 
-    aMemo: string, 
-    aAccount: Account, 
-    aCategory: Category, 
-    aAmount: number
+  public incomeRecordAdd(
+    aDate: YearMonthDayDate,
+    aMemo: string,
+    aAccount: Account,
+    aCategory: Category,
+    aAmount: number,
   ) {
     // オブジェクト作成
     const obj = new RecordIncome(aAccount, aCategory);
     obj.date = aDate;
     obj.memo = aMemo;
     obj.amount = aAmount;
-    
+
     // 追加
     obj.id = this.nextId.income.record;
     this.nextId.income.record++;
     this.income.records[obj.id] = obj;
     return obj.id;
-  };
+  }
 
-  /// 口座Idがキーの口座ハッシュ。
-  accounts: {[key: number]: Account} = {};
-  
-  /// 入金。
-  income: {
-    categories: {[key: number]: Category}; ///< 入金カテゴリIdがキーの入金カテゴリハッシュ。
-    records: {[key: number]: RecordIncome}; ///< 入金レコードIdがキーの入金レコード。
-  } = {categories: {}, records: {},};
-
-  /// 送金。
-  outgo: {
-    categories : {[key: number]: Category};///< 出金カテゴリIdがキーの出金カテゴリハッシュ。
-    records: {[key: number]: RecordOutgo};  ///< 出金レコードIdがキーの出金レコード。
-  } = {categories: {}, records: {},};
-
-  /// 資金移動。
-  transfer: {
-    records: {[key: number]: RecordTransfer}; ///< 資金移動レコードIdがキーの資金移動レコード。
-  } = {records: {}};
-
-  /// 次に使用するId。
-  nextId: {
-    account: number;
-    income: {
-      category: number;
-      record: number;
-    };
-    outgo: {
-      category: number;
-      record: number;
-    };
-    transfer: {
-      record: number;
-    };
-  } = {
-    account: 1,
-    income: {category: 1, record: 1,},
-    outgo: {category: 1, record: 1,},
-    transfer: {record: 1},
-  };
 }
 
 export default Root;

@@ -9,9 +9,9 @@ class RecordTransfer extends Record {
     this.accountTo = accountTo;
   }
   
-  accountFrom: Account; ///< 送金元口座。
-  accountTo: Account; ///< 送金先口座。
-  amount: number = 0; ///< 金額。
+  accountFrom: Account; // 送金元口座。
+  accountTo: Account; // 送金先口座。
+  amount: number = 0; // 金額。
 }
 
 export default RecordTransfer;
