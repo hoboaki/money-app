@@ -1,5 +1,11 @@
 # 開発記録
 
+## vscode で行末空白の自動削除
+
+lint 先生にめっちゃ怒られたので設定しました。
+
+https://qiita.com/iwata-n@github/items/39dc0e4391277589878b
+
 ## vscode 上で tslint の結果がみたい
 
 ないわけはないだろうと検索したらやっぱりありました。ありがたやー。
