@@ -1,10 +1,10 @@
-import YearMonthDayDate from "./YearMonthDayDate";
+import YearMonthDayDate from './YearMonthDayDate';
 
 /// 入出金レコード共通クラス。
 class Record {
-  id: number = 0; // レコードId。
-  date: YearMonthDayDate = new YearMonthDayDate(); // 入出金発生日付。
-  memo: string = ""; // メモ。
-};
+  public id: number = 0; // レコードId。
+  public date: YearMonthDayDate = new YearMonthDayDate(); // 入出金発生日付。
+  public memo: string = ''; // メモ。
+}
 
 export default Record;

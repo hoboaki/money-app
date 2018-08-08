@@ -2,7 +2,7 @@
 class YearMonthDayDate {
   // Date オブジェクトから作成。
   public static FromDate(aDate: Date) {
-    let date = new YearMonthDayDate();
+    const date = new YearMonthDayDate();
     date.date = aDate;
     return date;
   }
@@ -13,20 +13,23 @@ class YearMonthDayDate {
   }
 
   /// Date データ。
-  date: Date = new Date(2018, 1, 1);
+  public date: Date = new Date(2018, 1, 1);
 
   // yyyy-mm-dd 形式に変換。
-  toText() {
+  public toText() {
     const toDoubleDigits = (num: number) => {
       let text = String(num);
       if (text.length === 1) {
-        text = "0" + text;
+        text = '0' + text;
       }
-      return text;     
+      return text;
     };
-    return `${this.date.getFullYear()}-${toDoubleDigits(this.date.getMonth() + 1)}-${toDoubleDigits(this.date.getDate())}`;
-  };
-  
-};
+    const year = this.date.getFullYear();
+    const month = toDoubleDigits(this.date.getMonth() + 1);
+    const day = toDoubleDigits(this.date.getDate());
+    return `${year}-${month}-${day}`;
+  }
+
+}
 
 export default YearMonthDayDate;

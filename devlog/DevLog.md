@@ -1,5 +1,27 @@
 # 開発記録
 
+## vscode 上で tslint の結果がみたい
+
+ないわけはないだろうと検索したらやっぱりありました。ありがたやー。
+
+https://hi1280.hatenablog.com/entry/2017/07/23/235031
+
+## 2018-08-09 enum キー文字列を parse して enum 値に変換
+
+value の型が number な enum のキー文字列を渡して enum 値に変換するコード。なかなか検索してもでてこず時間かかりました。
+
+```ts
+// enum デシリアライズ
+const enumPraseAccounntKind = (targetKey: string): AccountKind => {
+    for (const key in AccountKind) {
+    if (key === targetKey) {
+        return (+AccountKind[key]) as AccountKind;
+    }
+    }
+    throw new Error(`Error: Not found key named '${targetKey}'.`);
+};
+```
+
 ## 2018-08-05 render 内で配列を指定する際は key が必要
 
 SideBar の render 内で配列を出力したら下記のエラーが出た。
