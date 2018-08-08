@@ -2,7 +2,6 @@ import {ipcRenderer as IpcRenderer} from 'electron';
 import * as React from 'react';
 import * as StylesLayout from './Layout.css';
 import * as ModelDocRoot from './Model/Doc/Root';
-import * as ModelRoot from './Model/Root';
 import PageStyle from './Page.css';
 import PageSheet from './PageSheet';
 import SideBar from './SideBar';
@@ -13,6 +12,9 @@ interface IState {
   isActive: boolean;
 }
 
+enum Color {
+  Red = 0,
+}
 class MainWindow extends React.Component<any, IState> {
   constructor(props: any) {
     super(props);

@@ -1,10 +1,17 @@
+import Account from "./Account"
 import Record from "./Record";
 
-/// 資金移動レコードデータ。
+/// 資金移動レコード。
 class RecordTransfer extends Record {
-   accountFrom: number = 0; ///< 送金元口座Id。amount が加算される。
-   accountTo: number = 0; ///< 送金先口座Id。amount が減算される。
-   amount: number = 0; ///< 金額。
+  constructor(accountFrom: Account, accountTo: Account) {
+    super();
+    this.accountFrom = accountFrom;
+    this.accountTo = accountTo;
+  }
+  
+  accountFrom: Account; ///< 送金元口座。
+  accountTo: Account; ///< 送金先口座。
+  amount: number = 0; ///< 金額。
 }
 
 export default RecordTransfer;

@@ -1,9 +1,17 @@
+import Account from "./Account"
+import Category from "./Category";
 import Record from "./Record";
 
-/// 出金レコード（データ版）。
+/// 出金レコード。
 class RecordOutgo extends Record {
-  account: number = 0; ///< 口座Id。
-  category: number = 0; ///< 出金カテゴリId。
+  constructor(account: Account, category: Category) {
+    super();
+    this.account = account;
+    this.category = category;
+  }
+  
+  account: Account; ///< 口座。
+  category: Category; ///< カテゴリ。
   amount: number = 0; ///< 金額。(出金がプラス・入金がマイナス)
 }
 

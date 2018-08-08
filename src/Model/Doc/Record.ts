@@ -1,6 +1,9 @@
-/// 入出金レコード共通クラスデータ版。
+import YearMonthDayDate from "./YearMonthDate";
+
+/// 入出金レコード共通クラス。
 class Record {
-  date: string = ""; ///< 入出金発生日付。(YYYY-MM-DD形式)
+  id: number = 0; ///< レコードId。
+  date: YearMonthDayDate = new YearMonthDayDate(); ///< 入出金発生日付。
   memo: string = ""; ///< メモ。
 };
 
