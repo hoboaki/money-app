@@ -15,7 +15,7 @@ class Root {
   /// DataRoot から作成。
   public static FromData(aData: DataRoot) {
     // enum デシリアライズ
-    const enumPraseAccounntKind = (targetKey: string): AccountKind => {
+    const enumPraseAccountKind = (targetKey: string): AccountKind => {
       for (const key in AccountKind) {
         if (key === targetKey) {
           return (+AccountKind[key]) as AccountKind;
@@ -30,7 +30,7 @@ class Root {
     //  口座
     const accountIdDict: {[key: number]: number} = {}; // Data内Id → オブジェクトId 変換テーブル
     for (const data of aData.accounts) {
-      const kind = enumPraseAccounntKind(data.kind);
+      const kind = enumPraseAccountKind(data.kind);
       const key = r.accountAdd(data.name, kind, data.initialAmount);
       accountIdDict[data.id] = key;
     }
