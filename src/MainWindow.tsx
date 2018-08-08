@@ -1,7 +1,7 @@
 import {ipcRenderer as IpcRenderer} from 'electron';
 import * as React from 'react';
-import * as StylesLayout from './Layout.css';
-import * as ModelDocRoot from './Model/Doc/Root';
+import LayoutStyle from './Layout.css';
+import ModelSampleDoc from './Model/SampleDoc';
 import PageStyle from './Page.css';
 import PageSheet from './PageSheet';
 import SideBar from './SideBar';
@@ -25,6 +25,9 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   public componentDidMount() {
+    // テスト実行
+    ModelSampleDoc.Test();
+
     // Focus/Unfocus 切替
     window.onload = () => {
       IpcRenderer.on('app-message', (event: any, msg: string) => {
@@ -53,9 +56,9 @@ class MainWindow extends React.Component<any, IState> {
     }
 
     return (
-      <div className={StylesLayout.TopToBottom}>
+      <div className={LayoutStyle.TopToBottom}>
         <TitleBar isActive={this.state.isActive}/>
-        <div className={StylesLayout.LeftToRight}>
+        <div className={LayoutStyle.LeftToRight}>
           <SideBar
             onBtnClicked={(pageId) => {this.onPageBtnClicked(pageId); }}
             currentPageId={this.state.currentPageId}

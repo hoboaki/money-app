@@ -1,4 +1,4 @@
-import YearMonthDayDate from "./YearMonthDate";
+import YearMonthDayDate from "./YearMonthDayDate";
 
 /// 入出金レコード共通クラス。
 class Record {

@@ -8,7 +8,7 @@ import DataRoot from './Data/Root'
 import RecordIncome from './RecordIncome';
 import RecordOutgo from './RecordOutgo';
 import RecordTransfer from './RecordTransfer';
-import YearMonthDayDate from './YearMonthDate';
+import YearMonthDayDate from './YearMonthDayDate';
 
 /// ドキュメントルート。
 class Root {
