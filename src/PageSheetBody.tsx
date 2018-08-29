@@ -16,21 +16,86 @@ class PageSheetBody extends React.Component<any, any> {
       Style.TableColhead,
       Style.TableColheadAccountCategory,
     );
-    const colHeadCarried = ClassNames(
+    const colHeadCarriedClass = ClassNames(
       Style.TableColhead,
       Style.TableColheadCarried,
     );
-    const colHeadCell = ClassNames(
+    const colHeadCellClass = ClassNames(
       Style.TableColhead,
       Style.TableColheadCell,
     );
-    const colHeadSpace = ClassNames(
+    const colHeadSpaceClass = ClassNames(
       Style.TableColhead,
       Style.TableColheadSpace,
     );
-    const colHeadBalance = ClassNames(
+    const colHeadBalanceClass = ClassNames(
       Style.TableColhead,
       Style.TableColheadBalance,
+    );
+    const rowHeadRootOpenerSpaceClass = ClassNames(
+      Style.TableRowhead,
+      Style.TableRowheadRoot,
+      Style.TableOpenerSpace,
+    );
+    const rowHeadRootAccountNameClass = ClassNames(
+      Style.TableRowhead,
+      Style.TableRowheadRoot,
+      Style.TableRowheadAccountName,
+    );
+    const rowHeadRootAccountCategoryClass = ClassNames(
+      Style.TableRowhead,
+      Style.TableRowheadRoot,
+      Style.TableRowheadAccountCategory,
+    );
+    const rowHeadRootAccountCarriedClass = ClassNames(
+      Style.TableRowhead,
+      Style.TableRowheadRoot,
+      Style.TableRowheadCarried,
+    );
+    const rowHeadRootBalance = ClassNames(
+      Style.TableRowhead,
+      Style.TableRowheadRoot,
+      Style.TableRowheadBalance,
+    );
+    const cellRootClass = ClassNames(
+      Style.TableCell,
+      Style.TableCellRoot,
+    );
+    const cellSpaceRootClass = ClassNames(
+      Style.TableCellSpace,
+      Style.TableCellRoot,
+    );
+    const rowHeadAccountOpenerSpaceClass = ClassNames(
+      Style.TableRowhead,
+      Style.TableRowheadAccount,
+      Style.TableOpenerSpace,
+    );
+    const rowHeadAccountAccountNameClass = ClassNames(
+      Style.TableRowhead,
+      Style.TableRowheadAccount,
+      Style.TableRowheadAccountName,
+    );
+    const rowHeadAccountAccountCategoryClass = ClassNames(
+      Style.TableRowhead,
+      Style.TableRowheadAccount,
+      Style.TableRowheadAccountCategory,
+    );
+    const rowHeadAccountAccountCarriedClass = ClassNames(
+      Style.TableRowhead,
+      Style.TableRowheadAccount,
+      Style.TableRowheadCarried,
+    );
+    const rowHeadAccountBalance = ClassNames(
+      Style.TableRowhead,
+      Style.TableRowheadAccount,
+      Style.TableRowheadBalance,
+    );
+    const cellClass = ClassNames(
+      Style.TableCell,
+      Style.TableCellOdd,
+    );
+    const cellSpaceClass = ClassNames(
+      Style.TableCellSpace,
     );
     return (
       <div className={rootClass}>
@@ -38,62 +103,62 @@ class PageSheetBody extends React.Component<any, any> {
           <table className={Style.Table}>
             <td className={colHeadAccountNameClass}>アカウント</td>
             <td className={colHeadAccountCategoryClass}>*</td>
-            <td className={colHeadCarried}>繰り越し</td>
-            <td className={colHeadCell}>18/01/01 月</td>
-            <td className={colHeadCell}>18/01/02 火</td>
-            <td className={colHeadCell}>18/01/03 水</td>
-            <td className={colHeadCell}>18/01/04 木</td>
-            <td className={colHeadCell}>18/01/05 金</td>
-            <td className={colHeadCell}>18/01/06 土</td>
-            <td className={colHeadCell}>18/01/07 日</td>
-            <td className={colHeadSpace}></td>
-            <td className={colHeadBalance}>残高</td>
+            <td className={colHeadCarriedClass}>繰り越し</td>
+            <td className={colHeadCellClass}>18/01/01 月</td>
+            <td className={colHeadCellClass}>18/01/02 火</td>
+            <td className={colHeadCellClass}>18/01/03 水</td>
+            <td className={colHeadCellClass}>18/01/04 木</td>
+            <td className={colHeadCellClass}>18/01/05 金</td>
+            <td className={colHeadCellClass}>18/01/06 土</td>
+            <td className={colHeadCellClass}>18/01/07 日</td>
+            <td className={colHeadSpaceClass}></td>
+            <td className={colHeadBalanceClass}>残高</td>
           </table>
           <table className={Style.Table}>
             <tr>
-              {/* <td class="page-sheet-table-rowhead page-sheet-table-rowhead-root page-sheet-table-opener-space"></td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-root page-sheet-table-rowhead-account-name">資産アカウント</td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-root page-sheet-table-rowhead-account-category"></td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-root page-sheet-table-rowhead-carried">10,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-root">10,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-root">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-root">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-root">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-root">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-root">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-root">1,000,000</td>
-              <td class="page-sheet-table-cell-space page-sheet-table-cell-root"></td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-root page-sheet-table-rowhead-balance">1,000,000</td> */}
+              <td className={rowHeadRootOpenerSpaceClass}></td>
+              <td className={rowHeadRootAccountNameClass}>資産アカウント</td>
+              <td className={rowHeadRootAccountCategoryClass}></td>
+              <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
+              <td className={cellRootClass}>10,000,000</td>
+              <td className={cellRootClass}>1,000,000</td>
+              <td className={cellRootClass}>1,000,000</td>
+              <td className={cellRootClass}>1,000,000</td>
+              <td className={cellRootClass}>1,000,000</td>
+              <td className={cellRootClass}>1,000,000</td>
+              <td className={cellRootClass}>1,000,000</td>
+              <td className={cellSpaceRootClass}></td>
+              <td className={rowHeadRootBalance}>1,000,000</td>
             </tr>
             <tr>
-              {/* <td class="page-sheet-table-rowhead page-sheet-table-rowhead-account page-sheet-table-opener-space"></td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-account page-sheet-table-rowhead-account-name">　財布</td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-account page-sheet-table-rowhead-account-category">現</td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-account page-sheet-table-rowhead-carried">10,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-odd">10,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-odd">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-odd">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-odd">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-odd">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-odd">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-odd">1,000,000</td>
-              <td class="page-sheet-table-cell-space"></td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-account page-sheet-table-rowhead-balance">1,000,000</td> */}
+              <td className={rowHeadAccountOpenerSpaceClass}></td>
+              <td className={rowHeadAccountAccountNameClass}>財布</td>
+              <td className={rowHeadAccountAccountCategoryClass}>現</td>
+              <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
+              <td className={cellClass}>10,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellSpaceClass}></td>
+              <td className={rowHeadAccountBalance}>1,000,000</td>
             </tr>
             <tr>
-              {/* <td class="page-sheet-table-rowhead page-sheet-table-rowhead-account page-sheet-table-opener-space"></td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-account page-sheet-table-rowhead-account-name">　アデリー銀行</td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-account page-sheet-table-rowhead-account-category">銀</td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-account page-sheet-table-rowhead-carried">10,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-even">10,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-even">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-even">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-even">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-even">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-even">1,000,000</td>
-              <td class="page-sheet-table-cell page-sheet-table-cell-even">1,000,000</td>
-              <td class="page-sheet-table-cell-space"></td>
-              <td class="page-sheet-table-rowhead page-sheet-table-rowhead-account page-sheet-table-rowhead-balance">1,000,000</td> */}
+              <td className={rowHeadAccountOpenerSpaceClass}></td>
+              <td className={rowHeadAccountAccountNameClass}>アデリー銀行</td>
+              <td className={rowHeadAccountAccountCategoryClass}>銀</td>
+              <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
+              <td className={cellClass}>10,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellClass}>1,000,000</td>
+              <td className={cellSpaceClass}></td>
+              <td className={rowHeadAccountBalance}>1,000,000</td>
             </tr>
           </table>
         </div>
@@ -102,13 +167,13 @@ class PageSheetBody extends React.Component<any, any> {
             <td class="page-sheet-table-colhead page-sheet-table-colhead-account-name">アカウント</td>
             <td class="page-sheet-table-colhead page-sheet-table-colhead-account-category">*</td>
             <td class="page-sheet-table-colhead page-sheet-table-colhead-carried">繰り越し</td>
-            <td className={colHeadCell}>18/01/01 月</td>
-            <td className={colHeadCell}>18/01/02 火</td>
-            <td className={colHeadCell}>18/01/03 水</td>
-            <td className={colHeadCell}>18/01/04 木</td>
-            <td className={colHeadCell}>18/01/05 金</td>
-            <td className={colHeadCell}>18/01/06 土</td>
-            <td className={colHeadCell}>18/01/07 日</td>
+            <td className={colHeadCellClass}>18/01/01 月</td>
+            <td className={colHeadCellClass}>18/01/02 火</td>
+            <td className={colHeadCellClass}>18/01/03 水</td>
+            <td className={colHeadCellClass}>18/01/04 木</td>
+            <td className={colHeadCellClass}>18/01/05 金</td>
+            <td className={colHeadCellClass}>18/01/06 土</td>
+            <td className={colHeadCellClass}>18/01/07 日</td>
             <td class="page-sheet-table-colhead page-sheet-table-colhead-space"></td>
             <td class="page-sheet-table-colhead page-sheet-table-colhead-balance">残高</td>
           </table> */}
