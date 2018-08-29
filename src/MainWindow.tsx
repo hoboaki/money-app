@@ -1,5 +1,6 @@
 import {ipcRenderer as IpcRenderer} from 'electron';
 import * as React from 'react';
+import Split from 'split.js';
 import LayoutStyle from './Layout.css';
 import ModelSampleDoc from './Model/SampleDoc';
 import PageStyle from './Page.css';
@@ -40,6 +41,20 @@ class MainWindow extends React.Component<any, IState> {
             this.setState({isActive: false});
             break;
         }
+      });
+
+      // スプリッター設定
+      Split(['#pageSheetBodyTop', '#pageSheetBodyBottom'], {
+        direction: 'vertical',
+        elementStyle: (dimension, size, gutterSize) => {
+          const reservedHeight = 44; // タイトルバー + ヘッダーエリア
+          return {
+            height: `calc(${size}% - ${gutterSize}px - ${reservedHeight}px)`,
+          };
+        },
+        gutterSize: 8,
+        minSize: 200,
+        sizes: [25, 75],
       });
     };
 
