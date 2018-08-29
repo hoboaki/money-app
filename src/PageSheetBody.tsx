@@ -101,85 +101,91 @@ class PageSheetBody extends React.Component<any, any> {
       <div className={rootClass}>
         <div id="pageSheetBodyTop">
           <table className={Style.Table}>
-            <tr>
-              <td className={colHeadAccountNameClass}>アカウント</td>
-              <td className={colHeadAccountCategoryClass}>*</td>
-              <td className={colHeadCarriedClass}>繰り越し</td>
-              <td className={colHeadCellClass}>18/01/01 月</td>
-              <td className={colHeadCellClass}>18/01/02 火</td>
-              <td className={colHeadCellClass}>18/01/03 水</td>
-              <td className={colHeadCellClass}>18/01/04 木</td>
-              <td className={colHeadCellClass}>18/01/05 金</td>
-              <td className={colHeadCellClass}>18/01/06 土</td>
-              <td className={colHeadCellClass}>18/01/07 日</td>
-              <td className={colHeadSpaceClass}></td>
-              <td className={colHeadBalanceClass}>残高</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td className={colHeadAccountNameClass}>アカウント</td>
+                <td className={colHeadAccountCategoryClass}>*</td>
+                <td className={colHeadCarriedClass}>繰り越し</td>
+                <td className={colHeadCellClass}>18/01/01 月</td>
+                <td className={colHeadCellClass}>18/01/02 火</td>
+                <td className={colHeadCellClass}>18/01/03 水</td>
+                <td className={colHeadCellClass}>18/01/04 木</td>
+                <td className={colHeadCellClass}>18/01/05 金</td>
+                <td className={colHeadCellClass}>18/01/06 土</td>
+                <td className={colHeadCellClass}>18/01/07 日</td>
+                <td className={colHeadSpaceClass}></td>
+                <td className={colHeadBalanceClass}>残高</td>
+              </tr>
+            </tbody>
           </table>
           <table className={Style.Table}>
-            <tr>
-              <td className={rowHeadRootOpenerSpaceClass}></td>
-              <td className={rowHeadRootAccountNameClass}>資産アカウント</td>
-              <td className={rowHeadRootAccountCategoryClass}></td>
-              <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
-              <td className={cellRootClass}>10,000,000</td>
-              <td className={cellRootClass}>1,000,000</td>
-              <td className={cellRootClass}>1,000,000</td>
-              <td className={cellRootClass}>1,000,000</td>
-              <td className={cellRootClass}>1,000,000</td>
-              <td className={cellRootClass}>1,000,000</td>
-              <td className={cellRootClass}>1,000,000</td>
-              <td className={cellSpaceRootClass}></td>
-              <td className={rowHeadRootBalance}>1,000,000</td>
-            </tr>
-            <tr>
-              <td className={rowHeadAccountOpenerSpaceClass}></td>
-              <td className={rowHeadAccountAccountNameClass}>財布</td>
-              <td className={rowHeadAccountAccountCategoryClass}>現</td>
-              <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
-              <td className={cellClass}>10,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellSpaceClass}></td>
-              <td className={rowHeadAccountBalance}>1,000,000</td>
-            </tr>
-            <tr>
-              <td className={rowHeadAccountOpenerSpaceClass}></td>
-              <td className={rowHeadAccountAccountNameClass}>アデリー銀行</td>
-              <td className={rowHeadAccountAccountCategoryClass}>銀</td>
-              <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
-              <td className={cellClass}>10,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellClass}>1,000,000</td>
-              <td className={cellSpaceClass}></td>
-              <td className={rowHeadAccountBalance}>1,000,000</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td className={rowHeadRootOpenerSpaceClass}></td>
+                <td className={rowHeadRootAccountNameClass}>資産アカウント</td>
+                <td className={rowHeadRootAccountCategoryClass}></td>
+                <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
+                <td className={cellRootClass}>10,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellSpaceRootClass}></td>
+                <td className={rowHeadRootBalance}>1,000,000</td>
+              </tr>
+              <tr>
+                <td className={rowHeadAccountOpenerSpaceClass}></td>
+                <td className={rowHeadAccountAccountNameClass}>財布</td>
+                <td className={rowHeadAccountAccountCategoryClass}>現</td>
+                <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
+                <td className={cellClass}>10,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellSpaceClass}></td>
+                <td className={rowHeadAccountBalance}>1,000,000</td>
+              </tr>
+              <tr>
+                <td className={rowHeadAccountOpenerSpaceClass}></td>
+                <td className={rowHeadAccountAccountNameClass}>アデリー銀行</td>
+                <td className={rowHeadAccountAccountCategoryClass}>銀</td>
+                <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
+                <td className={cellClass}>10,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellClass}>1,000,000</td>
+                <td className={cellSpaceClass}></td>
+                <td className={rowHeadAccountBalance}>1,000,000</td>
+              </tr>
+            </tbody>
           </table>
         </div>
         <div id="pageSheetBodyBottom">
           <table className={Style.Table}>
-            <tr>
-              <td className={colHeadAccountNameClass}>アカウント</td>
-              <td className={colHeadAccountCategoryClass}>*</td>
-              <td className={colHeadCarriedClass}>繰り越し</td>
-              <td className={colHeadCellClass}>18/01/01 月</td>
-              <td className={colHeadCellClass}>18/01/02 火</td>
-              <td className={colHeadCellClass}>18/01/03 水</td>
-              <td className={colHeadCellClass}>18/01/04 木</td>
-              <td className={colHeadCellClass}>18/01/05 金</td>
-              <td className={colHeadCellClass}>18/01/06 土</td>
-              <td className={colHeadCellClass}>18/01/07 日</td>
-              <td className={colHeadSpaceClass}></td>
-              <td className={colHeadBalanceClass}>残高</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td className={colHeadAccountNameClass}>アカウント</td>
+                <td className={colHeadAccountCategoryClass}>*</td>
+                <td className={colHeadCarriedClass}>繰り越し</td>
+                <td className={colHeadCellClass}>18/01/01 月</td>
+                <td className={colHeadCellClass}>18/01/02 火</td>
+                <td className={colHeadCellClass}>18/01/03 水</td>
+                <td className={colHeadCellClass}>18/01/04 木</td>
+                <td className={colHeadCellClass}>18/01/05 金</td>
+                <td className={colHeadCellClass}>18/01/06 土</td>
+                <td className={colHeadCellClass}>18/01/07 日</td>
+                <td className={colHeadSpaceClass}></td>
+                <td className={colHeadBalanceClass}>残高</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
