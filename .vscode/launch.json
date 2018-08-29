@@ -16,6 +16,7 @@
           "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
         },
         "protocol": "inspector",
+        "sourceMaps": true
       },
       {
           "name": "Electron: Renderer",
@@ -23,6 +24,7 @@
           "request": "attach",
           "port": 9223,
           "webRoot": "${workspaceRoot}",
+          "sourceMaps": true,
           "timeout": 30000
       }
     ],

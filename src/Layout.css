@@ -1,0 +1,18 @@
+.TopToBottom {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+.LeftToRight {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+.RightToLeft {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 100%;
+  width: 100%;
+}

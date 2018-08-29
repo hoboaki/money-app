@@ -61,6 +61,4 @@ typings/
 .next
 
 # other
-public/index.js
-public/index.js.map
-*.d.ts
+new-src/dist

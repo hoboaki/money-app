@@ -1,0 +1,10 @@
+import Record from './Record';
+
+/// 入金レコードデータ。
+class RecordIncome extends Record {
+  public account: number = 0; // 口座Id。
+  public category: number = 0; // 入金カテゴリId。
+  public amount: number = 0; // 金額。(入金がプラス・出金がマイナス)
+}
+
+export default RecordIncome;

@@ -1,0 +1,21 @@
+.Base {
+  -webkit-app-region: drag;
+  -webkit-margin-after: 0px;
+  -webkit-margin-before: 0px;
+  -webkit-user-select: none;
+  color: #bababa;
+  height: 22px;
+}
+.Bg {
+  background: #606060;
+}
+.BgActive {
+  background: #1b1b1b;
+}
+.Title {
+  align-items: center;
+  display: flex;
+  font-size: 9pt;
+  height: 1.8em;
+  justify-content: center;
+}

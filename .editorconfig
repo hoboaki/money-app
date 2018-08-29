@@ -11,3 +11,21 @@ indent_size = 2
 charset = utf-8
 indent_style = space
 indent_size = 4
+
+# TS
+[*.ts]
+charset = utf-8
+indent_style = space
+indent_size = 2
+
+# TSX
+[*.tsx]
+charset = utf-8
+indent_style = space
+indent_size = 2
+
+# HTML
+[*.html]
+charset = utf-8
+indent_sylte = space
+indent_size = 2

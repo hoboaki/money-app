@@ -1,0 +1,12 @@
+.Root {
+  align-items: center;
+  background: #424242;
+  color: #bababa;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: 2px;
+  padding-top: 2px;
+  text-align: center;
+  width: 50px;
+}
