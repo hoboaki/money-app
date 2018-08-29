@@ -101,18 +101,20 @@ class PageSheetBody extends React.Component<any, any> {
       <div className={rootClass}>
         <div id="pageSheetBodyTop">
           <table className={Style.Table}>
-            <td className={colHeadAccountNameClass}>アカウント</td>
-            <td className={colHeadAccountCategoryClass}>*</td>
-            <td className={colHeadCarriedClass}>繰り越し</td>
-            <td className={colHeadCellClass}>18/01/01 月</td>
-            <td className={colHeadCellClass}>18/01/02 火</td>
-            <td className={colHeadCellClass}>18/01/03 水</td>
-            <td className={colHeadCellClass}>18/01/04 木</td>
-            <td className={colHeadCellClass}>18/01/05 金</td>
-            <td className={colHeadCellClass}>18/01/06 土</td>
-            <td className={colHeadCellClass}>18/01/07 日</td>
-            <td className={colHeadSpaceClass}></td>
-            <td className={colHeadBalanceClass}>残高</td>
+            <tr>
+              <td className={colHeadAccountNameClass}>アカウント</td>
+              <td className={colHeadAccountCategoryClass}>*</td>
+              <td className={colHeadCarriedClass}>繰り越し</td>
+              <td className={colHeadCellClass}>18/01/01 月</td>
+              <td className={colHeadCellClass}>18/01/02 火</td>
+              <td className={colHeadCellClass}>18/01/03 水</td>
+              <td className={colHeadCellClass}>18/01/04 木</td>
+              <td className={colHeadCellClass}>18/01/05 金</td>
+              <td className={colHeadCellClass}>18/01/06 土</td>
+              <td className={colHeadCellClass}>18/01/07 日</td>
+              <td className={colHeadSpaceClass}></td>
+              <td className={colHeadBalanceClass}>残高</td>
+            </tr>
           </table>
           <table className={Style.Table}>
             <tr>
