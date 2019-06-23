@@ -21,19 +21,26 @@
   width: 260px;
 }
 
+.Btn {
+  color: #bababa;
+}
+
+.Btn:hover {
+  color: #ffffff;
+}
+
+.Btn:active {
+  color: #bababa;
+}
+
 .MoveBtn {
   background: #424242;
   border: 0px;
-  color: #bababa;
   display: block;
   height: 30px;
   outline: none;
   padding: 2px;
   width: 74px;
-}
-
-.MoveBtn:hover {
-  color: #ffffff;
 }
 
 .MovePrevBtn {
@@ -52,17 +59,12 @@
   background: #424242;
   border: 0px;
   border-radius: 5px;
-  color: #bababa;
   display:block;
   height: 30px;
   margin-left: 4px;
   outline: none;
   padding: 2px;
   width: 74px;
-}
-
-.JumpBtn:hover {
-  color: #ffffff;
 }
 
 .ViewUnitSelect {
@@ -85,29 +87,19 @@
 .FilterBtn {
   background: transparent;
   border: 0px;
-  color: #bababa;
   display: block;
   height: 30px;
   margin-left: 4px;
   outline: none;
   padding: 2px;
-}
-
-.FilterBtn:hover {
-  color: #ffffff;
 }
 
 .NewRecordBtn {
   background: transparent;
   border: 0px;
-  color: #bababa;
   display: block;
   height: 30px;
   margin-left: 4px;
   outline: none;
   padding: 2px;
-}
-
-.NewRecordBtn:hover {
-  color: #ffffff;
 }

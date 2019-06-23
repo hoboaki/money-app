@@ -12,23 +12,29 @@ class PageHomeHeader extends React.Component<any, any> {
       Style.CurrentDate,
     );
     const movePrevBtnClass = ClassNames(
+      Style.Btn,
       Style.MoveBtn,
       Style.MovePrevBtn,
     );
     const moveTodayBtnClass = ClassNames(
+      Style.Btn,
       Style.MoveBtn,
     );
     const moveNextBtnClass = ClassNames(
+      Style.Btn,
       Style.MoveBtn,
       Style.MoveNextBtn,
     );
     const jumpBtnClass = ClassNames(
+      Style.Btn,
       Style.JumpBtn,
     );
     const filterBtnClass = ClassNames(
+      Style.Btn,
       Style.FilterBtn,
     );
     const newRecordBtnClass = ClassNames(
+      Style.Btn,
       Style.NewRecordBtn,
     );
     const iconClass = ClassNames(
