@@ -8,6 +8,9 @@ class PageHomeHeader extends React.Component<any, any> {
     const rootClass = ClassNames(
       Style.Root,
     );
+    const currentDateClass = ClassNames(
+      Style.CurrentDate,
+    );
     const movePrevBtnClass = ClassNames(
       Style.MoveBtn,
       Style.MovePrevBtn,
@@ -26,18 +29,18 @@ class PageHomeHeader extends React.Component<any, any> {
     );
     return (
       <div className={rootClass}>
-        <select className={Style.CellUnitSelect} defaultValue="day" onChange={this.onCellUnitChanged}>
-          <option value="day">日</option>
-          <option value="month">月</option>
-          <option value="year">年</option>
-        </select>
+        <p className={currentDateClass}>2019年6月</p>
         <button className={movePrevBtnClass} onClick={this.onMovePrevBtnPushed}>
           <i className={iconClass}>chevron_left</i>
         </button>
-        <button className={moveTodayBtnClass} onClick={this.onMoveTodayBtnPushed}>今日</button>
+        <button className={moveTodayBtnClass} onClick={this.onMoveTodayBtnPushed}>今月</button>
         <button className={moveNextBtnClass} onClick={this.onMoveNextBtnPushed}>
           <i className={iconClass}>chevron_right</i>
         </button>
+        <select className={Style.ViewUnitSelect} defaultValue="month" onChange={this.onViewUnitChanged}>
+          <option value="month">月表示</option>
+          <option value="year">年表示</option>
+        </select>
         <div className={LayoutStyle.RightToLeft}>
           <div className={LayoutStyle.TopToBottom} style={{width: 'auto'}}>
             <span className={Style.ZoomLabel}>水平ズーム:</span>
@@ -49,8 +52,8 @@ class PageHomeHeader extends React.Component<any, any> {
     );
   }
 
-  private onCellUnitChanged() {
-    global.console.log('onCellUnitChanged');
+  private onViewUnitChanged() {
+    global.console.log('onViewUnitChanged');
   }
 
   private onMovePrevBtnPushed() {
