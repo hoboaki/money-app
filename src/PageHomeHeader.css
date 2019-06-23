@@ -13,6 +13,7 @@
   width: 100%;
 }
 
+/* 表示中の日付ラベル */
 .CurrentDate {
   color: rgba(255, 255, 255, 0.61);
   font-size: 20pt;
@@ -21,25 +22,38 @@
   width: 260px;
 }
 
+/* ボタンの既定スタイル */
 .Btn {
   color: #bababa;
+  display: block;
+  height: 30px;
 }
-
 .Btn:hover {
   color: #ffffff;
 }
-
 .Btn:active {
   color: #bababa;
 }
 
-.MoveBtn {
+/* フレーム有りボタンの既定スタイル */
+.FrameBtn {
   background: #424242;
   border: 0px;
-  display: block;
-  height: 30px;
   outline: none;
   padding: 2px;
+}
+
+/* フレーム無しボタンの既定スタイル */
+.NoFrameBtn {
+  background: transparent;
+  border: 0px;
+  outline: none;
+  padding: 2px;
+}
+
+/* 以下，それぞれのインプット専用設定 */
+
+.MoveBtn {
   width: 74px;
 }
 
@@ -56,14 +70,8 @@
 }
 
 .JumpBtn {
-  background: #424242;
-  border: 0px;
   border-radius: 5px;
-  display:block;
-  height: 30px;
   margin-left: 4px;
-  outline: none;
-  padding: 2px;
   width: 74px;
 }
 
@@ -74,9 +82,9 @@
   color: #bababa;
   display: block;
   height: 30px;
+  outline: none;
   margin-left: 4px;
   margin-right: 8px;
-  outline: none;
   width: 80px;
 }
 
@@ -85,21 +93,9 @@
 }
 
 .FilterBtn {
-  background: transparent;
-  border: 0px;
-  display: block;
-  height: 30px;
   margin-left: 4px;
-  outline: none;
-  padding: 2px;
 }
 
 .NewRecordBtn {
-  background: transparent;
-  border: 0px;
-  display: block;
-  height: 30px;
   margin-left: 4px;
-  outline: none;
-  padding: 2px;
 }

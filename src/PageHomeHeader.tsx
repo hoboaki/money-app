@@ -13,28 +13,34 @@ class PageHomeHeader extends React.Component<any, any> {
     );
     const movePrevBtnClass = ClassNames(
       Style.Btn,
+      Style.FrameBtn,
       Style.MoveBtn,
       Style.MovePrevBtn,
     );
     const moveTodayBtnClass = ClassNames(
       Style.Btn,
+      Style.FrameBtn,
       Style.MoveBtn,
     );
     const moveNextBtnClass = ClassNames(
       Style.Btn,
+      Style.FrameBtn,
       Style.MoveBtn,
       Style.MoveNextBtn,
     );
     const jumpBtnClass = ClassNames(
       Style.Btn,
+      Style.FrameBtn,
       Style.JumpBtn,
     );
     const filterBtnClass = ClassNames(
       Style.Btn,
+      Style.NoFrameBtn,
       Style.FilterBtn,
     );
     const newRecordBtnClass = ClassNames(
       Style.Btn,
+      Style.NoFrameBtn,
       Style.NewRecordBtn,
     );
     const iconClass = ClassNames(
