@@ -1,59 +1,58 @@
 .Root {
-    align-items: center;
-    background: #6d6d6d;
-    color: #424242;
-    display: flex;
-    flex-direction: row;
-    height: 40px;
-    justify-content: center;
-    padding-bottom: 4px;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 4px;
-    width: 100%;
-  }
-  
-  .CellUnitSelect {
-    display:block;
-    margin-right: 8px;
-    outline: none;
-    width: 80px;
-  }
-  
-  .MoveBtn {
-    background: #424242;
-    border: 0px;
-    color: #bababa;
-    display:block;
-    height: 30px;
-    outline: none;
-    padding: 2px;
-    width: 56px;
-  }
-  
-  .MoveBtn:hover {
-    color: #ffffff;
-  }
-  
-  .MovePrevBtn {
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-    margin-right: 1px;
-  }
-  
-  .MoveNextBtn {
-    border-top-right-radius: 12px;
-    border-bottom-right-radius: 12px;  
-    margin-left: 1px;
-  }
-  
-  .ZoomDiv {
-    width: 120px;
-  }
-  
-  .ZoomLabel {
-    color: rgba(255, 255, 255, 0.61);
-    font-size: 8pt;
-    margin-right: 4px;
-  }
-  
+  align-items: center;
+  background: #6d6d6d;
+  color: #424242;
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+  justify-content: center;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+  width: 100%;
+}
+
+.CellUnitSelect {
+  display:block;
+  margin-right: 8px;
+  outline: none;
+  width: 80px;
+}
+
+.MoveBtn {
+  background: #424242;
+  border: 0px;
+  color: #bababa;
+  display:block;
+  height: 30px;
+  outline: none;
+  padding: 2px;
+  width: 56px;
+}
+
+.MoveBtn:hover {
+  color: #ffffff;
+}
+
+.MovePrevBtn {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  margin-right: 1px;
+}
+
+.MoveNextBtn {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  margin-left: 1px;
+}
+
+.ZoomDiv {
+  width: 120px;
+}
+
+.ZoomLabel {
+  color: rgba(255, 255, 255, 0.61);
+  font-size: 8pt;
+  margin-right: 4px;
+}
