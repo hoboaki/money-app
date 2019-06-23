@@ -22,6 +22,15 @@ class PageHomeHeader extends React.Component<any, any> {
       Style.MoveBtn,
       Style.MoveNextBtn,
     );
+    const jumpBtnClass = ClassNames(
+      Style.JumpBtn,
+    );
+    const filterBtnClass = ClassNames(
+      Style.FilterBtn,
+    );
+    const newRecordBtnClass = ClassNames(
+      Style.NewRecordBtn,
+    );
     const iconClass = ClassNames(
       'material-icons',
       'md-16',
@@ -37,15 +46,18 @@ class PageHomeHeader extends React.Component<any, any> {
         <button className={moveNextBtnClass} onClick={this.onMoveNextBtnPushed}>
           <i className={iconClass}>chevron_right</i>
         </button>
+        <button className={jumpBtnClass} onClick={this.onJumpBtnPushed}>移動</button>
         <select className={Style.ViewUnitSelect} defaultValue="month" onChange={this.onViewUnitChanged}>
           <option value="month">月表示</option>
           <option value="year">年表示</option>
         </select>
+        <button className={filterBtnClass} onClick={this.onFilterBtnPushed}>
+          <i className={iconClass}>filter_list</i>
+        </button>
         <div className={LayoutStyle.RightToLeft}>
-          <div className={LayoutStyle.TopToBottom} style={{width: 'auto'}}>
-            <span className={Style.ZoomLabel}>水平ズーム:</span>
-            <div className={Style.ZoomDiv}><input type="range" defaultValue="1" min="1" max="100" step="1"/></div>
-          </div>
+          <button className={newRecordBtnClass} onClick={this.onNewRecordBtnPushed}>
+            <i className={iconClass}>note_add</i>
+          </button>
           <div style={{width: '100%'}}/>
         </div>
       </div>
@@ -66,6 +78,18 @@ class PageHomeHeader extends React.Component<any, any> {
 
   private onMoveNextBtnPushed() {
     global.console.log('onMoveNextBtnPushed');
+  }
+
+  private onJumpBtnPushed() {
+    global.console.log('onJumpBtnPushed');
+  }
+
+  private onFilterBtnPushed() {
+    global.console.log('onFilterBtnPushed');
+  }
+
+  private onNewRecordBtnPushed() {
+    global.console.log('onNewRecordBtnPushed');
   }
 }
 

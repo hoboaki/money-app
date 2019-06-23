@@ -21,22 +21,15 @@
   width: 260px;
 }
 
-.ViewUnitSelect {
-  display:block;
-  margin-right: 8px;
-  outline: none;
-  width: 80px;
-}
-
 .MoveBtn {
   background: #424242;
   border: 0px;
   color: #bababa;
-  display:block;
+  display: block;
   height: 30px;
   outline: none;
   padding: 2px;
-  width: 56px;
+  width: 74px;
 }
 
 .MoveBtn:hover {
@@ -55,12 +48,66 @@
   margin-left: 1px;
 }
 
-.ZoomDiv {
-  width: 120px;
+.JumpBtn {
+  background: #424242;
+  border: 0px;
+  border-radius: 5px;
+  color: #bababa;
+  display:block;
+  height: 30px;
+  margin-left: 4px;
+  outline: none;
+  padding: 2px;
+  width: 74px;
 }
 
-.ZoomLabel {
-  color: rgba(255, 255, 255, 0.61);
-  font-size: 8pt;
-  margin-right: 4px;
+.JumpBtn:hover {
+  color: #ffffff;
+}
+
+.ViewUnitSelect {
+  background: #424242;
+  border: 0px;
+  border-radius: 5px;
+  color: #bababa;
+  display: block;
+  height: 30px;
+  margin-left: 4px;
+  margin-right: 8px;
+  outline: none;
+  width: 80px;
+}
+
+.ViewUnitSelect:hover {
+  color: #ffffff;
+}
+
+.FilterBtn {
+  background: transparent;
+  border: 0px;
+  color: #bababa;
+  display: block;
+  height: 30px;
+  margin-left: 4px;
+  outline: none;
+  padding: 2px;
+}
+
+.FilterBtn:hover {
+  color: #ffffff;
+}
+
+.NewRecordBtn {
+  background: transparent;
+  border: 0px;
+  color: #bababa;
+  display: block;
+  height: 30px;
+  margin-left: 4px;
+  outline: none;
+  padding: 2px;
+}
+
+.NewRecordBtn:hover {
+  color: #ffffff;
 }
