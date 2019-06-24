@@ -12,8 +12,8 @@ class PageHomeBody extends React.Component<any, any> {
     );
     return (
       <div className={rootClass}>
-        <PageHomeBalance />
         <PageHomeCalendar />
+        <PageHomeBalance />
       </div>
     );
   }
