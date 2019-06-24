@@ -33,29 +33,37 @@ class PageHomeBalance extends React.Component<any, any> {
     return (
       <div className={rootClass}>
         <table className={tableClass}>
-          <tr>
-            <th className={tableHeaderLabelClass}>当月収入</th>
-            <th className={tableHeaderSpacerClass}></th>
-            <th className={tableHeaderLabelClass}>当月支出</th>
-            <th className={tableHeaderSpacerClass}></th>
-            <th className={tableHeaderLabelClass}>当月収支</th>
-          </tr>
-          <tr>
-            <td className={tableDataValueClass}>¥999,999,999</td>
-            <td className={tableDataSignClass}>-</td>
-            <td className={tableDataValueClass}>¥999,999,999</td>
-            <td className={tableDataSignClass}>=</td>
-            <td className={tableDataValueClass}>¥999,999,999</td>
-          </tr>
+          <thead>
+            <tr>
+              <th className={tableHeaderLabelClass}>当月収入</th>
+              <th className={tableHeaderSpacerClass}></th>
+              <th className={tableHeaderLabelClass}>当月支出</th>
+              <th className={tableHeaderSpacerClass}></th>
+              <th className={tableHeaderLabelClass}>当月収支</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className={tableDataValueClass}>¥999,999,999</td>
+              <td className={tableDataSignClass}>-</td>
+              <td className={tableDataValueClass}>¥999,999,999</td>
+              <td className={tableDataSignClass}>=</td>
+              <td className={tableDataValueClass}>¥999,999,999</td>
+            </tr>
+          </tbody>
         </table>
         <div className={spacerClass}/>
         <table className={tableClass}>
-          <tr>
-            <th className={tableHeaderLabelClass}>残高</th>
-          </tr>
-          <tr>
-            <td className={tableDataValueClass}>¥999,999,999</td>
-          </tr>
+          <thead>
+            <tr>
+              <th className={tableHeaderLabelClass}>残高</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className={tableDataValueClass}>¥999,999,999</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     );
