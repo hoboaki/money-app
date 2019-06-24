@@ -1,0 +1,43 @@
+.Root {
+  display: table;
+}
+
+.Spacer {
+  display: table-cell;
+  width: 24px;
+}
+
+.Table {
+  border: 1px solid rgba(0,0,0,0.12);
+  display: table-cell;
+}
+
+.TableHeader {
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+  color: #707070;
+  font-weight: normal;
+  text-align: center;
+}
+
+.TableHeaderLabel {
+  text-align: center;
+  width: 160px;
+}
+
+.TableHeaderSpacer {
+  text-align: center;
+  width: 24px;
+}
+
+.TableData {
+  color: rgba(0,0,0,0.87);
+  text-align: center;
+}
+
+.TableDataValue {
+  text-align: center;
+}
+
+.TableDataSign {
+  text-align: center;
+}
