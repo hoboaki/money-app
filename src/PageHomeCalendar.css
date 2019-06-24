@@ -4,7 +4,7 @@
 }
 
 .Table {
-  border: 1px solid rgba(0,0,0,0.12);
+  border: 0px none;
   display: table-cell;
 }
 
@@ -19,6 +19,13 @@
 .TableData {
   border: 1px solid rgba(0,0,0,0.12);
   color: rgba(0,0,0,0.87);
-  height: 160px;
+  height: 60px;
+  padding: 1px 4px;
   text-align: left;
+  vertical-align: top;
+}
+
+.TableDataDark {
+  background: #eeeeee;
+  color: rgba(0, 0, 0, 0.61);
 }

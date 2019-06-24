@@ -16,63 +16,68 @@ class PageHomeCalendar extends React.Component<any, any> {
     const tableDataClass = ClassNames(
       Style.TableData,
     );
+    const tableDataDarkClass = ClassNames(
+      Style.TableData,
+      Style.TableDataDark,
+    );
 
     interface IData {
       day: number;
+      dark: boolean;
     }
     const row0: IData[] = [
-      {day: 26},
-      {day: 27},
-      {day: 28},
-      {day: 29},
-      {day: 30},
-      {day: 31},
-      {day: 1},
+      {day: 26, dark: true},
+      {day: 27, dark: true},
+      {day: 28, dark: true},
+      {day: 29, dark: true},
+      {day: 30, dark: true},
+      {day: 31, dark: true},
+      {day: 1, dark: false},
     ];
     const row1: IData[] = [
-      {day: 2},
-      {day: 3},
-      {day: 4},
-      {day: 5},
-      {day: 6},
-      {day: 7},
-      {day: 8},
+      {day: 2, dark: false},
+      {day: 3, dark: false},
+      {day: 4, dark: false},
+      {day: 5, dark: false},
+      {day: 6, dark: false},
+      {day: 7, dark: false},
+      {day: 8, dark: false},
     ];
     const row2: IData[] = [
-      {day: 9},
-      {day: 10},
-      {day: 11},
-      {day: 12},
-      {day: 13},
-      {day: 14},
-      {day: 15},
+      {day: 9, dark: false},
+      {day: 10, dark: false},
+      {day: 11, dark: false},
+      {day: 12, dark: false},
+      {day: 13, dark: false},
+      {day: 14, dark: false},
+      {day: 15, dark: false},
     ];
     const row3: IData[] = [
-      {day: 16},
-      {day: 17},
-      {day: 18},
-      {day: 19},
-      {day: 20},
-      {day: 21},
-      {day: 22},
+      {day: 16, dark: false},
+      {day: 17, dark: false},
+      {day: 18, dark: false},
+      {day: 19, dark: false},
+      {day: 20, dark: false},
+      {day: 21, dark: false},
+      {day: 22, dark: false},
     ];
     const row4: IData[] = [
-      {day: 23},
-      {day: 24},
-      {day: 25},
-      {day: 26},
-      {day: 27},
-      {day: 28},
-      {day: 29},
+      {day: 23, dark: false},
+      {day: 24, dark: false},
+      {day: 25, dark: false},
+      {day: 26, dark: false},
+      {day: 27, dark: false},
+      {day: 28, dark: false},
+      {day: 29, dark: false},
     ];
     const row5: IData[] = [
-      {day: 30},
-      {day: 1},
-      {day: 2},
-      {day: 3},
-      {day: 4},
-      {day: 5},
-      {day: 6},
+      {day: 30, dark: false},
+      {day: 1, dark: true},
+      {day: 2, dark: true},
+      {day: 3, dark: true},
+      {day: 4, dark: true},
+      {day: 5, dark: true},
+      {day: 6, dark: true},
     ];
     const cellDataArray = [row0, row1, row2, row3, row4, row5];
     const cells = <tbody>
@@ -80,7 +85,8 @@ class PageHomeCalendar extends React.Component<any, any> {
         return (
           <tr key={rowIndex}>
             {row.map((cell, colIndex) => {
-              return (<td key={rowIndex * 10 + colIndex} className={tableDataClass}>{cell.day}</td>);
+              const classNames = cell.dark ? tableDataDarkClass : tableDataClass;
+              return (<td key={rowIndex * 10 + colIndex} className={classNames}>{cell.day}</td>);
             })}
           </tr>
           );
