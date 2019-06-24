@@ -1,0 +1,24 @@
+.Root {
+  display: block;
+  margin-top: 16px;
+}
+
+.Table {
+  border: 1px solid rgba(0,0,0,0.12);
+  display: table-cell;
+}
+
+.TableHeader {
+  border: 1px solid rgba(0,0,0,0.12);
+  color: #707070;
+  font-weight: normal;
+  text-align: center;
+  width: 124px;
+}
+
+.TableData {
+  border: 1px solid rgba(0,0,0,0.12);
+  color: rgba(0,0,0,0.87);
+  height: 160px;
+  text-align: left;
+}

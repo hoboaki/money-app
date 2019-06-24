@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as LayoutStyle from './Layout.css';
 import PageHomeBalance from './PageHomeBalance';
 import * as Style from './PageHomeBody.css';
+import PageHomeCalendar from './PageHomeCalendar';
 
 class PageHomeBody extends React.Component<any, any> {
   public render() {
@@ -12,6 +13,7 @@ class PageHomeBody extends React.Component<any, any> {
     return (
       <div className={rootClass}>
         <PageHomeBalance />
+        <PageHomeCalendar />
       </div>
     );
   }
