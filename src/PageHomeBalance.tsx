@@ -56,11 +56,13 @@ class PageHomeBalance extends React.Component<any, any> {
         <table className={tableClass}>
           <thead>
             <tr>
+              <th className={tableHeaderLabelClass}>振替小計</th>
               <th className={tableHeaderLabelClass}>残高</th>
             </tr>
           </thead>
           <tbody>
             <tr>
+              <td className={tableDataValueClass}>¥999,999,999</td>
               <td className={tableDataValueClass}>¥999,999,999</td>
             </tr>
           </tbody>
