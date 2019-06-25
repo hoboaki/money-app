@@ -1,5 +1,84 @@
 # 開発記録
 
+## 2019-06-25 map 入れ子のキレイな書き方が分からない
+
+これでしのいだけどもっとスマートな書き方ありそう…。
+
+```ts
+    interface IData {
+      day: number;
+      dark: boolean;
+    }
+    const row0: IData[] = [
+      {day: 26, dark: true},
+      {day: 27, dark: true},
+      {day: 28, dark: true},
+      {day: 29, dark: true},
+      {day: 30, dark: true},
+      {day: 31, dark: true},
+      {day: 1, dark: false},
+    ];
+    const row1: IData[] = [
+      {day: 2, dark: false},
+      {day: 3, dark: false},
+      {day: 4, dark: false},
+      {day: 5, dark: false},
+      {day: 6, dark: false},
+      {day: 7, dark: false},
+      {day: 8, dark: false},
+    ];
+    const row2: IData[] = [
+      {day: 9, dark: false},
+      {day: 10, dark: false},
+      {day: 11, dark: false},
+      {day: 12, dark: false},
+      {day: 13, dark: false},
+      {day: 14, dark: false},
+      {day: 15, dark: false},
+    ];
+    const row3: IData[] = [
+      {day: 16, dark: false},
+      {day: 17, dark: false},
+      {day: 18, dark: false},
+      {day: 19, dark: false},
+      {day: 20, dark: false},
+      {day: 21, dark: false},
+      {day: 22, dark: false},
+    ];
+    const row4: IData[] = [
+      {day: 23, dark: false},
+      {day: 24, dark: false},
+      {day: 25, dark: false},
+      {day: 26, dark: false},
+      {day: 27, dark: false},
+      {day: 28, dark: false},
+      {day: 29, dark: false},
+    ];
+    const row5: IData[] = [
+      {day: 30, dark: false},
+      {day: 1, dark: true},
+      {day: 2, dark: true},
+      {day: 3, dark: true},
+      {day: 4, dark: true},
+      {day: 5, dark: true},
+      {day: 6, dark: true},
+    ];
+    const cellDataArray = [row0, row1, row2, row3, row4, row5];
+    const cells = <tbody>
+      {cellDataArray.map((row, rowIndex) => {
+        return (
+          <tr key={rowIndex}>
+            {row.map((cell, colIndex) => {
+              const classNames = cell.dark ? tableDataDarkClass : tableDataClass;
+              return (<td key={rowIndex * 10 + colIndex} className={classNames}>{cell.day}</td>);
+            })}
+          </tr>
+          );
+        },
+      )}
+      </tbody>;
+```
+
 ## 2018-08-08 vscode で行末空白の自動削除
 
 lint 先生にめっちゃ怒られたので設定しました。
