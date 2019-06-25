@@ -20,6 +20,20 @@ class PageHomeCalendar extends React.Component<any, any> {
       Style.TableData,
       Style.TableDataDark,
     );
+    const cellTopClass = ClassNames(
+      Style.CellTop,
+    );
+    const cellDayClass = ClassNames(
+      Style.CellDay,
+    );
+    const cellNewRecordBtnClass = ClassNames(
+      Style.CellNewRecordBtn,
+    );
+    const iconClass = ClassNames(
+      'material-icons',
+      'md-16',
+      Style.CellNewRecordBtnIcon,
+    );
 
     interface IData {
       day: number;
@@ -86,12 +100,20 @@ class PageHomeCalendar extends React.Component<any, any> {
           <tr key={rowIndex}>
             {row.map((cell, colIndex) => {
               const classNames = cell.dark ? tableDataDarkClass : tableDataClass;
-              return (<td key={rowIndex * 10 + colIndex} className={classNames}>{cell.day}</td>);
+              return (
+                <td key={rowIndex * 10 + colIndex} className={classNames}>
+                  <div className={cellTopClass}>
+                    <span className={cellDayClass}>{cell.day}</span>
+                    <button className={cellNewRecordBtnClass} onClick={this.onNewRecordBtnPushed}>
+                      <i className={iconClass}>note_add</i>
+                    </button>
+                  </div>
+                </td>
+                );
             })}
           </tr>
           );
-        },
-      )}
+        })}
       </tbody>;
 
     return (
@@ -114,6 +136,9 @@ class PageHomeCalendar extends React.Component<any, any> {
     );
   }
 
+  private onNewRecordBtnPushed() {
+    global.console.log('onNewRecordBtnPushed');
+  }
 }
 
 export default PageHomeCalendar;

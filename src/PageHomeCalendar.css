@@ -28,3 +28,32 @@
   background: #eeeeee;
   color: rgba(0, 0, 0, 0.61);
 }
+
+.CellTop {
+  display: flex;
+}
+
+.CellDay {
+  display: block;
+}
+
+.CellNewRecordBtn {
+  background: transparent;
+  border: 0px;
+  color: rgba(0, 0, 0, 0.61);
+  display: block;
+  height: 14px;
+  margin-left: 2px;
+  outline: none;
+  padding: 2px;
+}
+.CellNewRecordBtn:hover {
+  color: #000000;
+}
+.CellNewRecordBtn:active {
+  color: rgba(0, 0, 0, 0.61);
+}
+
+.CellNewRecordBtnIcon {
+  font-size: 14px;
+}
