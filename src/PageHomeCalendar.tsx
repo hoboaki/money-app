@@ -21,6 +21,7 @@ class PageHomeCalendar extends React.Component<any, any> {
       Style.TableDataDark,
     );
     const cellTopClass = ClassNames(
+      Style.Cell,
       Style.CellTop,
     );
     const cellDayClass = ClassNames(
@@ -29,10 +30,30 @@ class PageHomeCalendar extends React.Component<any, any> {
     const cellNewRecordBtnClass = ClassNames(
       Style.CellNewRecordBtn,
     );
-    const iconClass = ClassNames(
+    const cellNewRecordBtnIconClass = ClassNames(
       'material-icons',
       'md-16',
       Style.CellNewRecordBtnIcon,
+    );
+    const cellMiddleClass = ClassNames(
+      Style.Cell,
+    );
+    const cellIncomePriceClass = ClassNames(
+      Style.CellPrice,
+      Style.CellIncomePrice,
+    );
+    const cellOutgoPriceClass = ClassNames(
+      Style.CellPrice,
+      Style.CellOutgoPrice,
+    );
+    const cellIncomeIconClass = ClassNames(
+      Style.CellIncomeIcon,
+    );
+    const cellOutgoIconClass = ClassNames(
+      Style.CellOutgoIcon,
+    );
+    const cellBottomClass = ClassNames(
+      Style.Cell,
     );
 
     interface IData {
@@ -105,8 +126,16 @@ class PageHomeCalendar extends React.Component<any, any> {
                   <div className={cellTopClass}>
                     <span className={cellDayClass}>{cell.day}</span>
                     <button className={cellNewRecordBtnClass} onClick={this.onNewRecordBtnPushed}>
-                      <i className={iconClass}>note_add</i>
+                      <i className={cellNewRecordBtnIconClass}>note_add</i>
                     </button>
+                  </div>
+                  <div className={cellMiddleClass}>
+                    <span className={cellIncomePriceClass}>+99,999,999</span>
+                    <img className={cellIncomeIconClass} src="./image/icon-ex/income.svg"/>
+                  </div>
+                  <div className={cellBottomClass}>
+                    <span className={cellOutgoPriceClass}>-99,999,999</span>
+                    <img className={cellOutgoIconClass} src="./image/icon-ex/outgo.svg"/>
                   </div>
                 </td>
                 );

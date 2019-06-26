@@ -29,8 +29,12 @@
   color: rgba(0, 0, 0, 0.61);
 }
 
-.CellTop {
+.Cell {
   display: flex;
+  flex-direction: row-reverse;
+}
+.CellTop {
+  flex-direction: row;
 }
 
 .CellDay {
@@ -55,5 +59,33 @@
 }
 
 .CellNewRecordBtnIcon {
+  font-size: 14px;
+}
+
+.CellPrice {
+  display: block;
+  margin: 1px 0px;
+  padding: 0px 8px;
+  width: 100%;
+  text-align: right;
+}
+
+.CellIncomePrice {
+  background-color: #cfdeff;
+}
+
+.CellOutgoPrice {
+  background-color: #ffcfcf;
+}
+
+.CellIncomeIcon {
+  color: #3273ff;
+  display: none;
+  font-size: 14px;
+}
+
+.CellOutgoIcon {
+  color: #fd4134;
+  display: none;
   font-size: 14px;
 }
