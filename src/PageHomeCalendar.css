@@ -32,13 +32,19 @@
 .Cell {
   display: flex;
   flex-direction: row-reverse;
+  height: 22px;
 }
 .CellTop {
   flex-direction: row;
+  height: auto;
+}
+.CellHidden {
+  display: none;
 }
 
 .CellDay {
   display: block;
+  font-size: 18px;
 }
 
 .CellNewRecordBtn {

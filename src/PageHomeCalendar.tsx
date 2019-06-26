@@ -38,6 +38,9 @@ class PageHomeCalendar extends React.Component<any, any> {
     const cellMiddleClass = ClassNames(
       Style.Cell,
     );
+    const cellHiddenClass = ClassNames(
+      Style.CellHidden,
+    );
     const cellIncomePriceClass = ClassNames(
       Style.CellPrice,
       Style.CellIncomePrice,
@@ -59,60 +62,62 @@ class PageHomeCalendar extends React.Component<any, any> {
     interface IData {
       day: number;
       dark: boolean;
+      income: number;
+      outgo: number;
     }
     const row0: IData[] = [
-      {day: 26, dark: true},
-      {day: 27, dark: true},
-      {day: 28, dark: true},
-      {day: 29, dark: true},
-      {day: 30, dark: true},
-      {day: 31, dark: true},
-      {day: 1, dark: false},
+      {day: 26, dark: true, income: 0, outgo: 0},
+      {day: 27, dark: true, income: 1000, outgo: 100},
+      {day: 28, dark: true, income: 0, outgo: 10000},
+      {day: 29, dark: true, income: 100, outgo: 0},
+      {day: 30, dark: true, income: 0, outgo: 0},
+      {day: 31, dark: true, income: 0, outgo: 0},
+      {day: 1, dark: false, income: 0, outgo: 0},
     ];
     const row1: IData[] = [
-      {day: 2, dark: false},
-      {day: 3, dark: false},
-      {day: 4, dark: false},
-      {day: 5, dark: false},
-      {day: 6, dark: false},
-      {day: 7, dark: false},
-      {day: 8, dark: false},
+      {day: 2, dark: false, income: 1000, outgo: 0},
+      {day: 3, dark: false, income: 0, outgo: 1000},
+      {day: 4, dark: false, income: 200, outgo: 100},
+      {day: 5, dark: false, income: 0, outgo: 0},
+      {day: 6, dark: false, income: 0, outgo: 0},
+      {day: 7, dark: false, income: 0, outgo: 0},
+      {day: 8, dark: false, income: 0, outgo: 0},
     ];
     const row2: IData[] = [
-      {day: 9, dark: false},
-      {day: 10, dark: false},
-      {day: 11, dark: false},
-      {day: 12, dark: false},
-      {day: 13, dark: false},
-      {day: 14, dark: false},
-      {day: 15, dark: false},
+      {day: 9, dark: false, income: 0, outgo: 0},
+      {day: 10, dark: false, income: 0, outgo: 0},
+      {day: 11, dark: false, income: 0, outgo: 0},
+      {day: 12, dark: false, income: 0, outgo: 0},
+      {day: 13, dark: false, income: 0, outgo: 0},
+      {day: 14, dark: false, income: 0, outgo: 0},
+      {day: 15, dark: false, income: 0, outgo: 0},
     ];
     const row3: IData[] = [
-      {day: 16, dark: false},
-      {day: 17, dark: false},
-      {day: 18, dark: false},
-      {day: 19, dark: false},
-      {day: 20, dark: false},
-      {day: 21, dark: false},
-      {day: 22, dark: false},
+      {day: 16, dark: false, income: 0, outgo: 0},
+      {day: 17, dark: false, income: 0, outgo: 0},
+      {day: 18, dark: false, income: 0, outgo: 0},
+      {day: 19, dark: false, income: 0, outgo: 0},
+      {day: 20, dark: false, income: 0, outgo: 0},
+      {day: 21, dark: false, income: 0, outgo: 0},
+      {day: 22, dark: false, income: 0, outgo: 0},
     ];
     const row4: IData[] = [
-      {day: 23, dark: false},
-      {day: 24, dark: false},
-      {day: 25, dark: false},
-      {day: 26, dark: false},
-      {day: 27, dark: false},
-      {day: 28, dark: false},
-      {day: 29, dark: false},
+      {day: 23, dark: false, income: 0, outgo: 0},
+      {day: 24, dark: false, income: 0, outgo: 0},
+      {day: 25, dark: false, income: 0, outgo: 0},
+      {day: 26, dark: false, income: 0, outgo: 0},
+      {day: 27, dark: false, income: 0, outgo: 0},
+      {day: 28, dark: false, income: 0, outgo: 0},
+      {day: 29, dark: false, income: 0, outgo: 0},
     ];
     const row5: IData[] = [
-      {day: 30, dark: false},
-      {day: 1, dark: true},
-      {day: 2, dark: true},
-      {day: 3, dark: true},
-      {day: 4, dark: true},
-      {day: 5, dark: true},
-      {day: 6, dark: true},
+      {day: 30, dark: false, income: 0, outgo: 0},
+      {day: 1, dark: true, income: 0, outgo: 0},
+      {day: 2, dark: true, income: 0, outgo: 0},
+      {day: 3, dark: true, income: 0, outgo: 0},
+      {day: 4, dark: true, income: 0, outgo: 0},
+      {day: 5, dark: true, income: 0, outgo: 0},
+      {day: 6, dark: true, income: 0, outgo: 0},
     ];
     const cellDataArray = [row0, row1, row2, row3, row4, row5];
     const cells = <tbody>
@@ -121,6 +126,11 @@ class PageHomeCalendar extends React.Component<any, any> {
           <tr key={rowIndex}>
             {row.map((cell, colIndex) => {
               const classNames = cell.dark ? tableDataDarkClass : tableDataClass;
+              const incomePriceClassNames = cell.income !== 0 ? cellIncomePriceClass : cellHiddenClass;
+              const incomeIconClassNames = cell.income !== 0 ? cellIncomeIconClass : cellHiddenClass;
+              const outgoPriceClassNames = cell.outgo !== 0 ? cellOutgoPriceClass : cellHiddenClass;
+              const outgoIconClassNames = cell.outgo !== 0 ? cellOutgoIconClass : cellHiddenClass;
+
               return (
                 <td key={rowIndex * 10 + colIndex} className={classNames}>
                   <div className={cellTopClass}>
@@ -130,12 +140,12 @@ class PageHomeCalendar extends React.Component<any, any> {
                     </button>
                   </div>
                   <div className={cellMiddleClass}>
-                    <span className={cellIncomePriceClass}>+99,999,999</span>
-                    <img className={cellIncomeIconClass} src="./image/icon-ex/income.svg"/>
+                    <span className={incomePriceClassNames}>+{cell.income}</span>
+                    <img className={incomeIconClassNames} src="./image/icon-ex/income.svg"/>
                   </div>
                   <div className={cellBottomClass}>
-                    <span className={cellOutgoPriceClass}>-99,999,999</span>
-                    <img className={cellOutgoIconClass} src="./image/icon-ex/outgo.svg"/>
+                    <span className={outgoPriceClassNames}>-{cell.outgo}</span>
+                    <img className={outgoIconClassNames} src="./image/icon-ex/outgo.svg"/>
                   </div>
                 </td>
                 );
