@@ -77,11 +77,13 @@
 }
 
 .CellIncomePrice {
-  background-color: #cfdeff;
+  /* background-color: #cfdeff; */
+  color: #3030FF;
 }
 
 .CellOutgoPrice {
-  background-color: #ffcfcf;
+  /* background-color: #ffcfcf; */
+  color: #FF3030;
 }
 
 .CellIncomeIcon {
