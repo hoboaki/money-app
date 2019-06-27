@@ -38,6 +38,10 @@ class PageHomeHeader extends React.Component<any, any> {
       Style.NoFrameBtn,
       Style.FilterBtn,
     );
+    const rightAreaClass = ClassNames(
+      LayoutStyle.RightToLeft,
+      Style.RightArea,
+    );
     const newRecordBtnClass = ClassNames(
       Style.Btn,
       Style.NoFrameBtn,
@@ -50,7 +54,7 @@ class PageHomeHeader extends React.Component<any, any> {
     );
     return (
       <div className={rootClass}>
-        <p className={currentDateClass}>2019年6月</p>
+        <span className={currentDateClass}>2019年6月</span>
         <button className={movePrevBtnClass} onClick={this.onMovePrevBtnPushed}>
           <i className={iconClass}>chevron_left</i>
         </button>
@@ -66,7 +70,7 @@ class PageHomeHeader extends React.Component<any, any> {
         <button className={filterBtnClass} onClick={this.onFilterBtnPushed}>
           <i className={iconClass}>filter_list</i>
         </button>
-        <div className={LayoutStyle.RightToLeft}>
+        <div className={rightAreaClass}>
           <button className={newRecordBtnClass} onClick={this.onNewRecordBtnPushed}>
             <i className={iconClass}>note_add</i>
           </button>
