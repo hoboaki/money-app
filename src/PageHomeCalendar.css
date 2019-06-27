@@ -32,7 +32,7 @@
 .Cell {
   display: flex;
   flex-direction: row-reverse;
-  height: 22px;
+  height: 18px;
 }
 .CellTop {
   flex-direction: row;
@@ -44,7 +44,7 @@
 
 .CellDay {
   display: block;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .CellNewRecordBtn {
@@ -53,7 +53,7 @@
   color: rgba(0, 0, 0, 0.61);
   display: block;
   height: 14px;
-  margin-left: 2px;
+  margin-left: 1px;
   outline: none;
   padding: 2px;
 }
@@ -70,8 +70,9 @@
 
 .CellPrice {
   display: block;
+  font-size: 12px;
   margin: 1px 0px;
-  padding: 0px 8px;
+  padding: 0px 4px;
   width: 100%;
   text-align: right;
 }

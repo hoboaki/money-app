@@ -13,9 +13,9 @@
 
 /* 表示中の日付ラベル */
 .CurrentDate {
-  font-size: 28pt;
+  font-size: 24pt;
   margin: 0px;
-  text-align: center;
+  text-align: left;
   width: 340px;
 }
 
