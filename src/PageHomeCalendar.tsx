@@ -1,5 +1,6 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeCalendar.css';
 
 class PageHomeCalendar extends React.Component<any, any> {
@@ -35,6 +36,15 @@ class PageHomeCalendar extends React.Component<any, any> {
       'md-16',
       Style.CellNewRecordBtnIcon,
     );
+    const cellTopRightClass = ClassNames(
+      LayoutStyle.RightToLeft,
+    );
+    const cellTransferClass = ClassNames(
+      Style.CellTransfer,
+    );
+    const cellTransferIconClass = ClassNames(
+      Style.CellTransferIcon,
+    );
     const cellMiddleClass = ClassNames(
       Style.Cell,
     );
@@ -48,9 +58,6 @@ class PageHomeCalendar extends React.Component<any, any> {
     const cellOutgoPriceClass = ClassNames(
       Style.CellPrice,
       Style.CellOutgoPrice,
-    );
-    const cellTransferClass = ClassNames(
-      Style.CellTransfer,
     );
     const cellIncomeIconClass = ClassNames(
       Style.CellIncomeIcon,
@@ -131,6 +138,7 @@ class PageHomeCalendar extends React.Component<any, any> {
             {row.map((cell, colIndex) => {
               const classNames = cell.dark ? tableDataDarkClass : tableDataClass;
               const transferClassNames = cell.transfer ? cellTransferClass : cellHiddenClass;
+              const transferIconClassNames = cell.transfer ? cellTransferIconClass : cellHiddenClass;
               const incomePriceClassNames = cell.income !== 0 ? cellIncomePriceClass : cellHiddenClass;
               const incomeIconClassNames = cell.income !== 0 ? cellIncomeIconClass : cellHiddenClass;
               const outgoPriceClassNames = cell.outgo !== 0 ? cellOutgoPriceClass : cellHiddenClass;
@@ -143,7 +151,9 @@ class PageHomeCalendar extends React.Component<any, any> {
                     <button className={cellNewRecordBtnClass} onClick={this.onNewRecordBtnPushed}>
                       <i className={cellNewRecordBtnIconClass}>note_add</i>
                     </button>
-                    <span className={transferClassNames}>振替</span>
+                    <div className={cellTopRightClass}>
+                      <img className={transferIconClassNames} src="./image/icon-ex/transfer-outline.svg"/>
+                    </div>
                   </div>
                   <div className={cellMiddleClass}>
                     <span className={incomePriceClassNames}>+{cell.income}</span>

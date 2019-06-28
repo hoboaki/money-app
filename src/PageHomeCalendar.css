@@ -89,6 +89,14 @@
   padding: 0px 1px;
 }
 
+.CellTransferIcon {
+  display: block;
+  height: 16px;
+  margin-top: 3px;
+  margin-right: 2px;
+  width: 16px;
+}
+
 .CellIncomePrice {
   /* background-color: #cfdeff; */
   color: #3030FF;
