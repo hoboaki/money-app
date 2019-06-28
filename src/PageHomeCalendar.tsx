@@ -49,6 +49,9 @@ class PageHomeCalendar extends React.Component<any, any> {
       Style.CellPrice,
       Style.CellOutgoPrice,
     );
+    const cellTransferClass = ClassNames(
+      Style.CellTransfer,
+    );
     const cellIncomeIconClass = ClassNames(
       Style.CellIncomeIcon,
     );
@@ -62,62 +65,63 @@ class PageHomeCalendar extends React.Component<any, any> {
     interface IData {
       day: number;
       dark: boolean;
+      transfer: boolean;
       income: number;
       outgo: number;
     }
     const row0: IData[] = [
-      {day: 26, dark: true, income: 0, outgo: 0},
-      {day: 27, dark: true, income: 1000, outgo: 100},
-      {day: 28, dark: true, income: 0, outgo: 10000},
-      {day: 29, dark: true, income: 100, outgo: 0},
-      {day: 30, dark: true, income: 0, outgo: 0},
-      {day: 31, dark: true, income: 0, outgo: 0},
-      {day: 1, dark: false, income: 0, outgo: 0},
+      {day: 26, dark: true, transfer: false, income: 0, outgo: 0},
+      {day: 27, dark: true, transfer: false, income: 1000, outgo: 100},
+      {day: 28, dark: true, transfer: false, income: 0, outgo: 10000},
+      {day: 29, dark: true, transfer: false, income: 100, outgo: 0},
+      {day: 30, dark: true, transfer: true, income: 0, outgo: 0},
+      {day: 31, dark: true, transfer: false, income: 0, outgo: 0},
+      {day: 1, dark: false, transfer: false, income: 0, outgo: 0},
     ];
     const row1: IData[] = [
-      {day: 2, dark: false, income: 1000, outgo: 0},
-      {day: 3, dark: false, income: 0, outgo: 1000},
-      {day: 4, dark: false, income: 200, outgo: 100},
-      {day: 5, dark: false, income: 0, outgo: 0},
-      {day: 6, dark: false, income: 0, outgo: 0},
-      {day: 7, dark: false, income: 0, outgo: 0},
-      {day: 8, dark: false, income: 0, outgo: 0},
+      {day: 2, dark: false, transfer: false, income: 1000, outgo: 0},
+      {day: 3, dark: false, transfer: false, income: 0, outgo: 1000},
+      {day: 4, dark: false, transfer: false, income: 200, outgo: 100},
+      {day: 5, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 6, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 7, dark: false, transfer: true, income: 200, outgo: 100},
+      {day: 8, dark: false, transfer: false, income: 0, outgo: 0},
     ];
     const row2: IData[] = [
-      {day: 9, dark: false, income: 0, outgo: 0},
-      {day: 10, dark: false, income: 0, outgo: 0},
-      {day: 11, dark: false, income: 0, outgo: 0},
-      {day: 12, dark: false, income: 0, outgo: 0},
-      {day: 13, dark: false, income: 0, outgo: 0},
-      {day: 14, dark: false, income: 0, outgo: 0},
-      {day: 15, dark: false, income: 0, outgo: 0},
+      {day: 9, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 10, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 11, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 12, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 13, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 14, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 15, dark: false, transfer: false, income: 0, outgo: 0},
     ];
     const row3: IData[] = [
-      {day: 16, dark: false, income: 0, outgo: 0},
-      {day: 17, dark: false, income: 0, outgo: 0},
-      {day: 18, dark: false, income: 0, outgo: 0},
-      {day: 19, dark: false, income: 0, outgo: 0},
-      {day: 20, dark: false, income: 0, outgo: 0},
-      {day: 21, dark: false, income: 0, outgo: 0},
-      {day: 22, dark: false, income: 0, outgo: 0},
+      {day: 16, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 17, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 18, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 19, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 20, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 21, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 22, dark: false, transfer: false, income: 0, outgo: 0},
     ];
     const row4: IData[] = [
-      {day: 23, dark: false, income: 0, outgo: 0},
-      {day: 24, dark: false, income: 0, outgo: 0},
-      {day: 25, dark: false, income: 0, outgo: 0},
-      {day: 26, dark: false, income: 0, outgo: 0},
-      {day: 27, dark: false, income: 0, outgo: 0},
-      {day: 28, dark: false, income: 0, outgo: 0},
-      {day: 29, dark: false, income: 0, outgo: 0},
+      {day: 23, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 24, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 25, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 26, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 27, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 28, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 29, dark: false, transfer: false, income: 0, outgo: 0},
     ];
     const row5: IData[] = [
-      {day: 30, dark: false, income: 0, outgo: 0},
-      {day: 1, dark: true, income: 0, outgo: 0},
-      {day: 2, dark: true, income: 0, outgo: 0},
-      {day: 3, dark: true, income: 0, outgo: 0},
-      {day: 4, dark: true, income: 0, outgo: 0},
-      {day: 5, dark: true, income: 0, outgo: 0},
-      {day: 6, dark: true, income: 0, outgo: 0},
+      {day: 30, dark: false, transfer: false, income: 0, outgo: 0},
+      {day: 1, dark: true, transfer: false, income: 0, outgo: 0},
+      {day: 2, dark: true, transfer: false, income: 0, outgo: 0},
+      {day: 3, dark: true, transfer: false, income: 0, outgo: 0},
+      {day: 4, dark: true, transfer: false, income: 0, outgo: 0},
+      {day: 5, dark: true, transfer: false, income: 0, outgo: 0},
+      {day: 6, dark: true, transfer: false, income: 0, outgo: 0},
     ];
     const cellDataArray = [row0, row1, row2, row3, row4, row5];
     const cells = <tbody>
@@ -126,6 +130,7 @@ class PageHomeCalendar extends React.Component<any, any> {
           <tr key={rowIndex}>
             {row.map((cell, colIndex) => {
               const classNames = cell.dark ? tableDataDarkClass : tableDataClass;
+              const transferClassNames = cell.transfer ? cellTransferClass : cellHiddenClass;
               const incomePriceClassNames = cell.income !== 0 ? cellIncomePriceClass : cellHiddenClass;
               const incomeIconClassNames = cell.income !== 0 ? cellIncomeIconClass : cellHiddenClass;
               const outgoPriceClassNames = cell.outgo !== 0 ? cellOutgoPriceClass : cellHiddenClass;
@@ -138,6 +143,7 @@ class PageHomeCalendar extends React.Component<any, any> {
                     <button className={cellNewRecordBtnClass} onClick={this.onNewRecordBtnPushed}>
                       <i className={cellNewRecordBtnIconClass}>note_add</i>
                     </button>
+                    <span className={transferClassNames}>振替</span>
                   </div>
                   <div className={cellMiddleClass}>
                     <span className={incomePriceClassNames}>+{cell.income}</span>

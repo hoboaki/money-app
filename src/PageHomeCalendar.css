@@ -77,6 +77,18 @@
   text-align: right;
 }
 
+.CellTransfer {
+  align-items: center;
+  border: 1px solid #24b032;
+  border-radius: 6px;
+  color: #24b032;
+  display: block;
+  font-size: 12px;
+  height: 20px;
+  margin-left: 46px;
+  padding: 0px 1px;
+}
+
 .CellIncomePrice {
   /* background-color: #cfdeff; */
   color: #3030FF;
