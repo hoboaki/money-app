@@ -1,0 +1,120 @@
+.Root {
+  display: block;
+}
+
+.Table {
+  border: 0px none;
+  display: table-cell;
+}
+
+.TableHeader {
+  border: 1px solid rgba(0,0,0,0.12);
+  color: #707070;
+  font-weight: normal;
+  text-align: center;
+  width: 124px;
+}
+
+.TableData {
+  border: 1px solid rgba(0,0,0,0.12);
+  color: rgba(0,0,0,0.87);
+  height: 60px;
+  padding: 1px 4px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.TableDataDark {
+  background: #eeeeee;
+  color: rgba(0, 0, 0, 0.61);
+}
+
+.Cell {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 18px;
+}
+.CellTop {
+  flex-direction: row;
+  height: auto;
+}
+.CellHidden {
+  display: none;
+}
+
+.CellDay {
+  display: block;
+  font-size: 16px;
+}
+
+.CellNewRecordBtn {
+  background: transparent;
+  border: 0px;
+  color: rgba(0, 0, 0, 0.61);
+  display: block;
+  height: 14px;
+  margin-left: 1px;
+  outline: none;
+  padding: 2px;
+}
+.CellNewRecordBtn:hover {
+  color: #000000;
+}
+.CellNewRecordBtn:active {
+  color: rgba(0, 0, 0, 0.61);
+}
+
+.CellNewRecordBtnIcon {
+  font-size: 14px;
+}
+
+.CellPrice {
+  display: block;
+  font-size: 12px;
+  margin: 1px 0px;
+  padding: 0px 4px;
+  width: 100%;
+  text-align: right;
+}
+
+.CellTransfer {
+  align-items: center;
+  border: 1px solid #24b032;
+  border-radius: 6px;
+  color: #24b032;
+  display: block;
+  font-size: 12px;
+  height: 20px;
+  margin-left: 46px;
+  padding: 0px 1px;
+}
+
+.CellTransferIcon {
+  display: block;
+  height: 16px;
+  margin-top: 3px;
+  margin-right: 2px;
+  width: 16px;
+}
+
+.CellIncomePrice {
+  /* background-color: #cfdeff; */
+  color: #3273ff;
+}
+
+.CellOutgoPrice {
+  /* background-color: #ffcfcf; */
+  color: #fd4134;
+}
+
+.CellIncomeIcon {
+  color: #3273ff;
+  display: none;
+  font-size: 14px;
+}
+
+.CellOutgoIcon {
+  color: #fd4134;
+  display: none;
+  font-size: 14px;
+}

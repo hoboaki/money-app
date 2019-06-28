@@ -4,6 +4,11 @@
 
 自分が今の家計簿から乗り換えるために必要な最低限の機能の実現。
 
+## カラー計画
+
+https://material.io/tools/color/#!/?view.left=1&view.right=0&primary.color=424242&secondary.color=E3F2FD
+
+
 ## 個別要素
 
 - 新規レコード追加

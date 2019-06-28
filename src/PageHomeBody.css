@@ -1,0 +1,51 @@
+.Root {
+  background: #f5f5f6;
+  display: block;
+  height: 100%;
+  padding: 12px;
+  width: 100%;
+}
+
+.Abstract {
+  display: table;
+}
+
+.AbstractSpacer {
+  display: table-cell;
+  width: 24px;
+}
+
+.AbstractTable {
+  border: 1px solid rgba(0,0,0,0.12);
+  display: table-cell;
+}
+
+.AbstractTableHeader {
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+  color: #707070;
+  font-weight: normal;
+  text-align: center;
+}
+
+.AbstractTableHeaderLabel {
+  text-align: center;
+  width: 160px;
+}
+
+.AbstractTableHeaderSpacer {
+  text-align: center;
+  width: 24px;
+}
+
+.AbstractTableData {
+  color: rgba(0,0,0,0.87);
+  text-align: center;
+}
+
+.AbstractTableDataValue {
+  text-align: center;
+}
+
+.AbstractTableDataSign {
+  text-align: center;
+}

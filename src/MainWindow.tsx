@@ -4,6 +4,7 @@ import Split from 'split.js';
 import LayoutStyle from './Layout.css';
 import ModelSampleDoc from './Model/SampleDoc';
 import PageStyle from './Page.css';
+import PageHome from './PageHome';
 import PageSheet from './PageSheet';
 import SideBar from './SideBar';
 import TitleBar from './TitleBar';
@@ -59,12 +60,15 @@ class MainWindow extends React.Component<any, IState> {
     };
 
     // ページ有効化
-    this.activatePage(PageSheet.PageId);
+    this.activatePage(PageHome.PageId);
   }
 
   public render() {
     let pageContent = <div className={PageStyle.Base}/>;
     switch (this.state.currentPageId) {
+      case PageHome.PageId:
+        pageContent = <PageHome />;
+        break;
       case PageSheet.PageId:
         pageContent = <PageSheet />;
         break;

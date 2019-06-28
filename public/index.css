@@ -6,7 +6,7 @@ https://material.io/tools/color/#!/?view.left=1&view.right=0&primary.color=42424
 body {
   margin: 0px;
   height: 100vh;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   -webkit-user-select: none;
 }
 .contents {
