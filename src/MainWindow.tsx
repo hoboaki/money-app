@@ -1,7 +1,9 @@
+import ClassNames from 'classnames';
 import {ipcRenderer as IpcRenderer} from 'electron';
 import * as React from 'react';
 import Split from 'split.js';
 import LayoutStyle from './Layout.css';
+import * as MainWindowStyle from './MainWindow.css';
 import ModelSampleDoc from './Model/SampleDoc';
 import PageStyle from './Page.css';
 import PageHome from './PageHome';
@@ -74,8 +76,12 @@ class MainWindow extends React.Component<any, IState> {
         break;
     }
 
+    const rootClass = ClassNames(
+      MainWindowStyle.Root,
+      LayoutStyle.TopToBottom,
+    );
     return (
-      <div className={LayoutStyle.TopToBottom}>
+      <div className={rootClass}>
         <TitleBar isActive={this.state.isActive}/>
         <div className={LayoutStyle.LeftToRight}>
           <SideBar
