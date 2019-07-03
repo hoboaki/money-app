@@ -52,6 +52,31 @@ class PageHomeHeader extends React.Component<any, any> {
       'md-16',
       'md-dark',
     );
+
+    const formTabsRootClass = ClassNames(
+      Style.FormTabsRoot,
+    );
+    const formTabsBaseClass = ClassNames(
+      Style.FormTabsBase,
+    );
+    const formTabOutgoClass = ClassNames(
+      Style.FormTab,
+      Style.FormTabActive,
+    );
+    const formTabIncomeClass = ClassNames(
+      Style.FormTab,
+    );
+    const formTabTransferClass = ClassNames(
+      Style.FormTab,
+      Style.FormTabLast,
+    );
+    const formSvgIconClass = ClassNames(
+      Style.FormSvgIcon,
+    );
+
+    const formInputRootClass = ClassNames(
+      Style.FormInputRoot,
+    );
     return (
       <div className={rootClass}>
         <span className={currentDateClass}>2019年6月</span>
@@ -83,13 +108,31 @@ class PageHomeHeader extends React.Component<any, any> {
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 className="modal-title" id="exampleModalLabel">レコードの追加</h5>
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div className="modal-body">
-                ...
+              <div>
+                <div className={formTabsRootClass}>
+                  <div className={formTabsBaseClass}>
+                    <div className={formTabOutgoClass}>
+                      <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
+                      <span>支出</span>
+                    </div>
+                    <div className={formTabIncomeClass}>
+                      <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
+                      <span>収入</span>
+                    </div>
+                    <div className={formTabTransferClass}>
+                      <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
+                      <span>振替</span>
+                    </div>
+                  </div>
+                </div>
+                <div className={formInputRootClass}>
+                  あいうえお
+                </div>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
