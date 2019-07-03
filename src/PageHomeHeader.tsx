@@ -117,11 +117,11 @@ class PageHomeHeader extends React.Component<any, any> {
                 <div className={formTabsRootClass}>
                   <div className={formTabsBaseClass}>
                     <div className={formTabOutgoClass}>
-                      <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
+                      <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
                       <span>支出</span>
                     </div>
                     <div className={formTabIncomeClass}>
-                      <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
+                      <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
                       <span>収入</span>
                     </div>
                     <div className={formTabTransferClass}>
