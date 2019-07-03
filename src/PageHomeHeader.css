@@ -129,11 +129,12 @@
   border-collapse: collapse;
   border-left: 1px solid #cccccc;
   border-top: 1px solid #cccccc;
-  box-sizing: content-box;
   display: flex;
   flex-direction: row;
   height: 100%;
   justify-content: center;
+  margin-bottom: -1px;
+  padding-top: 2px;
   width: 150px;
 }
 
@@ -142,8 +143,8 @@
 }
 
 .FormTabActive {
-  background: #f5f5f6;
-  border-bottom: 1px solid #f5f5f6;
+  background: #ffffff;
+  border-bottom: 1px solid #ffffff;
 }
 
 .FormSvgIcon {
@@ -155,5 +156,5 @@
 }
 
 .FormInputRoot {
-  background: #f5f5f6;
+  background: #ffffff;
 }
