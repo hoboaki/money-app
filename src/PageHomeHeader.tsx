@@ -131,8 +131,7 @@ class PageHomeHeader extends React.Component<any, any> {
                   </div>
                 </div>
                 <div className={formInputRootClass}>
-                  <span>あいうえお</span>
-                  <input type="text" id="picker"></input>
+                  あいうえお
                 </div>
               </div>
               <div className="modal-footer">
