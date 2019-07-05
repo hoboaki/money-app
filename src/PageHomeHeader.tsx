@@ -1,4 +1,5 @@
 import ClassNames from 'classnames';
+import flatpickr from 'flatpickr';
 import * as React from 'react';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeHeader.css';
@@ -131,7 +132,8 @@ class PageHomeHeader extends React.Component<any, any> {
                   </div>
                 </div>
                 <div className={formInputRootClass}>
-                  あいうえお
+                  <span>あいうえお</span>
+                  <input type="text" id="formDate"/>
                 </div>
               </div>
               <div className="modal-footer">
@@ -171,6 +173,7 @@ class PageHomeHeader extends React.Component<any, any> {
 
   private onNewRecordBtnPushed() {
     global.console.log('onNewRecordBtnPushed');
+    flatpickr('#formDate');
   }
 }
 
