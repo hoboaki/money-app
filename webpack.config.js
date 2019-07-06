@@ -19,15 +19,14 @@ module.exports = {
     },
     // ファイルタイプ毎の処理を記述する
     module: {
-        rules: [
-            {
+        rules: [{
                 // 正規表現で指定する
                 // 拡張子 .ts または .tsx の場合
                 test: /\.tsx?$/,
                 // ローダーの指定
                 // TypeScript をコンパイルする
                 use: 'ts-loader'
-            }, 
+            },
             {
                 // 拡張子 .ts または .tsx の場合
                 test: /\.tsx?$/,
@@ -43,12 +42,18 @@ module.exports = {
                 },
             },
             {
-                test: /\.css$/,
+                // node_modules 以下の css は元のクラス名でロード
+                test: /node_modules\/.*\.css$/,
+                loaders: ['style-loader', 'css-loader'],
+            },
+            {
+                // src 以下の css は名前衝突回避されたクラス名でロード
+                test: /src\/.*\.css$/,
                 loaders: ['style-loader', 'css-loader?modules'],
             },
         ],
     },
-   // 処理対象のファイルを記載する
+    // 処理対象のファイルを記載する
     resolve: {
         extensions: [
             '.ts',
