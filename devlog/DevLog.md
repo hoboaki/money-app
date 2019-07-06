@@ -1,5 +1,26 @@
 # 開発記録
 
+## 2019-07-06 node_modules 以下の css をスコープ処理せずそのまま読み込みたい
+
+webpack.config.js の css 処理周りをこのように変更したらいけた。
+
+```js
+{
+    // node_modules 以下の css は元のクラス名でロード
+    test: /node_modules\/.*\.css$/,
+    loaders: ['style-loader', 'css-loader'],
+},
+{
+    // src 以下の css は名前衝突回避されたクラス名でロード
+    test: /src\/.*\.css$/,
+    loaders: ['style-loader', 'css-loader?modules'],
+},
+```
+
+loader ってそもそもなんですの？みたいな疑問はこちらのページで解決しました。
+
+https://qiita.com/terrierscript/items/0574ab1ef358fecb55b9
+
 ## 2019-07-05 DatePicker 探訪
 
 bootstrap-material-datetimepicker を使おうとしたが TypeScript バインドを手動で書かないといけなくて断念。
