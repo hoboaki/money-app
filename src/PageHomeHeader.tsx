@@ -1,5 +1,6 @@
 import ClassNames from 'classnames';
 import flatpickr from 'flatpickr';
+import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeHeader.css';
@@ -133,7 +134,7 @@ class PageHomeHeader extends React.Component<any, any> {
                 </div>
                 <div className={formInputRootClass}>
                   <span>あいうえお</span>
-                  <input type="text" id="formDate"/>
+                  <input type="text" id="formDate" value="2019-07-07"/>
                 </div>
               </div>
               <div className="modal-footer">
@@ -173,7 +174,7 @@ class PageHomeHeader extends React.Component<any, any> {
 
   private onNewRecordBtnPushed() {
     global.console.log('onNewRecordBtnPushed');
-    flatpickr('#formDate');
+    flatpickr('#formDate', {locale: 'ja'});
   }
 }
 

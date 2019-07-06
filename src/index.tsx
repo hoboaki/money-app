@@ -4,7 +4,7 @@ import ReactDom from 'react-dom';
 import MainWindow from './MainWindow';
 
 // node_modules の css ロード
-import '../node_modules/flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/dark.css';
 
 // 全 css ファイルを require して watch 対応。
 function requireAll(r: any) {
