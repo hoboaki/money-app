@@ -133,8 +133,32 @@ class PageHomeHeader extends React.Component<any, any> {
                   </div>
                 </div>
                 <div className={formInputRootClass}>
-                  <span>あいうえお</span>
-                  <input type="text" id="formDate" value="2019-07-07"/>
+                  <table>
+                    <tr>
+                      <th scope="row">日付</th>
+                      <td>
+                        <input type="text" id="formDate" value="2019-07-07"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">カテゴリ</th>
+                      <td>
+                        <input type="text" value="家事費 > 食費"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">金額</th>
+                      <td>
+                        <input type="text" value="10000"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">メモ</th>
+                      <td>
+                        <input type="text" value="お弁当代"/>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
               </div>
               <div className="modal-footer">
