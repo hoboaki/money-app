@@ -15,7 +15,10 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 1000, 
     height: 600, 
-    titleBarStyle: 'hidden'
+    titleBarStyle: 'hidden',
+    webPreferences: {
+        nodeIntegration: true
+    }
   })
   //mainWindow.setMenuBarVisibility(false);
 
