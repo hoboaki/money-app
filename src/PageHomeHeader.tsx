@@ -147,6 +147,12 @@ class PageHomeHeader extends React.Component<any, any> {
                       </td>
                     </tr>
                     <tr>
+                      <th scope="row">口座</th>
+                      <td>
+                        <input type="text" value="財布"/>
+                      </td>
+                    </tr>
+                    <tr>
                       <th scope="row">金額</th>
                       <td>
                         <input type="text" value="10000"/>
