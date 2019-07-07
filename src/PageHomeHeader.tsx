@@ -171,8 +171,10 @@ class PageHomeHeader extends React.Component<any, any> {
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" className="btn btn-primary">Save changes</button>
+                <label htmlFor="continueCheckbox">
+                  <input type="checkbox" id="continueCheckbox"/>続けて入力
+                </label>
+                <button type="button" className="btn btn-primary">追加</button>
               </div>
             </div>
           </div>

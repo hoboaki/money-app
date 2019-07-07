@@ -205,3 +205,8 @@
 .FormInputMemo {
   width: 100%
 }
+
+.Root label, 
+.Root input[type='checkbox'] {
+  cursor: pointer;
+}
