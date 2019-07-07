@@ -103,3 +103,114 @@
 .RightArea {
   align-items: center;
 }
+
+.FormTabsRoot {
+  background: #eeeeee;
+  border-bottom: 1px solid #cccccc;
+  border-collapse: collapse;
+  color: rgba(0,0,0,0.87);
+  height: 40px;
+  padding-top: 8px;
+  width: 100%;
+}
+
+.FormTabsBase {
+  align-items: center;
+  background: #eeeeee;
+  border-collapse: collapse;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+.FormTab {
+  border-collapse: collapse;
+  border-left: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  justify-content: center;
+  margin-bottom: -1px;
+  padding-top: 2px;
+  width: 150px;
+}
+
+.FormTabLast {
+  border-right: 1px solid #cccccc;
+}
+
+.FormTabActive {
+  background: #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
+
+.FormSvgIcon {
+  display: block;
+  height: 18px;
+  margin-top: 3px;
+  margin-right: 2px;
+  width: 18px;
+}
+
+.FormInputRoot {
+  background: #ffffff;
+}
+
+.FormInputRoot table {
+  border: none;
+  margin-top: 20px;
+  margin-bottom: -1px;
+  width: 100%;
+}
+
+.FormInputRoot tr {
+  height: 48px;
+}
+
+.FormInputRoot th {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-left: none;
+  color: #707070;
+  font-weight: normal;
+  padding: 8px;
+  text-align: right;
+  width: 124px;
+}
+
+.FormInputRoot td {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-right: none;
+  padding: 8px;
+}
+
+.FormInputRoot input, 
+.FormInputRoot select {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 5px;
+  color: rgba(0,0,0,0.87);
+  display: block;
+  height: 30px;
+  outline: none;
+  padding-left: 8px;
+}
+
+.FormInputRoot select:hover {
+  color: rgba(0,0,0,0.87);
+}
+
+.FormInputMemo {
+  width: 100%
+}
+
+.FormFooterRoot label, 
+.FormFooterRoot input[type='checkbox'] {
+  cursor: pointer;
+  font-size: 10pt;
+}
+.FormFooterRoot input[type='checkbox'] {
+  margin: 0px 2px;
+}

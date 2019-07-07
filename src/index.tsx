@@ -3,6 +3,9 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import MainWindow from './MainWindow';
 
+// node_modules の css ロード
+import 'flatpickr/dist/themes/dark.css';
+
 // 全 css ファイルを require して watch 対応。
 function requireAll(r: any) {
   r.keys().forEach(r);
