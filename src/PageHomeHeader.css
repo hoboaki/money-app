@@ -166,6 +166,10 @@
   width: 100%;
 }
 
+.FormInputRoot tr {
+  height: 48px;
+}
+
 .FormInputRoot th {
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-left: none;
@@ -182,6 +186,18 @@
   padding: 8px;
 }
 
-.FormInputRoot input {
+.FormInputRoot input, 
+.FormInputRoot select {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 5px;
+  color: rgba(0,0,0,0.87);
+  display: block;
+  height: 30px;
+  outline: none;
+  padding-left: 8px;
+}
+
+.FormInputRoot select:hover {
   color: rgba(0,0,0,0.87);
 }

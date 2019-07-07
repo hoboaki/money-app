@@ -149,7 +149,10 @@ class PageHomeHeader extends React.Component<any, any> {
                     <tr>
                       <th scope="row">口座</th>
                       <td>
-                        <input type="text" value="財布"/>
+                        <select defaultValue="財布">
+                          <option value="財布">財布</option>
+                          <option value="アデリー銀行">アデリー銀行</option>
+                        </select>
                       </td>
                     </tr>
                     <tr>
