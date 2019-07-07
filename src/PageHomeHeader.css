@@ -212,6 +212,5 @@
   font-size: 10pt;
 }
 .FormFooterRoot input[type='checkbox'] {
-  cursor: pointer;
-  font-size: 10pt;
+  margin: 0px 2px;
 }

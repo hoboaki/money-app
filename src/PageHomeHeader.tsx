@@ -176,7 +176,7 @@ class PageHomeHeader extends React.Component<any, any> {
                 </div>
               </div>
               <div className={formFooterRootClass}>
-                <label htmlFor="continueCheckbox">
+                <label>
                   <input type="checkbox" id="continueCheckbox"/>続けて入力
                 </label>
                 <button type="button" className="btn btn-primary">追加</button>
