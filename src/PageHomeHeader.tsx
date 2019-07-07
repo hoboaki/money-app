@@ -1,11 +1,23 @@
 import ClassNames from 'classnames';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
+import * as Lodash from 'lodash';
 import * as React from 'react';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeHeader.css';
 
-class PageHomeHeader extends React.Component<any, any> {
+interface IState {
+  elementId: string;
+}
+
+class PageHomeHeader extends React.Component<any, IState> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      elementId: Lodash.uniqueId('PageHomeHeader'),
+    };
+  }
+
   public render() {
     const rootClass = ClassNames(
       Style.Root,
@@ -99,11 +111,11 @@ class PageHomeHeader extends React.Component<any, any> {
           <option value="month">月表示</option>
           <option value="year">年表示</option>
         </select>
-        <button className={filterBtnClass} onClick={this.onFilterBtnPushed}>
+        <button className={filterBtnClass} onClick={() => {this.onFilterBtnPushed(); }}>
           <i className={iconClass}>filter_list</i>
         </button>
         <div className={rightAreaClass}>
-          <button className={newRecordBtnClass} onClick={this.onNewRecordBtnPushed}
+          <button className={newRecordBtnClass} onClick={() => {this.onNewRecordBtnPushed(); }}
             data-toggle="modal" data-target="#basicExampleModal"
             >
             <i className={iconClass}>note_add</i>
@@ -143,7 +155,7 @@ class PageHomeHeader extends React.Component<any, any> {
                       <tr>
                         <th scope="row">日付</th>
                         <td>
-                          <input type="text" id="formDate" value="2019-07-07"/>
+                          <input type="text" id={`${this.state.elementId}_date`} value="2019-07-07"/>
                         </td>
                       </tr>
                       <tr>
@@ -216,7 +228,7 @@ class PageHomeHeader extends React.Component<any, any> {
 
   private onNewRecordBtnPushed() {
     global.console.log('onNewRecordBtnPushed');
-    flatpickr('#formDate', {locale: 'ja'});
+    flatpickr(`#${this.state.elementId}_date`, {locale: 'ja'});
   }
 }
 
