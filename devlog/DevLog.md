@@ -1,5 +1,24 @@
 # 開発記録
 
+## 2019-07-08 onClicked に記述する方法で this にアクセスできなくなる
+
+小一時間はまった。一緒に見えるじゃん！
+
+```ts
+// これだと onJumpBtnPushed 内の this は undefined
+onClick={this.onJumpBtnPushed}
+
+// これだと this にアクセス可
+onClick={() => {this.onJumpBtnPushed(); }}
+```
+
+## 2019-07-08 js ライブラリで引数に id を渡す奴の対処方法
+
+React なので id を適当につけると重複するのが恐い。
+lodash の uniqueId を使って重複を防ぐことにしました。
+
+https://lodash.com/docs#uniqueId
+
 ## 2019-07-06 node_modules 以下の css をスコープ処理せずそのまま読み込みたい
 
 webpack.config.js の css 処理周りをこのように変更したらいけた。
