@@ -139,39 +139,41 @@ class PageHomeHeader extends React.Component<any, any> {
                 </div>
                 <div className={formInputRootClass}>
                   <table>
-                    <tr>
-                      <th scope="row">日付</th>
-                      <td>
-                        <input type="text" id="formDate" value="2019-07-07"/>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">カテゴリ</th>
-                      <td>
-                        <input type="text" value="家事費 > 食費"/>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">口座</th>
-                      <td>
-                        <select defaultValue="財布">
-                          <option value="財布">財布</option>
-                          <option value="アデリー銀行">アデリー銀行</option>
-                        </select>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">金額</th>
-                      <td>
-                        <input type="text" value="10000"/>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">メモ</th>
-                      <td>
-                        <input className={Style.FormInputMemo} type="text" value="お弁当代"/>
-                      </td>
-                    </tr>
+                    <tbody>
+                      <tr>
+                        <th scope="row">日付</th>
+                        <td>
+                          <input type="text" id="formDate" value="2019-07-07"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">カテゴリ</th>
+                        <td>
+                          <input type="text" value="家事費 > 食費"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">口座</th>
+                        <td>
+                          <select defaultValue="財布">
+                            <option value="財布">財布</option>
+                            <option value="アデリー銀行">アデリー銀行</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">金額</th>
+                        <td>
+                          <input type="text" value="10000"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">メモ</th>
+                        <td>
+                          <input className={Style.FormInputMemo} type="text" value="お弁当代"/>
+                        </td>
+                      </tr>
+                    </tbody>
                   </table>
                 </div>
               </div>
