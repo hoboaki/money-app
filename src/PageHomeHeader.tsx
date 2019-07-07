@@ -79,6 +79,11 @@ class PageHomeHeader extends React.Component<any, any> {
     const formInputRootClass = ClassNames(
       Style.FormInputRoot,
     );
+
+    const formFooterRootClass = ClassNames(
+      'modal-footer',
+      Style.FormFooterRoot,
+    );
     return (
       <div className={rootClass}>
         <span className={currentDateClass}>2019年6月</span>
@@ -170,7 +175,7 @@ class PageHomeHeader extends React.Component<any, any> {
                   </table>
                 </div>
               </div>
-              <div className="modal-footer">
+              <div className={formFooterRootClass}>
                 <label htmlFor="continueCheckbox">
                   <input type="checkbox" id="continueCheckbox"/>続けて入力
                 </label>

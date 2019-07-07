@@ -206,7 +206,12 @@
   width: 100%
 }
 
-.Root label, 
-.Root input[type='checkbox'] {
+.FormFooterRoot label, 
+.FormFooterRoot input[type='checkbox'] {
   cursor: pointer;
+  font-size: 10pt;
+}
+.FormFooterRoot input[type='checkbox'] {
+  cursor: pointer;
+  font-size: 10pt;
 }
