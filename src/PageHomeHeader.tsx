@@ -164,7 +164,7 @@ class PageHomeHeader extends React.Component<any, any> {
                     <tr>
                       <th scope="row">メモ</th>
                       <td>
-                        <input type="text" value="お弁当代"/>
+                        <input className={Style.FormInputMemo} type="text" value="お弁当代"/>
                       </td>
                     </tr>
                   </table>
