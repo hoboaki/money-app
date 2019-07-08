@@ -4,9 +4,14 @@
 
 レコード入力のカテゴリ選択をどうするか。
 最初ドロップダウン（select）で考えていたのですが、ぴったりなライブラリが見つからず。
-最終的に Context Menu で選ばせるほうが理想に近いのでそうしてみることに。
+最終的に jquery-contextmenu で選ばせるのが理想に近いのでそうしてみることに。
 
 https://swisnl.github.io/jQuery-contextMenu/
+
+
+日付ピッカーもこういうのもあるみたい。テキスト入力に対応させるならこっちに乗換だけど需要出るまで保留。
+
+http://js.studio-kingdom.com/jqueryui/widgets/datepicker
 
 
 ## 2019-07-08 onClicked に記述する方法で this にアクセスできなくなる
