@@ -3,18 +3,19 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
 import * as Lodash from 'lodash';
 import * as React from 'react';
+import DialogRecordAdd from './DialogRecordAdd';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeHeader.css';
 
 interface IState {
-  elementId: string;
+  modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
 }
 
 class PageHomeHeader extends React.Component<any, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      elementId: Lodash.uniqueId('PageHomeHeader'),
+      modalAddRecord: false,
     };
   }
 
@@ -66,36 +67,10 @@ class PageHomeHeader extends React.Component<any, IState> {
       'md-16',
       'md-dark',
     );
-
-    const formTabsRootClass = ClassNames(
-      Style.FormTabsRoot,
-    );
-    const formTabsBaseClass = ClassNames(
-      Style.FormTabsBase,
-    );
-    const formTabOutgoClass = ClassNames(
-      Style.FormTab,
-      Style.FormTabActive,
-    );
-    const formTabIncomeClass = ClassNames(
-      Style.FormTab,
-    );
-    const formTabTransferClass = ClassNames(
-      Style.FormTab,
-      Style.FormTabLast,
-    );
-    const formSvgIconClass = ClassNames(
-      Style.FormSvgIcon,
-    );
-
-    const formInputRootClass = ClassNames(
-      Style.FormInputRoot,
-    );
-
-    const formFooterRootClass = ClassNames(
-      'modal-footer',
-      Style.FormFooterRoot,
-    );
+    let modalDialog: JSX.Element | null = null;
+    if (this.state.modalAddRecord) {
+        modalDialog = <DialogRecordAdd onClosed={() => {global.console.log('onClosed'); }}/>;
+    }
     return (
       <div className={rootClass}>
         <span className={currentDateClass}>2019年6月</span>
@@ -115,89 +90,12 @@ class PageHomeHeader extends React.Component<any, IState> {
           <i className={iconClass}>filter_list</i>
         </button>
         <div className={rightAreaClass}>
-          <button className={newRecordBtnClass} onClick={() => {this.onNewRecordBtnPushed(); }}
-            data-toggle="modal" data-target="#basicExampleModal"
-            >
+          <button className={newRecordBtnClass} onClick={() => {this.onNewRecordBtnPushed(); }}>
             <i className={iconClass}>note_add</i>
           </button>
           <div style={{width: '100%'}}/>
         </div>
-        <div className="modal fade" id="basicExampleModal" tabIndex={-1}
-          role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">レコードの追加</h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div>
-                <div className={formTabsRootClass}>
-                  <div className={formTabsBaseClass}>
-                    <div className={formTabOutgoClass}>
-                      <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
-                      <span>支出</span>
-                    </div>
-                    <div className={formTabIncomeClass}>
-                      <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
-                      <span>収入</span>
-                    </div>
-                    <div className={formTabTransferClass}>
-                      <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
-                      <span>振替</span>
-                    </div>
-                  </div>
-                </div>
-                <div className={formInputRootClass}>
-                  <table>
-                    <tbody>
-                      <tr>
-                        <th scope="row">日付</th>
-                        <td>
-                          <input type="text" id={`${this.state.elementId}_date`} value="2019-07-07"/>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">カテゴリ</th>
-                        <td>
-                          <input type="text" value="家事費 > 食費"/>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">口座</th>
-                        <td>
-                          <select defaultValue="財布">
-                            <option value="財布">財布</option>
-                            <option value="アデリー銀行">アデリー銀行</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">金額</th>
-                        <td>
-                          <input type="text" value="10000"/>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">メモ</th>
-                        <td>
-                          <input className={Style.FormInputMemo} type="text" value="お弁当代"/>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className={formFooterRootClass}>
-                <label>
-                  <input type="checkbox" id="continueCheckbox"/>続けて入力
-                </label>
-                <button type="button" className="btn btn-primary">追加</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        {modalDialog}
       </div>
     );
   }
@@ -228,7 +126,7 @@ class PageHomeHeader extends React.Component<any, IState> {
 
   private onNewRecordBtnPushed() {
     global.console.log('onNewRecordBtnPushed');
-    flatpickr(`#${this.state.elementId}_date`, {locale: 'ja'});
+    this.setState({modalAddRecord: true});
   }
 }
 
