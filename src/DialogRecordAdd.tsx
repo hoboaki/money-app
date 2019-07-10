@@ -15,6 +15,7 @@ interface IState {
 class DialogRecordAdd extends React.Component<IProps, IState> {
   private elementIdRoot: string;
   private elementIdFormDate: string;
+  private closeObserver: MutationObserver;
 
   constructor(props: IProps) {
     super(props);
@@ -23,12 +24,38 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
     };
     this.elementIdRoot = Lodash.uniqueId('Root');
     this.elementIdFormDate = this.state.elementId;
+    this.closeObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'aria-modal' && mutation.oldValue === 'true') {
+          this.props.onClosed();
+        }
+      });
+    });
   }
 
   public componentDidMount() {
-    global.console.log('DialogRecordAdd.componentDidMount');
+    // DatePicker セットアップ
     flatpickr(`#${this.elementIdFormDate}`, {locale: 'ja'});
+
+    // MDB が TypeScript 非対応なので文字列で実行
     new Function(`$('#${this.elementIdRoot}').modal('show')`)();
+
+    // ダイアログの閉じ終わった瞬間を感知するための監視
+    // TypeScript 環境では MDB Modal に JavaScript イベントを登録できないため属性変更検知で代用
+    const target = document.getElementById(this.elementIdRoot);
+    if (target === null) {
+      throw new Error();
+    }
+    const config = {
+      attributeOldValue: true,
+      attributes: true,
+      subtree: false,
+    };
+    this.closeObserver.observe(target, config);
+  }
+
+  public componentWillUnmount() {
+    this.closeObserver.disconnect();
   }
 
   public render() {

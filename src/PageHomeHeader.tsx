@@ -1,7 +1,4 @@
 import ClassNames from 'classnames';
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/l10n/ja.js';
-import * as Lodash from 'lodash';
 import * as React from 'react';
 import DialogRecordAdd from './DialogRecordAdd';
 import * as LayoutStyle from './Layout.css';
@@ -69,7 +66,9 @@ class PageHomeHeader extends React.Component<any, IState> {
     );
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalAddRecord) {
-        modalDialog = <DialogRecordAdd onClosed={() => {global.console.log('onClosed'); }}/>;
+        modalDialog = <DialogRecordAdd onClosed={() => {
+          this.setState({modalAddRecord: false});
+        }}/>;
     }
     return (
       <div className={rootClass}>
