@@ -1,5 +1,26 @@
 # 開発記録
 
+## 2019-07-11 TypeScript から MDB Dialog をなんとかして操作
+
+開くのは Function で。
+
+```ts
+// MDB が TypeScript 非対応なので文字列で実行
+new Function(`$('#${this.elementIdRoot}').modal('show')`)();
+```
+
+閉じた瞬間のコールバックは MutationObserver でしのぎました。
+
+```ts
+this.closeObserver = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.attributeName === 'aria-modal' && mutation.oldValue === 'true') {
+      this.props.onClosed();
+    }
+  });
+});
+```
+
 ## 2019-07-09 カテゴリ選択どうするか
 
 レコード入力のカテゴリ選択をどうするか。
