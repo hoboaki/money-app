@@ -8,22 +8,16 @@ import * as Style from './DialogRecordAdd.css';
 interface IProps {
   onClosed: (() => void);
 }
-interface IState {
-  elementId: string;
-}
 
-class DialogRecordAdd extends React.Component<IProps, IState> {
+class DialogRecordAdd extends React.Component<IProps, any> {
   private elementIdRoot: string;
   private elementIdFormDate: string;
   private closeObserver: MutationObserver;
 
   constructor(props: IProps) {
     super(props);
-    this.state = {
-      elementId: Lodash.uniqueId('FormDate'),
-    };
-    this.elementIdRoot = Lodash.uniqueId('Root');
-    this.elementIdFormDate = this.state.elementId;
+    this.elementIdRoot = Lodash.uniqueId('dialogRecordAddRoot');
+    this.elementIdFormDate = Lodash.uniqueId('dialogRecordAddFormDate');
     this.closeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'aria-modal' && mutation.oldValue === 'true') {
