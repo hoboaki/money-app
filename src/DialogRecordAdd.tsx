@@ -40,14 +40,30 @@ class DialogRecordAdd extends React.Component<IProps, any> {
         global.console.log(m);
       },
       items: {
-        edit: {name: 'Edit', icon: 'edit'},
-        cut: {name: 'Cut', icon: 'cut'},
-        copy: {name: 'Copy', icon: 'copy'},
-        paste: {name: 'Paste', icon: 'paste'},
-        delete: {name: 'Delete', icon: 'delete'},
-        sep1: '---------',
-        quit: {
-          name: 'Quit',
+        cat0: {
+          name: '家事費',
+          items: {
+            sub0: {name: '食費'},
+            sub1: {name: '日用品'},
+            sub2: {name: '妻小遣い'},
+          },
+        },
+        cat1: {
+          name: '光熱・通信費',
+          items: {
+            sub0: {name: '電気'},
+            sub1: {name: '水道'},
+            sub2: {name: 'プロバイダ・光電話'},
+            sub3: {name: 'CATV'},
+            sub4: {name: 'NHK'},
+          },
+        },
+        cat2: {
+          name: '通勤・通学費',
+          items: {
+            sub0: {name: '洗車'},
+            sub1: {name: 'ガソリン'},
+          },
         },
       },
       selector: `#${this.elementIdFormCategory}`,
