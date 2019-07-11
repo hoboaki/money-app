@@ -5,7 +5,6 @@
     ],
     "jsRules": {},
     "rules": {
-        "object-literal-sort-keys" : false,
         "quotemark": [true, "single", "jsx-double"]
     },
     "rulesDirectory": []
