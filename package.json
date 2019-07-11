@@ -11,6 +11,8 @@
   "devDependencies": {
     "@types/classnames": "^2.2.9",
     "@types/flatpickr": "^3.1.2",
+    "@types/jquery": "^3.3.30",
+    "@types/jquery.contextmenu": "^1.7.34",
     "@types/lodash": "^4.14.135",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
@@ -21,6 +23,8 @@
     "css-loader": "^3.0.0",
     "electron": "^5.0.6",
     "flatpickr": "^4.6.1",
+    "jquery": "^3.4.1",
+    "jquery-contextmenu": "^2.8.0",
     "lodash": "^4.17.11",
     "split.js": "^1.5.11",
     "style-loader": "^0.23.1",
