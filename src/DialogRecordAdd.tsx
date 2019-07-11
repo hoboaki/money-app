@@ -1,6 +1,7 @@
 import ClassNames from 'classnames';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
+import 'jquery-contextmenu'; // @ts-ignore
 import * as Lodash from 'lodash';
 import * as React from 'react';
 import * as Style from './DialogRecordAdd.css';
@@ -11,12 +12,14 @@ interface IProps {
 
 class DialogRecordAdd extends React.Component<IProps, any> {
   private elementIdRoot: string;
+  private elementIdFormCategory: string;
   private elementIdFormDate: string;
   private closeObserver: MutationObserver;
 
   constructor(props: IProps) {
     super(props);
     this.elementIdRoot = Lodash.uniqueId('dialogRecordAddRoot');
+    this.elementIdFormCategory = Lodash.uniqueId('dialogRecordAddFormCategory');
     this.elementIdFormDate = Lodash.uniqueId('dialogRecordAddFormDate');
     this.closeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
@@ -30,6 +33,27 @@ class DialogRecordAdd extends React.Component<IProps, any> {
   public componentDidMount() {
     // DatePicker セットアップ
     flatpickr(`#${this.elementIdFormDate}`, {locale: 'ja'});
+
+    // ContextMenu セットアップ
+    $.contextMenu({
+      callback: (key, options) => {
+        const m = 'clicked: ' + key;
+        global.console.log(m);
+      },
+      items: {
+        edit: {name: 'Edit', icon: 'edit'},
+        cut: {name: 'Cut', icon: 'cut'},
+        copy: {name: 'Copy', icon: 'copy'},
+        paste: {name: 'Paste', icon: 'paste'},
+        delete: {name: 'Delete', icon: 'delete'},
+        sep1: '---------',
+        quit: {
+          name: 'Quit',
+        },
+      },
+      selector: `#${this.elementIdFormCategory}`,
+      trigger: 'left',
+    });
 
     // MDB が TypeScript 非対応なので文字列で実行
     new Function(`$('#${this.elementIdRoot}').modal('show')`)();
@@ -122,7 +146,7 @@ class DialogRecordAdd extends React.Component<IProps, any> {
                     <tr>
                       <th scope="row">カテゴリ</th>
                       <td>
-                        <input type="text" value="家事費 > 食費"/>
+                        <input type="text" id={this.elementIdFormCategory} value="家事費 > 食費"/>
                       </td>
                     </tr>
                     <tr>

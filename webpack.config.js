@@ -51,6 +51,10 @@ module.exports = {
                 test: /src\/.*\.css$/,
                 loaders: ['style-loader', 'css-loader?modules'],
             },
+            {
+              test: /\.(woff|woff2|eot|ttf|svg)$/,
+              loader: 'file-loader?name=../font/[name].[ext]'
+            },
         ],
     },
     // 処理対象のファイルを記載する
