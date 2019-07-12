@@ -9,14 +9,39 @@ interface IProps {
   onClosed: (() => void);
 }
 
-class DialogRecordAdd extends React.Component<IProps, any> {
+interface ICategory {
+  name: string;
+  items: Array<{
+    name: string;
+  }>;
+}
+
+interface ISelectedCategory {
+  index: number;
+  indexSub: number;
+}
+
+interface IState {
+  selectedCategory: ISelectedCategory;
+}
+
+class DialogRecordAdd extends React.Component<IProps, IState> {
   private elementIdRoot: string;
+  private elementIdFormCategory: string;
   private elementIdFormDate: string;
   private closeObserver: MutationObserver;
+  private demoCategories: ICategory[];
 
   constructor(props: IProps) {
     super(props);
+    this.state = {
+      selectedCategory: {
+        index: 0,
+        indexSub: 0,
+      },
+    };
     this.elementIdRoot = Lodash.uniqueId('dialogRecordAddRoot');
+    this.elementIdFormCategory = Lodash.uniqueId('dialogRecordAddFormCategory');
     this.elementIdFormDate = Lodash.uniqueId('dialogRecordAddFormDate');
     this.closeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
@@ -25,11 +50,68 @@ class DialogRecordAdd extends React.Component<IProps, any> {
         }
       });
     });
+    this.demoCategories = [
+      {
+        name: '家事費',
+        items: [
+          {name: '食費'},
+          {name: '日用品'},
+          {name: '妻小遣い'},
+        ],
+      },
+      {
+        name: '光熱・通信費',
+        items: [
+          {name: '電気'},
+          {name: 'プロバイダ・光電話'},
+          {name: '水道'},
+          {name: 'CATV'},
+          {name: 'NHK'},
+        ],
+      },
+      {
+        name: '通勤・通学費',
+        items: [
+          {name: '洗車'},
+          {name: 'ガソリン'},
+        ],
+      },
+    ];
   }
 
   public componentDidMount() {
     // DatePicker セットアップ
     flatpickr(`#${this.elementIdFormDate}`, {locale: 'ja'});
+
+    // ContextMenu セットアップ
+    const categoryItems: {[key: string]: any} = {};
+    this.demoCategories.map((mainValue, mainIndex, mainArray) => {
+      const subItems: {[key: string]: any} = {};
+      mainValue.items.map((subValue, subIndex, subArray) => {
+        subItems[`category-${mainIndex}-${subIndex}`] = {
+          name: subValue.name,
+        };
+      });
+      categoryItems[`category-${mainIndex}`] = {
+        name: mainValue.name,
+        items: subItems,
+      };
+    });
+    $.contextMenu({
+      callback: (key, options) => {
+        const texts = key.split('-');
+        this.setState({
+          selectedCategory: {
+            index: parseInt(texts[1], 10),
+            indexSub: parseInt(texts[2], 10),
+          },
+        });
+      },
+      className: Style.ContextMenuRoot,
+      items: categoryItems,
+      selector: `#${this.elementIdFormCategory}`,
+      trigger: 'left',
+    });
 
     // MDB が TypeScript 非対応なので文字列で実行
     new Function(`$('#${this.elementIdRoot}').modal('show')`)();
@@ -77,6 +159,9 @@ class DialogRecordAdd extends React.Component<IProps, any> {
     const formInputRootClass = ClassNames(
       Style.FormInputRoot,
     );
+    const formInputCategoryClass = ClassNames(
+      Style.FormInputCategory,
+    );
 
     const formFooterRootClass = ClassNames(
       'modal-footer',
@@ -122,7 +207,13 @@ class DialogRecordAdd extends React.Component<IProps, any> {
                     <tr>
                       <th scope="row">カテゴリ</th>
                       <td>
-                        <input type="text" value="家事費 > 食費"/>
+                        <input
+                          type="text"
+                          id={this.elementIdFormCategory}
+                          className={formInputCategoryClass}
+                          readOnly={true}
+                          value={this.categoryDisplayText()}
+                          />
                       </td>
                     </tr>
                     <tr>
@@ -160,6 +251,14 @@ class DialogRecordAdd extends React.Component<IProps, any> {
         </div>
       </div>
     );
+  }
+
+  /// カテゴリインプットに表示するテキストを返す。
+  private categoryDisplayText(): string {
+    const parentCategory = this.demoCategories[this.state.selectedCategory.index];
+    const name0 = parentCategory.name;
+    const name1 = parentCategory.items[this.state.selectedCategory.indexSub].name;
+    return `${name0} > ${name1}`;
   }
 }
 

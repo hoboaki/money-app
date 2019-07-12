@@ -96,6 +96,10 @@
   color: rgba(0,0,0,0.87);
 }
 
+.FormInputCategory {
+  cursor: pointer;
+}
+
 .FormInputMemo {
   width: 100%
 }
@@ -107,4 +111,9 @@
 }
 .FormFooterRoot input[type='checkbox'] {
   margin: 0px 2px;
+}
+
+.ContextMenuRoot {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: .8rem;
 }
