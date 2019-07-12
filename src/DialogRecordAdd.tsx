@@ -117,6 +117,9 @@ class DialogRecordAdd extends React.Component<IProps, any> {
     const formInputRootClass = ClassNames(
       Style.FormInputRoot,
     );
+    const formInputCategoryClass = ClassNames(
+      Style.FormInputCategory,
+    );
 
     const formFooterRootClass = ClassNames(
       'modal-footer',
@@ -162,7 +165,13 @@ class DialogRecordAdd extends React.Component<IProps, any> {
                     <tr>
                       <th scope="row">カテゴリ</th>
                       <td>
-                        <input type="text" id={this.elementIdFormCategory} value="家事費 > 食費"/>
+                        <input
+                          type="text"
+                          id={this.elementIdFormCategory}
+                          className={formInputCategoryClass}
+                          readOnly={true}
+                          value="家事費 > 食費"
+                          />
                       </td>
                     </tr>
                     <tr>

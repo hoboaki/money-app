@@ -96,6 +96,10 @@
   color: rgba(0,0,0,0.87);
 }
 
+.FormInputCategory {
+  cursor: pointer;
+}
+
 .FormInputMemo {
   width: 100%
 }
