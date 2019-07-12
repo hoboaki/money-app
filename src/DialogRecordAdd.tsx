@@ -39,6 +39,7 @@ class DialogRecordAdd extends React.Component<IProps, any> {
         const m = 'clicked: ' + key;
         global.console.log(m);
       },
+      className: Style.ContextMenuRoot,
       items: {
         cat0: {
           name: '家事費',
