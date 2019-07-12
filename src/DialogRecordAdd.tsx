@@ -16,11 +16,17 @@ interface ICategory {
   }>;
 }
 
+interface ISelectedCategory {
+  index: number;
+  indexSub: number;
+}
+
 class DialogRecordAdd extends React.Component<IProps, any> {
   private elementIdRoot: string;
   private elementIdFormCategory: string;
   private elementIdFormDate: string;
   private closeObserver: MutationObserver;
+  private formSelectedCategory: ISelectedCategory;
   private demoCategories: ICategory[];
 
   constructor(props: IProps) {
@@ -35,6 +41,10 @@ class DialogRecordAdd extends React.Component<IProps, any> {
         }
       });
     });
+    this.formSelectedCategory = {
+      index: 0,
+      indexSub: 0,
+    };
     this.demoCategories = [
       {
         name: '家事費',
@@ -192,7 +202,7 @@ class DialogRecordAdd extends React.Component<IProps, any> {
                           id={this.elementIdFormCategory}
                           className={formInputCategoryClass}
                           readOnly={true}
-                          value="家事費 > 食費"
+                          value={this.categoryDisplayText()}
                           />
                       </td>
                     </tr>
@@ -231,6 +241,13 @@ class DialogRecordAdd extends React.Component<IProps, any> {
         </div>
       </div>
     );
+  }
+
+  private categoryDisplayText(): string {
+    const parentCategory = this.demoCategories[this.formSelectedCategory.index];
+    const name0 = parentCategory.name;
+    const name1 = parentCategory.items[this.formSelectedCategory.indexSub].name;
+    return `${name0} > ${name1}`;
   }
 }
 
