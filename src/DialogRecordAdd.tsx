@@ -21,16 +21,25 @@ interface ISelectedCategory {
   indexSub: number;
 }
 
-class DialogRecordAdd extends React.Component<IProps, any> {
+interface IState {
+  selectedCategory: ISelectedCategory;
+}
+
+class DialogRecordAdd extends React.Component<IProps, IState> {
   private elementIdRoot: string;
   private elementIdFormCategory: string;
   private elementIdFormDate: string;
   private closeObserver: MutationObserver;
-  private formSelectedCategory: ISelectedCategory;
   private demoCategories: ICategory[];
 
   constructor(props: IProps) {
     super(props);
+    this.state = {
+      selectedCategory: {
+        index: 0,
+        indexSub: 0,
+      },
+    };
     this.elementIdRoot = Lodash.uniqueId('dialogRecordAddRoot');
     this.elementIdFormCategory = Lodash.uniqueId('dialogRecordAddFormCategory');
     this.elementIdFormDate = Lodash.uniqueId('dialogRecordAddFormDate');
@@ -41,10 +50,6 @@ class DialogRecordAdd extends React.Component<IProps, any> {
         }
       });
     });
-    this.formSelectedCategory = {
-      index: 0,
-      indexSub: 0,
-    };
     this.demoCategories = [
       {
         name: '家事費',
@@ -94,8 +99,13 @@ class DialogRecordAdd extends React.Component<IProps, any> {
     });
     $.contextMenu({
       callback: (key, options) => {
-        const m = 'clicked: ' + key;
-        global.console.log(m);
+        const texts = key.split('-');
+        this.setState({
+          selectedCategory: {
+            index: parseInt(texts[1], 10),
+            indexSub: parseInt(texts[2], 10),
+          },
+        });
       },
       className: Style.ContextMenuRoot,
       items: categoryItems,
@@ -243,10 +253,11 @@ class DialogRecordAdd extends React.Component<IProps, any> {
     );
   }
 
+  /// カテゴリインプットに表示するテキストを返す。
   private categoryDisplayText(): string {
-    const parentCategory = this.demoCategories[this.formSelectedCategory.index];
+    const parentCategory = this.demoCategories[this.state.selectedCategory.index];
     const name0 = parentCategory.name;
-    const name1 = parentCategory.items[this.formSelectedCategory.indexSub].name;
+    const name1 = parentCategory.items[this.state.selectedCategory.indexSub].name;
     return `${name0} > ${name1}`;
   }
 }
