@@ -9,11 +9,19 @@ interface IProps {
   onClosed: (() => void);
 }
 
+interface ICategory {
+  name: string;
+  items: Array<{
+    name: string;
+  }>;
+}
+
 class DialogRecordAdd extends React.Component<IProps, any> {
   private elementIdRoot: string;
   private elementIdFormCategory: string;
   private elementIdFormDate: string;
   private closeObserver: MutationObserver;
+  private demoCategories: ICategory[];
 
   constructor(props: IProps) {
     super(props);
@@ -27,6 +35,33 @@ class DialogRecordAdd extends React.Component<IProps, any> {
         }
       });
     });
+    this.demoCategories = [
+      {
+        name: '家事費',
+        items: [
+          {name: '食費'},
+          {name: '日用品'},
+          {name: '妻小遣い'},
+        ],
+      },
+      {
+        name: '光熱・通信費',
+        items: [
+          {name: '電気'},
+          {name: 'プロバイダ・光電話'},
+          {name: '水道'},
+          {name: 'CATV'},
+          {name: 'NHK'},
+        ],
+      },
+      {
+        name: '通勤・通学費',
+        items: [
+          {name: '洗車'},
+          {name: 'ガソリン'},
+        ],
+      },
+    ];
   }
 
   public componentDidMount() {
@@ -34,39 +69,26 @@ class DialogRecordAdd extends React.Component<IProps, any> {
     flatpickr(`#${this.elementIdFormDate}`, {locale: 'ja'});
 
     // ContextMenu セットアップ
+    const categoryItems: {[key: string]: any} = {};
+    this.demoCategories.map((mainValue, mainIndex, mainArray) => {
+      const subItems: {[key: string]: any} = {};
+      mainValue.items.map((subValue, subIndex, subArray) => {
+        subItems[`category-${mainIndex}-${subIndex}`] = {
+          name: subValue.name,
+        };
+      });
+      categoryItems[`category-${mainIndex}`] = {
+        name: mainValue.name,
+        items: subItems,
+      };
+    });
     $.contextMenu({
       callback: (key, options) => {
         const m = 'clicked: ' + key;
         global.console.log(m);
       },
       className: Style.ContextMenuRoot,
-      items: {
-        cat0: {
-          name: '家事費',
-          items: {
-            sub0: {name: '食費'},
-            sub1: {name: '日用品'},
-            sub2: {name: '妻小遣い'},
-          },
-        },
-        cat1: {
-          name: '光熱・通信費',
-          items: {
-            sub0: {name: '電気'},
-            sub1: {name: '水道'},
-            sub2: {name: 'プロバイダ・光電話'},
-            sub3: {name: 'CATV'},
-            sub4: {name: 'NHK'},
-          },
-        },
-        cat2: {
-          name: '通勤・通学費',
-          items: {
-            sub0: {name: '洗車'},
-            sub1: {name: 'ガソリン'},
-          },
-        },
-      },
+      items: categoryItems,
       selector: `#${this.elementIdFormCategory}`,
       trigger: 'left',
     });
