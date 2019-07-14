@@ -4,6 +4,7 @@ import Redux from 'redux';
 import createA2RMapper from '../../utils/ActionToReducerMapper';
 import * as Action from './Action';
 import * as State from './State';
+import * as StateMethod from './StateMethod';
 
 const a2RMapper = createA2RMapper<State.IState>();
 
@@ -11,7 +12,7 @@ const a2RMapper = createA2RMapper<State.IState>();
 a2RMapper.addWork<Action.IAddRecordOutgo>(
     Action.ADD_RECORD_OUTGO,
     (state, action) => {
-        State.outgoRecordAddNew(
+        StateMethod.outgoRecordAddNew(
           state,
           action.date,
           action.memo,

@@ -1,6 +1,8 @@
+import YearMonthDayDate from '../../utils/YearMonthDayDate';
+
 export interface IRecord {
   id: number;
-  date: string;
+  date: YearMonthDayDate;
   memo: string;
 }
 
@@ -60,7 +62,7 @@ export const defaultState: IState = {
  */
 export const outgoRecordAddNew = (
   state: IState,
-  date: string,
+  date: YearMonthDayDate,
   memo: string,
   accountId: number,
   categoryId: number,
