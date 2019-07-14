@@ -22,6 +22,7 @@ interface ISelectedCategory {
 }
 
 interface IState {
+  selectedDate: string;
   selectedCategory: ISelectedCategory;
 }
 
@@ -35,6 +36,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
+      selectedDate: '2019-07-07',
       selectedCategory: {
         index: 0,
         indexSub: 0,
@@ -81,7 +83,12 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
 
   public componentDidMount() {
     // DatePicker セットアップ
-    flatpickr(`#${this.elementIdFormDate}`, {locale: 'ja'});
+    flatpickr(`#${this.elementIdFormDate}`, {
+      locale: 'ja',
+      onClose: ((selectedDates, dateStr, instance) => {
+        this.setState({selectedDate: dateStr});
+      }),
+    });
 
     // ContextMenu セットアップ
     const categoryItems: {[key: string]: any} = {};
@@ -201,7 +208,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
                     <tr>
                       <th scope="row">日付</th>
                       <td>
-                        <input type="text" id={this.elementIdFormDate} value="2019-07-07"/>
+                        <input type="text" id={this.elementIdFormDate} value={this.state.selectedDate}/>
                       </td>
                     </tr>
                     <tr>
