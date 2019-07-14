@@ -8,10 +8,17 @@ import * as State from './State';
 const a2RMapper = createA2RMapper<State.IState>();
 
 // タスクを追加する。
-a2RMapper.addWork<Action.IRecordOutgoAddAction>(
-    Action.RECORD_OUTGO_ADD,
+a2RMapper.addWork<Action.IAddRecordOutgo>(
+    Action.ADD_RECORD_OUTGO,
     (state, action) => {
-        state.hoge = 1;
+        State.outgoRecordAddNew(
+          state,
+          action.date,
+          action.memo,
+          action.accountId,
+          action.categoryId,
+          action.amount,
+          );
     },
 );
 
