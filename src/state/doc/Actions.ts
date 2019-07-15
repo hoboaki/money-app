@@ -12,7 +12,7 @@ export interface IAddRecordOutgo extends Action {
   categoryId: number;
   amount: number;
 }
-export const createAddRecordOutgo = (
+export const addRecordOutgo = (
   date: YearMonthDayDate,
   memo: string,
   accountId: number,
