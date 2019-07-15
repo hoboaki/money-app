@@ -2,8 +2,8 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import { Provider } from 'react-redux'; // 追加
-import MainWindow from './MainWindow';
 import Store from './state/Store'; // 追加
+import MainWindow from './view/MainWindow';
 
 // node_modules の css ロード
 import 'flatpickr/dist/themes/dark.css';
