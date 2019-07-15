@@ -12,34 +12,64 @@ class SampleDoc {
 
     // 口座
     const accountId = StateMethods.accountAdd(state, '財布', Types.AccountKind.AssetsCash, 2020);
-    StateMethods.accountAdd(state, 'アデリー銀行', Types.AccountKind.AssetsBank, 504000);
+    const bankAccountId = StateMethods.accountAdd(state, 'アデリー銀行', Types.AccountKind.AssetsBank, 504000);
     StateMethods.accountAdd(state, 'コウテイ銀行', Types.AccountKind.AssetsBank, 12036756);
-    StateMethods.accountAdd(state, 'PPPカード', Types.AccountKind.LiabilitiesCard, 0);
+    const creditCardAccountId = StateMethods.accountAdd(state, 'PPPカード', Types.AccountKind.LiabilitiesCard, 0);
     StateMethods.accountAdd(state, 'キングカード', Types.AccountKind.LiabilitiesCard, 0);
+    global.console.assert(Object.keys(state.accounts).length === 5);
 
     // 入金
-    // const categoryId = state.incomeCategoryAdd('お小遣い', null);
-    // state.incomeRecordAdd(
-    //   YearMonthDayDate.FromText('2018-01-02'),
-    //   '1月分お小遣い',
-    //   state.accounts[accountId],
-    //   state.income.categories[categoryId],
-    //   3000,
-    // );
+    {
+      const categoryId = StateMethods.incomeCategoryAdd(state, 'お小遣い', null);
+      const currentDate = new Date();
+      StateMethods.incomeRecordAdd(
+        state,
+        currentDate,
+        currentDate,
+        YearMonthDayDate.fromText('2018-01-02'),
+        '1月分お小遣い',
+        accountId,
+        categoryId,
+        3000,
+      );
+      global.console.assert(Object.keys(state.income.categories).length === 1);
+      global.console.assert(Object.keys(state.income.records).length === 1);
+    }
 
     // 出金
-    const categoryId = StateMethods.outgoCategoryAdd(state, '雑費', null);
-    const currentDate = new Date();
-    StateMethods.outgoRecordAdd(
-      state,
-      currentDate,
-      currentDate,
-      YearMonthDayDate.fromText('2018-01-02'),
-      'メガネケース',
-      accountId,
-      categoryId,
-      3000,
-    );
+    {
+      const categoryId = StateMethods.outgoCategoryAdd(state, '雑費', null);
+      const currentDate = new Date();
+      StateMethods.outgoRecordAdd(
+        state,
+        currentDate,
+        currentDate,
+        YearMonthDayDate.fromText('2018-01-02'),
+        'メガネケース',
+        accountId,
+        categoryId,
+        3000,
+      );
+      global.console.assert(Object.keys(state.outgo.categories).length === 1);
+      global.console.assert(Object.keys(state.outgo.records).length === 1);
+    }
+
+    // 送金
+    {
+      const currentDate = new Date();
+      StateMethods.transferRecordAdd(
+        state,
+        currentDate,
+        currentDate,
+        YearMonthDayDate.fromText('2018-02-01'),
+        '1月分請求',
+        bankAccountId,
+        creditCardAccountId,
+        20000,
+      );
+      global.console.assert(Object.keys(state.transfer.records).length === 1);
+    }
+
     return state;
   }
 
