@@ -13,6 +13,8 @@ export const outgoRecordAddNew = (
   categoryId: number,
   amount: number,
   ) => {
+  global.console.log('Called outgoRecordAddNew');
+
   // オブジェクト作成
   const obj = {
     id: 0,
