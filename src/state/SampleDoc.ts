@@ -29,9 +29,11 @@ class SampleDoc {
 
     // 出金
     const categoryId = StateMethods.outgoCategoryAdd(state, '雑費', null);
+    const currentDate = new Date();
     StateMethods.outgoRecordAdd(
       state,
-      new Date(),
+      currentDate,
+      currentDate,
       YearMonthDayDate.fromText('2018-01-02'),
       'メガネケース',
       accountId,

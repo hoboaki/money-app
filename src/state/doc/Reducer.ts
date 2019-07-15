@@ -15,6 +15,7 @@ a2RMapper.addWork<Action.IAddRecordOutgo>(
         StateMethods.outgoRecordAdd(
           state,
           action.createDate,
+          action.createDate, // 新規レコードなので更新日時は作成日時と同じでOK。
           action.date,
           action.memo,
           action.accountId,
