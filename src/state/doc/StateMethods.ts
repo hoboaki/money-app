@@ -55,7 +55,8 @@ export const fromData = (src: DataRoot) => {
         }
         outgoRecordAdd(
           r,
-          new Date(), // @todo データからひっぱってくる。
+          new Date(data.createDate),
+          new Date(data.updateDate),
           YearMonthDayDate.fromText(data.date),
           data.memo,
           accountId,
@@ -111,6 +112,8 @@ export const toData = (state: States.IState) => {
       }
       const src = state.outgo.records[key];
       const data = new DataRecordOutgo();
+      data.createDate = src.createDate.toISOString();
+      data.updateDate = src.updateDate.toISOString();
       data.date = src.date.toText();
       data.memo = src.memo;
       data.amount = src.amount;
@@ -186,6 +189,7 @@ export const outgoCategoryAdd = (
 export const outgoRecordAdd = (
   state: States.IState,
   createDate: Date,
+  updateDate: Date,
   date: YearMonthDayDate,
   memo: string,
   accountId: number,
@@ -198,7 +202,7 @@ export const outgoRecordAdd = (
   const obj = {
     id: 0,
     createDate,
-    updateDate: createDate,
+    updateDate,
     date,
     memo,
     account: accountId,
