@@ -1,8 +1,8 @@
 import Clone from 'clone';
-import DataAccount from '../../Model/Doc/Data/Account';
-import DataCategory from '../../Model/Doc/Data/Category';
-import DataRecordOutgo from '../../Model/Doc/Data/RecordOutgo';
-import DataRoot from '../../Model/Doc/Data/Root';
+import DataAccount from '../../data-model/doc/Account';
+import DataCategory from '../../data-model/doc/Category';
+import DataRecordOutgo from '../../data-model/doc/RecordOutgo';
+import DataRoot from '../../data-model/doc/Root';
 import YearMonthDayDate from '../../util/YearMonthDayDate';
 import * as States from './States';
 import * as Types from './Types';
