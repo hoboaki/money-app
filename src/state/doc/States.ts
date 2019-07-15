@@ -17,6 +17,12 @@ export interface ICategory {
   parent: number | null; // 親 Category の CategoryId 。null ならルート。
   childs: number[]; // 子 Category の CategoryId 配列。
 }
+export const defaultCategory = {
+  id: 0,
+  name: '',
+  parent: null,
+  childs: [],
+};
 
 /** 全レコード共通インターフェース。 */
 export interface IRecord {
@@ -54,7 +60,7 @@ export interface IRecordTransfer extends IRecord {
 /** ドキュメントルート。 */
 export interface IState {
   /** AccountId がキーの口座郡。 */
-  accounts: {[key: number]: Account};
+  accounts: {[key: number]: IAccount};
 
   /** 入金。 */
   income: {
