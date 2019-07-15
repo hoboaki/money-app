@@ -24,7 +24,7 @@ export const fromData = (src: DataRoot) => {
   // 結果
   const r = Clone(States.defaultState);
 
-  //  口座
+  // 口座
   const accountIdDict: {[key: number]: number} = {}; // Data内Id → オブジェクトId 変換テーブル
   for (const data of src.accounts) {
     const kind = enumPraseAccountKind(data.kind);
@@ -32,40 +32,100 @@ export const fromData = (src: DataRoot) => {
     accountIdDict[data.id] = key;
   }
 
+  // 入金
+  {
+    const categoryIdDict: {[key: number]: number} = {}; // Data内Id -> オブジェクトId 変換テーブル
+    for (const data of src.income.categories) {
+      let parentId = null;
+      if (data.parent !== 0) {
+        parentId = categoryIdDict[data.parent];
+        if (parentId == null) {
+            throw new Error(`Error: Invalid parent value(${data.parent}) in income category (id: '${data.id}').`);
+        }
+      }
+      const key = incomeCategoryAdd(r, data.name, parentId);
+      categoryIdDict[data.id] = key;
+    }
+    for (const data of src.income.records) {
+      const categoryId = categoryIdDict[data.category];
+      if (categoryId == null) {
+          throw new Error(`Error: Invalid category value(${data.category}) in income record.`);
+      }
+      const accountId = accountIdDict[data.account];
+      if (accountId == null) {
+          throw new Error(`Error: Invalid account value(${data.account}) in income record.`);
+      }
+      incomeRecordAdd(
+        r,
+        new Date(data.createDate),
+        new Date(data.updateDate),
+        YearMonthDayDate.fromText(data.date),
+        data.memo,
+        accountId,
+        categoryId,
+        data.amount,
+      );
+    }
+  }
+
   // 出金
   {
-      const categoryIdDict: {[key: number]: number} = {}; // Data内Id -> オブジェクトId 変換テーブル
-      for (const data of src.outgo.categories) {
-        let parentId = null;
-        if (data.parent !== 0) {
-          parentId = categoryIdDict[data.parent];
-          if (parentId == null) {
-              throw new Error(`Error: Invalid parent value(${data.parent}) in outgo category (id: '${data.id}').`);
-          }
+    const categoryIdDict: {[key: number]: number} = {}; // Data内Id -> オブジェクトId 変換テーブル
+    for (const data of src.outgo.categories) {
+      let parentId = null;
+      if (data.parent !== 0) {
+        parentId = categoryIdDict[data.parent];
+        if (parentId == null) {
+            throw new Error(`Error: Invalid parent value(${data.parent}) in outgo category (id: '${data.id}').`);
         }
-        const key = outgoCategoryAdd(r, data.name, parentId);
-        categoryIdDict[data.id] = key;
       }
-      for (const data of src.outgo.records) {
-        const categoryId = categoryIdDict[data.category];
-        if (categoryId == null) {
-            throw new Error(`Error: Invalid category value(${data.category}) in outgo record.`);
-        }
-        const accountId = accountIdDict[data.account];
-        if (accountId == null) {
-            throw new Error(`Error: Invalid account value(${data.account}) in outgo record.`);
-        }
-        outgoRecordAdd(
-          r,
-          new Date(data.createDate),
-          new Date(data.updateDate),
-          YearMonthDayDate.fromText(data.date),
-          data.memo,
-          accountId,
-          categoryId,
-          data.amount,
-        );
+      const key = outgoCategoryAdd(r, data.name, parentId);
+      categoryIdDict[data.id] = key;
+    }
+    for (const data of src.outgo.records) {
+      const categoryId = categoryIdDict[data.category];
+      if (categoryId == null) {
+          throw new Error(`Error: Invalid category value(${data.category}) in outgo record.`);
       }
+      const accountId = accountIdDict[data.account];
+      if (accountId == null) {
+          throw new Error(`Error: Invalid account value(${data.account}) in outgo record.`);
+      }
+      outgoRecordAdd(
+        r,
+        new Date(data.createDate),
+        new Date(data.updateDate),
+        YearMonthDayDate.fromText(data.date),
+        data.memo,
+        accountId,
+        categoryId,
+        data.amount,
+      );
+    }
+  }
+
+  // 送金
+  {
+    for (const data of src.transfer.records) {
+      const accountFromId = accountIdDict[data.accountFrom];
+      if (accountFromId == null) {
+          throw new Error(`Error: Invalid account value(${data.accountFrom}) in transfer record.`);
+      }
+      const accountToId = accountIdDict[data.accountTo];
+      if (accountToId == null) {
+          throw new Error(`Error: Invalid account value(${data.accountTo}) in transfer record.`);
+      }
+      transferRecordAdd(
+        r,
+        new Date(data.createDate),
+        new Date(data.updateDate),
+        YearMonthDayDate.fromText(data.date),
+        data.memo,
+        accountFromId,
+        accountToId,
+        data.amount,
+      );
+    }
   }
 
   return r;
@@ -209,7 +269,6 @@ export const accountAdd = (
   return obj.id;
 };
 
-
 /// 入金カテゴリ追加。
 /// @return {number} 追加したカテゴリの CategoryId。
 export const incomeCategoryAdd = (
@@ -272,7 +331,6 @@ export const incomeRecordAdd = (
   state.income.records[obj.id] = obj;
   return obj.id;
 };
-
 
 /// 出金カテゴリ追加。
 /// @return {number} 追加したカテゴリの CategoryId。
