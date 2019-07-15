@@ -7,6 +7,7 @@ import * as State from './States';
  */
 export const outgoRecordAddNew = (
   state: State.IState,
+  createDate: Date,
   date: YearMonthDayDate,
   memo: string,
   accountId: number,
@@ -18,10 +19,12 @@ export const outgoRecordAddNew = (
   // オブジェクト作成
   const obj = {
     id: 0,
+    createDate,
+    updateDate: createDate,
     date,
     memo,
-    accountId,
-    categoryId,
+    account: accountId,
+    category: categoryId,
     amount,
   };
 

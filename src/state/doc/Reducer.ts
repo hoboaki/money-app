@@ -14,6 +14,7 @@ a2RMapper.addWork<Action.IAddRecordOutgo>(
     (state, action) => {
         StateMethods.outgoRecordAddNew(
           state,
+          action.createDate,
           action.date,
           action.memo,
           action.accountId,
