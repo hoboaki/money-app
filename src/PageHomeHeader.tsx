@@ -2,7 +2,10 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import DialogRecordAdd from './DialogRecordAdd';
 import * as LayoutStyle from './Layout.css';
+import * as Action from './modules/doc/Action';
+import Store from './modules/Store';
 import * as Style from './PageHomeHeader.css';
+import YearMonthDayDate from './utils/YearMonthDayDate';
 
 interface IState {
   modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
@@ -68,6 +71,13 @@ class PageHomeHeader extends React.Component<any, IState> {
     if (this.state.modalAddRecord) {
         modalDialog = <DialogRecordAdd onClosed={() => {
           this.setState({modalAddRecord: false});
+          Store.dispatch(Action.createAddRecordOutgo(
+            YearMonthDayDate.FromText('2019-07-07'),
+            'お弁当代',
+            1, // accountId
+            1, // categoryId
+            10000, // amount
+            ));
         }}/>;
     }
     return (

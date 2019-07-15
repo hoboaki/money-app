@@ -1,7 +1,9 @@
 // インポート。
 import React from 'react';
 import ReactDom from 'react-dom';
+import { Provider } from 'react-redux'; // 追加
 import MainWindow from './MainWindow';
+import Store from './modules/Store'; // 追加
 
 // node_modules の css ロード
 import 'flatpickr/dist/themes/dark.css';
@@ -15,7 +17,9 @@ requireAll((require as any).context('./', true, /\.css$/));
 // 描画
 const container = document.getElementById('contents');
 ReactDom.render(
-  <MainWindow/>,
+  <Provider store={Store}>
+    <MainWindow/>
+  </Provider>,
   container,
 );
 
