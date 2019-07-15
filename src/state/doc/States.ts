@@ -1,4 +1,4 @@
-import YearMonthDayDate from '../../utils/YearMonthDayDate';
+import YearMonthDayDate from '../../util/YearMonthDayDate';
 
 export interface IRecord {
   id: number;

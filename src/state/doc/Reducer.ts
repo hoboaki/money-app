@@ -1,18 +1,18 @@
 import Clone from 'clone';
 import Redux from 'redux';
 
-import createA2RMapper from '../../utils/ActionToReducerMapper';
-import * as Action from './Action';
-import * as State from './State';
-import * as StateMethod from './StateMethod';
+import createA2RMapper from '../../util/ActionToReducerMapper';
+import * as Action from './Actions';
+import * as StateMethods from './StateMethods';
+import * as States from './States';
 
-const a2RMapper = createA2RMapper<State.IState>();
+const a2RMapper = createA2RMapper<States.IState>();
 
 // タスクを追加する。
 a2RMapper.addWork<Action.IAddRecordOutgo>(
     Action.ADD_RECORD_OUTGO,
     (state, action) => {
-        StateMethod.outgoRecordAddNew(
+        StateMethods.outgoRecordAddNew(
           state,
           action.date,
           action.memo,
@@ -24,7 +24,7 @@ a2RMapper.addWork<Action.IAddRecordOutgo>(
 );
 
 // Reducer 本体。
-const Reducer: Redux.Reducer<State.IState> = (state = State.defaultState, action) => {
+const Reducer: Redux.Reducer<States.IState> = (state = States.defaultState, action) => {
     return a2RMapper.execute(state, action);
 };
 export default Reducer;

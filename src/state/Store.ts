@@ -1,6 +1,6 @@
 import { combineReducers, createStore } from 'redux';
 import DocReducer from './doc/Reducer';
-import * as DocState from './doc/State';
+import * as DocState from './doc/States';
 
 // データ型。
 export interface IState {
