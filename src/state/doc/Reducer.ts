@@ -12,7 +12,7 @@ const a2RMapper = createA2RMapper<States.IState>();
 a2RMapper.addWork<Action.IAddRecordOutgo>(
     Action.ADD_RECORD_OUTGO,
     (state, action) => {
-        StateMethods.outgoRecordAddNew(
+        StateMethods.outgoRecordAdd(
           state,
           action.createDate,
           action.date,
