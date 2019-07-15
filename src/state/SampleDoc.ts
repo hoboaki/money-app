@@ -1,3 +1,4 @@
+import Clone from 'clone';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as StateMethods from './doc/StateMethods';
 import * as States from './doc/States';
@@ -7,7 +8,7 @@ import * as Types from './doc/Types';
 class SampleDoc {
   /// サンプルドキュメントの作成。
   public static Create() {
-    const state = States.defaultState;
+    const state = Clone(States.defaultState);
 
     // 口座
     const accountId = StateMethods.accountAdd(state, '財布', Types.AccountKind.AssetsCash, 2020);
@@ -37,7 +38,6 @@ class SampleDoc {
       categoryId,
       3000,
     );
-
     return state;
   }
 

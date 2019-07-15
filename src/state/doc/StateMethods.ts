@@ -1,3 +1,4 @@
+import Clone from 'clone';
 import DataAccount from '../../Model/Doc/Data/Account';
 import DataCategory from '../../Model/Doc/Data/Category';
 import DataRecordOutgo from '../../Model/Doc/Data/RecordOutgo';
@@ -19,7 +20,7 @@ export const fromData = (src: DataRoot) => {
   };
 
   // 結果
-  const r = States.defaultState;
+  const r = Clone(States.defaultState);
 
   //  口座
   const accountIdDict: {[key: number]: number} = {}; // Data内Id → オブジェクトId 変換テーブル
@@ -33,12 +34,12 @@ export const fromData = (src: DataRoot) => {
   {
       const categoryIdDict: {[key: number]: number} = {}; // Data内Id -> オブジェクトId 変換テーブル
       for (const data of src.outgo.categories) {
-        let parentId = 0;
+        let parentId = null;
         if (data.parent !== 0) {
-            parentId = categoryIdDict[data.parent];
-            if (parentId == null) {
-                throw new Error(`Error: Invalid parent value(${data.parent}) in outgo category (id: '${data.id}').`);
-            }
+          parentId = categoryIdDict[data.parent];
+          if (parentId == null) {
+              throw new Error(`Error: Invalid parent value(${data.parent}) in outgo category (id: '${data.id}').`);
+          }
         }
         const key = outgoCategoryAdd(r, data.name, parentId);
         categoryIdDict[data.id] = key;
@@ -89,18 +90,18 @@ export const toData = (state: States.IState) => {
   // 出金
   {
     // カテゴリ
-    for (const key in state.income.categories) {
-      if (!state.income.categories.hasOwnProperty(key)) {
+    for (const key in state.outgo.categories) {
+      if (!state.outgo.categories.hasOwnProperty(key)) {
         continue;
       }
-      const src = state.income.categories[key];
+      const src = state.outgo.categories[key];
       const data = new DataCategory();
       data.id = src.id;
       data.name = src.name;
       if (src.parent != null) {
         data.parent = src.parent;
       }
-      result.income.categories.push(data);
+      result.outgo.categories.push(data);
     }
 
     // レコード
@@ -172,7 +173,7 @@ export const outgoCategoryAdd = (
     if (parent != null) {
       parent.childs.push(obj.id);
     } else {
-      global.console.assert(false);
+      throw new Error(`Category parent (id: ${parentId}) is not exist.`);
     }
   }
   return obj.id;
