@@ -1,15 +1,15 @@
 /// 年月日のみ表す日付。
 class YearMonthDayDate {
   // Date オブジェクトから作成。
-  public static FromDate(aDate: Date) {
+  public static fromDate(aDate: Date) {
     const date = new YearMonthDayDate();
     date.date = aDate;
     return date;
   }
 
   /// YYYY-MM-DD 形式のテキストから作成。
-  public static FromText(aText: string) {
-      return this.FromDate(new Date(aText));
+  public static fromText(aText: string) {
+      return this.fromDate(new Date(aText));
   }
 
   /// Date データ。
