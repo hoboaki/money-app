@@ -25,6 +25,26 @@ class YearMonthDayDate {
     return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() + 1, 1));
   }
 
+  /// 前の日。
+  public prevDay() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate() - 1));
+  }
+
+  /// 次の日。
+  public nextDay() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate() + 1));
+  }
+
+  /// 今指している月の1日。
+  public firstDayOfMonth() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth(), 1));
+  }
+
+  /// 今指している月の末日。
+  public lastDayOfMonth() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0));
+  }
+
   // yyyy-mm-dd 形式に変換。
   public toText() {
     const toDoubleDigits = (num: number) => {

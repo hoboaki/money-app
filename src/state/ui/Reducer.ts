@@ -26,7 +26,7 @@ a2RMapper.addWork<Action>(
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_TODAY,
   (state, action) => {
-    state.home.currentDate = new YearMonthDayDate();
+    state.home.currentDate = new YearMonthDayDate().firstDayOfMonth();
   },
 );
 

@@ -12,6 +12,6 @@ export interface IState {
 
 export const defaultState: IState = {
   home : {
-    currentDate: new YearMonthDayDate(),
+    currentDate: new YearMonthDayDate().firstDayOfMonth(),
   },
 };
