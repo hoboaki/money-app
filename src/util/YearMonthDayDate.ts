@@ -17,12 +17,12 @@ class YearMonthDayDate {
 
   /// 前の月の1日。
   public prevMonth() {
-    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() - 1, 0));
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() - 1, 1));
   }
 
   /// 次の月の1日。
   public nextMonth() {
-    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0));
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() + 1, 1));
   }
 
   // yyyy-mm-dd 形式に変換。
