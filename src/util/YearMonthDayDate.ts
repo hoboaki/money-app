@@ -12,8 +12,8 @@ class YearMonthDayDate {
       return this.fromDate(new Date(aText));
   }
 
-  /// Date データ。
-  public date: Date = new Date(2018, 1, 1);
+  /// Date データ。（初期値：今日）
+  public date: Date = new Date();
 
   /// 前の月の1日。
   public prevMonth() {
