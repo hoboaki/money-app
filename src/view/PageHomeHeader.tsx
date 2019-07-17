@@ -1,7 +1,10 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+import * as ReactRedux from 'react-redux';
 import * as Action from '../state/doc/Actions';
+import IStoreState from '../state/IStoreState';
 import Store from '../state/Store';
+import * as States from '../state/ui/States';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import DialogRecordAdd from './DialogRecordAdd';
 import * as LayoutStyle from './Layout.css';
@@ -11,8 +14,8 @@ interface IState {
   modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
 }
 
-class PageHomeHeader extends React.Component<any, IState> {
-  constructor(props: any) {
+class PageHomeHeader extends React.Component<States.IPageHome, IState> {
+  constructor(props: States.IPageHome) {
     super(props);
     this.state = {
       modalAddRecord: false,
@@ -81,9 +84,11 @@ class PageHomeHeader extends React.Component<any, IState> {
             ));
         }}/>;
     }
+    global.console.log(this.props);
+    const currentDate = `${this.props.currentDate.date.getFullYear()}年${this.props.currentDate.date.getMonth()}月`;
     return (
       <div className={rootClass}>
-        <span className={currentDateClass}>2019年6月</span>
+        <span className={currentDateClass}>{currentDate}</span>
         <button className={movePrevBtnClass} onClick={this.onMovePrevBtnPushed}>
           <i className={iconClass}>chevron_left</i>
         </button>
@@ -140,4 +145,7 @@ class PageHomeHeader extends React.Component<any, IState> {
   }
 }
 
-export default PageHomeHeader;
+const mapStateToProps = (state: IStoreState) => {
+  return state.ui.home;
+};
+export default ReactRedux.connect(mapStateToProps)(PageHomeHeader);

@@ -1,9 +1,12 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+import * as ReactRedux from 'react-redux';
+import IStoreState from '../state/IStoreState';
+import * as States from '../state/ui/States';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeCalendar.css';
 
-class PageHomeCalendar extends React.Component<any, any> {
+class PageHomeCalendar extends React.Component<States.IPageHome, any> {
   public render() {
     const rootClass = ClassNames(
       Style.Root,
@@ -197,4 +200,7 @@ class PageHomeCalendar extends React.Component<any, any> {
   }
 }
 
-export default PageHomeCalendar;
+const mapStateToProps = (state: IStoreState) => {
+  return state.ui.home;
+};
+export default ReactRedux.connect(mapStateToProps)(PageHomeCalendar);
