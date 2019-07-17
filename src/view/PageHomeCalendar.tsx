@@ -1,9 +1,13 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+import * as ReactRedux from 'react-redux';
+import IStoreState from '../state/IStoreState';
+import * as States from '../state/ui/States';
+import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeCalendar.css';
 
-class PageHomeCalendar extends React.Component<any, any> {
+class PageHomeCalendar extends React.Component<States.IPageHome, any> {
   public render() {
     const rootClass = ClassNames(
       Style.Root,
@@ -69,6 +73,7 @@ class PageHomeCalendar extends React.Component<any, any> {
       Style.Cell,
     );
 
+    // 6週分のデータを作成
     interface IData {
       day: number;
       dark: boolean;
@@ -76,62 +81,40 @@ class PageHomeCalendar extends React.Component<any, any> {
       income: number;
       outgo: number;
     }
-    const cellDataArray: IData[][] = [
-      [
-        {day: 26, dark: true, transfer: false, income: 0, outgo: 0},
-        {day: 27, dark: true, transfer: false, income: 1000, outgo: 100},
-        {day: 28, dark: true, transfer: false, income: 0, outgo: 10000},
-        {day: 29, dark: true, transfer: false, income: 100, outgo: 0},
-        {day: 30, dark: true, transfer: true, income: 0, outgo: 0},
-        {day: 31, dark: true, transfer: false, income: 0, outgo: 0},
-        {day: 1, dark: false, transfer: false, income: 0, outgo: 0},
-      ],
-      [
-        {day: 2, dark: false, transfer: false, income: 1000, outgo: 0},
-        {day: 3, dark: false, transfer: false, income: 0, outgo: 1000},
-        {day: 4, dark: false, transfer: false, income: 200, outgo: 100},
-        {day: 5, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 6, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 7, dark: false, transfer: true, income: 200, outgo: 100},
-        {day: 8, dark: false, transfer: false, income: 0, outgo: 0},
-      ],
-      [
-        {day: 9, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 10, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 11, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 12, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 13, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 14, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 15, dark: false, transfer: false, income: 0, outgo: 0},
-      ],
-      [
-        {day: 16, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 17, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 18, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 19, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 20, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 21, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 22, dark: false, transfer: false, income: 0, outgo: 0},
-      ],
-      [
-        {day: 23, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 24, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 25, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 26, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 27, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 28, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 29, dark: false, transfer: false, income: 0, outgo: 0},
-      ],
-      [
-        {day: 30, dark: false, transfer: false, income: 0, outgo: 0},
-        {day: 1, dark: true, transfer: false, income: 0, outgo: 0},
-        {day: 2, dark: true, transfer: false, income: 0, outgo: 0},
-        {day: 3, dark: true, transfer: false, income: 0, outgo: 0},
-        {day: 4, dark: true, transfer: false, income: 0, outgo: 0},
-        {day: 5, dark: true, transfer: false, income: 0, outgo: 0},
-        {day: 6, dark: true, transfer: false, income: 0, outgo: 0},
-      ],
-    ];
+    const baseDate = this.props.currentDate.date;
+    const startDate = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() - baseDate.getDay());
+    const dataArray: IData[] = [];
+    {
+      for (let i = 0, date = startDate; i < 7 * 6; ++i, date = YearMonthDayDate.fromDate(date).nextDay().date) {
+        dataArray.push({
+          day: date.getDate(),
+          dark: date.getMonth() !== baseDate.getMonth(),
+          transfer: false,
+          income: 0,
+          outgo: 0,
+        });
+      }
+    }
+
+    // 動作確認用にデータを加工
+    dataArray[1] = Object.assign(dataArray[1], {income: 1000, outgo: 100});
+    dataArray[2] = Object.assign(dataArray[2], {outgo: 10000});
+    dataArray[3] = Object.assign(dataArray[3], {income: 100});
+    dataArray[4] = Object.assign(dataArray[4], {transfer: true});
+    dataArray[7] = Object.assign(dataArray[7], {income: 1000});
+    dataArray[8] = Object.assign(dataArray[8], {outgo: 1000});
+    dataArray[9] = Object.assign(dataArray[9], {income: 200, outgo: 100});
+    dataArray[12] = Object.assign(dataArray[12], {transfer: true, income: 200, outgo: 100});
+
+    const cellDataArray: IData[][] = [];
+    for (let w = 0; w < 6; ++w) {
+      const array: IData[] = [];
+      for (let d = 0; d < 7; ++d) {
+        array.push(dataArray[w * 7 + d]);
+      }
+      cellDataArray.push(array);
+    }
+
     const cells = <tbody>
       {cellDataArray.map((row, rowIndex) => {
         return (
@@ -197,4 +180,7 @@ class PageHomeCalendar extends React.Component<any, any> {
   }
 }
 
-export default PageHomeCalendar;
+const mapStateToProps = (state: IStoreState) => {
+  return state.ui.home;
+};
+export default ReactRedux.connect(mapStateToProps)(PageHomeCalendar);

@@ -12,8 +12,38 @@ class YearMonthDayDate {
       return this.fromDate(new Date(aText));
   }
 
-  /// Date データ。
-  public date: Date = new Date(2018, 1, 1);
+  /// Date データ。（初期値：今日）
+  public date: Date = new Date();
+
+  /// 前の月の1日。
+  public prevMonth() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() - 1, 1));
+  }
+
+  /// 次の月の1日。
+  public nextMonth() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() + 1, 1));
+  }
+
+  /// 前の日。
+  public prevDay() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate() - 1));
+  }
+
+  /// 次の日。
+  public nextDay() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate() + 1));
+  }
+
+  /// 今指している月の1日。
+  public firstDayOfMonth() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth(), 1));
+  }
+
+  /// 今指している月の末日。
+  public lastDayOfMonth() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0));
+  }
 
   // yyyy-mm-dd 形式に変換。
   public toText() {
