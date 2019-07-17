@@ -85,7 +85,7 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
         }}/>;
     }
     global.console.log(this.props);
-    const currentDate = `${this.props.currentDate.date.getFullYear()}年${this.props.currentDate.date.getMonth()}月`;
+    const currentDate = `${this.props.currentDate.date.getFullYear()}年${this.props.currentDate.date.getMonth() + 1}月`;
     return (
       <div className={rootClass}>
         <span className={currentDateClass}>{currentDate}</span>
