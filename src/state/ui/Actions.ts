@@ -16,3 +16,11 @@ export const calendarMoveNext = (): Action => {
     type: CALENDAR_MOVE_NEXT,
   };
 };
+
+/// カレンダー今日へ。
+export const CALENDAR_MOVE_TODAY = UUID();
+export const calendarMoveToday = (): Action => {
+  return {
+    type: CALENDAR_MOVE_TODAY,
+  };
+};

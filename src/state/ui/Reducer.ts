@@ -3,6 +3,7 @@ import Redux from 'redux';
 import { Action } from 'redux';
 
 import createA2RMapper from '../../util/ActionToReducerMapper';
+import YearMonthDayDate from '../../util/YearMonthDayDate';
 import * as Actions from './Actions';
 import * as States from './States';
 
@@ -19,6 +20,13 @@ a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_NEXT,
   (state, action) => {
     state.home.currentDate = state.home.currentDate.nextMonth();
+  },
+);
+
+a2RMapper.addWork<Action>(
+  Actions.CALENDAR_MOVE_TODAY,
+  (state, action) => {
+    state.home.currentDate = new YearMonthDayDate();
   },
 );
 

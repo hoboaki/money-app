@@ -1,9 +1,10 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import * as Action from '../state/doc/Actions';
+import * as DocActions from '../state/doc/Actions';
 import IStoreState from '../state/IStoreState';
 import Store from '../state/Store';
+import * as UiActions from '../state/ui/Actions';
 import * as States from '../state/ui/States';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import DialogRecordAdd from './DialogRecordAdd';
@@ -74,7 +75,7 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
     if (this.state.modalAddRecord) {
         modalDialog = <DialogRecordAdd onClosed={() => {
           this.setState({modalAddRecord: false});
-          Store.dispatch(Action.addRecordOutgo(
+          Store.dispatch(DocActions.addRecordOutgo(
             new Date(),
             YearMonthDayDate.fromText('2019-07-07'),
             'お弁当代',
@@ -84,7 +85,6 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
             ));
         }}/>;
     }
-    global.console.log(this.props);
     const currentDate = `${this.props.currentDate.date.getFullYear()}年${this.props.currentDate.date.getMonth() + 1}月`;
     return (
       <div className={rootClass}>
@@ -120,15 +120,15 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
   }
 
   private onMovePrevBtnPushed() {
-    global.console.log('onMovePrevBtnPushed');
+    Store.dispatch(UiActions.calendarMovePrev());
   }
 
   private onMoveTodayBtnPushed() {
-    global.console.log('onMoveTodayBtnPushed');
+    Store.dispatch(UiActions.calendarMoveToday());
   }
 
   private onMoveNextBtnPushed() {
-    global.console.log('onMoveNextBtnPushed');
+    Store.dispatch(UiActions.calendarMoveNext());
   }
 
   private onJumpBtnPushed() {
