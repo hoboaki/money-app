@@ -15,6 +15,16 @@ class YearMonthDayDate {
   /// Date データ。
   public date: Date = new Date(2018, 1, 1);
 
+  /// 前の月の1日。
+  public prevMonth() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() - 1, 0));
+  }
+
+  /// 次の月の1日。
+  public nextMonth() {
+    return YearMonthDayDate.fromDate(new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0));
+  }
+
   // yyyy-mm-dd 形式に変換。
   public toText() {
     const toDoubleDigits = (num: number) => {
