@@ -55,7 +55,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
         index: 0,
         indexSub: 0,
       },
-      formAccount: 1,
+      formAccount: Number(Object.keys(props.accounts)[0]),
       formAmount: null,
       formMemo: '',
     };
@@ -250,8 +250,12 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
                           id={this.elementIdFormAccount}
                           onChange={(sender) => {this.onFormAccountChanged(sender.target); }}
                           >
-                          <option value="1">財布</option>
-                          <option value="2">アデリー銀行</option>
+                          {Object.keys(this.props.accounts).map((key) => {
+                            const account = this.props.accounts[Number(key)];
+                            return (
+                              <option key={key} value={key}>{account.name}</option>
+                            );
+                          })}
                         </select>
                       </td>
                     </tr>
@@ -327,10 +331,11 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: IStoreState, props: IProps) => {
-  return Object.assign(props, {
+  const result = Object.assign(props, {
     accounts: state.doc.accounts,
     incomeCategories: state.doc.income.categories,
     outgoCategories: state.doc.outgo.categories,
   });
+  return result;
 };
 export default ReactRedux.connect(mapStateToProps)(DialogRecordAdd);
