@@ -1,8 +1,8 @@
 import ClassNames from 'classnames';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
-import * as Lodash from 'lodash';
 import * as React from 'react';
+import { v4 as UUID } from 'uuid';
 import * as Style from './DialogRecordAdd.css';
 
 interface IProps {
@@ -22,29 +22,41 @@ interface ISelectedCategory {
 }
 
 interface IState {
-  selectedDate: string;
-  selectedCategory: ISelectedCategory;
+  formDate: string;
+  formCategory: ISelectedCategory;
+  formAccount: number;
+  formAmount: number | null;
+  formMemo: string;
 }
 
 class DialogRecordAdd extends React.Component<IProps, IState> {
   private elementIdRoot: string;
   private elementIdFormCategory: string;
   private elementIdFormDate: string;
+  private elementIdFormAccount: string;
+  private elementIdFormAmount: string;
+  private elementIdFormMemo: string;
   private closeObserver: MutationObserver;
   private demoCategories: ICategory[];
 
   constructor(props: IProps) {
     super(props);
     this.state = {
-      selectedDate: '2019-07-07',
-      selectedCategory: {
+      formDate: '2019-07-07',
+      formCategory: {
         index: 0,
         indexSub: 0,
       },
+      formAccount: 1,
+      formAmount: null,
+      formMemo: '',
     };
-    this.elementIdRoot = Lodash.uniqueId('dialogRecordAddRoot');
-    this.elementIdFormCategory = Lodash.uniqueId('dialogRecordAddFormCategory');
-    this.elementIdFormDate = Lodash.uniqueId('dialogRecordAddFormDate');
+    this.elementIdRoot = UUID();
+    this.elementIdFormCategory = UUID();
+    this.elementIdFormDate = UUID();
+    this.elementIdFormAccount = UUID();
+    this.elementIdFormAmount = UUID();
+    this.elementIdFormMemo = UUID();
     this.closeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'aria-modal' && mutation.oldValue === 'true') {
@@ -86,7 +98,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
     flatpickr(`#${this.elementIdFormDate}`, {
       locale: 'ja',
       onClose: ((selectedDates, dateStr, instance) => {
-        this.setState({selectedDate: dateStr});
+        this.setState({formDate: dateStr});
       }),
     });
 
@@ -108,7 +120,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
       callback: (key, options) => {
         const texts = key.split('-');
         this.setState({
-          selectedCategory: {
+          formCategory: {
             index: parseInt(texts[1], 10),
             indexSub: parseInt(texts[2], 10),
           },
@@ -208,7 +220,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
                     <tr>
                       <th scope="row">日付</th>
                       <td>
-                        <input type="text" id={this.elementIdFormDate} value={this.state.selectedDate}/>
+                        <input type="text" id={this.elementIdFormDate} value={this.state.formDate}/>
                       </td>
                     </tr>
                     <tr>
@@ -226,22 +238,33 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
                     <tr>
                       <th scope="row">口座</th>
                       <td>
-                        <select defaultValue="財布">
-                          <option value="財布">財布</option>
-                          <option value="アデリー銀行">アデリー銀行</option>
+                        <select defaultValue={this.state.formAccount.toString()}
+                          id={this.elementIdFormAccount}
+                          onChange={(sender) => {this.onFormAccountChanged(sender.target); }}
+                          >
+                          <option value="1">財布</option>
+                          <option value="2">アデリー銀行</option>
                         </select>
                       </td>
                     </tr>
                     <tr>
                       <th scope="row">金額</th>
                       <td>
-                        <input type="text" value="10000"/>
+                        <input type="text"
+                          id={this.elementIdFormAmount}
+                          value={this.state.formAmount != null ? this.state.formAmount.toString() : ''}
+                          onChange={(sender) => {this.onFormAmountChanged(sender.target); }}
+                          />
                       </td>
                     </tr>
                     <tr>
                       <th scope="row">メモ</th>
                       <td>
-                        <input className={Style.FormInputMemo} type="text" value="お弁当代"/>
+                        <input className={Style.FormInputMemo} type="text"
+                          id={this.elementIdFormMemo}
+                          value={this.state.formMemo}
+                          onChange={(sender) => {this.onFormMemoChanged(sender.target); }}
+                          />
                       </td>
                     </tr>
                   </tbody>
@@ -252,7 +275,9 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
               <label>
                 <input type="checkbox" id="continueCheckbox"/>続けて入力
               </label>
-              <button type="button" className="btn btn-primary">追加</button>
+              <button type="button" className="btn btn-primary"
+                onClick={() => {this.onAddButtonClicked(); }}
+                >追加</button>
             </div>
           </div>
         </div>
@@ -262,10 +287,34 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
 
   /// カテゴリインプットに表示するテキストを返す。
   private categoryDisplayText(): string {
-    const parentCategory = this.demoCategories[this.state.selectedCategory.index];
+    const parentCategory = this.demoCategories[this.state.formCategory.index];
     const name0 = parentCategory.name;
-    const name1 = parentCategory.items[this.state.selectedCategory.indexSub].name;
+    const name1 = parentCategory.items[this.state.formCategory.indexSub].name;
     return `${name0} > ${name1}`;
+  }
+
+  /// 口座値変更時の処理。
+  private onFormAccountChanged(sender: HTMLSelectElement) {
+    this.setState({formAccount: Number(sender.value)});
+  }
+
+  /// 価格値変更時の処理。
+  private onFormAmountChanged(sender: HTMLInputElement) {
+    this.setState({formAmount: Number(sender.value)});
+  }
+
+  /// メモ変更時の処理。
+  private onFormMemoChanged(sender: HTMLInputElement) {
+    this.setState({formMemo: sender.value});
+  }
+
+  /// 追加ボタンクリック時処理。
+  private onAddButtonClicked() {
+    // 追加イベントを実行
+
+    // ダイアログを閉じる
+    // MDB が TypeScript 非対応なので文字列で実行
+    new Function(`$('#${this.elementIdRoot}').modal('hide')`)();
   }
 }
 
