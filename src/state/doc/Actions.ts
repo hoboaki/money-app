@@ -2,6 +2,19 @@ import { Action } from 'redux';
 import { v4 as UUID } from 'uuid';
 
 import YearMonthDayDate from '../../util/YearMonthDayDate';
+import * as States from './States';
+
+/// ドキュメントをリセット。
+export const RESET_DOCUMENT = UUID();
+export interface IResetDocument extends Action {
+  doc: States.IState;
+}
+export const resetDocument = (state: States.IState): IResetDocument => {
+  return {
+    type: RESET_DOCUMENT,
+    doc: state,
+  };
+};
 
 /// 支出レコードの追加。
 export const ADD_RECORD_OUTGO = UUID();
