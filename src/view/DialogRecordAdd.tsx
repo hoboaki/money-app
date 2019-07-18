@@ -228,7 +228,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
                     <tr>
                       <th scope="row">日付</th>
                       <td>
-                        <input type="text" id={this.elementIdFormDate} value={this.state.formDate}/>
+                        <input type="text" id={this.elementIdFormDate} value={this.state.formDate} readOnly={true}/>
                       </td>
                     </tr>
                     <tr>
