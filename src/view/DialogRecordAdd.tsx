@@ -3,6 +3,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import { v4 as UUID } from 'uuid';
+import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as Style from './DialogRecordAdd.css';
 
 interface IProps {
@@ -42,7 +43,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      formDate: '2019-07-07',
+      formDate: new YearMonthDayDate().toText(),
       formCategory: {
         index: 0,
         indexSub: 0,
