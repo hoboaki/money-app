@@ -2,12 +2,19 @@ import ClassNames from 'classnames';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
+import * as ReactRedux from 'react-redux';
 import { v4 as UUID } from 'uuid';
+import * as DocStates from '../state/doc/States';
+import IStoreState from '../state/IStoreState';
+import Store from '../state/Store';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as Style from './DialogRecordAdd.css';
 
 interface IProps {
   onClosed: (() => void);
+  accounts: DocStates.IAccount[];
+  incomeCategories: { [key: number]: DocStates.ICategory };
+  outgoCategories: { [key: number]: DocStates.ICategory };
 }
 
 interface ICategory {
@@ -319,4 +326,11 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
   }
 }
 
-export default DialogRecordAdd;
+const mapStateToProps = (state: IStoreState, props: IProps) => {
+  return Object.assign(props, {
+    accounts: state.doc.accounts,
+    incomeCategories: state.doc.income.categories,
+    outgoCategories: state.doc.outgo.categories,
+  });
+};
+export default ReactRedux.connect(mapStateToProps)(DialogRecordAdd);

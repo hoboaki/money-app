@@ -73,7 +73,8 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
     );
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalAddRecord) {
-        modalDialog = <DialogRecordAdd onClosed={() => {
+        modalDialog = <DialogRecordAdd
+          onClosed={() => {
           this.setState({modalAddRecord: false});
           Store.dispatch(DocActions.addRecordOutgo(
             new Date(),
@@ -82,8 +83,11 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
             1, // accountId
             1, // categoryId
             10000, // amount
-            ));
-        }}/>;
+            )); }}
+          accounts={[]}
+          incomeCategories={{}}
+          outgoCategories={{}}
+        />;
     }
     const currentDate = `${this.props.currentDate.date.getFullYear()}年${this.props.currentDate.date.getMonth() + 1}月`;
     return (
