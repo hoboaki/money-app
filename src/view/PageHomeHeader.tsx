@@ -146,6 +146,6 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
 }
 
 const mapStateToProps = (state: IStoreState) => {
-  return state.ui.home;
+  return state.ui.pageHome;
 };
 export default ReactRedux.connect(mapStateToProps)(PageHomeHeader);

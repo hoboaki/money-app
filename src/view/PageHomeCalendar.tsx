@@ -181,6 +181,6 @@ class PageHomeCalendar extends React.Component<States.IPageHome, any> {
 }
 
 const mapStateToProps = (state: IStoreState) => {
-  return state.ui.home;
+  return state.ui.pageHome;
 };
 export default ReactRedux.connect(mapStateToProps)(PageHomeCalendar);

@@ -7,11 +7,11 @@ export interface IPageHome {
 
 /** State ルート。 */
 export interface IState {
-  home: IPageHome;
+  pageHome: IPageHome;
 }
 
 export const defaultState: IState = {
-  home : {
+  pageHome : {
     currentDate: new YearMonthDayDate().firstDayOfMonth(),
   },
 };
