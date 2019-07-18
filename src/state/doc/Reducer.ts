@@ -11,7 +11,7 @@ const a2RMapper = createA2RMapper<States.IState>();
 a2RMapper.addWork<Actions.IResetDocument>(
   Actions.RESET_DOCUMENT,
   (state, action) => {
-    state = action.doc;
+    Object.assign(state, action.doc);
   },
 );
 
