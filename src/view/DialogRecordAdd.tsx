@@ -4,6 +4,7 @@ import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import { v4 as UUID } from 'uuid';
+import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
 import Store from '../state/Store';
@@ -17,21 +18,9 @@ interface IProps {
   outgoCategories: { [key: number]: DocStates.ICategory };
 }
 
-interface ICategory {
-  name: string;
-  items: Array<{
-    name: string;
-  }>;
-}
-
-interface ISelectedCategory {
-  index: number;
-  indexSub: number;
-}
-
 interface IState {
   formDate: string;
-  formCategory: ISelectedCategory;
+  formCategory: number;
   formAccount: number;
   formAmount: number | null;
   formMemo: string;
@@ -45,16 +34,12 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
   private elementIdFormAmount: string;
   private elementIdFormMemo: string;
   private closeObserver: MutationObserver;
-  private demoCategories: ICategory[];
 
   constructor(props: IProps) {
     super(props);
     this.state = {
       formDate: new YearMonthDayDate().toText(),
-      formCategory: {
-        index: 0,
-        indexSub: 0,
-      },
+      formCategory: DocStateMethods.findFirstLeafCategory(this.props.outgoCategories),
       formAccount: Number(Object.keys(props.accounts)[0]),
       formAmount: null,
       formMemo: '',
@@ -72,66 +57,41 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
         }
       });
     });
-    this.demoCategories = [
-      {
-        name: '家事費',
-        items: [
-          {name: '食費'},
-          {name: '日用品'},
-          {name: '妻小遣い'},
-        ],
-      },
-      {
-        name: '光熱・通信費',
-        items: [
-          {name: '電気'},
-          {name: 'プロバイダ・光電話'},
-          {name: '水道'},
-          {name: 'CATV'},
-          {name: 'NHK'},
-        ],
-      },
-      {
-        name: '通勤・通学費',
-        items: [
-          {name: '洗車'},
-          {name: 'ガソリン'},
-        ],
-      },
-    ];
   }
 
   public componentDidMount() {
     // DatePicker セットアップ
-    flatpickr(`#${this.elementIdFormDate}`, {
-      locale: 'ja',
-      onClose: ((selectedDates, dateStr, instance) => {
-        this.setState({formDate: dateStr});
-      }),
-    });
+    // flatpickr(`#${this.elementIdFormDate}`, {
+    //   locale: 'ja',
+    //   onClose: ((selectedDates, dateStr, instance) => {
+    //     this.setState({formDate: dateStr});
+    //   }),
+    // });
 
     // ContextMenu セットアップ
     const categoryItems: {[key: string]: any} = {};
-    this.demoCategories.map((mainValue, mainIndex, mainArray) => {
-      const subItems: {[key: string]: any} = {};
-      mainValue.items.map((subValue, subIndex, subArray) => {
-        subItems[`category-${mainIndex}-${subIndex}`] = {
-          name: subValue.name,
-        };
+    const  categoryConvertFunc = (parent: {[key: string]: any}, cat: DocStates.ICategory) => {
+      const key = `category-${cat.id}`;
+      const name = cat.name;
+      const items: {[key: string]: any} = {};
+      cat.childs.forEach((child) => {
+        categoryConvertFunc(items, this.props.outgoCategories[child]);
       });
-      categoryItems[`category-${mainIndex}`] = {
-        name: mainValue.name,
-        items: subItems,
+      parent[key] = {
+        name,
+        items: Object.keys(items).length === 0 ? null : items,
       };
+    };
+    Object.entries(this.props.outgoCategories).forEach(([key, value]) => {
+      if (value.parent == null) {
+        categoryConvertFunc(categoryItems, this.props.outgoCategories[value.id]);
+      }
     });
     $.contextMenu({
       callback: (key, options) => {
         const texts = key.split('-');
         this.setState({
-          formCategory: {
-            index: parseInt(texts[1], 10),
-            indexSub: parseInt(texts[2], 10),
-          },
+          formCategory: Number(texts[1]),
         });
       },
       className: Style.ContextMenuRoot,
@@ -299,10 +259,14 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
 
   /// カテゴリインプットに表示するテキストを返す。
   private categoryDisplayText(): string {
-    const parentCategory = this.demoCategories[this.state.formCategory.index];
-    const name0 = parentCategory.name;
-    const name1 = parentCategory.items[this.state.formCategory.indexSub].name;
-    return `${name0} > ${name1}`;
+    const funcParentPath = (categoryId: number): string => {
+      const cat = this.props.outgoCategories[categoryId];
+      if (cat.parent == null) {
+        return cat.name;
+      }
+      return `${funcParentPath(cat.parent)} > ${cat.name}`;
+    };
+    return funcParentPath(this.state.formCategory);
   }
 
   /// 口座値変更時の処理。
