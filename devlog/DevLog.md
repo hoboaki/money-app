@@ -1,5 +1,13 @@
 # 開発記録
 
+## html element の id は 数字始まりがNG
+
+UUID を使って id をつけていたら
+``Error: DOMException: Failed to execute 'querySelectorAll' on 'Document': '#427a4e49-cc5f-4a45-96ed-090a4d6053b4' is not a valid selector.``
+といったエラーが時々出るようになりました。
+
+id は数字始まりダメなんでしたそうでした。ということで prefix つけるようにしました。
+
 ## 2019-07-20 ローカル関数の宣言方法
 
 こんな感じでできました。っが，こういう再帰パターンでも TypeScript ではいちいち宣言と定義を分けなくていいらしいです。らくちーん！
