@@ -427,3 +427,8 @@ export const transferRecordAdd = (
   state.transfer.records[obj.id] = obj;
   return obj.id;
 };
+
+/** 最初に見つかる末端カテゴリの CategoryId を返す。見つからない場合は 0 を返す。 */
+export const findFirstLeafCategory = (categories: {[key: number]: States.ICategory}) => {
+  return Object.values(categories).filter((cat) => cat.childs.length === 0)[0].id;
+};

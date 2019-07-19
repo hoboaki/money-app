@@ -80,9 +80,6 @@ class SampleDoc {
         });
       });
 
-      // １つめの末端カテゴリを探す
-      const categoryId = Object.values(state.outgo.categories).filter((cat) => cat.childs.length === 0)[0].id;
-
       // テスト用レコード作成
       const currentDate = new Date();
       StateMethods.outgoRecordAdd(
@@ -92,7 +89,7 @@ class SampleDoc {
         YearMonthDayDate.fromText('2018-01-02'),
         'メガネケース',
         accountId,
-        categoryId,
+        StateMethods.findFirstLeafCategory(state.outgo.categories),
         3000,
       );
       global.console.assert(Object.keys(state.outgo.records).length === 1);
