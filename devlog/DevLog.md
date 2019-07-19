@@ -1,5 +1,21 @@
 # 開発記録
 
+## 2019-07-20 ローカル関数の宣言方法
+
+こんな感じでできました。っが，こういう再帰パターンでも TypeScript ではいちいち宣言と定義を分けなくていいらしいです。らくちーん！
+
+```ts
+let funcParentPath: (categoryId: number) => string;
+funcParentPath = (categoryId) => {
+  const cat = this.props.outgoCategories[categoryId];
+  if (cat.parent == null) {
+    return cat.name;
+  }
+  return `${funcParentPath(cat.parent)} > ${cat.name}`;
+};
+```
+
+
 ## 2019-07-15 命名ルールの参考情報
 
 そういえば命名ルールどこにも定義してなかったなぁというのに今さら気づきまして。
