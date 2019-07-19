@@ -44,12 +44,12 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
       formAmount: null,
       formMemo: '',
     };
-    this.elementIdRoot = UUID();
-    this.elementIdFormCategory = UUID();
-    this.elementIdFormDate = UUID();
-    this.elementIdFormAccount = UUID();
-    this.elementIdFormAmount = UUID();
-    this.elementIdFormMemo = UUID();
+    this.elementIdRoot = `elem-${UUID()}`;
+    this.elementIdFormCategory = `elem-${UUID()}`;
+    this.elementIdFormDate = `elem-${UUID()}`;
+    this.elementIdFormAccount = `elem-${UUID()}`;
+    this.elementIdFormAmount = `elem-${UUID()}`;
+    this.elementIdFormMemo = `elem-${UUID()}`;
     this.closeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'aria-modal' && mutation.oldValue === 'true') {
@@ -61,16 +61,16 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
 
   public componentDidMount() {
     // DatePicker セットアップ
-    // flatpickr(`#${this.elementIdFormDate}`, {
-    //   locale: 'ja',
-    //   onClose: ((selectedDates, dateStr, instance) => {
-    //     this.setState({formDate: dateStr});
-    //   }),
-    // });
+    flatpickr(`#${this.elementIdFormDate}`, {
+      locale: 'ja',
+      onClose: ((selectedDates, dateStr, instance) => {
+        this.setState({formDate: dateStr});
+      }),
+    });
 
     // ContextMenu セットアップ
     const categoryItems: {[key: string]: any} = {};
-    const  categoryConvertFunc = (parent: {[key: string]: any}, cat: DocStates.ICategory) => {
+    const categoryConvertFunc = (parent: {[key: string]: any}, cat: DocStates.ICategory) => {
       const key = `category-${cat.id}`;
       const name = cat.name;
       const items: {[key: string]: any} = {};
