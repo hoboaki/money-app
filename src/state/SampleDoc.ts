@@ -4,6 +4,13 @@ import * as StateMethods from './doc/StateMethods';
 import * as States from './doc/States';
 import * as Types from './doc/Types';
 
+interface ICategory {
+  name: string;
+  items: Array<{
+    name: string;
+  }>;
+}
+
 /// サンプルドキュメントデータ。
 class SampleDoc {
   /// サンプルドキュメントの作成。
@@ -38,7 +45,45 @@ class SampleDoc {
 
     // 出金
     {
-      const categoryId = StateMethods.outgoCategoryAdd(state, '雑費', null);
+      // カテゴリ作成
+      const sampleCategories: ICategory[] = [
+        {
+          name: '家事費',
+          items: [
+            {name: '食費'},
+            {name: '日用品'},
+            {name: '妻小遣い'},
+          ],
+        },
+        {
+          name: '光熱・通信費',
+          items: [
+            {name: '電気'},
+            {name: 'プロバイダ・光電話'},
+            {name: '水道'},
+            {name: 'CATV'},
+            {name: 'NHK'},
+          ],
+        },
+        {
+          name: '通勤・通学費',
+          items: [
+            {name: '洗車'},
+            {name: 'ガソリン'},
+          ],
+        },
+      ];
+      sampleCategories.forEach((parent) => {
+        const parentId = StateMethods.outgoCategoryAdd(state, parent.name, null);
+        parent.items.forEach((child) => {
+          StateMethods.outgoCategoryAdd(state, child.name, parentId);
+        });
+      });
+
+      // １つめの末端カテゴリを探す
+      const categoryId = Object.values(state.outgo.categories).filter((cat) => cat.childs.length === 0)[0].id;
+
+      // テスト用レコード作成
       const currentDate = new Date();
       StateMethods.outgoRecordAdd(
         state,
@@ -50,7 +95,6 @@ class SampleDoc {
         categoryId,
         3000,
       );
-      global.console.assert(Object.keys(state.outgo.categories).length === 1);
       global.console.assert(Object.keys(state.outgo.records).length === 1);
     }
 
