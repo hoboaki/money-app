@@ -197,7 +197,12 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                     <tr>
                       <th scope="row">日付</th>
                       <td>
-                        <input type="text" id={this.elementIdFormDate} value={this.state.formDate} readOnly={true}/>
+                        <input
+                          type="text"
+                          id={this.elementIdFormDate}
+                          value={this.state.formDate}
+                          readOnly={true}
+                          />
                       </td>
                     </tr>
                     <tr>
@@ -235,6 +240,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           id={this.elementIdFormAmount}
                           value={this.state.formAmount != null ? this.state.formAmount.toString() : ''}
                           onChange={(event) => {this.onFormAmountChanged(event.target); }}
+                          onKeyDown={(event) => {this.onKeyDown(event); }}
                           />
                       </td>
                     </tr>
@@ -245,6 +251,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           id={this.elementIdFormMemo}
                           value={this.state.formMemo}
                           onChange={(event) => {this.onFormMemoChanged(event.target); }}
+                          onKeyDown={(event) => {this.onKeyDown(event); }}
                           />
                       </td>
                     </tr>
@@ -327,6 +334,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     // MDB が TypeScript 非対応なので文字列で実行
     new Function(`$('#${this.elementIdRoot}').modal('hide')`)();
   }
+
+  /// キーダウンイベント処理。
+  private onKeyDown(event: React.KeyboardEvent<HTMLElement>) {
+    // Command + Enter で追加ボタンを押下
+    if (event.keyCode === 13 && event.metaKey) {
+      this.onAddButtonClicked();
+      return;
+    }
+  }
+
 }
 
 const mapStateToProps = (state: IStoreState, props: IProps) => {
