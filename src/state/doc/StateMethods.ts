@@ -282,6 +282,23 @@ export const accountByName = (
   return account;
 };
 
+/**
+ * コードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecord[]
+ * @param records 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const recordsFromRecordsByDateRange = (
+  records: States.IRecord[],
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecord[] => {
+  return records.filter((rec) => {
+    return dateBegin.date <= rec.date.date && rec.date.date < dateEnd.date;
+    });
+};
+
 /// 入金カテゴリ追加。
 /// @return {number} 追加したカテゴリの CategoryId。
 export const incomeCategoryAdd = (
@@ -343,6 +360,40 @@ export const incomeRecordAdd = (
   state.nextId.income.record++;
   state.income.records[obj.id] = obj;
   return obj.id;
+};
+
+/**
+ * 入金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordIncome[]
+ * @param state 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const incomeRecordsFromStateyDateRange = (
+  state: States.IState,
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordIncome[] => {
+  return incomeRecordsFromRecordsByDateRange(
+    Object.values(state.income.records),
+    dateBegin,
+    dateEnd,
+  );
+};
+
+/**
+ * 入金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordIncome[]
+ * @param records 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const incomeRecordsFromRecordsByDateRange = (
+  records: States.IRecordIncome[],
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordIncome[] => {
+  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd).map((rec) => records[rec.id]);
 };
 
 /// 出金カテゴリ追加。
@@ -409,6 +460,40 @@ export const outgoRecordAdd = (
 };
 
 /**
+ * 出金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordOutgo[]
+ * @param state 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const outgoRecordsFromStateyDateRange = (
+  state: States.IState,
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordOutgo[] => {
+  return outgoRecordsFromRecordsByDateRange(
+    Object.values(state.outgo.records),
+    dateBegin,
+    dateEnd,
+  );
+};
+
+/**
+ * 出金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordOutgo[]
+ * @param records 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const outgoRecordsFromRecordsByDateRange = (
+  records: States.IRecordOutgo[],
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordOutgo[] => {
+  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd).map((rec) => records[rec.id]);
+};
+
+/**
  * 送金レコードの追加。
  * @param amount 金額。送金元口座からは減算され送金先口座に加算される。
  */
@@ -439,6 +524,40 @@ export const transferRecordAdd = (
   state.nextId.transfer.record++;
   state.transfer.records[obj.id] = obj;
   return obj.id;
+};
+
+/**
+ * 送金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordOutgo[]
+ * @param state 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const transferRecordsFromStateyDateRange = (
+  state: States.IState,
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordTransfer[] => {
+  return transferRecordsFromRecordsByDateRange(
+    Object.values(state.transfer.records),
+    dateBegin,
+    dateEnd,
+  );
+};
+
+/**
+ * 送金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordTransfer[]
+ * @param records 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const transferRecordsFromRecordsByDateRange = (
+  records: States.IRecordTransfer[],
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordTransfer[] => {
+  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd).map((rec) => records[rec.id]);
 };
 
 /**
