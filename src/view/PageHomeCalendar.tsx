@@ -1,13 +1,20 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import * as DocStateMethods from '../state/doc/StateMethods';
+import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
-import * as States from '../state/ui/States';
+import * as UiStates from '../state/ui/States';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeCalendar.css';
 
-class PageHomeCalendar extends React.Component<States.IPageHome, any> {
+interface IProps {
+  doc: DocStates.IState;
+  pageHome: UiStates.IPageHome;
+}
+
+class PageHomeCalendar extends React.Component<IProps, any> {
   public render() {
     const rootClass = ClassNames(
       Style.Root,
@@ -81,36 +88,71 @@ class PageHomeCalendar extends React.Component<States.IPageHome, any> {
       income: number;
       outgo: number;
     }
-    const baseDate = this.props.currentDate.date;
-    const startDate = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() - baseDate.getDay());
+    const dayCountInWeek = 7;
+    const rowCount = 6;
+    const baseDate = this.props.pageHome.currentDate.date;
+    const startDate = YearMonthDayDate.fromDate(new Date(
+      baseDate.getFullYear(),
+      baseDate.getMonth(),
+      baseDate.getDate() - baseDate.getDay(),
+      ));
+    const endDate = YearMonthDayDate.fromDate(new Date(
+      startDate.date.getFullYear(),
+      startDate.date.getMonth(),
+      startDate.date.getDate() + dayCountInWeek * rowCount,
+      ));
+    const incomeRecordsInCalendar = DocStateMethods.incomeRecordsFromStateByDateRange(
+      this.props.doc,
+      startDate,
+      endDate,
+      );
+    const outgoRecordsInCalendar = DocStateMethods.outgoRecordsFromStateByDateRange(
+      this.props.doc,
+      startDate,
+      endDate,
+      );
+    const transferRecordsInCalendar = DocStateMethods.transferRecordsFromStateByDateRange(
+      this.props.doc,
+      startDate,
+      endDate,
+      );
     const dataArray: IData[] = [];
     {
-      for (let i = 0, date = startDate; i < 7 * 6; ++i, date = YearMonthDayDate.fromDate(date).nextDay().date) {
+      for (let i = 0, date = startDate;
+        i < dayCountInWeek * rowCount; ++i,
+        date = date.nextDay()
+        ) {
+        const nextDay = date.nextDay();
+        const incomeRecords = DocStateMethods.incomeRecordsFromRecordsByDateRange(
+          incomeRecordsInCalendar,
+          date,
+          nextDay,
+          );
+        const outgoRecords = DocStateMethods.outgoRecordsFromRecordsByDateRange(
+          outgoRecordsInCalendar,
+          date,
+          nextDay,
+          );
+        const transferRecords = DocStateMethods.transferRecordsFromRecordsByDateRange(
+          transferRecordsInCalendar,
+          date,
+          nextDay,
+          );
         dataArray.push({
-          day: date.getDate(),
-          dark: date.getMonth() !== baseDate.getMonth(),
-          transfer: false,
-          income: 0,
-          outgo: 0,
+          day: date.date.getDate(),
+          dark: date.date.getMonth() !== baseDate.getMonth(),
+          transfer: transferRecords.length !== 0,
+          income: incomeRecords.reduce((current, next) => current + next.amount, 0),
+          outgo: outgoRecords.reduce((current, next) => current + next.amount, 0),
         });
       }
     }
 
-    // 動作確認用にデータを加工
-    dataArray[1] = Object.assign(dataArray[1], {income: 1000, outgo: 100});
-    dataArray[2] = Object.assign(dataArray[2], {outgo: 10000});
-    dataArray[3] = Object.assign(dataArray[3], {income: 100});
-    dataArray[4] = Object.assign(dataArray[4], {transfer: true});
-    dataArray[7] = Object.assign(dataArray[7], {income: 1000});
-    dataArray[8] = Object.assign(dataArray[8], {outgo: 1000});
-    dataArray[9] = Object.assign(dataArray[9], {income: 200, outgo: 100});
-    dataArray[12] = Object.assign(dataArray[12], {transfer: true, income: 200, outgo: 100});
-
     const cellDataArray: IData[][] = [];
-    for (let w = 0; w < 6; ++w) {
+    for (let w = 0; w < rowCount; ++w) {
       const array: IData[] = [];
-      for (let d = 0; d < 7; ++d) {
-        array.push(dataArray[w * 7 + d]);
+      for (let d = 0; d < dayCountInWeek; ++d) {
+        array.push(dataArray[w * dayCountInWeek + d]);
       }
       cellDataArray.push(array);
     }
@@ -181,6 +223,9 @@ class PageHomeCalendar extends React.Component<States.IPageHome, any> {
 }
 
 const mapStateToProps = (state: IStoreState) => {
-  return state.ui.pageHome;
+  return {
+    doc: state.doc,
+    pageHome: state.ui.pageHome,
+  };
 };
 export default ReactRedux.connect(mapStateToProps)(PageHomeCalendar);

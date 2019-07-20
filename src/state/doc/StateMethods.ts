@@ -269,6 +269,35 @@ export const accountAdd = (
   return obj.id;
 };
 
+/** 指定の名前の口座オブジェクトを取得。見つからなければエラー。 */
+export const accountByName = (
+  state: States.IState,
+  name: string,
+  ): States.IAccount => {
+  const account = Object.values(state.accounts).find((ac) => ac.name === name);
+  if (account === undefined) {
+    global.console.log(state.accounts);
+    throw new Error(`Not found account named '${name}'.`);
+  }
+  return account;
+};
+
+/**
+ * コードの中で日付の範囲を指定して絞り込む。
+ * @param records 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const recordsFromRecordsByDateRange = <TRecord extends States.IRecord>(
+  records: TRecord[],
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): TRecord[] => {
+  return records.filter((rec) => {
+    return dateBegin.date <= rec.date.date && rec.date.date < dateEnd.date;
+    });
+};
+
 /// 入金カテゴリ追加。
 /// @return {number} 追加したカテゴリの CategoryId。
 export const incomeCategoryAdd = (
@@ -330,6 +359,40 @@ export const incomeRecordAdd = (
   state.nextId.income.record++;
   state.income.records[obj.id] = obj;
   return obj.id;
+};
+
+/**
+ * 入金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordIncome[]
+ * @param state 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const incomeRecordsFromStateByDateRange = (
+  state: States.IState,
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordIncome[] => {
+  return incomeRecordsFromRecordsByDateRange(
+    Object.values(state.income.records),
+    dateBegin,
+    dateEnd,
+  );
+};
+
+/**
+ * 入金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordIncome[]
+ * @param records 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const incomeRecordsFromRecordsByDateRange = (
+  records: States.IRecordIncome[],
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordIncome[] => {
+  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd);
 };
 
 /// 出金カテゴリ追加。
@@ -396,6 +459,40 @@ export const outgoRecordAdd = (
 };
 
 /**
+ * 出金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordOutgo[]
+ * @param state 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const outgoRecordsFromStateByDateRange = (
+  state: States.IState,
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordOutgo[] => {
+  return outgoRecordsFromRecordsByDateRange(
+    Object.values(state.outgo.records),
+    dateBegin,
+    dateEnd,
+  );
+};
+
+/**
+ * 出金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordOutgo[]
+ * @param records 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const outgoRecordsFromRecordsByDateRange = (
+  records: States.IRecordOutgo[],
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordOutgo[] => {
+  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd);
+};
+
+/**
  * 送金レコードの追加。
  * @param amount 金額。送金元口座からは減算され送金先口座に加算される。
  */
@@ -428,7 +525,75 @@ export const transferRecordAdd = (
   return obj.id;
 };
 
-/** 最初に見つかる末端カテゴリの CategoryId を返す。見つからない場合は 0 を返す。 */
-export const findFirstLeafCategory = (categories: {[key: number]: States.ICategory}) => {
-  return Object.values(categories).filter((cat) => cat.childs.length === 0)[0].id;
+/**
+ * 送金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordOutgo[]
+ * @param state 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const transferRecordsFromStateByDateRange = (
+  state: States.IState,
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordTransfer[] => {
+  return transferRecordsFromRecordsByDateRange(
+    Object.values(state.transfer.records),
+    dateBegin,
+    dateEnd,
+  );
+};
+
+/**
+ * 送金レコードの中で日付の範囲を指定して絞り込む。
+ * @returns IRecordTransfer[]
+ * @param records 検索対象。
+ * @param dateBegin 開始日。この日を含む。
+ * @param dateEnd 終了日。この日は含まない。
+ */
+export const transferRecordsFromRecordsByDateRange = (
+  records: States.IRecordTransfer[],
+  dateBegin: YearMonthDayDate,
+  dateEnd: YearMonthDayDate,
+  ): States.IRecordTransfer[] => {
+  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd);
+};
+
+/**
+ * パス形式文字列でカテゴリを検索し ICategory オブジェクトで返す。見つからない場合はエラー。
+ * @param categories incomeCategories もしくは outgoCategories の参照。
+ * @param path 階層をスラッシュで区切った文字列。（例：'家事費/食費'）
+ */
+export const categoryByPath = (categories: {[key: number]: States.ICategory}, path: string) => {
+  // 引数チェック
+  if (path === '') {
+    throw new Error(`Argument named 'path' is empty.`);
+  }
+
+  // スラッシュでパスを分解して検索
+  const names = path.split('/');
+  let parentId: number = 0;
+  names.forEach((name) => {
+    const cats = parentId === 0 ?
+      Object.keys(categories).filter((cat) => categories[Number(cat)].parent == null).map((cat) => Number(cat)) :
+      categories[parentId].childs;
+    const nextId = cats.find((catId) => categories[catId].name === name);
+    if (nextId === undefined) {
+      global.console.log(`Finding '${name}' from parentId '${parentId}'.`);
+      global.console.log(names);
+      global.console.log(categories);
+      throw new Error(`Not found category path '${path}'.`);
+    }
+    parentId = nextId;
+  });
+  return categories[parentId];
+};
+
+/** 最初に見つかる末端カテゴリの ICategory を返す。見つからない場合はエラー。 */
+export const firstLeafCategory = (categories: {[key: number]: States.ICategory}) => {
+  const category = Object.values(categories).find((cat) => cat.childs.length === 0);
+  if (category === undefined) {
+    throw new Error(`Not found leaf category.`);
+  }
+  return category;
 };
