@@ -284,16 +284,15 @@ export const accountByName = (
 
 /**
  * コードの中で日付の範囲を指定して絞り込む。
- * @returns IRecord[]
  * @param records 検索対象。
  * @param dateBegin 開始日。この日を含む。
  * @param dateEnd 終了日。この日は含まない。
  */
-export const recordsFromRecordsByDateRange = (
-  records: States.IRecord[],
+export const recordsFromRecordsByDateRange = <TRecord extends States.IRecord>(
+  records: TRecord[],
   dateBegin: YearMonthDayDate,
   dateEnd: YearMonthDayDate,
-  ): States.IRecord[] => {
+  ): TRecord[] => {
   return records.filter((rec) => {
     return dateBegin.date <= rec.date.date && rec.date.date < dateEnd.date;
     });
@@ -393,7 +392,7 @@ export const incomeRecordsFromRecordsByDateRange = (
   dateBegin: YearMonthDayDate,
   dateEnd: YearMonthDayDate,
   ): States.IRecordIncome[] => {
-  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd).map((rec) => records[rec.id]);
+  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd);
 };
 
 /// 出金カテゴリ追加。
@@ -490,7 +489,7 @@ export const outgoRecordsFromRecordsByDateRange = (
   dateBegin: YearMonthDayDate,
   dateEnd: YearMonthDayDate,
   ): States.IRecordOutgo[] => {
-  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd).map((rec) => records[rec.id]);
+  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd);
 };
 
 /**
@@ -557,7 +556,7 @@ export const transferRecordsFromRecordsByDateRange = (
   dateBegin: YearMonthDayDate,
   dateEnd: YearMonthDayDate,
   ): States.IRecordTransfer[] => {
-  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd).map((rec) => records[rec.id]);
+  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd);
 };
 
 /**
