@@ -12,21 +12,21 @@ const a2RMapper = createA2RMapper<States.IState>();
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_PREV,
   (state, action) => {
-    state.home.currentDate = state.home.currentDate.prevMonth();
+    state.pageHome.currentDate = state.pageHome.currentDate.prevMonth();
   },
 );
 
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_NEXT,
   (state, action) => {
-    state.home.currentDate = state.home.currentDate.nextMonth();
+    state.pageHome.currentDate = state.pageHome.currentDate.nextMonth();
   },
 );
 
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_TODAY,
   (state, action) => {
-    state.home.currentDate = new YearMonthDayDate().firstDayOfMonth();
+    state.pageHome.currentDate = new YearMonthDayDate().firstDayOfMonth();
   },
 );
 

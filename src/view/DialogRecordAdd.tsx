@@ -1,50 +1,56 @@
 import ClassNames from 'classnames';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
-import * as Lodash from 'lodash';
 import * as React from 'react';
+import * as ReactRedux from 'react-redux';
+import { v4 as UUID } from 'uuid';
+import * as DocActions from '../state/doc/Actions';
+import * as DocStateMethods from '../state/doc/StateMethods';
+import * as DocStates from '../state/doc/States';
+import IStoreState from '../state/IStoreState';
+import Store from '../state/Store';
+import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as Style from './DialogRecordAdd.css';
 
 interface IProps {
   onClosed: (() => void);
-}
-
-interface ICategory {
-  name: string;
-  items: Array<{
-    name: string;
-  }>;
-}
-
-interface ISelectedCategory {
-  index: number;
-  indexSub: number;
+  accounts: DocStates.IAccount[];
+  incomeCategories: { [key: number]: DocStates.ICategory };
+  outgoCategories: { [key: number]: DocStates.ICategory };
 }
 
 interface IState {
-  selectedDate: string;
-  selectedCategory: ISelectedCategory;
+  formDate: string;
+  formCategory: number;
+  formAccount: number;
+  formAmount: number | null;
+  formMemo: string;
 }
 
 class DialogRecordAdd extends React.Component<IProps, IState> {
   private elementIdRoot: string;
   private elementIdFormCategory: string;
   private elementIdFormDate: string;
+  private elementIdFormAccount: string;
+  private elementIdFormAmount: string;
+  private elementIdFormMemo: string;
   private closeObserver: MutationObserver;
-  private demoCategories: ICategory[];
 
   constructor(props: IProps) {
     super(props);
     this.state = {
-      selectedDate: '2019-07-07',
-      selectedCategory: {
-        index: 0,
-        indexSub: 0,
-      },
+      formDate: new YearMonthDayDate().toText(),
+      formCategory: DocStateMethods.findFirstLeafCategory(this.props.outgoCategories),
+      formAccount: Number(Object.keys(props.accounts)[0]),
+      formAmount: null,
+      formMemo: '',
     };
-    this.elementIdRoot = Lodash.uniqueId('dialogRecordAddRoot');
-    this.elementIdFormCategory = Lodash.uniqueId('dialogRecordAddFormCategory');
-    this.elementIdFormDate = Lodash.uniqueId('dialogRecordAddFormDate');
+    this.elementIdRoot = `elem-${UUID()}`;
+    this.elementIdFormCategory = `elem-${UUID()}`;
+    this.elementIdFormDate = `elem-${UUID()}`;
+    this.elementIdFormAccount = `elem-${UUID()}`;
+    this.elementIdFormAmount = `elem-${UUID()}`;
+    this.elementIdFormMemo = `elem-${UUID()}`;
     this.closeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'aria-modal' && mutation.oldValue === 'true') {
@@ -52,33 +58,6 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
         }
       });
     });
-    this.demoCategories = [
-      {
-        name: '家事費',
-        items: [
-          {name: '食費'},
-          {name: '日用品'},
-          {name: '妻小遣い'},
-        ],
-      },
-      {
-        name: '光熱・通信費',
-        items: [
-          {name: '電気'},
-          {name: 'プロバイダ・光電話'},
-          {name: '水道'},
-          {name: 'CATV'},
-          {name: 'NHK'},
-        ],
-      },
-      {
-        name: '通勤・通学費',
-        items: [
-          {name: '洗車'},
-          {name: 'ガソリン'},
-        ],
-      },
-    ];
   }
 
   public componentDidMount() {
@@ -86,32 +65,34 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
     flatpickr(`#${this.elementIdFormDate}`, {
       locale: 'ja',
       onClose: ((selectedDates, dateStr, instance) => {
-        this.setState({selectedDate: dateStr});
+        this.setState({formDate: dateStr});
       }),
     });
 
     // ContextMenu セットアップ
     const categoryItems: {[key: string]: any} = {};
-    this.demoCategories.map((mainValue, mainIndex, mainArray) => {
-      const subItems: {[key: string]: any} = {};
-      mainValue.items.map((subValue, subIndex, subArray) => {
-        subItems[`category-${mainIndex}-${subIndex}`] = {
-          name: subValue.name,
-        };
+    const categoryConvertFunc = (parent: {[key: string]: any}, cat: DocStates.ICategory) => {
+      const key = `category-${cat.id}`;
+      const name = cat.name;
+      const items: {[key: string]: any} = {};
+      cat.childs.forEach((child) => {
+        categoryConvertFunc(items, this.props.outgoCategories[child]);
       });
-      categoryItems[`category-${mainIndex}`] = {
-        name: mainValue.name,
-        items: subItems,
+      parent[key] = {
+        name,
+        items: Object.keys(items).length === 0 ? null : items,
       };
+    };
+    Object.entries(this.props.outgoCategories).forEach(([key, value]) => {
+      if (value.parent == null) {
+        categoryConvertFunc(categoryItems, this.props.outgoCategories[value.id]);
+      }
     });
     $.contextMenu({
       callback: (key, options) => {
         const texts = key.split('-');
         this.setState({
-          selectedCategory: {
-            index: parseInt(texts[1], 10),
-            indexSub: parseInt(texts[2], 10),
-          },
+          formCategory: Number(texts[1]),
         });
       },
       className: Style.ContextMenuRoot,
@@ -208,7 +189,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
                     <tr>
                       <th scope="row">日付</th>
                       <td>
-                        <input type="text" id={this.elementIdFormDate} value={this.state.selectedDate}/>
+                        <input type="text" id={this.elementIdFormDate} value={this.state.formDate} readOnly={true}/>
                       </td>
                     </tr>
                     <tr>
@@ -226,22 +207,37 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
                     <tr>
                       <th scope="row">口座</th>
                       <td>
-                        <select defaultValue="財布">
-                          <option value="財布">財布</option>
-                          <option value="アデリー銀行">アデリー銀行</option>
+                        <select defaultValue={this.state.formAccount.toString()}
+                          id={this.elementIdFormAccount}
+                          onChange={(sender) => {this.onFormAccountChanged(sender.target); }}
+                          >
+                          {Object.keys(this.props.accounts).map((key) => {
+                            const account = this.props.accounts[Number(key)];
+                            return (
+                              <option key={key} value={key}>{account.name}</option>
+                            );
+                          })}
                         </select>
                       </td>
                     </tr>
                     <tr>
                       <th scope="row">金額</th>
                       <td>
-                        <input type="text" value="10000"/>
+                        <input type="text"
+                          id={this.elementIdFormAmount}
+                          value={this.state.formAmount != null ? this.state.formAmount.toString() : ''}
+                          onChange={(sender) => {this.onFormAmountChanged(sender.target); }}
+                          />
                       </td>
                     </tr>
                     <tr>
                       <th scope="row">メモ</th>
                       <td>
-                        <input className={Style.FormInputMemo} type="text" value="お弁当代"/>
+                        <input className={Style.FormInputMemo} type="text"
+                          id={this.elementIdFormMemo}
+                          value={this.state.formMemo}
+                          onChange={(sender) => {this.onFormMemoChanged(sender.target); }}
+                          />
                       </td>
                     </tr>
                   </tbody>
@@ -252,7 +248,9 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
               <label>
                 <input type="checkbox" id="continueCheckbox"/>続けて入力
               </label>
-              <button type="button" className="btn btn-primary">追加</button>
+              <button type="button" className="btn btn-primary"
+                onClick={() => {this.onAddButtonClicked(); }}
+                >追加</button>
             </div>
           </div>
         </div>
@@ -262,11 +260,55 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
 
   /// カテゴリインプットに表示するテキストを返す。
   private categoryDisplayText(): string {
-    const parentCategory = this.demoCategories[this.state.selectedCategory.index];
-    const name0 = parentCategory.name;
-    const name1 = parentCategory.items[this.state.selectedCategory.indexSub].name;
-    return `${name0} > ${name1}`;
+    const funcParentPath = (categoryId: number): string => {
+      const cat = this.props.outgoCategories[categoryId];
+      if (cat.parent == null) {
+        return cat.name;
+      }
+      return `${funcParentPath(cat.parent)} > ${cat.name}`;
+    };
+    return funcParentPath(this.state.formCategory);
+  }
+
+  /// 口座値変更時の処理。
+  private onFormAccountChanged(sender: HTMLSelectElement) {
+    this.setState({formAccount: Number(sender.value)});
+  }
+
+  /// 価格値変更時の処理。
+  private onFormAmountChanged(sender: HTMLInputElement) {
+    this.setState({formAmount: Number(sender.value)});
+  }
+
+  /// メモ変更時の処理。
+  private onFormMemoChanged(sender: HTMLInputElement) {
+    this.setState({formMemo: sender.value});
+  }
+
+  /// 追加ボタンクリック時処理。
+  private onAddButtonClicked() {
+    // 追加イベントを実行
+    Store.dispatch(DocActions.addRecordOutgo(
+      new Date(),
+      YearMonthDayDate.fromText(this.state.formDate),
+      this.state.formMemo,
+      this.state.formAccount,
+      this.state.formCategory,
+      this.state.formAmount != null ? this.state.formAmount : 0,
+      ));
+
+    // ダイアログを閉じる
+    // MDB が TypeScript 非対応なので文字列で実行
+    new Function(`$('#${this.elementIdRoot}').modal('hide')`)();
   }
 }
 
-export default DialogRecordAdd;
+const mapStateToProps = (state: IStoreState, props: IProps) => {
+  const result = Object.assign(props, {
+    accounts: state.doc.accounts,
+    incomeCategories: state.doc.income.categories,
+    outgoCategories: state.doc.outgo.categories,
+  });
+  return result;
+};
+export default ReactRedux.connect(mapStateToProps)(DialogRecordAdd);

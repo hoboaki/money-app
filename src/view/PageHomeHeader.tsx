@@ -73,17 +73,14 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
     );
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalAddRecord) {
-        modalDialog = <DialogRecordAdd onClosed={() => {
-          this.setState({modalAddRecord: false});
-          Store.dispatch(DocActions.addRecordOutgo(
-            new Date(),
-            YearMonthDayDate.fromText('2019-07-07'),
-            'お弁当代',
-            1, // accountId
-            1, // categoryId
-            10000, // amount
-            ));
-        }}/>;
+        modalDialog = <DialogRecordAdd
+          onClosed={() => {
+            this.setState({modalAddRecord: false});
+          }}
+          accounts={[]}
+          incomeCategories={{}}
+          outgoCategories={{}}
+        />;
     }
     const currentDate = `${this.props.currentDate.date.getFullYear()}年${this.props.currentDate.date.getMonth() + 1}月`;
     return (
@@ -146,6 +143,6 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
 }
 
 const mapStateToProps = (state: IStoreState) => {
-  return state.ui.home;
+  return state.ui.pageHome;
 };
 export default ReactRedux.connect(mapStateToProps)(PageHomeHeader);

@@ -2,15 +2,21 @@ import Clone from 'clone';
 import Redux from 'redux';
 
 import createA2RMapper from '../../util/ActionToReducerMapper';
-import * as Action from './Actions';
+import * as Actions from './Actions';
 import * as StateMethods from './StateMethods';
 import * as States from './States';
 
 const a2RMapper = createA2RMapper<States.IState>();
 
-// タスクを追加する。
-a2RMapper.addWork<Action.IAddRecordOutgo>(
-    Action.ADD_RECORD_OUTGO,
+a2RMapper.addWork<Actions.IResetDocument>(
+  Actions.RESET_DOCUMENT,
+  (state, action) => {
+    Object.assign(state, action.doc);
+  },
+);
+
+a2RMapper.addWork<Actions.IAddRecordOutgo>(
+    Actions.ADD_RECORD_OUTGO,
     (state, action) => {
         StateMethods.outgoRecordAdd(
           state,

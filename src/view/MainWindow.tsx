@@ -2,7 +2,9 @@ import ClassNames from 'classnames';
 import {ipcRenderer as IpcRenderer} from 'electron';
 import * as React from 'react';
 import Split from 'split.js';
-import StateSampleDoc from '../state/SampleDoc';
+import * as DocActions from '../state/doc/Actions';
+import SampleDoc from '../state/SampleDoc';
+import Store from '../state/Store';
 import LayoutStyle from './Layout.css';
 import * as MainWindowStyle from './MainWindow.css';
 import PageStyle from './Page.css';
@@ -30,7 +32,10 @@ class MainWindow extends React.Component<any, IState> {
 
   public componentDidMount() {
     // テスト実行
-    StateSampleDoc.Test();
+    SampleDoc.Test();
+
+    // サンプルドキュメントで初期化
+    Store.dispatch(DocActions.resetDocument(SampleDoc.Create()));
 
     // Focus/Unfocus 切替
     window.onload = () => {
