@@ -93,7 +93,7 @@
 }
 .FormInputRoot input:focus,
 .FormInputRoot select:focus {
-  background: #eee;
+  background: #eeeeee;
 }
 .FormInputRoot select:hover {
   color: #424242;
