@@ -11,6 +11,14 @@ interface ICategory {
   }>;
 }
 
+interface ISampleRecord {
+  day: number;
+  account: string;
+  category: string;
+  amount: number;
+  memo: string;
+}
+
 /// サンプルドキュメントデータ。
 class SampleDoc {
   /// サンプルドキュメントの作成。
@@ -27,20 +35,94 @@ class SampleDoc {
 
     // 入金
     {
-      const categoryId = StateMethods.incomeCategoryAdd(state, 'お小遣い', null);
+      // カテゴリ作成
+      const sampleCategories: ICategory[] = [
+        {
+          name: '給料',
+          items: [
+            {name: '固定給'},
+            {name: '年俸給'},
+            {name: '残業代'},
+            {name: '通勤手当'},
+            {name: '住宅手当'},
+            {name: '家族手当'},
+          ],
+        },
+        {
+          name: '賞与',
+          items: [
+            {name: '年俸給分'},
+            {name: '調整給料分'},
+          ],
+        },
+        {
+          name: '児童手当',
+          items: [],
+        },
+        {
+          name: '太陽光発電',
+          items: [],
+        },
+        {
+          name: 'お小遣い',
+          items: [],
+        },
+      ];
+      sampleCategories.forEach((parent) => {
+        const parentId = StateMethods.incomeCategoryAdd(state, parent.name, null);
+        parent.items.forEach((child) => {
+          StateMethods.incomeCategoryAdd(state, child.name, parentId);
+        });
+      });
+
+      // テスト用レコード作成
+      const sampleRecords: ISampleRecord[] = [
+        {
+          day: -2,
+          account: 'アデリー銀行',
+          category: '給料/固定給',
+          amount: 150000,
+          memo: '',
+        },
+        {
+          day: 0,
+          account: '財布',
+          category: 'お小遣い',
+          amount: 100,
+          memo: '',
+        },
+        {
+          day: 5,
+          account: '財布',
+          category: 'お小遣い',
+          amount: 1000,
+          memo: 'お手伝い',
+        },
+        {
+          day: 7,
+          account: '財布',
+          category: 'お小遣い',
+          amount: 200,
+          memo: 'アイス代',
+        },
+      ];
       const currentDate = new Date();
-      StateMethods.incomeRecordAdd(
-        state,
-        currentDate,
-        currentDate,
-        YearMonthDayDate.fromText('2018-01-02'),
-        '1月分お小遣い',
-        accountId,
-        categoryId,
-        3000,
-      );
-      global.console.assert(Object.keys(state.income.categories).length === 1);
-      global.console.assert(Object.keys(state.income.records).length === 1);
+      sampleRecords.forEach((rec) => {
+        StateMethods.incomeRecordAdd(
+          state,
+          currentDate,
+          currentDate,
+          YearMonthDayDate.fromDate(new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            rec.day,
+            )),
+          rec.memo,
+          StateMethods.accountByName(state, rec.account).id,
+          StateMethods.categoryByPath(state.income.categories, rec.category).id,
+          rec.amount,
+        );
+      });
     }
 
     // 出金
@@ -89,7 +171,7 @@ class SampleDoc {
         YearMonthDayDate.fromText('2018-01-02'),
         'メガネケース',
         accountId,
-        StateMethods.findFirstLeafCategory(state.outgo.categories),
+        StateMethods.firstLeafCategory(state.outgo.categories).id,
         3000,
       );
       global.console.assert(Object.keys(state.outgo.records).length === 1);

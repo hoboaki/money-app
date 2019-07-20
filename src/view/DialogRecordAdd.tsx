@@ -40,7 +40,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       formDate: new YearMonthDayDate().toText(),
-      formCategory: DocStateMethods.findFirstLeafCategory(this.props.outgoCategories),
+      formCategory: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
       formAccount: Number(Object.keys(props.accounts)[0]),
       formAmount: null,
       formMemo: '',
