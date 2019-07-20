@@ -91,13 +91,16 @@
   outline: none;
   padding-left: 8px;
 }
-
+.FormInputRoot input:focus,
+.FormInputRoot select:focus {
+  background: #eee;
+}
 .FormInputRoot select:hover {
-  color: rgba(0,0,0,0.87);
+  color: #424242;
+  cursor: pointer;
 }
 
 .FormInputCategory {
-  cursor: pointer;
   width: 100%
 }
 
