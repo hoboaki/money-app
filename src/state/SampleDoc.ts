@@ -19,6 +19,14 @@ interface ISampleRecord {
   memo: string;
 }
 
+interface ISampleTransferRecord {
+  day: number;
+  accountFrom: string;
+  accountTo: string;
+  amount: number;
+  memo: string;
+}
+
 /// サンプルドキュメントデータ。
 class SampleDoc {
   /// サンプルドキュメントの作成。
@@ -92,18 +100,25 @@ class SampleDoc {
           memo: '',
         },
         {
-          day: 5,
+          day: 4,
           account: '財布',
           category: 'お小遣い',
           amount: 1000,
           memo: 'お手伝い',
         },
         {
-          day: 7,
+          day: 6,
           account: '財布',
           category: 'お小遣い',
           amount: 200,
           memo: 'アイス代',
+        },
+        {
+          day: 9,
+          account: '財布',
+          category: 'お小遣い',
+          amount: 200,
+          memo: '遠足代',
         },
       ];
       const currentDate = new Date();
@@ -163,34 +178,97 @@ class SampleDoc {
       });
 
       // テスト用レコード作成
+      const sampleRecords: ISampleRecord[] = [
+        {
+          day: -1,
+          account: 'アデリー銀行',
+          category: '光熱・通信費/電気',
+          amount: 10000,
+          memo: '',
+        },
+        {
+          day: 5,
+          account: '財布',
+          category: '家事費/食費',
+          amount: 1000,
+          memo: '夕飯代',
+        },
+        {
+          day: 6,
+          account: '財布',
+          category: '家事費/日用品',
+          amount: 100,
+          memo: 'ティッシュ',
+        },
+        {
+          day: 7,
+          account: '財布',
+          category: '家事費/食費',
+          amount: 200,
+          memo: 'アイス',
+        },
+        {
+          day: 9,
+          account: '財布',
+          category: '家事費/食費',
+          amount: 100,
+          memo: 'バナナ',
+        },
+      ];
       const currentDate = new Date();
-      StateMethods.outgoRecordAdd(
-        state,
-        currentDate,
-        currentDate,
-        YearMonthDayDate.fromText('2018-01-02'),
-        'メガネケース',
-        accountId,
-        StateMethods.firstLeafCategory(state.outgo.categories).id,
-        3000,
-      );
-      global.console.assert(Object.keys(state.outgo.records).length === 1);
+      sampleRecords.forEach((rec) => {
+        StateMethods.outgoRecordAdd(
+          state,
+          currentDate,
+          currentDate,
+          YearMonthDayDate.fromDate(new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            rec.day,
+            )),
+          rec.memo,
+          StateMethods.accountByName(state, rec.account).id,
+          StateMethods.categoryByPath(state.outgo.categories, rec.category).id,
+          rec.amount,
+        );
+      });
     }
 
     // 送金
     {
+      const sampleRecords: ISampleTransferRecord[] = [
+        {
+          day: 1,
+          accountFrom: 'アデリー銀行',
+          accountTo: '財布',
+          amount: 30000,
+          memo: '今月分のお小遣い',
+        },
+        {
+          day: 6,
+          accountFrom: 'アデリー銀行',
+          accountTo: '財布',
+          amount: 10000,
+          memo: '追加のお小遣い',
+        },
+      ];
       const currentDate = new Date();
-      StateMethods.transferRecordAdd(
-        state,
-        currentDate,
-        currentDate,
-        YearMonthDayDate.fromText('2018-02-01'),
-        '1月分請求',
-        bankAccountId,
-        creditCardAccountId,
-        20000,
-      );
-      global.console.assert(Object.keys(state.transfer.records).length === 1);
+      sampleRecords.forEach((rec) => {
+        StateMethods.transferRecordAdd(
+          state,
+          currentDate,
+          currentDate,
+          YearMonthDayDate.fromDate(new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            rec.day,
+            )),
+          rec.memo,
+          StateMethods.accountByName(state, rec.accountFrom).id,
+          StateMethods.accountByName(state, rec.accountTo).id,
+          rec.amount,
+        );
+      });
     }
 
     return state;
