@@ -137,7 +137,6 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
   }
 
   private onNewRecordBtnPushed() {
-    global.console.log('onNewRecordBtnPushed');
     this.setState({modalAddRecord: true});
   }
 }
