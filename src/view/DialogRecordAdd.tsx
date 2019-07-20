@@ -41,6 +41,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   private elementIdFormAmount: string;
   private elementIdFormMemo: string;
   private elementIdFormIsContinueMode: string;
+  private elementIdFormSubmit: string;
   private closeObserver: MutationObserver;
 
   constructor(props: ILocalProps) {
@@ -59,6 +60,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     this.elementIdFormAmount = `elem-${UUID()}`;
     this.elementIdFormMemo = `elem-${UUID()}`;
     this.elementIdFormIsContinueMode = `elem-${UUID()}`;
+    this.elementIdFormSubmit = `elem-${UUID()}`;
     this.closeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'aria-modal' && mutation.oldValue === 'true') {
@@ -109,7 +111,12 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       trigger: 'left',
     });
 
-    // MDB が TypeScript 非対応なので文字列で実行
+    // ツールチップ対応
+    new Function(`$('#${this.elementIdFormSubmit}').tooltip({
+      title: '⌘Cmd + ⏎', delay: {show: 500, hide: 100}, placement:'bottom'
+    })`)();
+
+    // ダイアログ表示（MDB が TypeScript 非対応なので文字列で実行）
     new Function(`$('#${this.elementIdRoot}').modal('show')`)();
 
     // ダイアログの閉じ終わった瞬間を感知するための監視
@@ -267,7 +274,10 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                   onChange={(event) => {this.onIsContinueModeChanged(event.target); }}
                   />続けて入力
               </label>
-              <button type="button" className="btn btn-primary"
+              <button type="button"
+                className="btn btn-primary"
+                id={this.elementIdFormSubmit}
+                data-toggle="tooltip"
                 onClick={() => {this.onAddButtonClicked(); }}
                 >追加</button>
             </div>
