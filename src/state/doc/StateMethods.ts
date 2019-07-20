@@ -368,7 +368,7 @@ export const incomeRecordAdd = (
  * @param dateBegin 開始日。この日を含む。
  * @param dateEnd 終了日。この日は含まない。
  */
-export const incomeRecordsFromStateyDateRange = (
+export const incomeRecordsFromStateByDateRange = (
   state: States.IState,
   dateBegin: YearMonthDayDate,
   dateEnd: YearMonthDayDate,
@@ -465,7 +465,7 @@ export const outgoRecordAdd = (
  * @param dateBegin 開始日。この日を含む。
  * @param dateEnd 終了日。この日は含まない。
  */
-export const outgoRecordsFromStateyDateRange = (
+export const outgoRecordsFromStateByDateRange = (
   state: States.IState,
   dateBegin: YearMonthDayDate,
   dateEnd: YearMonthDayDate,
@@ -532,7 +532,7 @@ export const transferRecordAdd = (
  * @param dateBegin 開始日。この日を含む。
  * @param dateEnd 終了日。この日は含まない。
  */
-export const transferRecordsFromStateyDateRange = (
+export const transferRecordsFromStateByDateRange = (
   state: States.IState,
   dateBegin: YearMonthDayDate,
   dateEnd: YearMonthDayDate,
