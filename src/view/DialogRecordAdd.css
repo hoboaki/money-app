@@ -105,6 +105,12 @@
   width: 100%
 }
 
+.FormErrorMsg {
+  color: #e44;
+  display: block;
+  margin: 4px;
+}
+
 .FormFooterRoot label,
 .FormFooterRoot input[type='checkbox'] {
   cursor: pointer;

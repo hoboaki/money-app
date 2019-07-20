@@ -31,6 +31,7 @@ interface IState {
   formAccount: number;
   formAmount: number | null;
   formMemo: string;
+  isAmountEmptyError: boolean;
 }
 
 class DialogRecordAdd extends React.Component<ILocalProps, IState> {
@@ -52,6 +53,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       formAccount: Number(Object.keys(props.accounts)[0]),
       formAmount: null,
       formMemo: '',
+      isAmountEmptyError: false,
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdFormCategory = `elem-${UUID()}`;
@@ -170,6 +172,10 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       'modal-footer',
       Style.FormFooterRoot,
     );
+
+    const amountEmptyErrorMsg = !this.state.isAmountEmptyError ? null :
+      <span className={Style.FormErrorMsg}>入力してください</span>;
+
     return (
       <div className="modal fade" id={this.elementIdRoot} tabIndex={-1}
         role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -249,6 +255,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           onChange={(event) => {this.onFormAmountChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
                           />
+                        {amountEmptyErrorMsg}
                       </td>
                     </tr>
                     <tr>
@@ -321,6 +328,12 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
   /// 追加ボタンクリック時処理。
   private onAddButtonClicked() {
+    // エラーチェック
+    if (this.state.formAmount == null) {
+      this.setState({isAmountEmptyError: true});
+      return;
+    }
+
     // 追加イベントを実行
     Store.dispatch(DocActions.addRecordOutgo(
       new Date(),
@@ -330,6 +343,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       this.state.formCategory,
       this.state.formAmount != null ? this.state.formAmount : 0,
       ));
+    this.setState({isAmountEmptyError: false});
 
     // 続けて入力モード用の処理
     if (this.props.dialogRecordAdd.isContinueMode) {
