@@ -3,17 +3,30 @@ class YearMonthDayDate {
   // Date オブジェクトから作成。
   public static fromDate(aDate: Date) {
     const date = new YearMonthDayDate();
-    date.date = aDate;
+    date.date = new Date(
+      aDate.getFullYear(),
+      aDate.getMonth(),
+      aDate.getDate(),
+      0,
+      0,
+      0,
+      0);
     return date;
   }
 
   /// YYYY-MM-DD 形式のテキストから作成。
   public static fromText(aText: string) {
-      return this.fromDate(new Date(aText));
+    return this.fromDate(new Date(aText));
   }
 
-  /// Date データ。（初期値：今日）
-  public date: Date = new Date();
+  /// Date データ。（初期値：今日の0時0分0秒）
+  public date: Date;
+
+  /// コンストラクタ。
+  public constructor() {
+    const today = new Date();
+    this.date = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0);
+  }
 
   /// 前の月の1日。
   public prevMonth() {
