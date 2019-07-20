@@ -75,15 +75,8 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
     if (this.state.modalAddRecord) {
         modalDialog = <DialogRecordAdd
           onClosed={() => {
-          this.setState({modalAddRecord: false});
-          Store.dispatch(DocActions.addRecordOutgo(
-            new Date(),
-            YearMonthDayDate.fromText('2019-07-07'),
-            'お弁当代',
-            1, // accountId
-            1, // categoryId
-            10000, // amount
-            )); }}
+            this.setState({modalAddRecord: false});
+          }}
           accounts={[]}
           incomeCategories={{}}
           outgoCategories={{}}

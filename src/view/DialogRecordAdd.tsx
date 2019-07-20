@@ -4,6 +4,7 @@ import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import { v4 as UUID } from 'uuid';
+import * as DocActions from '../state/doc/Actions';
 import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
@@ -287,6 +288,14 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
   /// 追加ボタンクリック時処理。
   private onAddButtonClicked() {
     // 追加イベントを実行
+    Store.dispatch(DocActions.addRecordOutgo(
+      new Date(),
+      YearMonthDayDate.fromText(this.state.formDate),
+      this.state.formMemo,
+      this.state.formAccount,
+      this.state.formCategory,
+      this.state.formAmount != null ? this.state.formAmount : 0,
+      ));
 
     // ダイアログを閉じる
     // MDB が TypeScript 非対応なので文字列で実行
