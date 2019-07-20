@@ -9,14 +9,20 @@ import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
 import Store from '../state/Store';
+import * as UiActions from '../state/ui/Actions';
+import * as UiStates from '../state/ui/States';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as Style from './DialogRecordAdd.css';
 
 interface IProps {
   onClosed: (() => void);
+}
+
+interface ILocalProps extends IProps {
   accounts: DocStates.IAccount[];
   incomeCategories: { [key: number]: DocStates.ICategory };
   outgoCategories: { [key: number]: DocStates.ICategory };
+  dialogRecordAdd: UiStates.IDialogAddRecord;
 }
 
 interface IState {
@@ -27,16 +33,17 @@ interface IState {
   formMemo: string;
 }
 
-class DialogRecordAdd extends React.Component<IProps, IState> {
+class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdFormCategory: string;
   private elementIdFormDate: string;
   private elementIdFormAccount: string;
   private elementIdFormAmount: string;
   private elementIdFormMemo: string;
+  private elementIdFormIsContinueMode: string;
   private closeObserver: MutationObserver;
 
-  constructor(props: IProps) {
+  constructor(props: ILocalProps) {
     super(props);
     this.state = {
       formDate: new YearMonthDayDate().toText(),
@@ -51,6 +58,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
     this.elementIdFormAccount = `elem-${UUID()}`;
     this.elementIdFormAmount = `elem-${UUID()}`;
     this.elementIdFormMemo = `elem-${UUID()}`;
+    this.elementIdFormIsContinueMode = `elem-${UUID()}`;
     this.closeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'aria-modal' && mutation.oldValue === 'true') {
@@ -209,7 +217,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
                       <td>
                         <select defaultValue={this.state.formAccount.toString()}
                           id={this.elementIdFormAccount}
-                          onChange={(sender) => {this.onFormAccountChanged(sender.target); }}
+                          onChange={(event) => {this.onFormAccountChanged(event.target); }}
                           >
                           {Object.keys(this.props.accounts).map((key) => {
                             const account = this.props.accounts[Number(key)];
@@ -226,7 +234,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
                         <input type="text"
                           id={this.elementIdFormAmount}
                           value={this.state.formAmount != null ? this.state.formAmount.toString() : ''}
-                          onChange={(sender) => {this.onFormAmountChanged(sender.target); }}
+                          onChange={(event) => {this.onFormAmountChanged(event.target); }}
                           />
                       </td>
                     </tr>
@@ -236,7 +244,7 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
                         <input className={Style.FormInputMemo} type="text"
                           id={this.elementIdFormMemo}
                           value={this.state.formMemo}
-                          onChange={(sender) => {this.onFormMemoChanged(sender.target); }}
+                          onChange={(event) => {this.onFormMemoChanged(event.target); }}
                           />
                       </td>
                     </tr>
@@ -246,7 +254,11 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
             </div>
             <div className={formFooterRootClass}>
               <label>
-                <input type="checkbox" id="continueCheckbox"/>続けて入力
+                <input type="checkbox"
+                  id={this.elementIdFormIsContinueMode}
+                  checked={this.props.dialogRecordAdd.isContinueMode}
+                  onChange={(event) => {this.onIsContinueModeChanged(event.target); }}
+                  />続けて入力
               </label>
               <button type="button" className="btn btn-primary"
                 onClick={() => {this.onAddButtonClicked(); }}
@@ -285,6 +297,11 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
     this.setState({formMemo: sender.value});
   }
 
+  /// 続けて入力モードフラグ変更時の処理。
+  private onIsContinueModeChanged(sender: HTMLInputElement) {
+    Store.dispatch(UiActions.dialogAddRecordSetContinueMode(sender.checked));
+  }
+
   /// 追加ボタンクリック時処理。
   private onAddButtonClicked() {
     // 追加イベントを実行
@@ -297,6 +314,15 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
       this.state.formAmount != null ? this.state.formAmount : 0,
       ));
 
+    // 続けて入力モード用の処理
+    if (this.props.dialogRecordAdd.isContinueMode) {
+      this.setState({
+        formAmount: null,
+        formMemo: '',
+      });
+      return;
+    }
+
     // ダイアログを閉じる
     // MDB が TypeScript 非対応なので文字列で実行
     new Function(`$('#${this.elementIdRoot}').modal('hide')`)();
@@ -304,11 +330,15 @@ class DialogRecordAdd extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: IStoreState, props: IProps) => {
-  const result = Object.assign(props, {
-    accounts: state.doc.accounts,
-    incomeCategories: state.doc.income.categories,
-    outgoCategories: state.doc.outgo.categories,
-  });
+  const result: ILocalProps = Object.assign(
+    props,
+    {
+      accounts: Object.values(state.doc.accounts),
+      incomeCategories: state.doc.income.categories,
+      outgoCategories: state.doc.outgo.categories,
+      dialogRecordAdd: state.ui.dialogAddRecord,
+    },
+  );
   return result;
 };
 export default ReactRedux.connect(mapStateToProps)(DialogRecordAdd);

@@ -77,9 +77,6 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
           onClosed={() => {
             this.setState({modalAddRecord: false});
           }}
-          accounts={[]}
-          incomeCategories={{}}
-          outgoCategories={{}}
         />;
     }
     const currentDate = `${this.props.currentDate.date.getFullYear()}年${this.props.currentDate.date.getMonth() + 1}月`;
