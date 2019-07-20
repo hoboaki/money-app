@@ -240,6 +240,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           className={formInputAccountClass}
                           id={this.elementIdFormAccount}
                           onChange={(event) => {this.onFormAccountChanged(event.target); }}
+                          onKeyDown={(event) => {this.onKeyDown(event); }}
                           >
                           {Object.keys(this.props.accounts).map((key) => {
                             const account = this.props.accounts[Number(key)];
