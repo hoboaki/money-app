@@ -101,6 +101,10 @@
   width: 100%
 }
 
+.FormInputAccount {
+  cursor: pointer;
+}
+
 .FormInputMemo {
   width: 100%
 }

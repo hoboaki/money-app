@@ -167,6 +167,9 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     const formInputCategoryClass = ClassNames(
       Style.FormInputCategory,
     );
+    const formInputAccountClass = ClassNames(
+      Style.FormInputAccount,
+    );
 
     const formFooterRootClass = ClassNames(
       'modal-footer',
@@ -234,6 +237,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                       <th scope="row">口座</th>
                       <td>
                         <select defaultValue={this.state.formAccount.toString()}
+                          className={formInputAccountClass}
                           id={this.elementIdFormAccount}
                           onChange={(event) => {this.onFormAccountChanged(event.target); }}
                           >
