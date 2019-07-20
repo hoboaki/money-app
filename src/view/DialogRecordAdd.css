@@ -91,17 +91,31 @@
   outline: none;
   padding-left: 8px;
 }
-
+.FormInputRoot input:focus,
+.FormInputRoot select:focus {
+  background: #eeeeee;
+}
 .FormInputRoot select:hover {
-  color: rgba(0,0,0,0.87);
+  color: #424242;
+  cursor: pointer;
 }
 
 .FormInputCategory {
+  width: 100%
+}
+
+.FormInputAccount {
   cursor: pointer;
 }
 
 .FormInputMemo {
   width: 100%
+}
+
+.FormErrorMsg {
+  color: #e44;
+  display: block;
+  margin: 4px;
 }
 
 .FormFooterRoot label,
