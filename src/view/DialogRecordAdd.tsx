@@ -7,6 +7,7 @@ import { v4 as UUID } from 'uuid';
 import * as DocActions from '../state/doc/Actions';
 import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
+import * as DocTypes from '../state/doc/Types';
 import IStoreState from '../state/IStoreState';
 import Store from '../state/Store';
 import * as UiActions from '../state/ui/Actions';
@@ -26,8 +27,10 @@ interface ILocalProps extends IProps {
 }
 
 interface IState {
+  formKind: DocTypes.RecordKind;
   formDate: string;
-  formCategory: number;
+  formCategoryOutgo: number;
+  formCategoryIncome: number;
   formAccount: number;
   formAmount: number | null;
   formMemo: string;
@@ -36,7 +39,8 @@ interface IState {
 
 class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
-  private elementIdFormCategory: string;
+  private elementIdFormCategoryOutgo: string;
+  private elementIdFormCategoryIncome: string;
   private elementIdFormDate: string;
   private elementIdFormAccount: string;
   private elementIdFormAmount: string;
@@ -48,15 +52,18 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   constructor(props: ILocalProps) {
     super(props);
     this.state = {
+      formKind: DocTypes.RecordKind.Outgo,
       formDate: new YearMonthDayDate().toText(),
-      formCategory: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
+      formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
+      formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.incomeCategories).id,
       formAccount: Number(Object.keys(props.accounts)[0]),
       formAmount: null,
       formMemo: '',
       isAmountEmptyError: false,
     };
     this.elementIdRoot = `elem-${UUID()}`;
-    this.elementIdFormCategory = `elem-${UUID()}`;
+    this.elementIdFormCategoryOutgo = `elem-${UUID()}`;
+    this.elementIdFormCategoryIncome = `elem-${UUID()}`;
     this.elementIdFormDate = `elem-${UUID()}`;
     this.elementIdFormAccount = `elem-${UUID()}`;
     this.elementIdFormAmount = `elem-${UUID()}`;
@@ -82,36 +89,58 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     });
 
     // ContextMenu セットアップ
-    const categoryItems: {[key: string]: any} = {};
-    const categoryConvertFunc = (parent: {[key: string]: any}, cat: DocStates.ICategory) => {
-      const key = `category-${cat.id}`;
-      const name = cat.name;
-      const items: {[key: string]: any} = {};
-      cat.childs.forEach((child) => {
-        categoryConvertFunc(items, this.props.outgoCategories[child]);
-      });
-      parent[key] = {
-        name,
-        items: Object.keys(items).length === 0 ? null : items,
-      };
+    const categorySetup = (
+      categories: {[key: number]: DocStates.ICategory},
+      onCategorySelected: (categoryId: number) => void,
+      selector: string,
+      ) => {
+        const categoryItems: {[key: string]: any} = {};
+        const categoryConvertFunc = (parent: {[key: string]: any}, cat: DocStates.ICategory) => {
+          const key = `category-${cat.id}`;
+          const name = cat.name;
+          const items: {[key: string]: any} = {};
+          cat.childs.forEach((child) => {
+            categoryConvertFunc(items, categories[child]);
+          });
+          parent[key] = {
+            name,
+            items: Object.keys(items).length === 0 ? null : items,
+          };
+        };
+        Object.entries(categories).forEach(([key, value]) => {
+          if (value.parent == null) {
+            categoryConvertFunc(categoryItems, categories[value.id]);
+          }
+        });
+        $.contextMenu({
+          callback: (key, options) => {
+            const texts = key.split('-');
+            onCategorySelected(Number(texts[1]));
+          },
+          className: Style.ContextMenuRoot,
+          items: categoryItems,
+          selector,
+          trigger: 'left',
+        });
     };
-    Object.entries(this.props.outgoCategories).forEach(([key, value]) => {
-      if (value.parent == null) {
-        categoryConvertFunc(categoryItems, this.props.outgoCategories[value.id]);
-      }
-    });
-    $.contextMenu({
-      callback: (key, options) => {
-        const texts = key.split('-');
+    categorySetup(
+      this.props.outgoCategories,
+      (categoryId) => {
         this.setState({
-          formCategory: Number(texts[1]),
+          formCategoryOutgo: categoryId,
         });
       },
-      className: Style.ContextMenuRoot,
-      items: categoryItems,
-      selector: `#${this.elementIdFormCategory}`,
-      trigger: 'left',
-    });
+      `#${this.elementIdFormCategoryOutgo}`,
+    );
+    categorySetup(
+      this.props.incomeCategories,
+      (categoryId) => {
+        this.setState({
+          formCategoryIncome: categoryId,
+        });
+      },
+      `#${this.elementIdFormCategoryIncome}`,
+    );
 
     // ツールチップ対応
     new Function(`$('#${this.elementIdFormSubmit}').tooltip({
@@ -148,14 +177,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     );
     const formTabOutgoClass = ClassNames(
       Style.FormTab,
-      Style.FormTabActive,
+      this.state.formKind === DocTypes.RecordKind.Outgo ? Style.FormTabActive : null,
     );
     const formTabIncomeClass = ClassNames(
       Style.FormTab,
+      this.state.formKind === DocTypes.RecordKind.Income ? Style.FormTabActive : null,
     );
     const formTabTransferClass = ClassNames(
       Style.FormTab,
       Style.FormTabLast,
+      this.state.formKind === DocTypes.RecordKind.Transfer ? Style.FormTabActive : null,
     );
     const formSvgIconClass = ClassNames(
       Style.FormSvgIcon,
@@ -163,6 +194,12 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
     const formInputRootClass = ClassNames(
       Style.FormInputRoot,
+    );
+    const formInputRowCategoryOutgo = ClassNames(
+      this.state.formKind === DocTypes.RecordKind.Outgo ? null : Style.FormInputRowHide,
+    );
+    const formInputRowCategoryIncome = ClassNames(
+      this.state.formKind === DocTypes.RecordKind.Income ? null : Style.FormInputRowHide,
     );
     const formInputCategoryClass = ClassNames(
       Style.FormInputCategory,
@@ -194,16 +231,31 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
               <div className={formTabsRootClass}>
                 <div className={formTabsBaseClass}>
                   <div className={formTabOutgoClass}>
-                    <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
-                    <span>支出</span>
+                    <button className={Style.FormTabButton}
+                      disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
+                      onClick={() => {this.setState({formKind: DocTypes.RecordKind.Outgo}); }}
+                      >
+                      <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
+                      <span className={Style.FormTabLabel}>支出</span>
+                    </button>
                   </div>
                   <div className={formTabIncomeClass}>
-                    <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
-                    <span>収入</span>
+                    <button className={Style.FormTabButton}
+                      disabled={this.state.formKind === DocTypes.RecordKind.Income}
+                      onClick={() => {this.setState({formKind: DocTypes.RecordKind.Income}); }}
+                      >
+                      <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
+                      <span className={Style.FormTabLabel}>収入</span>
+                    </button>
                   </div>
                   <div className={formTabTransferClass}>
-                    <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
-                    <span>振替</span>
+                    <button className={Style.FormTabButton}
+                      disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
+                      onClick={() => {this.setState({formKind: DocTypes.RecordKind.Transfer}); }}
+                      >
+                      <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
+                      <span className={Style.FormTabLabel}>振替</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -221,15 +273,27 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           />
                       </td>
                     </tr>
-                    <tr>
+                    <tr className={formInputRowCategoryOutgo}>
                       <th scope="row">カテゴリ</th>
                       <td>
                         <input
                           type="text"
-                          id={this.elementIdFormCategory}
+                          id={this.elementIdFormCategoryOutgo}
                           className={formInputCategoryClass}
                           readOnly={true}
-                          value={this.categoryDisplayText()}
+                          value={this.categoryOutgoDisplayText()}
+                          />
+                      </td>
+                    </tr>
+                    <tr className={formInputRowCategoryIncome}>
+                      <th scope="row">カテゴリ</th>
+                      <td>
+                        <input
+                          type="text"
+                          id={this.elementIdFormCategoryIncome}
+                          className={formInputCategoryClass}
+                          readOnly={true}
+                          value={this.categoryIncomeDisplayText()}
                           />
                       </td>
                     </tr>
@@ -300,15 +364,27 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   }
 
   /// カテゴリインプットに表示するテキストを返す。
-  private categoryDisplayText(): string {
-    const funcParentPath = (categoryId: number): string => {
-      const cat = this.props.outgoCategories[categoryId];
+  private categoryOutgoDisplayText(): string {
+    return this.categoryDisplayText(
+      this.props.outgoCategories,
+      this.state.formCategoryOutgo,
+    );
+  }
+  private categoryIncomeDisplayText(): string {
+    return this.categoryDisplayText(
+      this.props.incomeCategories,
+      this.state.formCategoryIncome,
+    );
+  }
+  private categoryDisplayText(categories: {[key: number]: DocStates.ICategory}, categoryId: number): string {
+    const funcParentPath = (catId: number): string => {
+      const cat = categories[catId];
       if (cat.parent == null) {
         return cat.name;
       }
       return `${funcParentPath(cat.parent)} > ${cat.name}`;
     };
-    return funcParentPath(this.state.formCategory);
+    return funcParentPath(categoryId);
   }
 
   /// 口座値変更時の処理。
@@ -340,14 +416,29 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     }
 
     // 追加イベントを実行
-    Store.dispatch(DocActions.addRecordOutgo(
-      new Date(),
-      YearMonthDayDate.fromText(this.state.formDate),
-      this.state.formMemo,
-      this.state.formAccount,
-      this.state.formCategory,
-      this.state.formAmount != null ? this.state.formAmount : 0,
-      ));
+    switch (this.state.formKind) {
+      case DocTypes.RecordKind.Outgo:
+        Store.dispatch(DocActions.addRecordOutgo(
+          new Date(),
+          YearMonthDayDate.fromText(this.state.formDate),
+          this.state.formMemo,
+          this.state.formAccount,
+          this.state.formCategoryOutgo,
+          this.state.formAmount != null ? this.state.formAmount : 0,
+          ));
+        break;
+
+      case DocTypes.RecordKind.Income:
+        Store.dispatch(DocActions.addRecordIncome(
+          new Date(),
+          YearMonthDayDate.fromText(this.state.formDate),
+          this.state.formMemo,
+          this.state.formAccount,
+          this.state.formCategoryIncome,
+          this.state.formAmount != null ? this.state.formAmount : 0,
+          ));
+        break;
+    }
     this.setState({isAmountEmptyError: false});
 
     // 続けて入力モード用の処理
