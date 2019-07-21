@@ -169,6 +169,8 @@ class PageHomeCalendar extends React.Component<IProps, any> {
               const incomeIconClassNames = cell.income !== 0 ? cellIncomeIconClass : cellHiddenClass;
               const outgoPriceClassNames = cell.outgo !== 0 ? cellOutgoPriceClass : cellHiddenClass;
               const outgoIconClassNames = cell.outgo !== 0 ? cellOutgoIconClass : cellHiddenClass;
+              const incomeText = `${cell.income < 0 ? '▲ ' : '+'}${Math.abs(cell.income)}`;
+              const outgoText = `${cell.outgo < 0 ? '△ ' : '-'}${Math.abs(cell.outgo)}`;
 
               return (
                 <td key={rowIndex * 10 + colIndex} className={classNames}>
@@ -182,11 +184,11 @@ class PageHomeCalendar extends React.Component<IProps, any> {
                     </div>
                   </div>
                   <div className={cellMiddleClass}>
-                    <span className={incomePriceClassNames}>+{cell.income}</span>
+                    <span className={incomePriceClassNames}>{incomeText}</span>
                     <img className={incomeIconClassNames} src="./image/icon-ex/income.svg"/>
                   </div>
                   <div className={cellBottomClass}>
-                    <span className={outgoPriceClassNames}>-{cell.outgo}</span>
+                    <span className={outgoPriceClassNames}>{outgoText}</span>
                     <img className={outgoIconClassNames} src="./image/icon-ex/outgo.svg"/>
                   </div>
                 </td>
