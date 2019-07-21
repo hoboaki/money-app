@@ -7,6 +7,7 @@ import { v4 as UUID } from 'uuid';
 import * as DocActions from '../state/doc/Actions';
 import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
+import * as DocTypes from '../state/doc/Types';
 import IStoreState from '../state/IStoreState';
 import Store from '../state/Store';
 import * as UiActions from '../state/ui/Actions';
@@ -26,6 +27,7 @@ interface ILocalProps extends IProps {
 }
 
 interface IState {
+  formKind: DocTypes.RecordKind;
   formDate: string;
   formCategory: number;
   formAccount: number;
@@ -48,6 +50,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   constructor(props: ILocalProps) {
     super(props);
     this.state = {
+      formKind: DocTypes.RecordKind.Outgo,
       formDate: new YearMonthDayDate().toText(),
       formCategory: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
       formAccount: Number(Object.keys(props.accounts)[0]),
@@ -148,14 +151,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     );
     const formTabOutgoClass = ClassNames(
       Style.FormTab,
-      Style.FormTabActive,
+      this.state.formKind === DocTypes.RecordKind.Outgo ? Style.FormTabActive : null,
     );
     const formTabIncomeClass = ClassNames(
       Style.FormTab,
+      this.state.formKind === DocTypes.RecordKind.Income ? Style.FormTabActive : null,
     );
     const formTabTransferClass = ClassNames(
       Style.FormTab,
       Style.FormTabLast,
+      this.state.formKind === DocTypes.RecordKind.Transfer ? Style.FormTabActive : null,
     );
     const formSvgIconClass = ClassNames(
       Style.FormSvgIcon,
@@ -194,16 +199,31 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
               <div className={formTabsRootClass}>
                 <div className={formTabsBaseClass}>
                   <div className={formTabOutgoClass}>
-                    <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
-                    <span>支出</span>
+                    <button className={Style.FormTabButton}
+                      disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
+                      onClick={() => {this.setState({formKind: DocTypes.RecordKind.Outgo}); }}
+                      >
+                      <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
+                      <span className={Style.FormTabLabel}>支出</span>
+                    </button>
                   </div>
                   <div className={formTabIncomeClass}>
-                    <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
-                    <span>収入</span>
+                    <button className={Style.FormTabButton}
+                      disabled={this.state.formKind === DocTypes.RecordKind.Income}
+                      onClick={() => {this.setState({formKind: DocTypes.RecordKind.Income}); }}
+                      >
+                      <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
+                      <span className={Style.FormTabLabel}>収入</span>
+                    </button>
                   </div>
                   <div className={formTabTransferClass}>
-                    <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
-                    <span>振替</span>
+                    <button className={Style.FormTabButton}
+                      disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
+                      onClick={() => {this.setState({formKind: DocTypes.RecordKind.Transfer}); }}
+                      >
+                      <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
+                      <span className={Style.FormTabLabel}>振替</span>
+                    </button>
                   </div>
                 </div>
               </div>

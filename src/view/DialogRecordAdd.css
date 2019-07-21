@@ -32,6 +32,22 @@
   width: 150px;
 }
 
+.FormTabButton {
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+.FormTabButton:disabled {
+  color: rgba(0,0,0,0.87);
+}
+
+.FormTabLabel {
+  display: block;
+}
+
 .FormTabLast {
   border-right: 1px solid #cccccc;
 }
