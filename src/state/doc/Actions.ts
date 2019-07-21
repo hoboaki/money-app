@@ -73,3 +73,32 @@ export const addRecordOutgo = (
     memo,
   };
 };
+
+/// 資金移動レコードの追加。
+export const ADD_RECORD_TRANSFER = UUID();
+export interface IAddRecordTransfer extends Action {
+  createDate: Date;
+  date: YearMonthDayDate;
+  memo: string;
+  accountFromId: number;
+  accountToId: number;
+  amount: number;
+}
+export const addRecordTransfer = (
+  createDate: Date,
+  date: YearMonthDayDate,
+  memo: string,
+  accountFromId: number,
+  accountToId: number,
+  amount: number,
+  ): IAddRecordTransfer => {
+  return {
+    type: ADD_RECORD_TRANSFER,
+    createDate,
+    date,
+    accountFromId,
+    accountToId,
+    amount,
+    memo,
+  };
+};
