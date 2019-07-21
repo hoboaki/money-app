@@ -382,6 +382,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           value={this.state.formAmount != null ? this.state.formAmount.toString() : ''}
                           onChange={(event) => {this.onFormAmountChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onFocus={(event) => {event.target.select(); }}
+                          onClick={(event) => {event.currentTarget.select(); return false; }}
                           />
                         {amountEmptyErrorMsg}
                       </td>
@@ -394,6 +396,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           value={this.state.formMemo}
                           onChange={(event) => {this.onFormMemoChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onFocus={(event) => {event.target.select(); }}
+                          onClick={(event) => {event.currentTarget.select(); return false; }}
                           />
                       </td>
                     </tr>
