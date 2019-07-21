@@ -73,11 +73,11 @@ class PageHomeBalance extends React.Component<IProps, any> {
         <table className={tableClass}>
           <thead>
             <tr>
-              <th className={tableHeaderLabelClass}>当月収入</th>
+              <th className={tableHeaderLabelClass}>当月収入 (¥)</th>
               <th className={tableHeaderSpacerClass}></th>
-              <th className={tableHeaderLabelClass}>当月支出</th>
+              <th className={tableHeaderLabelClass}>当月支出 (¥)</th>
               <th className={tableHeaderSpacerClass}></th>
-              <th className={tableHeaderLabelClass}>当月収支</th>
+              <th className={tableHeaderLabelClass}>当月収支 (¥)</th>
             </tr>
           </thead>
           <tbody>
@@ -94,7 +94,7 @@ class PageHomeBalance extends React.Component<IProps, any> {
         <table className={tableClass}>
           <thead>
             <tr>
-              <th className={tableHeaderLabelClass}>振替小計</th>
+              <th className={tableHeaderLabelClass}>振替小計 (¥)</th>
             </tr>
           </thead>
           <tbody>
@@ -107,7 +107,7 @@ class PageHomeBalance extends React.Component<IProps, any> {
         <table className={tableClass}>
           <thead>
             <tr>
-              <th className={tableHeaderLabelClass}>残高</th>
+              <th className={tableHeaderLabelClass}>残高 (¥)</th>
             </tr>
           </thead>
           <tbody>
