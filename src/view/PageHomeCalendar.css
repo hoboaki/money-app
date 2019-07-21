@@ -107,6 +107,10 @@
   color: #fd4134;
 }
 
+.CellNegativePrice {
+  color: #9234fd;
+}
+
 .CellIncomeIcon {
   color: #3273ff;
   display: none;
