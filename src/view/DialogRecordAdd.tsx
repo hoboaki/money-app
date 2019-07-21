@@ -32,13 +32,9 @@ interface IState {
   formCategoryOutgo: number;
   formCategoryIncome: number;
   formAccount: number;
-  formAccountFrom: number;
-  formAccountTo: number;
   formAmount: number | null;
   formMemo: string;
-  amountErrorMsg: string | null;
-  accountFromErrorMsg: string | null;
-  accountToErrorMsg: string | null;
+  isAmountEmptyError: boolean;
 }
 
 class DialogRecordAdd extends React.Component<ILocalProps, IState> {
@@ -47,8 +43,6 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   private elementIdFormCategoryIncome: string;
   private elementIdFormDate: string;
   private elementIdFormAccount: string;
-  private elementIdFormAccountFrom: string;
-  private elementIdFormAccountTo: string;
   private elementIdFormAmount: string;
   private elementIdFormMemo: string;
   private elementIdFormIsContinueMode: string;
@@ -63,21 +57,15 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
       formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.incomeCategories).id,
       formAccount: Number(Object.keys(props.accounts)[0]),
-      formAccountFrom: DocTypes.INVALID_ID,
-      formAccountTo: DocTypes.INVALID_ID,
       formAmount: null,
       formMemo: '',
-      amountErrorMsg: null,
-      accountFromErrorMsg: null,
-      accountToErrorMsg: null,
+      isAmountEmptyError: false,
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdFormCategoryOutgo = `elem-${UUID()}`;
     this.elementIdFormCategoryIncome = `elem-${UUID()}`;
     this.elementIdFormDate = `elem-${UUID()}`;
     this.elementIdFormAccount = `elem-${UUID()}`;
-    this.elementIdFormAccountFrom = `elem-${UUID()}`;
-    this.elementIdFormAccountTo = `elem-${UUID()}`;
     this.elementIdFormAmount = `elem-${UUID()}`;
     this.elementIdFormMemo = `elem-${UUID()}`;
     this.elementIdFormIsContinueMode = `elem-${UUID()}`;
@@ -207,22 +195,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     const formInputRootClass = ClassNames(
       Style.FormInputRoot,
     );
-    const formInputRowCategoryOutgoClass = ClassNames(
+    const formInputRowCategoryOutgo = ClassNames(
       this.state.formKind === DocTypes.RecordKind.Outgo ? null : Style.FormInputRowHide,
     );
-    const formInputRowCategoryIncomeClass = ClassNames(
+    const formInputRowCategoryIncome = ClassNames(
       this.state.formKind === DocTypes.RecordKind.Income ? null : Style.FormInputRowHide,
-    );
-    const formInputRowAcountClass = ClassNames(
-      this.state.formKind !== DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
-    );
-    const formInputRowAcountFromToClass = ClassNames(
-      this.state.formKind === DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
     );
     const formInputCategoryClass = ClassNames(
       Style.FormInputCategory,
     );
-    const formInputAccountSelectClass = ClassNames(
+    const formInputAccountClass = ClassNames(
       Style.FormInputAccount,
     );
 
@@ -231,12 +213,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       Style.FormFooterRoot,
     );
 
-    const amountEmptyErrorMsg = this.state.amountErrorMsg == null ? null :
-      <span className={Style.FormErrorMsg}>{this.state.amountErrorMsg}</span>;
-    const accountFromErrorMsg = this.state.accountFromErrorMsg == null ? null :
-      <span className={Style.FormErrorMsg}>{this.state.accountFromErrorMsg}</span>;
-    const accountToErrorMsg = this.state.accountToErrorMsg == null ? null :
-      <span className={Style.FormErrorMsg}>{this.state.accountToErrorMsg}</span>;
+    const amountEmptyErrorMsg = !this.state.isAmountEmptyError ? null :
+      <span className={Style.FormErrorMsg}>入力してください</span>;
 
     return (
       <div className="modal fade" id={this.elementIdRoot} tabIndex={-1}
@@ -295,7 +273,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           />
                       </td>
                     </tr>
-                    <tr className={formInputRowCategoryOutgoClass}>
+                    <tr className={formInputRowCategoryOutgo}>
                       <th scope="row">カテゴリ</th>
                       <td>
                         <input
@@ -307,7 +285,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           />
                       </td>
                     </tr>
-                    <tr className={formInputRowCategoryIncomeClass}>
+                    <tr className={formInputRowCategoryIncome}>
                       <th scope="row">カテゴリ</th>
                       <td>
                         <input
@@ -319,59 +297,22 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           />
                       </td>
                     </tr>
-                    <tr className={formInputRowAcountClass}>
+                    <tr>
                       <th scope="row">口座</th>
                       <td>
-                        <select value={this.state.formAccount.toString()}
-                          className={formInputAccountSelectClass}
+                        <select defaultValue={this.state.formAccount.toString()}
+                          className={formInputAccountClass}
                           id={this.elementIdFormAccount}
                           onChange={(event) => {this.onFormAccountChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
                           >
-                          {this.props.accounts.map((account) => {
+                          {Object.keys(this.props.accounts).map((key) => {
+                            const account = this.props.accounts[Number(key)];
                             return (
-                              <option key={account.id} value={account.id}>{account.name}</option>
+                              <option key={key} value={key}>{account.name}</option>
                             );
                           })}
                         </select>
-                      </td>
-                    </tr>
-                    <tr className={formInputRowAcountFromToClass}>
-                      <th scope="row">送金元</th>
-                      <td>
-                        <select value={this.state.formAccountFrom}
-                          className={formInputAccountSelectClass}
-                          id={this.elementIdFormAccountFrom}
-                          onChange={(event) => {this.onFormAccountFromChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDown(event); }}
-                          >
-                          <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                          {this.props.accounts.map((account) => {
-                            return (
-                              <option key={account.id} value={account.id}>{account.name}</option>
-                            );
-                          })}
-                        </select>
-                        {accountFromErrorMsg}
-                      </td>
-                    </tr>
-                    <tr className={formInputRowAcountFromToClass}>
-                      <th scope="row">送金先</th>
-                      <td>
-                        <select value={this.state.formAccountTo}
-                          className={formInputAccountSelectClass}
-                          id={this.elementIdFormAccountTo}
-                          onChange={(event) => {this.onFormAccountToChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDown(event); }}
-                          >
-                          <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                          {this.props.accounts.map((account) => {
-                            return (
-                              <option key={account.id} value={account.id}>{account.name}</option>
-                            );
-                          })}
-                        </select>
-                        {accountToErrorMsg}
                       </td>
                     </tr>
                     <tr>
@@ -382,6 +323,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           value={this.state.formAmount != null ? this.state.formAmount.toString() : ''}
                           onChange={(event) => {this.onFormAmountChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onFocus={(event) => {event.target.select(); }}
+                          onClick={(event) => {event.currentTarget.select(); return false; }}
                           />
                         {amountEmptyErrorMsg}
                       </td>
@@ -394,6 +337,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           value={this.state.formMemo}
                           onChange={(event) => {this.onFormMemoChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onFocus={(event) => {event.target.select(); }}
+                          onClick={(event) => {event.currentTarget.select(); return false; }}
                           />
                       </td>
                     </tr>
@@ -451,34 +396,6 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     this.setState({formAccount: Number(sender.value)});
   }
 
-  /// 送金元値変更時の処理。
-  private onFormAccountFromChanged(sender: HTMLSelectElement) {
-    const newAccountFrom = Number(sender.value);
-    let accountTo = this.state.formAccountTo;
-    if (newAccountFrom !== DocTypes.INVALID_ID && newAccountFrom === accountTo) {
-      // 同じ口座を選ばせないようにするために片方を未選択にする
-      accountTo = DocTypes.INVALID_ID;
-    }
-    this.setState({
-      formAccountFrom: newAccountFrom,
-      formAccountTo: accountTo,
-    });
-  }
-
-  /// 送金先値変更時の処理。
-  private onFormAccountToChanged(sender: HTMLSelectElement) {
-    const newAccountTo = Number(sender.value);
-    let accountFrom = this.state.formAccountFrom;
-    if (newAccountTo !== DocTypes.INVALID_ID && newAccountTo === accountFrom) {
-      // 同じ口座を選ばせないようにするために片方を未選択にする
-      accountFrom = DocTypes.INVALID_ID;
-    }
-    this.setState({
-      formAccountFrom: accountFrom,
-      formAccountTo: newAccountTo,
-    });
-  }
-
   /// 価格値変更時の処理。
   private onFormAmountChanged(sender: HTMLInputElement) {
     this.setState({formAmount: Number(sender.value)});
@@ -497,27 +414,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   /// 追加ボタンクリック時処理。
   private onAddButtonClicked() {
     // エラーチェック
-    const errorMsgNeedsInput = '入力してください';
-    let amountErrorMsg: string | null = null;
-    let accountFromErrorMsg: string | null = null;
-    let accountToErrorMsg: string | null = null;
     if (this.state.formAmount == null) {
-      amountErrorMsg = errorMsgNeedsInput;
-    }
-    if (this.state.formKind === DocTypes.RecordKind.Transfer) {
-      if (this.state.formAccountFrom === DocTypes.INVALID_ID) {
-        accountFromErrorMsg = errorMsgNeedsInput;
-      }
-      if (this.state.formAccountTo === DocTypes.INVALID_ID) {
-        accountToErrorMsg = errorMsgNeedsInput;
-      }
-    }
-    this.setState({
-      amountErrorMsg,
-      accountFromErrorMsg,
-      accountToErrorMsg,
-    });
-    if (amountErrorMsg != null || accountFromErrorMsg != null || accountToErrorMsg != null) {
+      this.setState({isAmountEmptyError: true});
       return;
     }
 
@@ -544,18 +442,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
           this.state.formAmount != null ? this.state.formAmount : 0,
           ));
         break;
-
-      case DocTypes.RecordKind.Transfer:
-        Store.dispatch(DocActions.addRecordTransfer(
-          new Date(),
-          YearMonthDayDate.fromText(this.state.formDate),
-          this.state.formMemo,
-          this.state.formAccountFrom,
-          this.state.formAccountTo,
-          this.state.formAmount != null ? this.state.formAmount : 0,
-          ));
-        break;
     }
+    this.setState({isAmountEmptyError: false});
 
     // 続けて入力モード用の処理
     if (this.props.dialogRecordAdd.isContinueMode) {
