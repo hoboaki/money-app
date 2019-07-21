@@ -275,7 +275,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                   <div className={formTabOutgoClass}>
                     <button className={Style.FormTabButton}
                       disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
-                      onClick={() => {this.setState({formKind: DocTypes.RecordKind.Outgo}); }}
+                      onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
                       >
                       <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
                       <span className={Style.FormTabLabel}>支出</span>
@@ -284,7 +284,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                   <div className={formTabIncomeClass}>
                     <button className={Style.FormTabButton}
                       disabled={this.state.formKind === DocTypes.RecordKind.Income}
-                      onClick={() => {this.setState({formKind: DocTypes.RecordKind.Income}); }}
+                      onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
                       >
                       <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
                       <span className={Style.FormTabLabel}>収入</span>
@@ -293,7 +293,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                   <div className={formTabTransferClass}>
                     <button className={Style.FormTabButton}
                       disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
-                      onClick={() => {this.setState({formKind: DocTypes.RecordKind.Transfer}); }}
+                      onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Transfer); }}
                       >
                       <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
                       <span className={Style.FormTabLabel}>振替</span>
@@ -484,6 +484,30 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     return funcParentPath(categoryId);
   }
 
+  /// 新規入力用に各項目をリセットする。
+  private resetForNewInput() {
+    this.setState({
+      formAccountFrom: DocTypes.INVALID_ID,
+      formAccountTo: DocTypes.INVALID_ID,
+      formAmount: 0,
+      formAmountTransfer: 0,
+      formAmountIsNegative: false,
+      formMemo: '',
+      amountErrorMsg: '',
+      amountTransferErrorMsg: '',
+      accountFromErrorMsg: '',
+      accountToErrorMsg: '',
+    });
+  }
+
+  /// レコード種類タブボタンが押されたときの処理。
+  private onFormKindTabCicked(kind: DocTypes.RecordKind) {
+    this.resetForNewInput();
+    this.setState({
+      formKind: kind,
+    });
+  }
+
   /// 口座値変更時の処理。
   private onFormAccountChanged(sender: HTMLSelectElement) {
     this.setState({formAccount: Number(sender.value)});
@@ -623,12 +647,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
     // 続けて入力モード用の処理
     if (this.props.dialogRecordAdd.isContinueMode) {
-      this.setState({
-        formAmount: 0,
-        formAmountTransfer: 0,
-        formAmountIsNegative: false,
-        formMemo: '',
-      });
+      this.resetForNewInput();
       return;
     }
 
