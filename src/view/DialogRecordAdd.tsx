@@ -36,7 +36,9 @@ interface IState {
   formAccountTo: number;
   formAmount: number | null;
   formMemo: string;
-  isAmountEmptyError: boolean;
+  amountErrorMsg: string | null;
+  accountFromErrorMsg: string | null;
+  accountToErrorMsg: string | null;
 }
 
 class DialogRecordAdd extends React.Component<ILocalProps, IState> {
@@ -65,7 +67,9 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       formAccountTo: DocTypes.INVALID_ID,
       formAmount: null,
       formMemo: '',
-      isAmountEmptyError: false,
+      amountErrorMsg: null,
+      accountFromErrorMsg: null,
+      accountToErrorMsg: null,
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdFormCategoryOutgo = `elem-${UUID()}`;
@@ -227,8 +231,12 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       Style.FormFooterRoot,
     );
 
-    const amountEmptyErrorMsg = !this.state.isAmountEmptyError ? null :
-      <span className={Style.FormErrorMsg}>入力してください</span>;
+    const amountEmptyErrorMsg = this.state.amountErrorMsg == null ? null :
+      <span className={Style.FormErrorMsg}>{this.state.amountErrorMsg}</span>;
+    const accountFromErrorMsg = this.state.accountFromErrorMsg == null ? null :
+      <span className={Style.FormErrorMsg}>{this.state.accountFromErrorMsg}</span>;
+    const accountToErrorMsg = this.state.accountToErrorMsg == null ? null :
+      <span className={Style.FormErrorMsg}>{this.state.accountToErrorMsg}</span>;
 
     return (
       <div className="modal fade" id={this.elementIdRoot} tabIndex={-1}
@@ -344,6 +352,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                             );
                           })}
                         </select>
+                        {accountFromErrorMsg}
                       </td>
                     </tr>
                     <tr className={formInputRowAcountFromToClass}>
@@ -362,6 +371,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                             );
                           })}
                         </select>
+                        {accountToErrorMsg}
                       </td>
                     </tr>
                     <tr>
@@ -487,8 +497,27 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   /// 追加ボタンクリック時処理。
   private onAddButtonClicked() {
     // エラーチェック
+    const errorMsgNeedsInput = '入力してください';
+    let amountErrorMsg: string | null = null;
+    let accountFromErrorMsg: string | null = null;
+    let accountToErrorMsg: string | null = null;
     if (this.state.formAmount == null) {
-      this.setState({isAmountEmptyError: true});
+      amountErrorMsg = errorMsgNeedsInput;
+    }
+    if (this.state.formKind === DocTypes.RecordKind.Transfer) {
+      if (this.state.formAccountFrom === DocTypes.INVALID_ID) {
+        accountFromErrorMsg = errorMsgNeedsInput;
+      }
+      if (this.state.formAccountTo === DocTypes.INVALID_ID) {
+        accountToErrorMsg = errorMsgNeedsInput;
+      }
+    }
+    this.setState({
+      amountErrorMsg,
+      accountFromErrorMsg,
+      accountToErrorMsg,
+    });
+    if (amountErrorMsg != null || accountFromErrorMsg != null || accountToErrorMsg != null) {
       return;
     }
 
@@ -517,17 +546,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
         break;
 
       case DocTypes.RecordKind.Transfer:
-        // Store.dispatch(DocActions.addRecordTransfer(
-        //   new Date(),
-        //   YearMonthDayDate.fromText(this.state.formDate),
-        //   this.state.formMemo,
-        //   this.state.formAccountFrom,
-        //   this.state.formAccountTo,
-        //   this.state.formAmount != null ? this.state.formAmount : 0,
-        //   ));
+        Store.dispatch(DocActions.addRecordTransfer(
+          new Date(),
+          YearMonthDayDate.fromText(this.state.formDate),
+          this.state.formMemo,
+          this.state.formAccountFrom,
+          this.state.formAccountTo,
+          this.state.formAmount != null ? this.state.formAmount : 0,
+          ));
         break;
     }
-    this.setState({isAmountEmptyError: false});
 
     // 続けて入力モード用の処理
     if (this.props.dialogRecordAdd.isContinueMode) {
