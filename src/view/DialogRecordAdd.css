@@ -80,6 +80,10 @@
   height: 48px;
 }
 
+.FormInputRowHide {
+  display: none;
+}
+
 .FormInputRoot th {
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-left: none;

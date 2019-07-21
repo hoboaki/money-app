@@ -195,6 +195,12 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     const formInputRootClass = ClassNames(
       Style.FormInputRoot,
     );
+    const formInputRowCategoryOutgo = ClassNames(
+      this.state.formKind === DocTypes.RecordKind.Outgo ? null : Style.FormInputRowHide,
+    );
+    const formInputRowCategoryIncome = ClassNames(
+      this.state.formKind === DocTypes.RecordKind.Income ? null : Style.FormInputRowHide,
+    );
     const formInputCategoryClass = ClassNames(
       Style.FormInputCategory,
     );
@@ -267,7 +273,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           />
                       </td>
                     </tr>
-                    <tr>
+                    <tr className={formInputRowCategoryOutgo}>
                       <th scope="row">カテゴリ</th>
                       <td>
                         <input
@@ -279,7 +285,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           />
                       </td>
                     </tr>
-                    <tr>
+                    <tr className={formInputRowCategoryIncome}>
                       <th scope="row">カテゴリ</th>
                       <td>
                         <input
