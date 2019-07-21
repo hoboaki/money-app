@@ -35,8 +35,11 @@ interface IState {
   formAccountFrom: number;
   formAccountTo: number;
   formAmount: number;
+  formAmountIsNegative: boolean;
+  formAmountTransfer: number;
   formMemo: string;
   amountErrorMsg: string | null;
+  amountTransferErrorMsg: string | null;
   accountFromErrorMsg: string | null;
   accountToErrorMsg: string | null;
 }
@@ -50,6 +53,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   private elementIdFormAccountFrom: string;
   private elementIdFormAccountTo: string;
   private elementIdFormAmount: string;
+  private elementIdFormAmountTransfer: string;
   private elementIdFormMemo: string;
   private elementIdFormIsContinueMode: string;
   private elementIdFormSubmit: string;
@@ -66,8 +70,11 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       formAccountFrom: DocTypes.INVALID_ID,
       formAccountTo: DocTypes.INVALID_ID,
       formAmount: 0,
+      formAmountIsNegative: false,
+      formAmountTransfer: 0,
       formMemo: '',
       amountErrorMsg: null,
+      amountTransferErrorMsg: null,
       accountFromErrorMsg: null,
       accountToErrorMsg: null,
     };
@@ -79,6 +86,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     this.elementIdFormAccountFrom = `elem-${UUID()}`;
     this.elementIdFormAccountTo = `elem-${UUID()}`;
     this.elementIdFormAmount = `elem-${UUID()}`;
+    this.elementIdFormAmountTransfer = `elem-${UUID()}`;
     this.elementIdFormMemo = `elem-${UUID()}`;
     this.elementIdFormIsContinueMode = `elem-${UUID()}`;
     this.elementIdFormSubmit = `elem-${UUID()}`;
@@ -219,6 +227,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     const formInputRowAcountFromToClass = ClassNames(
       this.state.formKind === DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
     );
+    const formInputRowAmountClass = ClassNames(
+      this.state.formKind !== DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
+      !this.state.formAmountIsNegative ? null :
+        this.state.formKind === DocTypes.RecordKind.Outgo ?
+          Style.FormInputAmountCellNegativeOutgo :
+          Style.FormInputAmountCellNegativeIncome,
+    );
+    const formInputRowAmountTransferClass = ClassNames(
+      this.state.formKind === DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
+    );
     const formInputCategoryClass = ClassNames(
       Style.FormInputCategory,
     );
@@ -231,12 +249,14 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       Style.FormFooterRoot,
     );
 
-    const amountEmptyErrorMsg = this.state.amountErrorMsg == null ? null :
-      <span className={Style.FormErrorMsg}>{this.state.amountErrorMsg}</span>;
     const accountFromErrorMsg = this.state.accountFromErrorMsg == null ? null :
       <span className={Style.FormErrorMsg}>{this.state.accountFromErrorMsg}</span>;
     const accountToErrorMsg = this.state.accountToErrorMsg == null ? null :
       <span className={Style.FormErrorMsg}>{this.state.accountToErrorMsg}</span>;
+    const amountErrorMsg = this.state.amountErrorMsg == null ? null :
+      <span className={Style.FormErrorMsg}>{this.state.amountErrorMsg}</span>;
+    const amountTransferErrorMsg = this.state.amountTransferErrorMsg == null ? null :
+      <span className={Style.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
 
     return (
       <div className="modal fade" id={this.elementIdRoot} tabIndex={-1}
@@ -374,7 +394,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                         {accountToErrorMsg}
                       </td>
                     </tr>
-                    <tr>
+                    <tr className={formInputRowAmountClass}>
                       <th scope="row">金額</th>
                       <td>
                         <input type="text"
@@ -385,7 +405,21 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           onFocus={(event) => {event.target.select(); }}
                           onClick={(event) => {event.currentTarget.select(); return false; }}
                           />
-                        {amountEmptyErrorMsg}
+                        {amountErrorMsg}
+                      </td>
+                    </tr>
+                    <tr className={formInputRowAmountTransferClass}>
+                      <th scope="row">送金額</th>
+                      <td>
+                        <input type="text"
+                          id={this.elementIdFormAmountTransfer}
+                          value={this.state.formAmountTransfer.toString()}
+                          onChange={(event) => {this.onFormAmountTransferChanged(event.target); }}
+                          onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onFocus={(event) => {event.target.select(); }}
+                          onClick={(event) => {event.currentTarget.select(); return false; }}
+                          />
+                        {amountTransferErrorMsg}
                       </td>
                     </tr>
                     <tr>
@@ -483,12 +517,23 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     });
   }
 
-  /// 価格値変更時の処理。
+  /// 金額値変更時の処理。
   private onFormAmountChanged(sender: HTMLInputElement) {
-    const newValue = Number(sender.value.replace(/[^\-\d]/, ''));
-    global.console.log(`${sender.value} -> ${newValue}`);
+    const newValue = Number(sender.value.replace(/[^\d]/, ''));
     if (!isNaN(newValue)) {
-      this.setState({formAmount: newValue});
+      // '-' の数分フラグを反転させる
+      const negCount = sender.value.split('-').length - 1;
+      const isNegative = (negCount % 2) === 0 ?
+        this.state.formAmountIsNegative : !this.state.formAmountIsNegative;
+      this.setState({formAmount: newValue, formAmountIsNegative: isNegative});
+    }
+  }
+
+  /// 送金額値変更時の処理。
+  private onFormAmountTransferChanged(sender: HTMLInputElement) {
+    const newValue = Number(sender.value.replace(/[^\d]/, ''));
+    if (!isNaN(newValue)) {
+      this.setState({formAmountTransfer: newValue});
     }
   }
 
@@ -505,27 +550,38 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   /// 追加ボタンクリック時処理。
   private onAddButtonClicked() {
     // エラーチェック
+    const errorMsgValidAmount = '0以外の値を入力してください';
     let amountErrorMsg: string | null = null;
+    let amountTransferErrorMsg: string | null = null;
     let accountFromErrorMsg: string | null = null;
     let accountToErrorMsg: string | null = null;
-    if (this.state.formAmount === 0) {
-      amountErrorMsg = `0以外の値を入力してください`;
-    }
     if (this.state.formKind === DocTypes.RecordKind.Transfer) {
       const errorMsgNeedsInput = '入力してください';
+      if (this.state.formAmountTransfer === 0) {
+        amountTransferErrorMsg = errorMsgValidAmount;
+      }
       if (this.state.formAccountFrom === DocTypes.INVALID_ID) {
         accountFromErrorMsg = errorMsgNeedsInput;
       }
       if (this.state.formAccountTo === DocTypes.INVALID_ID) {
         accountToErrorMsg = errorMsgNeedsInput;
       }
+    } else {
+      if (this.state.formAmount === 0) {
+        amountErrorMsg = errorMsgValidAmount;
+      }
     }
     this.setState({
       amountErrorMsg,
+      amountTransferErrorMsg,
       accountFromErrorMsg,
       accountToErrorMsg,
     });
-    if (amountErrorMsg != null || accountFromErrorMsg != null || accountToErrorMsg != null) {
+    if (amountErrorMsg != null ||
+      amountTransferErrorMsg != null ||
+      accountFromErrorMsg != null ||
+      accountToErrorMsg != null
+      ) {
       return;
     }
 
@@ -538,7 +594,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
           this.state.formMemo,
           this.state.formAccount,
           this.state.formCategoryOutgo,
-          this.state.formAmount != null ? this.state.formAmount : 0,
+          (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
           ));
         break;
 
@@ -549,7 +605,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
           this.state.formMemo,
           this.state.formAccount,
           this.state.formCategoryIncome,
-          this.state.formAmount != null ? this.state.formAmount : 0,
+          (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
           ));
         break;
 
@@ -569,6 +625,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     if (this.props.dialogRecordAdd.isContinueMode) {
       this.setState({
         formAmount: 0,
+        formAmountTransfer: 0,
+        formAmountIsNegative: false,
         formMemo: '',
       });
       return;
