@@ -34,7 +34,7 @@ interface IState {
   formAccount: number;
   formAccountFrom: number;
   formAccountTo: number;
-  formAmount: number | null;
+  formAmount: number;
   formMemo: string;
   amountErrorMsg: string | null;
   accountFromErrorMsg: string | null;
@@ -65,7 +65,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       formAccount: Number(Object.keys(props.accounts)[0]),
       formAccountFrom: DocTypes.INVALID_ID,
       formAccountTo: DocTypes.INVALID_ID,
-      formAmount: null,
+      formAmount: 0,
       formMemo: '',
       amountErrorMsg: null,
       accountFromErrorMsg: null,
@@ -379,7 +379,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                       <td>
                         <input type="text"
                           id={this.elementIdFormAmount}
-                          value={this.state.formAmount != null ? this.state.formAmount.toString() : ''}
+                          value={this.state.formAmount.toString()}
                           onChange={(event) => {this.onFormAmountChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
                           onFocus={(event) => {event.target.select(); }}
@@ -485,7 +485,11 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
   /// 価格値変更時の処理。
   private onFormAmountChanged(sender: HTMLInputElement) {
-    this.setState({formAmount: Number(sender.value)});
+    const newValue = Number(sender.value.replace(/[^\-\d]/, ''));
+    global.console.log(`${sender.value} -> ${newValue}`);
+    if (!isNaN(newValue)) {
+      this.setState({formAmount: newValue});
+    }
   }
 
   /// メモ変更時の処理。
@@ -501,14 +505,14 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   /// 追加ボタンクリック時処理。
   private onAddButtonClicked() {
     // エラーチェック
-    const errorMsgNeedsInput = '入力してください';
     let amountErrorMsg: string | null = null;
     let accountFromErrorMsg: string | null = null;
     let accountToErrorMsg: string | null = null;
-    if (this.state.formAmount == null) {
-      amountErrorMsg = errorMsgNeedsInput;
+    if (this.state.formAmount === 0) {
+      amountErrorMsg = `0以外の値を入力してください`;
     }
     if (this.state.formKind === DocTypes.RecordKind.Transfer) {
+      const errorMsgNeedsInput = '入力してください';
       if (this.state.formAccountFrom === DocTypes.INVALID_ID) {
         accountFromErrorMsg = errorMsgNeedsInput;
       }
@@ -564,7 +568,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     // 続けて入力モード用の処理
     if (this.props.dialogRecordAdd.isContinueMode) {
       this.setState({
-        formAmount: null,
+        formAmount: 0,
         formMemo: '',
       });
       return;
