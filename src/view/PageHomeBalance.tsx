@@ -5,6 +5,7 @@ import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
+import * as PriceUtils from '../util/PriceUtils';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeBalance.css';
 
@@ -37,11 +38,11 @@ class PageHomeBalance extends React.Component<IProps, any> {
     const outgoTotal = outgoRecords.reduce((current, next) => current + next.amount, 0);
     const balanceTotal = incomeTotal - outgoTotal;
     const incomeTotalText = `${incomeTotal < 0 ? '▲ ' : ''}` +
-      `${Math.abs(incomeTotal).toString().split(/[¥d]{3}$/).join(',')}`;
+      `${PriceUtils.numToLocaleString(incomeTotal)}`;
     const outgoTotalText = `${outgoTotal < 0 ? '△ ' : ''}` +
-      `${Math.abs(outgoTotal).toString().split(/[¥d]{3}$/).join(',')}`;
+      `${PriceUtils.numToLocaleString(outgoTotal)}`;
     const balanceTotalText = `${balanceTotal < 0 ? '-' : ''}` +
-      `${Math.abs(balanceTotal).toString().split(/[¥d]{3}$/).join(',')}`;
+      `${PriceUtils.numToLocaleString(balanceTotal)}`;
 
     const rootClass = ClassNames(
       Style.Root,

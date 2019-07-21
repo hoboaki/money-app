@@ -5,6 +5,7 @@ import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
+import * as PriceUtils from '../util/PriceUtils';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeCalendar.css';
@@ -175,8 +176,8 @@ class PageHomeCalendar extends React.Component<IProps, any> {
               const outgoPriceClassNames = cell.outgo === 0 ? cellHiddenClass :
                 (cell.outgo < 0 ? cellNegativePriceClass : cellOutgoPriceClass);
               const outgoIconClassNames = cell.outgo !== 0 ? cellOutgoIconClass : cellHiddenClass;
-              const incomeText = `${cell.income < 0 ? '▲ ' : '+'}${Math.abs(cell.income)}`;
-              const outgoText = `${cell.outgo < 0 ? '△ ' : '-'}${Math.abs(cell.outgo)}`;
+              const incomeText = `${cell.income < 0 ? '▲ ' : '+'}${PriceUtils.numToLocaleString(cell.income)}`;
+              const outgoText = `${cell.outgo < 0 ? '△ ' : '-'}${PriceUtils.numToLocaleString(cell.outgo)}`;
 
               return (
                 <td key={rowIndex * 10 + colIndex} className={classNames}>
