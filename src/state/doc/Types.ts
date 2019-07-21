@@ -31,3 +31,6 @@ export enum RecordKind {
   Outgo = 2, // 出金。
   Transfer = 3, // 資金移動。
 }
+
+/** 各種 ID の無効値。0番は使わない。 */
+export const INVALID_ID = 0;

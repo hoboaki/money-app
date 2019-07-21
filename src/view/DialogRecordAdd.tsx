@@ -61,8 +61,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
       formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.incomeCategories).id,
       formAccount: Number(Object.keys(props.accounts)[0]),
-      formAccountFrom: Number(Object.keys(props.accounts)[0]),
-      formAccountTo: Number(Object.keys(props.accounts)[0]),
+      formAccountFrom: DocTypes.INVALID_ID,
+      formAccountTo: DocTypes.INVALID_ID,
       formAmount: null,
       formMemo: '',
       isAmountEmptyError: false,
@@ -314,16 +314,15 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                     <tr className={formInputRowAcountClass}>
                       <th scope="row">口座</th>
                       <td>
-                        <select defaultValue={this.state.formAccount.toString()}
+                        <select value={this.state.formAccount.toString()}
                           className={formInputAccountSelectClass}
                           id={this.elementIdFormAccount}
                           onChange={(event) => {this.onFormAccountChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
                           >
-                          {Object.keys(this.props.accounts).map((key) => {
-                            const account = this.props.accounts[Number(key)];
+                          {this.props.accounts.map((account) => {
                             return (
-                              <option key={key} value={key}>{account.name}</option>
+                              <option key={account.id} value={account.id}>{account.name}</option>
                             );
                           })}
                         </select>
@@ -332,16 +331,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                     <tr className={formInputRowAcountFromToClass}>
                       <th scope="row">送金元</th>
                       <td>
-                        <select defaultValue={this.state.formAccountFrom.toString()}
+                        <select value={this.state.formAccountFrom}
                           className={formInputAccountSelectClass}
                           id={this.elementIdFormAccountFrom}
                           onChange={(event) => {this.onFormAccountFromChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
                           >
-                          {Object.keys(this.props.accounts).map((key) => {
-                            const account = this.props.accounts[Number(key)];
+                          <option value={DocTypes.INVALID_ID}>（未選択）</option>
+                          {this.props.accounts.map((account) => {
                             return (
-                              <option key={key} value={key}>{account.name}</option>
+                              <option key={account.id} value={account.id}>{account.name}</option>
                             );
                           })}
                         </select>
@@ -350,16 +349,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                     <tr className={formInputRowAcountFromToClass}>
                       <th scope="row">送金先</th>
                       <td>
-                        <select defaultValue={this.state.formAccountTo.toString()}
+                        <select value={this.state.formAccountTo}
                           className={formInputAccountSelectClass}
                           id={this.elementIdFormAccountTo}
                           onChange={(event) => {this.onFormAccountToChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
                           >
-                          {Object.keys(this.props.accounts).map((key) => {
-                            const account = this.props.accounts[Number(key)];
+                          <option value={DocTypes.INVALID_ID}>（未選択）</option>
+                          {this.props.accounts.map((account) => {
                             return (
-                              <option key={key} value={key}>{account.name}</option>
+                              <option key={account.id} value={account.id}>{account.name}</option>
                             );
                           })}
                         </select>
@@ -444,12 +443,30 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
   /// 送金元値変更時の処理。
   private onFormAccountFromChanged(sender: HTMLSelectElement) {
-    this.setState({formAccountFrom: Number(sender.value)});
+    const newAccountFrom = Number(sender.value);
+    let accountTo = this.state.formAccountTo;
+    if (newAccountFrom !== DocTypes.INVALID_ID && newAccountFrom === accountTo) {
+      // 同じ口座を選ばせないようにするために片方を未選択にする
+      accountTo = DocTypes.INVALID_ID;
+    }
+    this.setState({
+      formAccountFrom: newAccountFrom,
+      formAccountTo: accountTo,
+    });
   }
 
   /// 送金先値変更時の処理。
   private onFormAccountToChanged(sender: HTMLSelectElement) {
-    this.setState({formAccountTo: Number(sender.value)});
+    const newAccountTo = Number(sender.value);
+    let accountFrom = this.state.formAccountFrom;
+    if (newAccountTo !== DocTypes.INVALID_ID && newAccountTo === accountFrom) {
+      // 同じ口座を選ばせないようにするために片方を未選択にする
+      accountFrom = DocTypes.INVALID_ID;
+    }
+    this.setState({
+      formAccountFrom: accountFrom,
+      formAccountTo: newAccountTo,
+    });
   }
 
   /// 価格値変更時の処理。
@@ -500,14 +517,14 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
         break;
 
       case DocTypes.RecordKind.Transfer:
-        Store.dispatch(DocActions.addRecordTransfer(
-          new Date(),
-          YearMonthDayDate.fromText(this.state.formDate),
-          this.state.formMemo,
-          this.state.formAccountFrom,
-          this.state.formAccountTo,
-          this.state.formAmount != null ? this.state.formAmount : 0,
-          ));
+        // Store.dispatch(DocActions.addRecordTransfer(
+        //   new Date(),
+        //   YearMonthDayDate.fromText(this.state.formDate),
+        //   this.state.formMemo,
+        //   this.state.formAccountFrom,
+        //   this.state.formAccountTo,
+        //   this.state.formAmount != null ? this.state.formAmount : 0,
+        //   ));
         break;
     }
     this.setState({isAmountEmptyError: false});

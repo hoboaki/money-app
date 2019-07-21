@@ -78,7 +78,7 @@ export interface IState {
     records: {[key: number]: IRecordTransfer};
   };
 
-  /** 次に使用するId。 */
+  /** 次に使用するId。0(Types.INVALID_ID) は無効値。 */
   nextId: {
     account: number;
     income: {
