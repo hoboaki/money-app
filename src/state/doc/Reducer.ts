@@ -15,6 +15,22 @@ a2RMapper.addWork<Actions.IResetDocument>(
   },
 );
 
+a2RMapper.addWork<Actions.IAddRecordIncome>(
+    Actions.ADD_RECORD_INCOME,
+    (state, action) => {
+        StateMethods.incomeRecordAdd(
+          state,
+          action.createDate,
+          action.createDate, // 新規レコードなので更新日時は作成日時と同じでOK。
+          action.date,
+          action.memo,
+          action.accountId,
+          action.categoryId,
+          action.amount,
+          );
+    },
+);
+
 a2RMapper.addWork<Actions.IAddRecordOutgo>(
     Actions.ADD_RECORD_OUTGO,
     (state, action) => {

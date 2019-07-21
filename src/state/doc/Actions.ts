@@ -16,6 +16,35 @@ export const resetDocument = (state: States.IState): IResetDocument => {
   };
 };
 
+/// 収入レコードの追加。
+export const ADD_RECORD_INCOME = UUID();
+export interface IAddRecordIncome extends Action {
+  createDate: Date;
+  date: YearMonthDayDate;
+  memo: string;
+  accountId: number;
+  categoryId: number;
+  amount: number;
+}
+export const addRecordIncome = (
+  createDate: Date,
+  date: YearMonthDayDate,
+  memo: string,
+  accountId: number,
+  categoryId: number,
+  amount: number,
+  ): IAddRecordIncome => {
+  return {
+    type: ADD_RECORD_INCOME,
+    createDate,
+    date,
+    accountId,
+    categoryId,
+    amount,
+    memo,
+  };
+};
+
 /// 支出レコードの追加。
 export const ADD_RECORD_OUTGO = UUID();
 export interface IAddRecordOutgo extends Action {

@@ -416,14 +416,29 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     }
 
     // 追加イベントを実行
-    Store.dispatch(DocActions.addRecordOutgo(
-      new Date(),
-      YearMonthDayDate.fromText(this.state.formDate),
-      this.state.formMemo,
-      this.state.formAccount,
-      this.state.formCategoryOutgo,
-      this.state.formAmount != null ? this.state.formAmount : 0,
-      ));
+    switch (this.state.formKind) {
+      case DocTypes.RecordKind.Outgo:
+        Store.dispatch(DocActions.addRecordOutgo(
+          new Date(),
+          YearMonthDayDate.fromText(this.state.formDate),
+          this.state.formMemo,
+          this.state.formAccount,
+          this.state.formCategoryOutgo,
+          this.state.formAmount != null ? this.state.formAmount : 0,
+          ));
+        break;
+
+      case DocTypes.RecordKind.Income:
+        Store.dispatch(DocActions.addRecordIncome(
+          new Date(),
+          YearMonthDayDate.fromText(this.state.formDate),
+          this.state.formMemo,
+          this.state.formAccount,
+          this.state.formCategoryIncome,
+          this.state.formAmount != null ? this.state.formAmount : 0,
+          ));
+        break;
+    }
     this.setState({isAmountEmptyError: false});
 
     // 続けて入力モード用の処理
