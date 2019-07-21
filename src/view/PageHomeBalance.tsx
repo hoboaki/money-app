@@ -37,11 +37,11 @@ class PageHomeBalance extends React.Component<IProps, any> {
     const outgoTotal = outgoRecords.reduce((current, next) => current + next.amount, 0);
     const balanceTotal = incomeTotal - outgoTotal;
     const incomeTotalText = `${incomeTotal < 0 ? '▲ ' : ''}` +
-      `¥${Math.abs(incomeTotal).toString().split(/[¥d]{3}$/).join(',')}`;
+      `${Math.abs(incomeTotal).toString().split(/[¥d]{3}$/).join(',')}`;
     const outgoTotalText = `${outgoTotal < 0 ? '△ ' : ''}` +
-      `¥${Math.abs(outgoTotal).toString().split(/[¥d]{3}$/).join(',')}`;
-    const balanceTotalText = `${balanceTotal < 0 ? '▲ ' : ''}` +
-      `¥${Math.abs(balanceTotal).toString().split(/[¥d]{3}$/).join(',')}`;
+      `${Math.abs(outgoTotal).toString().split(/[¥d]{3}$/).join(',')}`;
+    const balanceTotalText = `${balanceTotal < 0 ? '-' : ''}` +
+      `${Math.abs(balanceTotal).toString().split(/[¥d]{3}$/).join(',')}`;
 
     const rootClass = ClassNames(
       Style.Root,
@@ -99,7 +99,7 @@ class PageHomeBalance extends React.Component<IProps, any> {
           </thead>
           <tbody>
             <tr>
-              <td className={tableDataValueClass}>¥999,999,999</td>
+              <td className={tableDataValueClass}>999,999,999</td>
             </tr>
           </tbody>
         </table>
@@ -112,7 +112,7 @@ class PageHomeBalance extends React.Component<IProps, any> {
           </thead>
           <tbody>
             <tr>
-              <td className={tableDataValueClass}>¥999,999,999</td>
+              <td className={tableDataValueClass}>999,999,999</td>
             </tr>
           </tbody>
         </table>
