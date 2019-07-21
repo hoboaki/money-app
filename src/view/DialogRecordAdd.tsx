@@ -32,6 +32,8 @@ interface IState {
   formCategoryOutgo: number;
   formCategoryIncome: number;
   formAccount: number;
+  formAccountFrom: number;
+  formAccountTo: number;
   formAmount: number | null;
   formMemo: string;
   isAmountEmptyError: boolean;
@@ -43,6 +45,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   private elementIdFormCategoryIncome: string;
   private elementIdFormDate: string;
   private elementIdFormAccount: string;
+  private elementIdFormAccountFrom: string;
+  private elementIdFormAccountTo: string;
   private elementIdFormAmount: string;
   private elementIdFormMemo: string;
   private elementIdFormIsContinueMode: string;
@@ -57,6 +61,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
       formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.incomeCategories).id,
       formAccount: Number(Object.keys(props.accounts)[0]),
+      formAccountFrom: Number(Object.keys(props.accounts)[0]),
+      formAccountTo: Number(Object.keys(props.accounts)[0]),
       formAmount: null,
       formMemo: '',
       isAmountEmptyError: false,
@@ -66,6 +72,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     this.elementIdFormCategoryIncome = `elem-${UUID()}`;
     this.elementIdFormDate = `elem-${UUID()}`;
     this.elementIdFormAccount = `elem-${UUID()}`;
+    this.elementIdFormAccountFrom = `elem-${UUID()}`;
+    this.elementIdFormAccountTo = `elem-${UUID()}`;
     this.elementIdFormAmount = `elem-${UUID()}`;
     this.elementIdFormMemo = `elem-${UUID()}`;
     this.elementIdFormIsContinueMode = `elem-${UUID()}`;
@@ -195,16 +203,22 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     const formInputRootClass = ClassNames(
       Style.FormInputRoot,
     );
-    const formInputRowCategoryOutgo = ClassNames(
+    const formInputRowCategoryOutgoClass = ClassNames(
       this.state.formKind === DocTypes.RecordKind.Outgo ? null : Style.FormInputRowHide,
     );
-    const formInputRowCategoryIncome = ClassNames(
+    const formInputRowCategoryIncomeClass = ClassNames(
       this.state.formKind === DocTypes.RecordKind.Income ? null : Style.FormInputRowHide,
+    );
+    const formInputRowAcountClass = ClassNames(
+      this.state.formKind !== DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
+    );
+    const formInputRowAcountFromToClass = ClassNames(
+      this.state.formKind === DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
     );
     const formInputCategoryClass = ClassNames(
       Style.FormInputCategory,
     );
-    const formInputAccountClass = ClassNames(
+    const formInputAccountSelectClass = ClassNames(
       Style.FormInputAccount,
     );
 
@@ -273,7 +287,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           />
                       </td>
                     </tr>
-                    <tr className={formInputRowCategoryOutgo}>
+                    <tr className={formInputRowCategoryOutgoClass}>
                       <th scope="row">カテゴリ</th>
                       <td>
                         <input
@@ -285,7 +299,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           />
                       </td>
                     </tr>
-                    <tr className={formInputRowCategoryIncome}>
+                    <tr className={formInputRowCategoryIncomeClass}>
                       <th scope="row">カテゴリ</th>
                       <td>
                         <input
@@ -297,13 +311,49 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           />
                       </td>
                     </tr>
-                    <tr>
+                    <tr className={formInputRowAcountClass}>
                       <th scope="row">口座</th>
                       <td>
                         <select defaultValue={this.state.formAccount.toString()}
-                          className={formInputAccountClass}
+                          className={formInputAccountSelectClass}
                           id={this.elementIdFormAccount}
                           onChange={(event) => {this.onFormAccountChanged(event.target); }}
+                          onKeyDown={(event) => {this.onKeyDown(event); }}
+                          >
+                          {Object.keys(this.props.accounts).map((key) => {
+                            const account = this.props.accounts[Number(key)];
+                            return (
+                              <option key={key} value={key}>{account.name}</option>
+                            );
+                          })}
+                        </select>
+                      </td>
+                    </tr>
+                    <tr className={formInputRowAcountFromToClass}>
+                      <th scope="row">送金元</th>
+                      <td>
+                        <select defaultValue={this.state.formAccountFrom.toString()}
+                          className={formInputAccountSelectClass}
+                          id={this.elementIdFormAccountFrom}
+                          onChange={(event) => {this.onFormAccountFromChanged(event.target); }}
+                          onKeyDown={(event) => {this.onKeyDown(event); }}
+                          >
+                          {Object.keys(this.props.accounts).map((key) => {
+                            const account = this.props.accounts[Number(key)];
+                            return (
+                              <option key={key} value={key}>{account.name}</option>
+                            );
+                          })}
+                        </select>
+                      </td>
+                    </tr>
+                    <tr className={formInputRowAcountFromToClass}>
+                      <th scope="row">送金先</th>
+                      <td>
+                        <select defaultValue={this.state.formAccountTo.toString()}
+                          className={formInputAccountSelectClass}
+                          id={this.elementIdFormAccountTo}
+                          onChange={(event) => {this.onFormAccountToChanged(event.target); }}
                           onKeyDown={(event) => {this.onKeyDown(event); }}
                           >
                           {Object.keys(this.props.accounts).map((key) => {
@@ -392,6 +442,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     this.setState({formAccount: Number(sender.value)});
   }
 
+  /// 送金元値変更時の処理。
+  private onFormAccountFromChanged(sender: HTMLSelectElement) {
+    this.setState({formAccountFrom: Number(sender.value)});
+  }
+
+  /// 送金先値変更時の処理。
+  private onFormAccountToChanged(sender: HTMLSelectElement) {
+    this.setState({formAccountTo: Number(sender.value)});
+  }
+
   /// 価格値変更時の処理。
   private onFormAmountChanged(sender: HTMLInputElement) {
     this.setState({formAmount: Number(sender.value)});
@@ -435,6 +495,17 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
           this.state.formMemo,
           this.state.formAccount,
           this.state.formCategoryIncome,
+          this.state.formAmount != null ? this.state.formAmount : 0,
+          ));
+        break;
+
+      case DocTypes.RecordKind.Transfer:
+        Store.dispatch(DocActions.addRecordTransfer(
+          new Date(),
+          YearMonthDayDate.fromText(this.state.formDate),
+          this.state.formMemo,
+          this.state.formAccountFrom,
+          this.state.formAccountTo,
           this.state.formAmount != null ? this.state.formAmount : 0,
           ));
         break;

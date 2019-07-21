@@ -47,6 +47,22 @@ a2RMapper.addWork<Actions.IAddRecordOutgo>(
     },
 );
 
+a2RMapper.addWork<Actions.IAddRecordTransfer>(
+    Actions.ADD_RECORD_TRANSFER,
+    (state, action) => {
+        StateMethods.transferRecordAdd(
+          state,
+          action.createDate,
+          action.createDate, // 新規レコードなので更新日時は作成日時と同じでOK。
+          action.date,
+          action.memo,
+          action.accountFromId,
+          action.accountToId,
+          action.amount,
+          );
+    },
+);
+
 // Reducer 本体。
 const Reducer: Redux.Reducer<States.IState> = (state = States.defaultState, action) => {
     return a2RMapper.execute(state, action);
