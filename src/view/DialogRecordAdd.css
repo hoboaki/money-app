@@ -120,6 +120,13 @@
   cursor: pointer;
 }
 
+.FormInputAmountCellNegativeIncome input {
+  color: #fd4134;
+}
+.FormInputAmountCellNegativeOutgo input {
+  color: #3273ff;
+}
+
 .FormInputCategory {
   width: 100%
 }
