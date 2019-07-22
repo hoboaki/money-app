@@ -38,15 +38,11 @@ class PageHomeBalance extends React.Component<IProps, any> {
     const outgoRecords = currentRecords.outgos;
     const transferRecords = currentRecords.transfers;
 
-    const prevIncomeTotal = prevRecords.incomes.reduce(
-      (current, next) => current + this.props.doc.income.records[next].amount, 0);
-    const prevOutgoTotal = prevRecords.outgos.reduce(
-      (current, next) => current + this.props.doc.outgo.records[next].amount, 0);
+    const prevIncomeTotal = RecordFinder.sumAmountIncome(prevRecords, this.props.doc);
+    const prevOutgoTotal = RecordFinder.sumAmountOutgo(prevRecords, this.props.doc);
     const prevTransferDiff = 0;
-    const incomeTotal = currentRecords.incomes.reduce(
-      (current, next) => current + this.props.doc.income.records[next].amount, 0);
-    const outgoTotal = currentRecords.outgos.reduce(
-      (current, next) => current + this.props.doc.outgo.records[next].amount, 0);
+    const incomeTotal = RecordFinder.sumAmountIncome(currentRecords, this.props.doc);
+    const outgoTotal = RecordFinder.sumAmountOutgo(currentRecords, this.props.doc);
     const balanceTotal = incomeTotal - outgoTotal;
     const transferDiff = 0;
     const closingPrice = prevIncomeTotal - prevOutgoTotal + prevTransferDiff + balanceTotal + transferDiff;
