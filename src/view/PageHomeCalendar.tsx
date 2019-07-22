@@ -7,8 +7,8 @@ import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
 import * as PriceUtils from '../util/PriceUtils';
 import YearMonthDayDate from '../util/YearMonthDayDate';
-import * as LayoutStyle from './Layout.css';
-import * as Style from './PageHomeCalendar.css';
+import * as LayoutStyles from './Layout.css';
+import * as Styles from './PageHomeCalendar.css';
 
 interface IProps {
   doc: DocStates.IState;
@@ -18,71 +18,71 @@ interface IProps {
 class PageHomeCalendar extends React.Component<IProps, any> {
   public render() {
     const rootClass = ClassNames(
-      Style.Root,
+      Styles.Root,
     );
     const tableClass = ClassNames(
-      Style.Table,
+      Styles.Table,
     );
     const tableHeaderClass = ClassNames(
-      Style.TableHeader,
+      Styles.TableHeader,
     );
     const tableDataClass = ClassNames(
-      Style.TableData,
+      Styles.TableData,
     );
     const tableDataDarkClass = ClassNames(
-      Style.TableData,
-      Style.TableDataDark,
+      Styles.TableData,
+      Styles.TableDataDark,
     );
     const cellTopClass = ClassNames(
-      Style.Cell,
-      Style.CellTop,
+      Styles.Cell,
+      Styles.CellTop,
     );
     const cellDayClass = ClassNames(
-      Style.CellDay,
+      Styles.CellDay,
     );
     const cellNewRecordBtnClass = ClassNames(
-      Style.CellNewRecordBtn,
+      Styles.CellNewRecordBtn,
     );
     const cellNewRecordBtnIconClass = ClassNames(
       'material-icons',
       'md-16',
-      Style.CellNewRecordBtnIcon,
+      Styles.CellNewRecordBtnIcon,
     );
     const cellTopRightClass = ClassNames(
-      LayoutStyle.RightToLeft,
+      LayoutStyles.RightToLeft,
     );
     const cellTransferClass = ClassNames(
-      Style.CellTransfer,
+      Styles.CellTransfer,
     );
     const cellTransferIconClass = ClassNames(
-      Style.CellTransferIcon,
+      Styles.CellTransferIcon,
     );
     const cellMiddleClass = ClassNames(
-      Style.Cell,
+      Styles.Cell,
     );
     const cellHiddenClass = ClassNames(
-      Style.CellHidden,
+      Styles.CellHidden,
     );
     const cellIncomePriceClass = ClassNames(
-      Style.CellPrice,
-      Style.CellIncomePrice,
+      Styles.CellPrice,
+      Styles.CellIncomePrice,
     );
     const cellOutgoPriceClass = ClassNames(
-      Style.CellPrice,
-      Style.CellOutgoPrice,
+      Styles.CellPrice,
+      Styles.CellOutgoPrice,
     );
     const cellNegativePriceClass = ClassNames(
-      Style.CellPrice,
-      Style.CellNegativePrice,
+      Styles.CellPrice,
+      Styles.CellNegativePrice,
     );
     const cellIncomeIconClass = ClassNames(
-      Style.CellIncomeIcon,
+      Styles.CellIncomeIcon,
     );
     const cellOutgoIconClass = ClassNames(
-      Style.CellOutgoIcon,
+      Styles.CellOutgoIcon,
     );
     const cellBottomClass = ClassNames(
-      Style.Cell,
+      Styles.Cell,
     );
 
     // 6週分のデータを作成

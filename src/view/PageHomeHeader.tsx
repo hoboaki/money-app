@@ -1,15 +1,13 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import * as DocActions from '../state/doc/Actions';
 import IStoreState from '../state/IStoreState';
 import Store from '../state/Store';
 import * as UiActions from '../state/ui/Actions';
 import * as States from '../state/ui/States';
-import YearMonthDayDate from '../util/YearMonthDayDate';
 import DialogRecordAdd from './DialogRecordAdd';
-import * as LayoutStyle from './Layout.css';
-import * as Style from './PageHomeHeader.css';
+import * as LayoutStyles from './Layout.css';
+import * as Styles from './PageHomeHeader.css';
 
 interface IState {
   modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
@@ -25,46 +23,46 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
 
   public render() {
     const rootClass = ClassNames(
-      Style.Root,
+      Styles.Root,
     );
     const currentDateClass = ClassNames(
-      Style.CurrentDate,
+      Styles.CurrentDate,
     );
     const movePrevBtnClass = ClassNames(
-      Style.Btn,
-      Style.FrameBtn,
-      Style.MoveBtn,
-      Style.MovePrevBtn,
+      Styles.Btn,
+      Styles.FrameBtn,
+      Styles.MoveBtn,
+      Styles.MovePrevBtn,
     );
     const moveTodayBtnClass = ClassNames(
-      Style.Btn,
-      Style.FrameBtn,
-      Style.MoveBtn,
+      Styles.Btn,
+      Styles.FrameBtn,
+      Styles.MoveBtn,
     );
     const moveNextBtnClass = ClassNames(
-      Style.Btn,
-      Style.FrameBtn,
-      Style.MoveBtn,
-      Style.MoveNextBtn,
+      Styles.Btn,
+      Styles.FrameBtn,
+      Styles.MoveBtn,
+      Styles.MoveNextBtn,
     );
     const jumpBtnClass = ClassNames(
-      Style.Btn,
-      Style.FrameBtn,
-      Style.JumpBtn,
+      Styles.Btn,
+      Styles.FrameBtn,
+      Styles.JumpBtn,
     );
     const filterBtnClass = ClassNames(
-      Style.Btn,
-      Style.NoFrameBtn,
-      Style.FilterBtn,
+      Styles.Btn,
+      Styles.NoFrameBtn,
+      Styles.FilterBtn,
     );
     const rightAreaClass = ClassNames(
-      LayoutStyle.RightToLeft,
-      Style.RightArea,
+      LayoutStyles.RightToLeft,
+      Styles.RightArea,
     );
     const newRecordBtnClass = ClassNames(
-      Style.Btn,
-      Style.NoFrameBtn,
-      Style.NewRecordBtn,
+      Styles.Btn,
+      Styles.NoFrameBtn,
+      Styles.NewRecordBtn,
     );
     const iconClass = ClassNames(
       'material-icons',
@@ -91,7 +89,7 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
           <i className={iconClass}>chevron_right</i>
         </button>
         <button className={jumpBtnClass} onClick={this.onJumpBtnPushed}>移動</button>
-        <select className={Style.ViewUnitSelect} defaultValue="month" onChange={this.onViewUnitChanged}>
+        <select className={Styles.ViewUnitSelect} defaultValue="month" onChange={this.onViewUnitChanged}>
           <option value="month">月表示</option>
           <option value="year">年表示</option>
         </select>

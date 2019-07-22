@@ -1,106 +1,105 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
-import * as LayoutStyle from './Layout.css';
-import * as Style from './PageSheetBody.css';
+import * as Styles from './PageSheetBody.css';
 
 class PageSheetBody extends React.Component<any, any> {
   public render() {
     const rootClass = ClassNames(
-      Style.Root,
+      Styles.Root,
     );
     const colHeadAccountNameClass = ClassNames(
-      Style.TableColhead,
-      Style.TableColheadAccountName,
+      Styles.TableColhead,
+      Styles.TableColheadAccountName,
     );
     const colHeadAccountCategoryClass = ClassNames(
-      Style.TableColhead,
-      Style.TableColheadAccountCategory,
+      Styles.TableColhead,
+      Styles.TableColheadAccountCategory,
     );
     const colHeadCarriedClass = ClassNames(
-      Style.TableColhead,
-      Style.TableColheadCarried,
+      Styles.TableColhead,
+      Styles.TableColheadCarried,
     );
     const colHeadCellClass = ClassNames(
-      Style.TableColhead,
-      Style.TableColheadCell,
+      Styles.TableColhead,
+      Styles.TableColheadCell,
     );
     const colHeadSpaceClass = ClassNames(
-      Style.TableColhead,
-      Style.TableColheadSpace,
+      Styles.TableColhead,
+      Styles.TableColheadSpace,
     );
     const colHeadBalanceClass = ClassNames(
-      Style.TableColhead,
-      Style.TableColheadBalance,
+      Styles.TableColhead,
+      Styles.TableColheadBalance,
     );
     const rowHeadRootOpenerSpaceClass = ClassNames(
-      Style.TableRowhead,
-      Style.TableRowheadRoot,
-      Style.TableOpenerSpace,
+      Styles.TableRowhead,
+      Styles.TableRowheadRoot,
+      Styles.TableOpenerSpace,
     );
     const rowHeadRootAccountNameClass = ClassNames(
-      Style.TableRowhead,
-      Style.TableRowheadRoot,
-      Style.TableRowheadAccountName,
+      Styles.TableRowhead,
+      Styles.TableRowheadRoot,
+      Styles.TableRowheadAccountName,
     );
     const rowHeadRootAccountCategoryClass = ClassNames(
-      Style.TableRowhead,
-      Style.TableRowheadRoot,
-      Style.TableRowheadAccountCategory,
+      Styles.TableRowhead,
+      Styles.TableRowheadRoot,
+      Styles.TableRowheadAccountCategory,
     );
     const rowHeadRootAccountCarriedClass = ClassNames(
-      Style.TableRowhead,
-      Style.TableRowheadRoot,
-      Style.TableRowheadCarried,
+      Styles.TableRowhead,
+      Styles.TableRowheadRoot,
+      Styles.TableRowheadCarried,
     );
     const rowHeadRootBalance = ClassNames(
-      Style.TableRowhead,
-      Style.TableRowheadRoot,
-      Style.TableRowheadBalance,
+      Styles.TableRowhead,
+      Styles.TableRowheadRoot,
+      Styles.TableRowheadBalance,
     );
     const cellRootClass = ClassNames(
-      Style.TableCell,
-      Style.TableCellRoot,
+      Styles.TableCell,
+      Styles.TableCellRoot,
     );
     const cellSpaceRootClass = ClassNames(
-      Style.TableCellSpace,
-      Style.TableCellRoot,
+      Styles.TableCellSpace,
+      Styles.TableCellRoot,
     );
     const rowHeadAccountOpenerSpaceClass = ClassNames(
-      Style.TableRowhead,
-      Style.TableRowheadAccount,
-      Style.TableOpenerSpace,
+      Styles.TableRowhead,
+      Styles.TableRowheadAccount,
+      Styles.TableOpenerSpace,
     );
     const rowHeadAccountAccountNameClass = ClassNames(
-      Style.TableRowhead,
-      Style.TableRowheadAccount,
-      Style.TableRowheadAccountName,
+      Styles.TableRowhead,
+      Styles.TableRowheadAccount,
+      Styles.TableRowheadAccountName,
     );
     const rowHeadAccountAccountCategoryClass = ClassNames(
-      Style.TableRowhead,
-      Style.TableRowheadAccount,
-      Style.TableRowheadAccountCategory,
+      Styles.TableRowhead,
+      Styles.TableRowheadAccount,
+      Styles.TableRowheadAccountCategory,
     );
     const rowHeadAccountAccountCarriedClass = ClassNames(
-      Style.TableRowhead,
-      Style.TableRowheadAccount,
-      Style.TableRowheadCarried,
+      Styles.TableRowhead,
+      Styles.TableRowheadAccount,
+      Styles.TableRowheadCarried,
     );
     const rowHeadAccountBalance = ClassNames(
-      Style.TableRowhead,
-      Style.TableRowheadAccount,
-      Style.TableRowheadBalance,
+      Styles.TableRowhead,
+      Styles.TableRowheadAccount,
+      Styles.TableRowheadBalance,
     );
     const cellClass = ClassNames(
-      Style.TableCell,
-      Style.TableCellOdd,
+      Styles.TableCell,
+      Styles.TableCellOdd,
     );
     const cellSpaceClass = ClassNames(
-      Style.TableCellSpace,
+      Styles.TableCellSpace,
     );
     return (
       <div className={rootClass}>
         <div id="pageSheetBodyTop">
-          <table className={Style.Table}>
+          <table className={Styles.Table}>
             <tbody>
               <tr>
                 <td className={colHeadAccountNameClass}>アカウント</td>
@@ -118,7 +117,7 @@ class PageSheetBody extends React.Component<any, any> {
               </tr>
             </tbody>
           </table>
-          <table className={Style.Table}>
+          <table className={Styles.Table}>
             <tbody>
               <tr>
                 <td className={rowHeadRootOpenerSpaceClass}></td>
@@ -169,7 +168,7 @@ class PageSheetBody extends React.Component<any, any> {
           </table>
         </div>
         <div id="pageSheetBodyBottom">
-          <table className={Style.Table}>
+          <table className={Styles.Table}>
             <tbody>
               <tr>
                 <td className={colHeadAccountNameClass}>アカウント</td>

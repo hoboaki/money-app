@@ -13,7 +13,7 @@ import Store from '../state/Store';
 import * as UiActions from '../state/ui/Actions';
 import * as UiStates from '../state/ui/States';
 import YearMonthDayDate from '../util/YearMonthDayDate';
-import * as Style from './DialogRecordAdd.css';
+import * as Styles from './DialogRecordAdd.css';
 
 interface IProps {
   onClosed: (() => void);
@@ -137,7 +137,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
             const texts = key.split('-');
             onCategorySelected(Number(texts[1]));
           },
-          className: Style.ContextMenuRoot,
+          className: Styles.ContextMenuRoot,
           items: categoryItems,
           selector,
           trigger: 'left',
@@ -190,73 +190,73 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
   public render() {
     const formTabsRootClass = ClassNames(
-      Style.FormTabsRoot,
+      Styles.FormTabsRoot,
     );
     const formTabsBaseClass = ClassNames(
-      Style.FormTabsBase,
+      Styles.FormTabsBase,
     );
     const formTabOutgoClass = ClassNames(
-      Style.FormTab,
-      this.state.formKind === DocTypes.RecordKind.Outgo ? Style.FormTabActive : null,
+      Styles.FormTab,
+      this.state.formKind === DocTypes.RecordKind.Outgo ? Styles.FormTabActive : null,
     );
     const formTabIncomeClass = ClassNames(
-      Style.FormTab,
-      this.state.formKind === DocTypes.RecordKind.Income ? Style.FormTabActive : null,
+      Styles.FormTab,
+      this.state.formKind === DocTypes.RecordKind.Income ? Styles.FormTabActive : null,
     );
     const formTabTransferClass = ClassNames(
-      Style.FormTab,
-      Style.FormTabLast,
-      this.state.formKind === DocTypes.RecordKind.Transfer ? Style.FormTabActive : null,
+      Styles.FormTab,
+      Styles.FormTabLast,
+      this.state.formKind === DocTypes.RecordKind.Transfer ? Styles.FormTabActive : null,
     );
     const formSvgIconClass = ClassNames(
-      Style.FormSvgIcon,
+      Styles.FormSvgIcon,
     );
 
     const formInputRootClass = ClassNames(
-      Style.FormInputRoot,
+      Styles.FormInputRoot,
     );
     const formInputRowCategoryOutgoClass = ClassNames(
-      this.state.formKind === DocTypes.RecordKind.Outgo ? null : Style.FormInputRowHide,
+      this.state.formKind === DocTypes.RecordKind.Outgo ? null : Styles.FormInputRowHide,
     );
     const formInputRowCategoryIncomeClass = ClassNames(
-      this.state.formKind === DocTypes.RecordKind.Income ? null : Style.FormInputRowHide,
+      this.state.formKind === DocTypes.RecordKind.Income ? null : Styles.FormInputRowHide,
     );
     const formInputRowAcountClass = ClassNames(
-      this.state.formKind !== DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
+      this.state.formKind !== DocTypes.RecordKind.Transfer ? null : Styles.FormInputRowHide,
     );
     const formInputRowAcountFromToClass = ClassNames(
-      this.state.formKind === DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
+      this.state.formKind === DocTypes.RecordKind.Transfer ? null : Styles.FormInputRowHide,
     );
     const formInputRowAmountClass = ClassNames(
-      this.state.formKind !== DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
+      this.state.formKind !== DocTypes.RecordKind.Transfer ? null : Styles.FormInputRowHide,
       !this.state.formAmountIsNegative ? null :
         this.state.formKind === DocTypes.RecordKind.Outgo ?
-          Style.FormInputAmountCellNegativeOutgo :
-          Style.FormInputAmountCellNegativeIncome,
+          Styles.FormInputAmountCellNegativeOutgo :
+          Styles.FormInputAmountCellNegativeIncome,
     );
     const formInputRowAmountTransferClass = ClassNames(
-      this.state.formKind === DocTypes.RecordKind.Transfer ? null : Style.FormInputRowHide,
+      this.state.formKind === DocTypes.RecordKind.Transfer ? null : Styles.FormInputRowHide,
     );
     const formInputCategoryClass = ClassNames(
-      Style.FormInputCategory,
+      Styles.FormInputCategory,
     );
     const formInputAccountSelectClass = ClassNames(
-      Style.FormInputAccount,
+      Styles.FormInputAccount,
     );
 
     const formFooterRootClass = ClassNames(
       'modal-footer',
-      Style.FormFooterRoot,
+      Styles.FormFooterRoot,
     );
 
     const accountFromErrorMsg = this.state.accountFromErrorMsg == null ? null :
-      <span className={Style.FormErrorMsg}>{this.state.accountFromErrorMsg}</span>;
+      <span className={Styles.FormErrorMsg}>{this.state.accountFromErrorMsg}</span>;
     const accountToErrorMsg = this.state.accountToErrorMsg == null ? null :
-      <span className={Style.FormErrorMsg}>{this.state.accountToErrorMsg}</span>;
+      <span className={Styles.FormErrorMsg}>{this.state.accountToErrorMsg}</span>;
     const amountErrorMsg = this.state.amountErrorMsg == null ? null :
-      <span className={Style.FormErrorMsg}>{this.state.amountErrorMsg}</span>;
+      <span className={Styles.FormErrorMsg}>{this.state.amountErrorMsg}</span>;
     const amountTransferErrorMsg = this.state.amountTransferErrorMsg == null ? null :
-      <span className={Style.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
+      <span className={Styles.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
 
     return (
       <div className="modal fade" id={this.elementIdRoot} tabIndex={-1}
@@ -273,30 +273,30 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
               <div className={formTabsRootClass}>
                 <div className={formTabsBaseClass}>
                   <div className={formTabOutgoClass}>
-                    <button className={Style.FormTabButton}
+                    <button className={Styles.FormTabButton}
                       disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
                       onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
                       >
                       <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
-                      <span className={Style.FormTabLabel}>支出</span>
+                      <span className={Styles.FormTabLabel}>支出</span>
                     </button>
                   </div>
                   <div className={formTabIncomeClass}>
-                    <button className={Style.FormTabButton}
+                    <button className={Styles.FormTabButton}
                       disabled={this.state.formKind === DocTypes.RecordKind.Income}
                       onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
                       >
                       <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
-                      <span className={Style.FormTabLabel}>収入</span>
+                      <span className={Styles.FormTabLabel}>収入</span>
                     </button>
                   </div>
                   <div className={formTabTransferClass}>
-                    <button className={Style.FormTabButton}
+                    <button className={Styles.FormTabButton}
                       disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
                       onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Transfer); }}
                       >
                       <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
-                      <span className={Style.FormTabLabel}>振替</span>
+                      <span className={Styles.FormTabLabel}>振替</span>
                     </button>
                   </div>
                 </div>
@@ -425,7 +425,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                     <tr>
                       <th scope="row">メモ</th>
                       <td>
-                        <input className={Style.FormInputMemo} type="text"
+                        <input className={Styles.FormInputMemo} type="text"
                           id={this.elementIdFormMemo}
                           value={this.state.formMemo}
                           onChange={(event) => {this.onFormMemoChanged(event.target); }}
