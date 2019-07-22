@@ -1,6 +1,6 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
-import * as Style from './SideBarBtn.css';
+import * as Styles from './SideBarBtn.css';
 
 interface IProps {
   onClicked: (() => void);
@@ -16,8 +16,8 @@ class SideBarBtn extends React.Component<IProps> {
 
   public render() {
     const rootClass = ClassNames(
-      Style.Root,
-      {[Style.RootActive]: this.props.isActive},
+      Styles.Root,
+      {[Styles.RootActive]: this.props.isActive},
     );
     const iconClass = ClassNames(
       'material-icons',

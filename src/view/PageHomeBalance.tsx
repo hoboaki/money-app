@@ -7,8 +7,7 @@ import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
 import * as PriceUtils from '../util/PriceUtils';
 import YearMonthDayDate from '../util/YearMonthDayDate';
-import * as LayoutStyle from './Layout.css';
-import * as Style from './PageHomeBalance.css';
+import * as Styles from './PageHomeBalance.css';
 
 interface IProps {
   doc: DocStates.IState;
@@ -63,35 +62,35 @@ class PageHomeBalance extends React.Component<IProps, any> {
     const transferDiffText = `${PriceUtils.numToLocaleString(transferDiff)}`;
 
     const rootClass = ClassNames(
-      Style.Root,
+      Styles.Root,
     );
     const spacerClass = ClassNames(
-      Style.Spacer,
+      Styles.Spacer,
     );
     const tableClass = ClassNames(
-      Style.Table,
+      Styles.Table,
     );
     const tableHeaderLabelClass = ClassNames(
-      Style.TableHeader,
-      Style.TableHeaderLabel,
+      Styles.TableHeader,
+      Styles.TableHeaderLabel,
     );
     const tableHeaderSpacerClass = ClassNames(
-      Style.TableHeader,
-      Style.TableHeaderSpacer,
+      Styles.TableHeader,
+      Styles.TableHeaderSpacer,
     );
     const tableDataValueClass = ClassNames(
-      Style.TableData,
-      Style.TableDataValue,
+      Styles.TableData,
+      Styles.TableDataValue,
     );
     const tableDataBalanceValueClass = ClassNames(
-      Style.TableData,
-      Style.TableDataValue,
-      balanceTotal < 0 ? Style.TableDataValueDeficit : null,
-      0 < balanceTotal ? Style.TableDataValueSurplus : null,
+      Styles.TableData,
+      Styles.TableDataValue,
+      balanceTotal < 0 ? Styles.TableDataValueDeficit : null,
+      0 < balanceTotal ? Styles.TableDataValueSurplus : null,
     );
     const tableDataSignClass = ClassNames(
-      Style.TableData,
-      Style.TableDataSign,
+      Styles.TableData,
+      Styles.TableDataSign,
     );
     return (
       <div className={rootClass}>
