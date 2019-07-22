@@ -81,17 +81,8 @@ export interface IState {
   /** 次に使用するId。0(Types.INVALID_ID) は無効値。 */
   nextId: {
     account: number;
-    income: {
-      category: number;
-      record: number;
-    };
-    outgo: {
-      category: number;
-      record: number;
-    };
-    transfer: {
-      record: number;
-    };
+    category: number;
+    record: number;
   };
 }
 
@@ -110,16 +101,7 @@ export const defaultState: IState = {
   },
   nextId: {
     account: 1,
-    income: {
-      category: 1,
-      record: 1,
-    },
-    outgo: {
-      category: 1,
-      record: 1,
-    },
-    transfer: {
-      record: 1,
-    },
+    category: 1,
+    record: 1,
   },
 };
