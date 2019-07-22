@@ -16,7 +16,7 @@ export const resetDocument = (state: States.IState): IResetDocument => {
   };
 };
 
-/// 収入レコードの追加。
+/// 入金レコードの追加。
 export const ADD_RECORD_INCOME = UUID();
 export interface IAddRecordIncome extends Action {
   createDate: Date;
@@ -45,7 +45,7 @@ export const addRecordIncome = (
   };
 };
 
-/// 支出レコードの追加。
+/// 出金レコードの追加。
 export const ADD_RECORD_OUTGO = UUID();
 export interface IAddRecordOutgo extends Action {
   createDate: Date;
