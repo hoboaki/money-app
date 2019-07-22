@@ -98,9 +98,9 @@ const filteredCollection = (
   checker: (record: States.IRecord) => boolean,
   ): IRecordCollection => {
   return {
-    incomes: filteredArray(collection.incomes, state.income, checker),
-    outgos: filteredArray(collection.outgos, state.outgo, checker),
-    transfers: filteredArray(collection.transfers, state.transfer, checker),
+    incomes: filteredArray(collection.incomes, state.income.records, checker),
+    outgos: filteredArray(collection.outgos, state.outgo.records, checker),
+    transfers: filteredArray(collection.transfers, state.transfer.records, checker),
   };
 };
 
