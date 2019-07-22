@@ -1,6 +1,12 @@
 # 開発記録
 
-## html element の id は 数字始まりがNG
+## 2019-07-23 関数オーバーロードができない
+
+TypeScript で関数オーバーロードできるって書いてあるのにできなくてはまる。これはできないってことでいいのかな…？
+
+https://codeday.me/jp/qa/20181213/35589.html
+
+## 2019-07-21 html element の id は 数字始まりがNG
 
 UUID を使って id をつけていたら
 ``Error: DOMException: Failed to execute 'querySelectorAll' on 'Document': '#427a4e49-cc5f-4a45-96ed-090a4d6053b4' is not a valid selector.``
