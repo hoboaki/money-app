@@ -5,6 +5,7 @@ import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
+import * as PriceUtils from '../util/PriceUtils';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeCalendar.css';
@@ -69,6 +70,10 @@ class PageHomeCalendar extends React.Component<IProps, any> {
     const cellOutgoPriceClass = ClassNames(
       Style.CellPrice,
       Style.CellOutgoPrice,
+    );
+    const cellNegativePriceClass = ClassNames(
+      Style.CellPrice,
+      Style.CellNegativePrice,
     );
     const cellIncomeIconClass = ClassNames(
       Style.CellIncomeIcon,
@@ -165,10 +170,14 @@ class PageHomeCalendar extends React.Component<IProps, any> {
               const classNames = cell.dark ? tableDataDarkClass : tableDataClass;
               const transferClassNames = cell.transfer ? cellTransferClass : cellHiddenClass;
               const transferIconClassNames = cell.transfer ? cellTransferIconClass : cellHiddenClass;
-              const incomePriceClassNames = cell.income !== 0 ? cellIncomePriceClass : cellHiddenClass;
+              const incomePriceClassNames = cell.income === 0 ? cellHiddenClass :
+                (cell.income < 0 ? cellNegativePriceClass : cellIncomePriceClass);
               const incomeIconClassNames = cell.income !== 0 ? cellIncomeIconClass : cellHiddenClass;
-              const outgoPriceClassNames = cell.outgo !== 0 ? cellOutgoPriceClass : cellHiddenClass;
+              const outgoPriceClassNames = cell.outgo === 0 ? cellHiddenClass :
+                (cell.outgo < 0 ? cellNegativePriceClass : cellOutgoPriceClass);
               const outgoIconClassNames = cell.outgo !== 0 ? cellOutgoIconClass : cellHiddenClass;
+              const incomeText = `${cell.income < 0 ? '-' : '+'}${PriceUtils.numToLocaleString(Math.abs(cell.income))}`;
+              const outgoText = `${cell.outgo < 0 ? '+' : '-'}${PriceUtils.numToLocaleString(Math.abs(cell.outgo))}`;
 
               return (
                 <td key={rowIndex * 10 + colIndex} className={classNames}>
@@ -182,11 +191,11 @@ class PageHomeCalendar extends React.Component<IProps, any> {
                     </div>
                   </div>
                   <div className={cellMiddleClass}>
-                    <span className={incomePriceClassNames}>+{cell.income}</span>
+                    <span className={incomePriceClassNames}>{incomeText}</span>
                     <img className={incomeIconClassNames} src="./image/icon-ex/income.svg"/>
                   </div>
                   <div className={cellBottomClass}>
-                    <span className={outgoPriceClassNames}>-{cell.outgo}</span>
+                    <span className={outgoPriceClassNames}>{outgoText}</span>
                     <img className={outgoIconClassNames} src="./image/icon-ex/outgo.svg"/>
                   </div>
                 </td>
