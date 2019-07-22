@@ -6,6 +6,7 @@ import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
 import * as PriceUtils from '../util/PriceUtils';
+import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as LayoutStyle from './Layout.css';
 import * as Style from './PageHomeBalance.css';
 
@@ -18,6 +19,8 @@ class PageHomeBalance extends React.Component<IProps, any> {
   public render() {
     const startDate = this.props.pageHome.currentDate;
     const endDate = startDate.nextMonth();
+    const prevStartDate = YearMonthDayDate.fromDate(new Date(0));
+    const prevEndDate = startDate;
     const incomeRecords = DocStateMethods.incomeRecordsFromStateByDateRange(
       this.props.doc,
       startDate,
@@ -34,9 +37,22 @@ class PageHomeBalance extends React.Component<IProps, any> {
       endDate,
       );
 
+    const prevIncomeTotal = DocStateMethods.incomeRecordsFromStateByDateRange(
+      this.props.doc,
+      prevStartDate,
+      prevEndDate,
+      ).reduce((current, next) => current + next.amount, 0);
+    const prevOutgoTotal = DocStateMethods.outgoRecordsFromStateByDateRange(
+      this.props.doc,
+      prevStartDate,
+      prevEndDate,
+      ).reduce((current, next) => current + next.amount, 0);
+    const prevTransferDiff = 0;
     const incomeTotal = incomeRecords.reduce((current, next) => current + next.amount, 0);
     const outgoTotal = outgoRecords.reduce((current, next) => current + next.amount, 0);
     const balanceTotal = incomeTotal - outgoTotal;
+    const transferDiff = 0;
+    const closingPrice = prevIncomeTotal - prevOutgoTotal + prevTransferDiff + balanceTotal + transferDiff;
     const incomeTotalText = `${incomeTotal < 0 ? '▲ ' : ''}` +
       `${PriceUtils.numToLocaleString(Math.abs(incomeTotal))}`;
     const outgoTotalText = `${outgoTotal < 0 ? '△ ' : ''}` +
@@ -44,6 +60,7 @@ class PageHomeBalance extends React.Component<IProps, any> {
     const balanceSignText = balanceTotal < 0 ? '-' : (0 < balanceTotal ? '+' : '');
     const balanceTotalText = balanceSignText +
       `${PriceUtils.numToLocaleString(Math.abs(balanceTotal))}`;
+    const transferDiffText = `${PriceUtils.numToLocaleString(transferDiff)}`;
 
     const rootClass = ClassNames(
       Style.Root,
@@ -107,7 +124,7 @@ class PageHomeBalance extends React.Component<IProps, any> {
           </thead>
           <tbody>
             <tr>
-              <td className={tableDataValueClass}>999,999,999</td>
+              <td className={tableDataValueClass}>{transferDiffText}</td>
             </tr>
           </tbody>
         </table>
@@ -120,7 +137,7 @@ class PageHomeBalance extends React.Component<IProps, any> {
           </thead>
           <tbody>
             <tr>
-              <td className={tableDataValueClass}>999,999,999</td>
+              <td className={tableDataValueClass}>{closingPrice}</td>
             </tr>
           </tbody>
         </table>
