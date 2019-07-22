@@ -64,6 +64,16 @@ export interface IRecordCollection {
   transfers: number[];
 }
 
+/** コレクションにおける入金レコードの総額を求める。 */
+export const sumAmountIncome = (collection: IRecordCollection, state: States.IState) => {
+  return collection.incomes.reduce((current, id) => current + state.income.records[id].amount, 0);
+};
+
+/** コレクションにおける出金レコードの総額を求める。 */
+export const sumAmountOutgo = (collection: IRecordCollection, state: States.IState) => {
+  return collection.outgos.reduce((current, id) => current + state.outgo.records[id].amount, 0);
+};
+
 /** Collection　の中にあるレコードから検索をする。 */
 export const findInCollection = (
   collection: IRecordCollection,

@@ -1,6 +1,7 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import * as RecordFinder from '../state/doc/RecordFinder';
 import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
@@ -100,27 +101,21 @@ class PageHomeCalendar extends React.Component<IProps, any> {
       baseDate.getFullYear(),
       baseDate.getMonth(),
       baseDate.getDate() - baseDate.getDay(),
-      ));
+    ));
     const endDate = YearMonthDayDate.fromDate(new Date(
       startDate.date.getFullYear(),
       startDate.date.getMonth(),
       startDate.date.getDate() + dayCountInWeek * rowCount,
-      ));
-    const incomeRecordsInCalendar = DocStateMethods.incomeRecordsFromStateByDateRange(
+    ));
+    const recordsInCalendar = RecordFinder.findInState(
       this.props.doc,
-      startDate,
-      endDate,
-      );
-    const outgoRecordsInCalendar = DocStateMethods.outgoRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
-    const transferRecordsInCalendar = DocStateMethods.transferRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
+      [
+        RecordFinder.createDateRangeFilter({
+          startDate,
+          endDate,
+        }),
+      ],
+    );
     const dataArray: IData[] = [];
     {
       for (let i = 0, date = startDate;
@@ -128,27 +123,22 @@ class PageHomeCalendar extends React.Component<IProps, any> {
         date = date.nextDay()
         ) {
         const nextDay = date.nextDay();
-        const incomeRecords = DocStateMethods.incomeRecordsFromRecordsByDateRange(
-          incomeRecordsInCalendar,
-          date,
-          nextDay,
-          );
-        const outgoRecords = DocStateMethods.outgoRecordsFromRecordsByDateRange(
-          outgoRecordsInCalendar,
-          date,
-          nextDay,
-          );
-        const transferRecords = DocStateMethods.transferRecordsFromRecordsByDateRange(
-          transferRecordsInCalendar,
-          date,
-          nextDay,
-          );
+        const records = RecordFinder.findInCollection(
+          recordsInCalendar,
+          this.props.doc,
+          [
+            RecordFinder.createDateRangeFilter({
+              startDate: date,
+              endDate: nextDay,
+            }),
+          ],
+        );
         dataArray.push({
           day: date.date.getDate(),
           dark: date.date.getMonth() !== baseDate.getMonth(),
-          transfer: transferRecords.length !== 0,
-          income: incomeRecords.reduce((current, next) => current + next.amount, 0),
-          outgo: outgoRecords.reduce((current, next) => current + next.amount, 0),
+          transfer: records.transfers.length !== 0,
+          income: RecordFinder.sumAmountIncome(records, this.props.doc),
+          outgo: RecordFinder.sumAmountOutgo(records, this.props.doc),
         });
       }
     }
