@@ -38,11 +38,12 @@ class PageHomeBalance extends React.Component<IProps, any> {
     const outgoTotal = outgoRecords.reduce((current, next) => current + next.amount, 0);
     const balanceTotal = incomeTotal - outgoTotal;
     const incomeTotalText = `${incomeTotal < 0 ? '▲ ' : ''}` +
-      `${PriceUtils.numToLocaleString(incomeTotal)}`;
+      `${PriceUtils.numToLocaleString(Math.abs(incomeTotal))}`;
     const outgoTotalText = `${outgoTotal < 0 ? '△ ' : ''}` +
-      `${PriceUtils.numToLocaleString(outgoTotal)}`;
-    const balanceTotalText = `${balanceTotal < 0 ? '-' : ''}` +
-      `${PriceUtils.numToLocaleString(balanceTotal)}`;
+      `${PriceUtils.numToLocaleString(Math.abs(outgoTotal))}`;
+    const balanceSignText = balanceTotal < 0 ? '-' : (0 < balanceTotal ? '+' : '');
+    const balanceTotalText = balanceSignText +
+      `${PriceUtils.numToLocaleString(Math.abs(balanceTotal))}`;
 
     const rootClass = ClassNames(
       Style.Root,
@@ -64,6 +65,12 @@ class PageHomeBalance extends React.Component<IProps, any> {
     const tableDataValueClass = ClassNames(
       Style.TableData,
       Style.TableDataValue,
+    );
+    const tableDataBalanceValueClass = ClassNames(
+      Style.TableData,
+      Style.TableDataValue,
+      balanceTotal < 0 ? Style.TableDataValueDeficit : null,
+      0 < balanceTotal ? Style.TableDataValueSurplus : null,
     );
     const tableDataSignClass = ClassNames(
       Style.TableData,
@@ -87,7 +94,7 @@ class PageHomeBalance extends React.Component<IProps, any> {
               <td className={tableDataSignClass}>-</td>
               <td className={tableDataValueClass}>{outgoTotalText}</td>
               <td className={tableDataSignClass}>=</td>
-              <td className={tableDataValueClass}>{balanceTotalText}</td>
+              <td className={tableDataBalanceValueClass}>{balanceTotalText}</td>
             </tr>
           </tbody>
         </table>

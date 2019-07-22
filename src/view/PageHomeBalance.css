@@ -39,6 +39,14 @@
   text-align: center;
 }
 
+.TableDataValueSurplus {
+  color: #3273ff;
+}
+
+.TableDataValueDeficit {
+  color: #fd4134;
+}
+
 .TableDataSign {
   text-align: center;
 }
