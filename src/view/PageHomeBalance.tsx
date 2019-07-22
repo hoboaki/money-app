@@ -1,6 +1,7 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import * as RecordFinder from '../state/doc/RecordFinder';
 import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
@@ -18,37 +19,34 @@ class PageHomeBalance extends React.Component<IProps, any> {
   public render() {
     const startDate = this.props.pageHome.currentDate;
     const endDate = startDate.nextMonth();
-    const prevStartDate = YearMonthDayDate.fromDate(new Date(0));
-    const prevEndDate = startDate;
-    const incomeRecords = DocStateMethods.incomeRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
-    const outgoRecords = DocStateMethods.outgoRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
-    const transferRecords = DocStateMethods.transferRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
 
-    const prevIncomeTotal = DocStateMethods.incomeRecordsFromStateByDateRange(
+    const prevRecords = RecordFinder.findInState(
       this.props.doc,
-      prevStartDate,
-      prevEndDate,
-      ).reduce((current, next) => current + next.amount, 0);
-    const prevOutgoTotal = DocStateMethods.outgoRecordsFromStateByDateRange(
+      [RecordFinder.createDateRangeFilter({
+        startDate: null,
+        endDate: startDate,
+      })],
+      );
+    const currentRecords = RecordFinder.findInState(
       this.props.doc,
-      prevStartDate,
-      prevEndDate,
-      ).reduce((current, next) => current + next.amount, 0);
+      [RecordFinder.createDateRangeFilter({
+        startDate,
+        endDate,
+      })],
+      );
+    const incomeRecords = currentRecords.incomes;
+    const outgoRecords = currentRecords.outgos;
+    const transferRecords = currentRecords.transfers;
+
+    const prevIncomeTotal = prevRecords.incomes.reduce(
+      (current, next) => current + this.props.doc.income.records[next].amount, 0);
+    const prevOutgoTotal = prevRecords.outgos.reduce(
+      (current, next) => current + this.props.doc.outgo.records[next].amount, 0);
     const prevTransferDiff = 0;
-    const incomeTotal = incomeRecords.reduce((current, next) => current + next.amount, 0);
-    const outgoTotal = outgoRecords.reduce((current, next) => current + next.amount, 0);
+    const incomeTotal = currentRecords.incomes.reduce(
+      (current, next) => current + this.props.doc.income.records[next].amount, 0);
+    const outgoTotal = currentRecords.outgos.reduce(
+      (current, next) => current + this.props.doc.outgo.records[next].amount, 0);
     const balanceTotal = incomeTotal - outgoTotal;
     const transferDiff = 0;
     const closingPrice = prevIncomeTotal - prevOutgoTotal + prevTransferDiff + balanceTotal + transferDiff;
