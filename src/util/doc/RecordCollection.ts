@@ -37,6 +37,30 @@ class RecordCollection implements IRecordCollection {
     return this.outgos.reduce((current, id) => current + this.state.outgo.records[id].amount, 0);
   }
 
+  /**
+   * コレクションにおける振替レコードの差額を求める。
+   * @param accounts 対象となる口座の AccountId。 null の場合は全口座。
+   */
+  public totalDiffTransfer(accounts: number[] | null = null) {
+    let accountsDict: {[key: number]: any} = {};
+    if (accounts != null) {
+      accounts.forEach((id) => {accountsDict[id] = true; });
+    } else {
+      accountsDict = this.state.accounts;
+    }
+    return this.transfers.reduce((current, id) => {
+      let result = current;
+      const record = this.state.transfer.records[id];
+      if (record.accountFrom in accountsDict) {
+        result -= record.amount;
+      }
+      if (record.accountTo in accountsDict) {
+        result += record.amount;
+      }
+      return result;
+    }, 0);
+  }
+
   /** フィルタにヒットするレコードだけを抽出したコレクションを返す。 */
   public filter(filters: IRecordFilter[]): RecordCollection {
     return new RecordCollection(
