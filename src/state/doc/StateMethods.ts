@@ -28,7 +28,7 @@ export const fromData = (src: DataRoot) => {
   const accountIdDict: {[key: number]: number} = {}; // Data内Id → オブジェクトId 変換テーブル
   for (const data of src.accounts) {
     const kind = enumPraseAccountKind(data.kind);
-    const key = accountAdd(r, data.name, kind, data.initialAmount);
+    const key = accountAdd(r, data.name, kind, data.initialAmount, YearMonthDayDate.fromText(data.startDate));
     accountIdDict[data.id] = key;
   }
 
@@ -253,6 +253,7 @@ export const accountAdd = (
   name: string,
   kind: Types.AccountKind,
   initialAmount: number,
+  startDate: YearMonthDayDate,
   ) => {
   // オブジェクト作成
   const obj = {
@@ -260,6 +261,7 @@ export const accountAdd = (
     name,
     kind,
     initialAmount,
+    startDate,
   };
 
   // 追加
