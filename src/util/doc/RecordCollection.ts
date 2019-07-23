@@ -1,4 +1,4 @@
-import * as States from '../state/doc/States';
+import * as States from '../../state/doc/States';
 import IRecordCollection from './IRecordCollection';
 import IRecordFilter from './IRecordFilter';
 
@@ -14,7 +14,7 @@ class RecordCollection implements IRecordCollection {
    * @param state データベースとなる state。
    * @param src コレクション対象となるデータ群。 null を指定した場合は state の全レコードを使う。
    */
-  public constructor(state: States.IState, src: IRecordCollection | null) {
+  public constructor(state: States.IState, src: IRecordCollection | null = null) {
     this.state = state;
     if (src != null) {
       this.incomes = src.incomes;

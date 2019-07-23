@@ -1,11 +1,11 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import * as RecordFinder from '../state/doc/RecordFinder';
-import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
+import RecordCollection from '../util/doc/RecordCollection';
+import * as RecordFilters from '../util/doc/RecordFilters';
 import * as PriceUtils from '../util/PriceUtils';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as LayoutStyles from './Layout.css';
@@ -107,15 +107,12 @@ class PageHomeCalendar extends React.Component<IProps, any> {
       startDate.date.getMonth(),
       startDate.date.getDate() + dayCountInWeek * rowCount,
     ));
-    const recordsInCalendar = RecordFinder.findInState(
-      this.props.doc,
-      [
-        RecordFinder.createDateRangeFilter({
-          startDate,
-          endDate,
-        }),
-      ],
-    );
+    const recordsInCalendar = new RecordCollection(this.props.doc).filter([
+      RecordFilters.createDateRangeFilter({
+        startDate,
+        endDate,
+      }),
+    ]);
     const dataArray: IData[] = [];
     {
       for (let i = 0, date = startDate;
@@ -123,22 +120,18 @@ class PageHomeCalendar extends React.Component<IProps, any> {
         date = date.nextDay()
         ) {
         const nextDay = date.nextDay();
-        const records = RecordFinder.findInCollection(
-          recordsInCalendar,
-          this.props.doc,
-          [
-            RecordFinder.createDateRangeFilter({
-              startDate: date,
-              endDate: nextDay,
-            }),
-          ],
-        );
+        const records = recordsInCalendar.filter([
+          RecordFilters.createDateRangeFilter({
+            startDate: date,
+            endDate: nextDay,
+          }),
+        ]);
         dataArray.push({
           day: date.date.getDate(),
           dark: date.date.getMonth() !== baseDate.getMonth(),
           transfer: records.transfers.length !== 0,
-          income: RecordFinder.sumAmountIncome(records, this.props.doc),
-          outgo: RecordFinder.sumAmountOutgo(records, this.props.doc),
+          income: records.sumAmountIncome(),
+          outgo: records.sumAmountOutgo(),
         });
       }
     }

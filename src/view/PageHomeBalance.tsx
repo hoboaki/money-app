@@ -1,11 +1,11 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import * as RecordFinder from '../state/doc/RecordFinder';
-import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
+import RecordCollection from '../util/doc/RecordCollection';
+import * as RecordFilters from '../util/doc/RecordFilters';
 import * as PriceUtils from '../util/PriceUtils';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as Styles from './PageHomeBalance.css';
@@ -20,29 +20,25 @@ class PageHomeBalance extends React.Component<IProps, any> {
     const startDate = this.props.pageHome.currentDate;
     const endDate = startDate.nextMonth();
 
-    const prevRecords = RecordFinder.findInState(
-      this.props.doc,
-      [RecordFinder.createDateRangeFilter({
+    const allRecords = new RecordCollection(this.props.doc);
+    const prevRecords = allRecords.filter([
+      RecordFilters.createDateRangeFilter({
         startDate: null,
         endDate: startDate,
-      })],
-      );
-    const currentRecords = RecordFinder.findInState(
-      this.props.doc,
-      [RecordFinder.createDateRangeFilter({
+      }),
+    ]);
+    const currentRecords = allRecords.filter([
+      RecordFilters.createDateRangeFilter({
         startDate,
         endDate,
-      })],
-      );
-    const incomeRecords = currentRecords.incomes;
-    const outgoRecords = currentRecords.outgos;
-    const transferRecords = currentRecords.transfers;
+      }),
+    ]);
 
-    const prevIncomeTotal = RecordFinder.sumAmountIncome(prevRecords, this.props.doc);
-    const prevOutgoTotal = RecordFinder.sumAmountOutgo(prevRecords, this.props.doc);
+    const prevIncomeTotal = prevRecords.sumAmountIncome();
+    const prevOutgoTotal = prevRecords.sumAmountOutgo();
     const prevTransferDiff = 0;
-    const incomeTotal = RecordFinder.sumAmountIncome(currentRecords, this.props.doc);
-    const outgoTotal = RecordFinder.sumAmountOutgo(currentRecords, this.props.doc);
+    const incomeTotal = currentRecords.sumAmountIncome();
+    const outgoTotal = currentRecords.sumAmountOutgo();
     const balanceTotal = incomeTotal - outgoTotal;
     const transferDiff = 0;
     const closingPrice = prevIncomeTotal - prevOutgoTotal + prevTransferDiff + balanceTotal + transferDiff;
