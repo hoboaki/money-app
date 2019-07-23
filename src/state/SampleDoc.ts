@@ -34,7 +34,7 @@ class SampleDoc {
     const state = Clone(States.defaultState);
 
     // 口座
-    const accountStartDate = new YearMonthDayDate().prevMonth();
+    const accountStartDate = new YearMonthDayDate().prevMonth().prevMonth();
     StateMethods.accountAdd(state, '財布', Types.AccountKind.AssetsCash, 2020, accountStartDate);
     StateMethods.accountAdd(state, 'アデリー銀行', Types.AccountKind.AssetsBank, 504000, accountStartDate);
     StateMethods.accountAdd(state, 'コウテイ銀行', Types.AccountKind.AssetsBank, 12036756, accountStartDate);
