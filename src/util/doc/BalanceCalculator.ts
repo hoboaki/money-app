@@ -13,20 +13,23 @@ class BalanceCalculator {
   /**
    * コンストラクタ。
    * @param state データベース。
-   * @param accounts 調査対象とする口座の AccountId 郡。
    * @param endDate 残高の決算日。この日の前日まで（この日を含めない）の残高を求める。
+   * @param accounts 調査対象とする口座の AccountId 郡。null の場合は全口座が対象。
    * @param cache 計算結果を再利用するためのオブジェクト。endDate が cache.endDate より後ろの場合，このオブジェクトの結果を使って不要な計算処理をスキップする。
    */
   public constructor(
     state: States.IState,
-    accounts: number[],
     endDate: YearMonthDayDate,
+    accounts: number[] | null = null,
     cache: BalanceCalculator | null = null,
     ) {
     this.state = state;
     this.endDate = endDate;
 
     const allRecords = new RecordCollection(state);
+    if (accounts == null) {
+      accounts = Object.keys(state.accounts).map((text) => Number(text));
+    }
     accounts.forEach((accountId) => {
       const cacheEnabled = cache != null && accountId in cache.balances && cache.endDate < endDate;
       const startDate: YearMonthDayDate | null = (cache != null && cacheEnabled) ? cache.endDate : null;
