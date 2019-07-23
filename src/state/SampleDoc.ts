@@ -34,11 +34,12 @@ class SampleDoc {
     const state = Clone(States.defaultState);
 
     // 口座
-    const accountId = StateMethods.accountAdd(state, '財布', Types.AccountKind.AssetsCash, 2020);
-    const bankAccountId = StateMethods.accountAdd(state, 'アデリー銀行', Types.AccountKind.AssetsBank, 504000);
-    StateMethods.accountAdd(state, 'コウテイ銀行', Types.AccountKind.AssetsBank, 12036756);
-    const creditCardAccountId = StateMethods.accountAdd(state, 'PPPカード', Types.AccountKind.LiabilitiesCard, 0);
-    StateMethods.accountAdd(state, 'キングカード', Types.AccountKind.LiabilitiesCard, 0);
+    const accountStartDate = new YearMonthDayDate().prevMonth();
+    StateMethods.accountAdd(state, '財布', Types.AccountKind.AssetsCash, 2020, accountStartDate);
+    StateMethods.accountAdd(state, 'アデリー銀行', Types.AccountKind.AssetsBank, 504000, accountStartDate);
+    StateMethods.accountAdd(state, 'コウテイ銀行', Types.AccountKind.AssetsBank, 12036756, accountStartDate);
+    StateMethods.accountAdd(state, 'PPPカード', Types.AccountKind.LiabilitiesCard, 0, accountStartDate);
+    StateMethods.accountAdd(state, 'キングカード', Types.AccountKind.LiabilitiesCard, 0, accountStartDate);
     global.console.assert(Object.keys(state.accounts).length === 5);
 
     // 入金

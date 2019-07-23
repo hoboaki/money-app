@@ -3,11 +3,16 @@ import * as Types from './Types';
 
 /** 口座。 */
 export interface IAccount {
-  id: number; // AccountId。
-  name: string; // 口座名。
-  kind: Types.AccountKind; // 種類。
+  /** AccountId。 */
+  id: number;
+  /** 口座名 */
+  name: string;
+  /** 種類。 */
+  kind: Types.AccountKind;
   /** 初期金額。プラスが貯蓄。マイナスが負債。 */
   initialAmount: number;
+  /** 口座開設日。initialAmount が加算される日。 */
+  startDate: YearMonthDayDate;
 }
 
 /** レコードのカテゴリ。 */
