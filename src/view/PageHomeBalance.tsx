@@ -1,10 +1,11 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
+import RecordCollection from '../util/doc/RecordCollection';
+import * as RecordFilters from '../util/doc/RecordFilters';
 import * as PriceUtils from '../util/PriceUtils';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as Styles from './PageHomeBalance.css';
@@ -18,37 +19,26 @@ class PageHomeBalance extends React.Component<IProps, any> {
   public render() {
     const startDate = this.props.pageHome.currentDate;
     const endDate = startDate.nextMonth();
-    const prevStartDate = YearMonthDayDate.fromDate(new Date(0));
-    const prevEndDate = startDate;
-    const incomeRecords = DocStateMethods.incomeRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
-    const outgoRecords = DocStateMethods.outgoRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
-    const transferRecords = DocStateMethods.transferRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
 
-    const prevIncomeTotal = DocStateMethods.incomeRecordsFromStateByDateRange(
-      this.props.doc,
-      prevStartDate,
-      prevEndDate,
-      ).reduce((current, next) => current + next.amount, 0);
-    const prevOutgoTotal = DocStateMethods.outgoRecordsFromStateByDateRange(
-      this.props.doc,
-      prevStartDate,
-      prevEndDate,
-      ).reduce((current, next) => current + next.amount, 0);
+    const allRecords = new RecordCollection(this.props.doc);
+    const prevRecords = allRecords.filter([
+      RecordFilters.createDateRangeFilter({
+        startDate: null,
+        endDate: startDate,
+      }),
+    ]);
+    const currentRecords = allRecords.filter([
+      RecordFilters.createDateRangeFilter({
+        startDate,
+        endDate,
+      }),
+    ]);
+
+    const prevIncomeTotal = prevRecords.sumAmountIncome();
+    const prevOutgoTotal = prevRecords.sumAmountOutgo();
     const prevTransferDiff = 0;
-    const incomeTotal = incomeRecords.reduce((current, next) => current + next.amount, 0);
-    const outgoTotal = outgoRecords.reduce((current, next) => current + next.amount, 0);
+    const incomeTotal = currentRecords.sumAmountIncome();
+    const outgoTotal = currentRecords.sumAmountOutgo();
     const balanceTotal = incomeTotal - outgoTotal;
     const transferDiff = 0;
     const closingPrice = prevIncomeTotal - prevOutgoTotal + prevTransferDiff + balanceTotal + transferDiff;

@@ -1,10 +1,11 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
 import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
+import RecordCollection from '../util/doc/RecordCollection';
+import * as RecordFilters from '../util/doc/RecordFilters';
 import * as PriceUtils from '../util/PriceUtils';
 import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as LayoutStyles from './Layout.css';
@@ -100,27 +101,18 @@ class PageHomeCalendar extends React.Component<IProps, any> {
       baseDate.getFullYear(),
       baseDate.getMonth(),
       baseDate.getDate() - baseDate.getDay(),
-      ));
+    ));
     const endDate = YearMonthDayDate.fromDate(new Date(
       startDate.date.getFullYear(),
       startDate.date.getMonth(),
       startDate.date.getDate() + dayCountInWeek * rowCount,
-      ));
-    const incomeRecordsInCalendar = DocStateMethods.incomeRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
-    const outgoRecordsInCalendar = DocStateMethods.outgoRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
-    const transferRecordsInCalendar = DocStateMethods.transferRecordsFromStateByDateRange(
-      this.props.doc,
-      startDate,
-      endDate,
-      );
+    ));
+    const recordsInCalendar = new RecordCollection(this.props.doc).filter([
+      RecordFilters.createDateRangeFilter({
+        startDate,
+        endDate,
+      }),
+    ]);
     const dataArray: IData[] = [];
     {
       for (let i = 0, date = startDate;
@@ -128,27 +120,18 @@ class PageHomeCalendar extends React.Component<IProps, any> {
         date = date.nextDay()
         ) {
         const nextDay = date.nextDay();
-        const incomeRecords = DocStateMethods.incomeRecordsFromRecordsByDateRange(
-          incomeRecordsInCalendar,
-          date,
-          nextDay,
-          );
-        const outgoRecords = DocStateMethods.outgoRecordsFromRecordsByDateRange(
-          outgoRecordsInCalendar,
-          date,
-          nextDay,
-          );
-        const transferRecords = DocStateMethods.transferRecordsFromRecordsByDateRange(
-          transferRecordsInCalendar,
-          date,
-          nextDay,
-          );
+        const records = recordsInCalendar.filter([
+          RecordFilters.createDateRangeFilter({
+            startDate: date,
+            endDate: nextDay,
+          }),
+        ]);
         dataArray.push({
           day: date.date.getDate(),
           dark: date.date.getMonth() !== baseDate.getMonth(),
-          transfer: transferRecords.length !== 0,
-          income: incomeRecords.reduce((current, next) => current + next.amount, 0),
-          outgo: outgoRecords.reduce((current, next) => current + next.amount, 0),
+          transfer: records.transfers.length !== 0,
+          income: records.sumAmountIncome(),
+          outgo: records.sumAmountOutgo(),
         });
       }
     }

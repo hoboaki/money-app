@@ -315,8 +315,8 @@ export const incomeCategoryAdd = (
   const parent = parentId != null ? state.income.categories[parentId] : null;
 
   // 追加
-  obj.id = state.nextId.income.category;
-  state.nextId.income.category++;
+  obj.id = state.nextId.category;
+  state.nextId.category++;
   state.income.categories[obj.id] = obj;
   if (parentId != null) {
     if (parent != null) {
@@ -355,8 +355,8 @@ export const incomeRecordAdd = (
   };
 
   // 追加
-  obj.id = state.nextId.income.record;
-  state.nextId.income.record++;
+  obj.id = state.nextId.record;
+  state.nextId.record++;
   state.income.records[obj.id] = obj;
   return obj.id;
 };
@@ -412,8 +412,8 @@ export const outgoCategoryAdd = (
   const parent = parentId != null ? state.outgo.categories[parentId] : null;
 
   // 追加
-  obj.id = state.nextId.outgo.category;
-  state.nextId.outgo.category++;
+  obj.id = state.nextId.category;
+  state.nextId.category++;
   state.outgo.categories[obj.id] = obj;
   if (parentId != null) {
     if (parent != null) {
@@ -452,8 +452,8 @@ export const outgoRecordAdd = (
   };
 
   // 追加
-  obj.id = state.nextId.outgo.record;
-  state.nextId.outgo.record++;
+  obj.id = state.nextId.record;
+  state.nextId.record++;
   state.outgo.records[obj.id] = obj;
   return obj.id;
 };
@@ -519,8 +519,8 @@ export const transferRecordAdd = (
   };
 
   // 追加
-  obj.id = state.nextId.transfer.record;
-  state.nextId.transfer.record++;
+  obj.id = state.nextId.record;
+  state.nextId.record++;
   state.transfer.records[obj.id] = obj;
   return obj.id;
 };
