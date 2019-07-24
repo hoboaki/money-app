@@ -1,10 +1,12 @@
 import ClassNames from 'classnames';
 import {ipcRenderer as IpcRenderer} from 'electron';
+import * as Fs from 'fs';
 import * as React from 'react';
 import Split from 'split.js';
 import * as DocActions from '../state/doc/Actions';
 import SampleDoc from '../state/SampleDoc';
 import Store from '../state/Store';
+import * as MmxfImporter from '../util/doc/MmxfImporter';
 import LayoutStyle from './Layout.css';
 import * as MainWindowStyles from './MainWindow.css';
 import PageStyles from './Page.css';
@@ -35,7 +37,25 @@ class MainWindow extends React.Component<any, IState> {
     SampleDoc.Test();
 
     // サンプルドキュメントで初期化
-    Store.dispatch(DocActions.resetDocument(SampleDoc.Create()));
+    {
+      let resetDoc = SampleDoc.Create();
+      const localMmxfFilePath = `${process.env.HOME}/Desktop/MoneyAppTest.mmxf`;
+      Fs.access(localMmxfFilePath, Fs.constants.R_OK, (err) => {
+        if (err != null) {
+          global.console.log('Can\'t access test document.');
+          global.console.log(err.message);
+        } else {
+          const result = MmxfImporter.importFile(localMmxfFilePath);
+          if (result.doc != null) {
+            resetDoc = result.doc;
+          } else {
+            global.console.log('Test document load failed.');
+            global.console.log(result);
+          }
+        }
+      });
+      Store.dispatch(DocActions.resetDocument(resetDoc));
+    }
 
     // Focus/Unfocus 切替
     window.onload = () => {
