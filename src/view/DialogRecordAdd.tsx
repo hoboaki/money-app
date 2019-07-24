@@ -16,6 +16,8 @@ import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as Styles from './DialogRecordAdd.css';
 
 interface IProps {
+  /** 入力フォームの初期日付。 */
+  formDefaultDate: YearMonthDayDate;
   onClosed: (() => void);
 }
 
@@ -63,7 +65,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     super(props);
     this.state = {
       formKind: DocTypes.RecordKind.Outgo,
-      formDate: new YearMonthDayDate().toText(),
+      formDate: props.formDefaultDate.toText(),
       formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
       formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.incomeCategories).id,
       formAccount: Number(Object.keys(props.accounts)[0]),

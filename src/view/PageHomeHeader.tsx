@@ -5,6 +5,7 @@ import IStoreState from '../state/IStoreState';
 import Store from '../state/Store';
 import * as UiActions from '../state/ui/Actions';
 import * as States from '../state/ui/States';
+import YearMonthDayDate from '../util/YearMonthDayDate';
 import DialogRecordAdd from './DialogRecordAdd';
 import * as LayoutStyles from './Layout.css';
 import * as Styles from './PageHomeHeader.css';
@@ -72,6 +73,7 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalAddRecord) {
         modalDialog = <DialogRecordAdd
+          formDefaultDate={new YearMonthDayDate()}
           onClosed={() => {
             this.setState({modalAddRecord: false});
           }}
