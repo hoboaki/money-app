@@ -8,6 +8,7 @@ import RecordCollection from '../util/doc/RecordCollection';
 import * as RecordFilters from '../util/doc/RecordFilters';
 import * as PriceUtils from '../util/PriceUtils';
 import YearMonthDayDate from '../util/YearMonthDayDate';
+import DialogRecordAdd from './DialogRecordAdd';
 import * as LayoutStyles from './Layout.css';
 import * as Styles from './PageHomeCalendar.css';
 
@@ -16,7 +17,20 @@ interface IProps {
   pageHome: UiStates.IPageHome;
 }
 
-class PageHomeCalendar extends React.Component<IProps, any> {
+interface IState {
+  modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
+  selectedDate: YearMonthDayDate; // 選択中の日付。
+}
+
+class PageHomeCalendar extends React.Component<IProps, IState> {
+  public constructor(props: IProps) {
+    super(props);
+    this.state = {
+      modalAddRecord: false,
+      selectedDate: new YearMonthDayDate(),
+    };
+  }
+
   public render() {
     const rootClass = ClassNames(
       Styles.Root,
@@ -88,7 +102,7 @@ class PageHomeCalendar extends React.Component<IProps, any> {
 
     // 6週分のデータを作成
     interface IData {
-      day: number;
+      date: YearMonthDayDate;
       dark: boolean;
       transfer: boolean;
       income: number;
@@ -127,7 +141,7 @@ class PageHomeCalendar extends React.Component<IProps, any> {
           }),
         ]);
         dataArray.push({
-          day: date.date.getDate(),
+          date,
           dark: date.date.getMonth() !== baseDate.getMonth(),
           transfer: records.transfers.length !== 0,
           income: records.sumAmountIncome(),
@@ -165,8 +179,8 @@ class PageHomeCalendar extends React.Component<IProps, any> {
               return (
                 <td key={rowIndex * 10 + colIndex} className={classNames}>
                   <div className={cellTopClass}>
-                    <span className={cellDayClass}>{cell.day}</span>
-                    <button className={cellNewRecordBtnClass} onClick={this.onNewRecordBtnPushed}>
+                    <span className={cellDayClass}>{cell.date.date.getDate()}</span>
+                    <button className={cellNewRecordBtnClass} onClick={() => {this.onNewRecordBtnPushed(cell.date); }}>
                       <i className={cellNewRecordBtnIconClass}>note_add</i>
                     </button>
                     <div className={cellTopRightClass}>
@@ -189,6 +203,16 @@ class PageHomeCalendar extends React.Component<IProps, any> {
         })}
       </tbody>;
 
+    let modalDialog: JSX.Element | null = null;
+    if (this.state.modalAddRecord) {
+        modalDialog = <DialogRecordAdd
+          formDefaultDate={this.state.selectedDate}
+          onClosed={() => {
+            this.setState({modalAddRecord: false});
+          }}
+        />;
+    }
+
     return (
       <div className={rootClass}>
         <table className={tableClass}>
@@ -205,12 +229,16 @@ class PageHomeCalendar extends React.Component<IProps, any> {
           </thead>
           {cells}
         </table>
+        {modalDialog}
       </div>
     );
   }
 
-  private onNewRecordBtnPushed() {
-    global.console.log('onNewRecordBtnPushed');
+  private onNewRecordBtnPushed(date: YearMonthDayDate) {
+    this.setState({
+      modalAddRecord: true,
+      selectedDate: date,
+    });
   }
 }
 
