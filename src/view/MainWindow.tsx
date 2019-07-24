@@ -6,8 +6,8 @@ import * as DocActions from '../state/doc/Actions';
 import SampleDoc from '../state/SampleDoc';
 import Store from '../state/Store';
 import LayoutStyle from './Layout.css';
-import * as MainWindowStyle from './MainWindow.css';
-import PageStyle from './Page.css';
+import * as MainWindowStyles from './MainWindow.css';
+import PageStyles from './Page.css';
 import PageHome from './PageHome';
 import PageSheet from './PageSheet';
 import SideBar from './SideBar';
@@ -72,7 +72,7 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   public render() {
-    let pageContent = <div className={PageStyle.Base}/>;
+    let pageContent = <div className={PageStyles.Base}/>;
     switch (this.state.currentPageId) {
       case PageHome.PageId:
         pageContent = <PageHome />;
@@ -83,7 +83,7 @@ class MainWindow extends React.Component<any, IState> {
     }
 
     const rootClass = ClassNames(
-      MainWindowStyle.Root,
+      MainWindowStyles.Root,
       LayoutStyle.TopToBottom,
     );
     return (
