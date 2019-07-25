@@ -205,6 +205,74 @@ export const importFile = (filePath: string): IImportResult => {
     return result;
   }
 
+  // 出金
+  {
+    const toCategoryId: {[key: string]: number} = {}; // node_group id から CategoryId に変換する辞書
+    const parseActual = (node: Element, parentCategoryId: number) => {
+      const account = (node.attributes.getNamedItem('account') as Attr).value;
+      const date = dateTextToYearMonthDate((node.attributes.getNamedItem('date') as Attr).value);
+      const value = Number((node.attributes.getNamedItem('value') as Attr).value);
+      const noteNode = (Xpath.select('note', node) as Element[])[0];
+      const note = noteNode != null ? noteNode.textContent : '';
+      StateMethods.outgoRecordAdd(
+        doc,
+        date.date, // createDate
+        date.date, // updateDate
+        date, // date
+        note != null ? note : '',
+        toAccountIdDict[account],
+        parentCategoryId,
+        value,
+      );
+    };
+    const parseNode = (node: Element, parentCategoryId: number | null) => {
+      const id = (node.attributes.getNamedItem('id') as Attr).value;
+      const title = (Xpath.select('title', node) as Element[])[0].textContent as string;
+      const groups = Xpath.select('node_group', node) as Element[];
+      const actuals = Xpath.select('actual', node) as Element[];
+      if (groups.length !== 0 && actuals.length !== 0) {
+        result.errorMsgs.push(`支出カテゴリ（名前='${title}）は子カテゴリもレコードも持つ不正なカテゴリです。'`);
+        return;
+      }
+
+      // カテゴリ登録
+      const categoryId = StateMethods.outgoCategoryAdd(
+        doc,
+        title,
+        parentCategoryId,
+        );
+      toCategoryId[id] = categoryId;
+
+      // 子カテゴリ対応
+      if (node.nodeName === 'node_group') {
+        parseChilds(node, categoryId);
+        return;
+      }
+
+      // レコードのパース
+      actuals.forEach((actual) => {
+        parseActual(actual, categoryId);
+      });
+    };
+    const parseChilds = (node: Element, parentCategoryId: number | null) => {
+      for (let idx = 0; idx < node.childNodes.length; ++idx) {
+        const childNode = node.childNodes.item(idx);
+        switch (childNode.nodeName) {
+          case 'node_group':
+          case 'node_actual':
+            parseNode(childNode as Element, parentCategoryId);
+            break;
+        }
+      }
+    };
+
+    // 実行
+    parseChilds((Xpath.select(`//expense`, xmlDoc) as Element[])[0], null);
+  }
+  if (result.errorMsgs.length !== 0) {
+    return result;
+  }
+
   // インポート成功
   result.doc = doc;
   return result;
