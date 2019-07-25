@@ -77,9 +77,29 @@ export const importFile = (filePath: string): IImportResult => {
         registerAccountFunc(node, Types.AccountKind.AssetsBank);
       });
 
+      // 投資
+      (Xpath.select('//asset/node_invest', xmlDoc) as Element[]).forEach((node) => {
+        registerAccountFunc(node, Types.AccountKind.AssetsInvesting);
+      });
+
+      // その他資産
+      (Xpath.select('//asset/node_asset', xmlDoc) as Element[]).forEach((node) => {
+        registerAccountFunc(node, Types.AccountKind.AssetsOther);
+      });
+
+      // ローン
+      if ((Xpath.select('//debt/node_loan', xmlDoc) as Element[]).length !== 0) {
+        result.errorMsgs.push(`種類がローンの口座は未対応です。`);
+      }
+
       // クレジットカード
       (Xpath.select('//debt/node_credit', xmlDoc) as Element[]).forEach((node) => {
         registerAccountFunc(node, Types.AccountKind.LiabilitiesCard);
+      });
+
+      // その他負債
+      (Xpath.select('//debt/node_debt', xmlDoc) as Element[]).forEach((node) => {
+        registerAccountFunc(node, Types.AccountKind.LiabilitiesOther);
       });
     }
     if (result.errorMsgs.length !== 0) {
