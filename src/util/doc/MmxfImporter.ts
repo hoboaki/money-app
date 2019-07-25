@@ -33,7 +33,7 @@ export const importFile = (filePath: string): IImportResult => {
   const dateTextToYearMonthDate = (text: string) => {
     const texts = text.split('.');
     return YearMonthDayDate.fromDate(new Date(
-      Number(texts[0]), Number(texts[1]), Number(texts[2]),
+      Number(texts[0]), Number(texts[1]) - 1, Number(texts[2]),
       ));
   };
 
