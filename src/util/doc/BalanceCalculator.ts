@@ -43,7 +43,7 @@ class BalanceCalculator {
         (startDate == null || startDate.date <= account.startDate.date);
       const initialAmount = addInitialAmount ? account.initialAmount : 0;
       this.balances[accountId] = cacheBalance + initialAmount +
-        records.sumAmountIncome() + records.sumAmountOutgo() + records.totalDiffTransfer([accountId]);
+        records.sumAmountIncome() - records.sumAmountOutgo() + records.totalDiffTransfer([accountId]);
     });
   }
 
