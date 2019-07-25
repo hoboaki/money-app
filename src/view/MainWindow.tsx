@@ -40,20 +40,24 @@ class MainWindow extends React.Component<any, IState> {
     {
       let resetDoc = SampleDoc.Create();
       const localMmxfFilePath = `${process.env.HOME}/Desktop/MoneyAppTest.mmxf`;
-      Fs.access(localMmxfFilePath, Fs.constants.R_OK, (err) => {
-        if (err != null) {
-          global.console.log('Can\'t access test document.');
-          global.console.log(err.message);
+      let isExistSampleFile = false;
+      try {
+        Fs.accessSync(localMmxfFilePath, Fs.constants.R_OK);
+        isExistSampleFile = true;
+      } catch (err) {
+        global.console.log('Can\'t access test document.');
+        global.console.log(err.message);
+      }
+      if (isExistSampleFile) {
+        const result = MmxfImporter.importFile(localMmxfFilePath);
+        if (result.doc != null) {
+          resetDoc = result.doc;
+          global.console.log('Test document load successed.');
         } else {
-          const result = MmxfImporter.importFile(localMmxfFilePath);
-          if (result.doc != null) {
-            resetDoc = result.doc;
-          } else {
-            global.console.log('Test document load failed.');
-            global.console.log(result);
-          }
+          global.console.log('Test document load failed.');
+          global.console.log(result);
         }
-      });
+      }
       Store.dispatch(DocActions.resetDocument(resetDoc));
     }
 
