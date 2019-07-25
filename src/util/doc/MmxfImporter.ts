@@ -46,7 +46,7 @@ export const importFile = (filePath: string): IImportResult => {
     const jpyCurrencyId = (jpyCurrencyNodes[0].attributes.getNamedItem('id') as Attr).value;
 
     // 口座の解析
-    const accountIdDict: {[key: number]: number} = {}; // node_cache id -> accountId の辞書
+    const toAccountIdDict: {[key: number]: number} = {}; // node_cache id -> accountId の辞書
     {
       const registerAccountFunc = (node: Element, accountKind: Types.AccountKind) => {
         const id = Number((node.attributes.getNamedItem('id') as Attr).value);
@@ -58,13 +58,14 @@ export const importFile = (filePath: string): IImportResult => {
         if (currency !== jpyCurrencyId) {
           result.errorMsgs.push(`アカウント（名前＝'${title}'）は日本円ではない通貨が設定されていました。`);
         }
-        StateMethods.accountAdd(
+        const accountId = StateMethods.accountAdd(
           doc,
           title,
           accountKind,
           value,
           dateTextToYearMonthDate(dateText),
           );
+        toAccountIdDict[id] = accountId;
       };
 
       // 現金
