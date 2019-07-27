@@ -1,5 +1,6 @@
 import * as States from '../../state/doc/States';
-import YearMonthDayDate from '../YearMonthDayDate';
+import IYearMonthDayDate from '../IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../IYearMonthDayDateUtils';
 import RecordCollection from './RecordCollection';
 import * as RecordFilters from './RecordFilters';
 
@@ -7,7 +8,7 @@ import * as RecordFilters from './RecordFilters';
 class BalanceCalculator {
   /** 口座 ID がキーの各講座の残高。 */
   public balances: {[key: number]: number} = {};
-  public endDate: YearMonthDayDate;
+  public endDate: IYearMonthDayDate;
   private state: States.IState;
 
   /**
@@ -19,7 +20,7 @@ class BalanceCalculator {
    */
   public constructor(
     state: States.IState,
-    endDate: YearMonthDayDate,
+    endDate: IYearMonthDayDate,
     accounts: number[] | null = null,
     cache: BalanceCalculator | null = null,
     ) {
@@ -32,15 +33,15 @@ class BalanceCalculator {
     }
     accounts.forEach((accountId) => {
       const cacheEnabled = cache != null && accountId in cache.balances && cache.endDate < endDate;
-      const startDate: YearMonthDayDate | null = (cache != null && cacheEnabled) ? cache.endDate : null;
+      const startDate: IYearMonthDayDate | null = (cache != null && cacheEnabled) ? cache.endDate : null;
       const records = allRecords.filter([
         RecordFilters.createDateRangeFilter({startDate, endDate}),
         RecordFilters.createAccountFilter({accounts: [accountId]}),
       ]);
       const cacheBalance = (cache != null && cacheEnabled) ? cache.balances[accountId] : 0;
       const account = state.accounts[accountId];
-      const addInitialAmount = account.startDate.date < endDate.date &&
-        (startDate == null || startDate.date <= account.startDate.date);
+      const addInitialAmount = IYearMonthDayDateUtils.less(account.startDate, endDate) &&
+        (startDate == null || IYearMonthDayDateUtils.lessEq(startDate, account.startDate));
       const initialAmount = addInitialAmount ? account.initialAmount : 0;
       this.balances[accountId] = cacheBalance + initialAmount +
         records.sumAmountIncome() - records.sumAmountOutgo() + records.totalDiffTransfer([accountId]);

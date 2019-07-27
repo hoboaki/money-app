@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 import { v4 as UUID } from 'uuid';
 
-import YearMonthDayDate from '../../util/YearMonthDayDate';
+import IYearMonthDayDate from '../../util/IYearMonthDayDate';
 import * as States from './States';
 
 /// ドキュメントをリセット。
@@ -20,7 +20,7 @@ export const resetDocument = (state: States.IState): IResetDocument => {
 export const ADD_RECORD_INCOME = UUID();
 export interface IAddRecordIncome extends Action {
   createDate: Date;
-  date: YearMonthDayDate;
+  date: IYearMonthDayDate;
   memo: string;
   accountId: number;
   categoryId: number;
@@ -28,7 +28,7 @@ export interface IAddRecordIncome extends Action {
 }
 export const addRecordIncome = (
   createDate: Date,
-  date: YearMonthDayDate,
+  date: IYearMonthDayDate,
   memo: string,
   accountId: number,
   categoryId: number,
@@ -49,7 +49,7 @@ export const addRecordIncome = (
 export const ADD_RECORD_OUTGO = UUID();
 export interface IAddRecordOutgo extends Action {
   createDate: Date;
-  date: YearMonthDayDate;
+  date: IYearMonthDayDate;
   memo: string;
   accountId: number;
   categoryId: number;
@@ -57,7 +57,7 @@ export interface IAddRecordOutgo extends Action {
 }
 export const addRecordOutgo = (
   createDate: Date,
-  date: YearMonthDayDate,
+  date: IYearMonthDayDate,
   memo: string,
   accountId: number,
   categoryId: number,
@@ -78,7 +78,7 @@ export const addRecordOutgo = (
 export const ADD_RECORD_TRANSFER = UUID();
 export interface IAddRecordTransfer extends Action {
   createDate: Date;
-  date: YearMonthDayDate;
+  date: IYearMonthDayDate;
   memo: string;
   accountFromId: number;
   accountToId: number;
@@ -86,7 +86,7 @@ export interface IAddRecordTransfer extends Action {
 }
 export const addRecordTransfer = (
   createDate: Date,
-  date: YearMonthDayDate,
+  date: IYearMonthDayDate,
   memo: string,
   accountFromId: number,
   accountToId: number,

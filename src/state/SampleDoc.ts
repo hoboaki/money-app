@@ -1,5 +1,6 @@
 import Clone from 'clone';
-import YearMonthDayDate from '../util/YearMonthDayDate';
+import IYearMonthDayDate from '../util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
 import * as StateMethods from './doc/StateMethods';
 import * as States from './doc/States';
 import * as Types from './doc/Types';
@@ -34,7 +35,10 @@ class SampleDoc {
     const state = Clone(States.defaultState);
 
     // 口座
-    const accountStartDate = new YearMonthDayDate().prevMonth().prevMonth();
+    const accountStartDate =
+      IYearMonthDayDateUtils.prevMonth(IYearMonthDayDateUtils.prevMonth(
+        IYearMonthDayDateUtils.today(),
+      ));
     StateMethods.accountAdd(state, '財布', Types.AccountKind.AssetsCash, 2020, accountStartDate);
     StateMethods.accountAdd(state, 'アデリー銀行', Types.AccountKind.AssetsBank, 504000, accountStartDate);
     StateMethods.accountAdd(state, 'コウテイ銀行', Types.AccountKind.AssetsBank, 12036756, accountStartDate);
@@ -128,7 +132,7 @@ class SampleDoc {
           state,
           currentDate,
           currentDate,
-          YearMonthDayDate.fromDate(new Date(
+          IYearMonthDayDateUtils.fromDate(new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
             rec.day,
@@ -222,7 +226,7 @@ class SampleDoc {
           state,
           currentDate,
           currentDate,
-          YearMonthDayDate.fromDate(new Date(
+          IYearMonthDayDateUtils.fromDate(new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
             rec.day,
@@ -259,7 +263,7 @@ class SampleDoc {
           state,
           currentDate,
           currentDate,
-          YearMonthDayDate.fromDate(new Date(
+          IYearMonthDayDateUtils.fromDate(new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
             rec.day,

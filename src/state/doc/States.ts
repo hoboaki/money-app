@@ -1,4 +1,4 @@
-import YearMonthDayDate from '../../util/YearMonthDayDate';
+import IYearMonthDayDate from '../../util/IYearMonthDayDate';
 import * as Types from './Types';
 
 /** 口座。 */
@@ -12,7 +12,7 @@ export interface IAccount {
   /** 初期金額。プラスが貯蓄。マイナスが負債。 */
   initialAmount: number;
   /** 口座開設日。initialAmount が加算される日。 */
-  startDate: YearMonthDayDate;
+  startDate: IYearMonthDayDate;
 }
 
 /** レコードのカテゴリ。 */
@@ -28,7 +28,7 @@ export interface IRecord {
   id: number; // RecordId。
   createDate: Date; // レコード作成日。
   updateDate: Date; // レコード更新日。
-  date: YearMonthDayDate; // 入出金発生日付。
+  date: IYearMonthDayDate; // 入出金発生日付。
   memo: string; // メモ。
 }
 

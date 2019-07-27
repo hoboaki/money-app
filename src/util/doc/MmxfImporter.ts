@@ -4,7 +4,8 @@ import * as Xpath from 'xpath-ts';
 import * as StateMethods from '../../state/doc/StateMethods';
 import * as States from '../../state/doc/States';
 import * as Types from '../../state/doc/Types';
-import YearMonthDayDate from '../YearMonthDayDate';
+import IYearMonthDayDate from '../IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../IYearMonthDayDateUtils';
 
 export interface IImportResult {
   errorMsgs: string[];
@@ -32,7 +33,7 @@ export const importFile = (filePath: string): IImportResult => {
   // 便利関数定義
   const dateTextToYearMonthDate = (text: string) => {
     const texts = text.split('.');
-    return YearMonthDayDate.fromDate(new Date(
+    return IYearMonthDayDateUtils.fromDate(new Date(
       Number(texts[0]), Number(texts[1]) - 1, Number(texts[2]),
       ));
   };
@@ -119,13 +120,14 @@ export const importFile = (filePath: string): IImportResult => {
     const accountFrom = (node.attributes.getNamedItem('account') as Attr).value;
     const accountTo = (node.attributes.getNamedItem('transfer') as Attr).value;
     const date = dateTextToYearMonthDate((node.attributes.getNamedItem('date') as Attr).value);
+    const nativeDate = IYearMonthDayDateUtils.toNativeDate(date);
     const value = Number((node.attributes.getNamedItem('value') as Attr).value);
     const noteNode = (Xpath.select('note', node) as Element[])[0];
     const note = noteNode != null ? noteNode.textContent : '';
     StateMethods.transferRecordAdd(
       doc,
-      date.date, // createDate
-      date.date, // updateDate
+      nativeDate, // createDate
+      nativeDate, // updateDate
       date, // date
       note != null ? note : '',
       toAccountIdDict[accountFrom],
@@ -143,13 +145,14 @@ export const importFile = (filePath: string): IImportResult => {
     const parseActual = (node: Element, parentCategoryId: number) => {
       const account = (node.attributes.getNamedItem('account') as Attr).value;
       const date = dateTextToYearMonthDate((node.attributes.getNamedItem('date') as Attr).value);
+      const nativeDate = IYearMonthDayDateUtils.toNativeDate(date);
       const value = Number((node.attributes.getNamedItem('value') as Attr).value);
       const noteNode = (Xpath.select('note', node) as Element[])[0];
       const note = noteNode != null ? noteNode.textContent : '';
       StateMethods.incomeRecordAdd(
         doc,
-        date.date, // createDate
-        date.date, // updateDate
+        nativeDate, // createDate
+        nativeDate, // updateDate
         date, // date
         note != null ? note : '',
         toAccountIdDict[account],
@@ -211,13 +214,14 @@ export const importFile = (filePath: string): IImportResult => {
     const parseActual = (node: Element, parentCategoryId: number) => {
       const account = (node.attributes.getNamedItem('account') as Attr).value;
       const date = dateTextToYearMonthDate((node.attributes.getNamedItem('date') as Attr).value);
+      const nativeDate = IYearMonthDayDateUtils.toNativeDate(date);
       const value = Number((node.attributes.getNamedItem('value') as Attr).value);
       const noteNode = (Xpath.select('note', node) as Element[])[0];
       const note = noteNode != null ? noteNode.textContent : '';
       StateMethods.outgoRecordAdd(
         doc,
-        date.date, // createDate
-        date.date, // updateDate
+        nativeDate, // createDate
+        nativeDate, // updateDate
         date, // date
         note != null ? note : '',
         toAccountIdDict[account],

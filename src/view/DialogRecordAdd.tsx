@@ -12,12 +12,13 @@ import IStoreState from '../state/IStoreState';
 import Store from '../state/Store';
 import * as UiActions from '../state/ui/Actions';
 import * as UiStates from '../state/ui/States';
-import YearMonthDayDate from '../util/YearMonthDayDate';
+import IYearMonthDayDate from '../util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
 import * as Styles from './DialogRecordAdd.css';
 
 interface IProps {
   /** 入力フォームの初期日付。 */
-  formDefaultDate: YearMonthDayDate;
+  formDefaultDate: IYearMonthDayDate;
   onClosed: (() => void);
 }
 
@@ -65,7 +66,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     super(props);
     this.state = {
       formKind: DocTypes.RecordKind.Outgo,
-      formDate: props.formDefaultDate.toText(),
+      formDate: IYearMonthDayDateUtils.toText(props.formDefaultDate),
       formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
       formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.incomeCategories).id,
       formAccount: Number(Object.keys(props.accounts)[0]),
@@ -616,7 +617,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       case DocTypes.RecordKind.Outgo:
         Store.dispatch(DocActions.addRecordOutgo(
           new Date(),
-          YearMonthDayDate.fromText(this.state.formDate),
+          IYearMonthDayDateUtils.fromText(this.state.formDate),
           this.state.formMemo,
           this.state.formAccount,
           this.state.formCategoryOutgo,
@@ -627,7 +628,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       case DocTypes.RecordKind.Income:
         Store.dispatch(DocActions.addRecordIncome(
           new Date(),
-          YearMonthDayDate.fromText(this.state.formDate),
+          IYearMonthDayDateUtils.fromText(this.state.formDate),
           this.state.formMemo,
           this.state.formAccount,
           this.state.formCategoryIncome,
@@ -638,7 +639,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       case DocTypes.RecordKind.Transfer:
         Store.dispatch(DocActions.addRecordTransfer(
           new Date(),
-          YearMonthDayDate.fromText(this.state.formDate),
+          IYearMonthDayDateUtils.fromText(this.state.formDate),
           this.state.formMemo,
           this.state.formAccountFrom,
           this.state.formAccountTo,

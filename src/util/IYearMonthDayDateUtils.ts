@@ -1,7 +1,7 @@
 import IYearMonthDayDate from './IYearMonthDayDate';
 
 /** 今日で作成。 */
-export const createToday = (): IYearMonthDayDate => {
+export const today = (): IYearMonthDayDate => {
   return fromDate(new Date());
 };
 
@@ -67,4 +67,14 @@ export const toText = (date: IYearMonthDayDate): string => {
   const month = toDoubleDigits(date.month);
   const day = toDoubleDigits(date.day);
   return `${year}-${month}-${day}`;
+};
+
+/** 日付が lhs < rhs か。 */
+export const less = (lhs: IYearMonthDayDate, rhs: IYearMonthDayDate): boolean => {
+  return (lhs.year * 372 + lhs.month * 31 + lhs.day) < (rhs.year * 372 + rhs.month * 31 + rhs.day);
+};
+
+/** 日付が lhs <= rhs か。 */
+export const lessEq = (lhs: IYearMonthDayDate, rhs: IYearMonthDayDate): boolean => {
+  return (lhs.year * 372 + lhs.month * 31 + lhs.day) <= (rhs.year * 372 + rhs.month * 31 + rhs.day);
 };

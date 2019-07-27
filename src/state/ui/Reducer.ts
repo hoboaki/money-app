@@ -3,7 +3,8 @@ import Redux from 'redux';
 import { Action } from 'redux';
 
 import createA2RMapper from '../../util/ActionToReducerMapper';
-import YearMonthDayDate from '../../util/YearMonthDayDate';
+import IYearMonthDayDate from '../../util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../../util/IYearMonthDayDateUtils';
 import * as Actions from './Actions';
 import * as States from './States';
 
@@ -19,21 +20,21 @@ a2RMapper.addWork<Actions.IDialogAddRecordSetContinueMode>(
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_PREV,
   (state, action) => {
-    state.pageHome.currentDate = state.pageHome.currentDate.prevMonth();
+    state.pageHome.currentDate = IYearMonthDayDateUtils.prevMonth(state.pageHome.currentDate);
   },
 );
 
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_NEXT,
   (state, action) => {
-    state.pageHome.currentDate = state.pageHome.currentDate.nextMonth();
+    state.pageHome.currentDate = IYearMonthDayDateUtils.nextMonth(state.pageHome.currentDate);
   },
 );
 
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_TODAY,
   (state, action) => {
-    state.pageHome.currentDate = new YearMonthDayDate().firstDayOfMonth();
+    state.pageHome.currentDate = IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today());
   },
 );
 

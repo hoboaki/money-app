@@ -6,8 +6,9 @@ import IStoreState from '../state/IStoreState';
 import * as UiStates from '../state/ui/States';
 import RecordCollection from '../util/doc/RecordCollection';
 import * as RecordFilters from '../util/doc/RecordFilters';
+import IYearMonthDayDate from '../util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
 import * as PriceUtils from '../util/PriceUtils';
-import YearMonthDayDate from '../util/YearMonthDayDate';
 import DialogRecordAdd from './DialogRecordAdd';
 import * as LayoutStyles from './Layout.css';
 import * as Styles from './PageHomeCalendar.css';
@@ -19,7 +20,7 @@ interface IProps {
 
 interface IState {
   modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
-  selectedDate: YearMonthDayDate; // 選択中の日付。
+  selectedDate: IYearMonthDayDate; // 選択中の日付。
 }
 
 class PageHomeCalendar extends React.Component<IProps, IState> {
@@ -27,7 +28,7 @@ class PageHomeCalendar extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       modalAddRecord: false,
-      selectedDate: new YearMonthDayDate(),
+      selectedDate: IYearMonthDayDateUtils.today(),
     };
   }
 
@@ -102,7 +103,7 @@ class PageHomeCalendar extends React.Component<IProps, IState> {
 
     // 6週分のデータを作成
     interface IData {
-      date: YearMonthDayDate;
+      date: IYearMonthDayDate;
       dark: boolean;
       transfer: boolean;
       income: number;
@@ -110,16 +111,17 @@ class PageHomeCalendar extends React.Component<IProps, IState> {
     }
     const dayCountInWeek = 7;
     const rowCount = 6;
-    const baseDate = this.props.pageHome.currentDate.date;
-    const startDate = YearMonthDayDate.fromDate(new Date(
+    const baseDate = IYearMonthDayDateUtils.toNativeDate(this.props.pageHome.currentDate);
+    const startDate = IYearMonthDayDateUtils.fromDate(new Date(
       baseDate.getFullYear(),
       baseDate.getMonth(),
       baseDate.getDate() - baseDate.getDay(),
     ));
-    const endDate = YearMonthDayDate.fromDate(new Date(
-      startDate.date.getFullYear(),
-      startDate.date.getMonth(),
-      startDate.date.getDate() + dayCountInWeek * rowCount,
+    const startDateNative = IYearMonthDayDateUtils.toNativeDate(startDate);
+    const endDate = IYearMonthDayDateUtils.fromDate(new Date(
+      startDateNative.getFullYear(),
+      startDateNative.getMonth(),
+      startDateNative.getDate() + dayCountInWeek * rowCount,
     ));
     const recordsInCalendar = new RecordCollection(this.props.doc).filter([
       RecordFilters.createDateRangeFilter({
@@ -131,9 +133,9 @@ class PageHomeCalendar extends React.Component<IProps, IState> {
     {
       for (let i = 0, date = startDate;
         i < dayCountInWeek * rowCount; ++i,
-        date = date.nextDay()
+        date = IYearMonthDayDateUtils.nextDay(date)
         ) {
-        const nextDay = date.nextDay();
+        const nextDay = IYearMonthDayDateUtils.nextDay(date);
         const records = recordsInCalendar.filter([
           RecordFilters.createDateRangeFilter({
             startDate: date,
@@ -142,7 +144,7 @@ class PageHomeCalendar extends React.Component<IProps, IState> {
         ]);
         dataArray.push({
           date,
-          dark: date.date.getMonth() !== baseDate.getMonth(),
+          dark: IYearMonthDayDateUtils.toNativeDate(date).getMonth() !== baseDate.getMonth(),
           transfer: records.transfers.length !== 0,
           income: records.sumAmountIncome(),
           outgo: records.sumAmountOutgo(),
@@ -179,7 +181,7 @@ class PageHomeCalendar extends React.Component<IProps, IState> {
               return (
                 <td key={rowIndex * 10 + colIndex} className={classNames}>
                   <div className={cellTopClass}>
-                    <span className={cellDayClass}>{cell.date.date.getDate()}</span>
+                    <span className={cellDayClass}>{cell.date.day}</span>
                     <button className={cellNewRecordBtnClass} onClick={() => {this.onNewRecordBtnPushed(cell.date); }}>
                       <i className={cellNewRecordBtnIconClass}>note_add</i>
                     </button>
@@ -234,7 +236,7 @@ class PageHomeCalendar extends React.Component<IProps, IState> {
     );
   }
 
-  private onNewRecordBtnPushed(date: YearMonthDayDate) {
+  private onNewRecordBtnPushed(date: IYearMonthDayDate) {
     this.setState({
       modalAddRecord: true,
       selectedDate: date,
