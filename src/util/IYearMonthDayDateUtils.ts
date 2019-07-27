@@ -9,7 +9,7 @@ export const today = (): IYearMonthDayDate => {
 export const fromDate = (nativeDate: Date): IYearMonthDayDate => {
   return {
     year: nativeDate.getFullYear(),
-    month: nativeDate.getMonth(),
+    month: nativeDate.getMonth() + 1,
     day: nativeDate.getDate(),
   };
 };
