@@ -1,4 +1,4 @@
-import Clone from 'clone';
+import Clone from 'deep-clone';
 import { Action } from 'redux';
 
 type WorkOfAction<S, A extends Action = any> = (state: S, action: A) => void;
@@ -21,9 +21,7 @@ class ActionToReducerMapper<S> {
         let newState = state;
         const process = this.works[action.type];
         if (!!process) {
-            global.console.log(`Bef: ${new Date().toISOString()}`);
-            newState = Clone(state, false);
-            global.console.log(`Aft: ${new Date().toISOString()}`);
+            newState = Clone(state);
             process(newState, action);
         }
         return newState;
