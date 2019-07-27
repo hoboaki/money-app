@@ -1,14 +1,15 @@
 import * as States from '../../state/doc/States';
-import YearMonthDayDate from '../YearMonthDayDate';
+import IYearMonthDayDate from '../IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../IYearMonthDayDateUtils';
 import IRecordCollection from './IRecordCollection';
 import IRecordFilter from './IRecordFilter';
 
 /** 日付フィルタのデータ。 */
 export interface IDateRangeFilterData {
   /** 開始日。この日以降（この日を含む）のレコードがヒットする。 null の場合は無期限。 */
-  startDate: YearMonthDayDate | null;
+  startDate: IYearMonthDayDate | null;
   /** 終了日。この日以前（この日を含まない）のレコードがヒットする。 null の場合は無制限。 */
-  endDate: YearMonthDayDate | null;
+  endDate: IYearMonthDayDate | null;
 }
 
 /** 日付フィルタを作成。 */
@@ -19,20 +20,21 @@ export const createDateRangeFilter = (data: IDateRangeFilterData): IRecordFilter
 
       // 比較演算が少しでも少なくなるようにチェック関数を場合分け
       if (data.startDate != null && data.endDate == null) {
-        const startDate = data.startDate.date;
+        const startDate = data.startDate;
         checkFunc = (record) => {
-          return startDate <= record.date.date;
+          return IYearMonthDayDateUtils.lessEq(startDate, record.date);
         };
       } else if (data.startDate == null && data.endDate != null) {
-        const endDate = data.endDate.date;
+        const endDate = data.endDate;
         checkFunc = (record) => {
-          return record.date.date < endDate;
+          return IYearMonthDayDateUtils.less(record.date, endDate);
         };
       } else if (data.startDate != null && data.endDate != null) {
-        const startDate = data.startDate.date;
-        const endDate = data.endDate.date;
+        const startDate = data.startDate;
+        const endDate = data.endDate;
         checkFunc = (record) => {
-          return startDate <= record.date.date && record.date.date < endDate;
+          return IYearMonthDayDateUtils.lessEq(startDate, record.date) &&
+            IYearMonthDayDateUtils.less(record.date, endDate);
         };
       }
 

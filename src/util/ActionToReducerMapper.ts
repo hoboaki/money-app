@@ -1,4 +1,4 @@
-import Clone from 'clone';
+import Clone from 'deep-clone';
 import { Action } from 'redux';
 
 type WorkOfAction<S, A extends Action = any> = (state: S, action: A) => void;

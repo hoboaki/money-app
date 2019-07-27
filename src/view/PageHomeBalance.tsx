@@ -7,8 +7,8 @@ import * as UiStates from '../state/ui/States';
 import BalanceCalculator from '../util/doc/BalanceCalculator';
 import RecordCollection from '../util/doc/RecordCollection';
 import * as RecordFilters from '../util/doc/RecordFilters';
+import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
 import * as PriceUtils from '../util/PriceUtils';
-import YearMonthDayDate from '../util/YearMonthDayDate';
 import * as Styles from './PageHomeBalance.css';
 
 interface IProps {
@@ -19,7 +19,7 @@ interface IProps {
 class PageHomeBalance extends React.Component<IProps, any> {
   public render() {
     const startDate = this.props.pageHome.currentDate;
-    const endDate = startDate.nextMonth();
+    const endDate = IYearMonthDayDateUtils.nextMonth(startDate);
 
     const currentRecords = new RecordCollection(this.props.doc).filter([
       RecordFilters.createDateRangeFilter({startDate, endDate}),

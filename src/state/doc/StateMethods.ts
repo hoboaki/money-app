@@ -5,7 +5,8 @@ import DataRecordIncome from '../../data-model/doc/RecordIncome';
 import DataRecordOutgo from '../../data-model/doc/RecordOutgo';
 import DataRecordTransfer from '../../data-model/doc/RecordTransfer';
 import DataRoot from '../../data-model/doc/Root';
-import YearMonthDayDate from '../../util/YearMonthDayDate';
+import IYearMonthDayDate from '../../util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../../util/IYearMonthDayDateUtils';
 import * as States from './States';
 import * as Types from './Types';
 
@@ -28,7 +29,7 @@ export const fromData = (src: DataRoot) => {
   const accountIdDict: {[key: number]: number} = {}; // Data内Id → オブジェクトId 変換テーブル
   for (const data of src.accounts) {
     const kind = enumPraseAccountKind(data.kind);
-    const key = accountAdd(r, data.name, kind, data.initialAmount, YearMonthDayDate.fromText(data.startDate));
+    const key = accountAdd(r, data.name, kind, data.initialAmount, IYearMonthDayDateUtils.fromText(data.startDate));
     accountIdDict[data.id] = key;
   }
 
@@ -59,7 +60,7 @@ export const fromData = (src: DataRoot) => {
         r,
         new Date(data.createDate),
         new Date(data.updateDate),
-        YearMonthDayDate.fromText(data.date),
+        IYearMonthDayDateUtils.fromText(data.date),
         data.memo,
         accountId,
         categoryId,
@@ -95,7 +96,7 @@ export const fromData = (src: DataRoot) => {
         r,
         new Date(data.createDate),
         new Date(data.updateDate),
-        YearMonthDayDate.fromText(data.date),
+        IYearMonthDayDateUtils.fromText(data.date),
         data.memo,
         accountId,
         categoryId,
@@ -119,7 +120,7 @@ export const fromData = (src: DataRoot) => {
         r,
         new Date(data.createDate),
         new Date(data.updateDate),
-        YearMonthDayDate.fromText(data.date),
+        IYearMonthDayDateUtils.fromText(data.date),
         data.memo,
         accountFromId,
         accountToId,
@@ -176,7 +177,7 @@ export const toData = (state: States.IState) => {
       const data = new DataRecordIncome();
       data.createDate = src.createDate.toISOString();
       data.updateDate = src.updateDate.toISOString();
-      data.date = src.date.toText();
+      data.date = IYearMonthDayDateUtils.toText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
       data.category = src.category;
@@ -211,7 +212,7 @@ export const toData = (state: States.IState) => {
       const data = new DataRecordOutgo();
       data.createDate = src.createDate.toISOString();
       data.updateDate = src.updateDate.toISOString();
-      data.date = src.date.toText();
+      data.date = IYearMonthDayDateUtils.toText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
       data.category = src.category;
@@ -231,7 +232,7 @@ export const toData = (state: States.IState) => {
       const data = new DataRecordTransfer();
       data.createDate = src.createDate.toISOString();
       data.updateDate = src.updateDate.toISOString();
-      data.date = src.date.toText();
+      data.date = IYearMonthDayDateUtils.toText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
       data.accountFrom = src.accountFrom;
@@ -253,7 +254,7 @@ export const accountAdd = (
   name: string,
   kind: Types.AccountKind,
   initialAmount: number,
-  startDate: YearMonthDayDate,
+  startDate: IYearMonthDayDate,
   ) => {
   // オブジェクト作成
   const obj = {
@@ -282,22 +283,6 @@ export const accountByName = (
     throw new Error(`Not found account named '${name}'.`);
   }
   return account;
-};
-
-/**
- * コードの中で日付の範囲を指定して絞り込む。
- * @param records 検索対象。
- * @param dateBegin 開始日。この日を含む。
- * @param dateEnd 終了日。この日は含まない。
- */
-export const recordsFromRecordsByDateRange = <TRecord extends States.IRecord>(
-  records: TRecord[],
-  dateBegin: YearMonthDayDate,
-  dateEnd: YearMonthDayDate,
-  ): TRecord[] => {
-  return records.filter((rec) => {
-    return dateBegin.date <= rec.date.date && rec.date.date < dateEnd.date;
-    });
 };
 
 /// 入金カテゴリ追加。
@@ -338,7 +323,7 @@ export const incomeRecordAdd = (
   state: States.IState,
   createDate: Date,
   updateDate: Date,
-  date: YearMonthDayDate,
+  date: IYearMonthDayDate,
   memo: string,
   accountId: number,
   categoryId: number,
@@ -361,40 +346,6 @@ export const incomeRecordAdd = (
   state.nextId.record++;
   state.income.records[obj.id] = obj;
   return obj.id;
-};
-
-/**
- * 入金レコードの中で日付の範囲を指定して絞り込む。
- * @returns IRecordIncome[]
- * @param state 検索対象。
- * @param dateBegin 開始日。この日を含む。
- * @param dateEnd 終了日。この日は含まない。
- */
-export const incomeRecordsFromStateByDateRange = (
-  state: States.IState,
-  dateBegin: YearMonthDayDate,
-  dateEnd: YearMonthDayDate,
-  ): States.IRecordIncome[] => {
-  return incomeRecordsFromRecordsByDateRange(
-    Object.values(state.income.records),
-    dateBegin,
-    dateEnd,
-  );
-};
-
-/**
- * 入金レコードの中で日付の範囲を指定して絞り込む。
- * @returns IRecordIncome[]
- * @param records 検索対象。
- * @param dateBegin 開始日。この日を含む。
- * @param dateEnd 終了日。この日は含まない。
- */
-export const incomeRecordsFromRecordsByDateRange = (
-  records: States.IRecordIncome[],
-  dateBegin: YearMonthDayDate,
-  dateEnd: YearMonthDayDate,
-  ): States.IRecordIncome[] => {
-  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd);
 };
 
 /// 出金カテゴリ追加。
@@ -435,7 +386,7 @@ export const outgoRecordAdd = (
   state: States.IState,
   createDate: Date,
   updateDate: Date,
-  date: YearMonthDayDate,
+  date: IYearMonthDayDate,
   memo: string,
   accountId: number,
   categoryId: number,
@@ -461,40 +412,6 @@ export const outgoRecordAdd = (
 };
 
 /**
- * 出金レコードの中で日付の範囲を指定して絞り込む。
- * @returns IRecordOutgo[]
- * @param state 検索対象。
- * @param dateBegin 開始日。この日を含む。
- * @param dateEnd 終了日。この日は含まない。
- */
-export const outgoRecordsFromStateByDateRange = (
-  state: States.IState,
-  dateBegin: YearMonthDayDate,
-  dateEnd: YearMonthDayDate,
-  ): States.IRecordOutgo[] => {
-  return outgoRecordsFromRecordsByDateRange(
-    Object.values(state.outgo.records),
-    dateBegin,
-    dateEnd,
-  );
-};
-
-/**
- * 出金レコードの中で日付の範囲を指定して絞り込む。
- * @returns IRecordOutgo[]
- * @param records 検索対象。
- * @param dateBegin 開始日。この日を含む。
- * @param dateEnd 終了日。この日は含まない。
- */
-export const outgoRecordsFromRecordsByDateRange = (
-  records: States.IRecordOutgo[],
-  dateBegin: YearMonthDayDate,
-  dateEnd: YearMonthDayDate,
-  ): States.IRecordOutgo[] => {
-  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd);
-};
-
-/**
  * 送金レコードの追加。
  * @param amount 金額。送金元口座からは減算され送金先口座に加算される。
  */
@@ -502,7 +419,7 @@ export const transferRecordAdd = (
   state: States.IState,
   createDate: Date,
   updateDate: Date,
-  date: YearMonthDayDate,
+  date: IYearMonthDayDate,
   memo: string,
   accountFromId: number,
   accountToId: number,
@@ -525,40 +442,6 @@ export const transferRecordAdd = (
   state.nextId.record++;
   state.transfer.records[obj.id] = obj;
   return obj.id;
-};
-
-/**
- * 送金レコードの中で日付の範囲を指定して絞り込む。
- * @returns IRecordOutgo[]
- * @param state 検索対象。
- * @param dateBegin 開始日。この日を含む。
- * @param dateEnd 終了日。この日は含まない。
- */
-export const transferRecordsFromStateByDateRange = (
-  state: States.IState,
-  dateBegin: YearMonthDayDate,
-  dateEnd: YearMonthDayDate,
-  ): States.IRecordTransfer[] => {
-  return transferRecordsFromRecordsByDateRange(
-    Object.values(state.transfer.records),
-    dateBegin,
-    dateEnd,
-  );
-};
-
-/**
- * 送金レコードの中で日付の範囲を指定して絞り込む。
- * @returns IRecordTransfer[]
- * @param records 検索対象。
- * @param dateBegin 開始日。この日を含む。
- * @param dateEnd 終了日。この日は含まない。
- */
-export const transferRecordsFromRecordsByDateRange = (
-  records: States.IRecordTransfer[],
-  dateBegin: YearMonthDayDate,
-  dateEnd: YearMonthDayDate,
-  ): States.IRecordTransfer[] => {
-  return recordsFromRecordsByDateRange(records, dateBegin, dateEnd);
 };
 
 /**

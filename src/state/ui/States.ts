@@ -1,4 +1,5 @@
-import YearMonthDayDate from '../../util/YearMonthDayDate';
+import IYearMonthDayDate from '../../util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../../util/IYearMonthDayDateUtils';
 
 /** レコード追加ダイアログ用 state。 */
 export interface IDialogAddRecord {
@@ -8,7 +9,7 @@ export interface IDialogAddRecord {
 
 /** PageHome 用 state。 */
 export interface IPageHome {
-  currentDate: YearMonthDayDate;
+  currentDate: IYearMonthDayDate;
 }
 
 /** State ルート。 */
@@ -22,6 +23,6 @@ export const defaultState: IState = {
     isContinueMode: false,
   },
   pageHome : {
-    currentDate: new YearMonthDayDate().firstDayOfMonth(),
+    currentDate: IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today()),
   },
 };

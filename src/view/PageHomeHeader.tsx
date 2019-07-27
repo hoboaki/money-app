@@ -5,7 +5,8 @@ import IStoreState from '../state/IStoreState';
 import Store from '../state/Store';
 import * as UiActions from '../state/ui/Actions';
 import * as States from '../state/ui/States';
-import YearMonthDayDate from '../util/YearMonthDayDate';
+import IYearMonthDayDate from '../util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
 import DialogRecordAdd from './DialogRecordAdd';
 import * as LayoutStyles from './Layout.css';
 import * as Styles from './PageHomeHeader.css';
@@ -73,13 +74,13 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalAddRecord) {
         modalDialog = <DialogRecordAdd
-          formDefaultDate={new YearMonthDayDate()}
+          formDefaultDate={IYearMonthDayDateUtils.today()}
           onClosed={() => {
             this.setState({modalAddRecord: false});
           }}
         />;
     }
-    const currentDate = `${this.props.currentDate.date.getFullYear()}年${this.props.currentDate.date.getMonth() + 1}月`;
+    const currentDate = `${this.props.currentDate.year}年${this.props.currentDate.month}月`;
     return (
       <div className={rootClass}>
         <span className={currentDateClass}>{currentDate}</span>
