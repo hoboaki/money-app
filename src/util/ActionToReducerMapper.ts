@@ -21,7 +21,9 @@ class ActionToReducerMapper<S> {
         let newState = state;
         const process = this.works[action.type];
         if (!!process) {
-            newState = Clone(state);
+            global.console.log(`Bef: ${new Date().toISOString()}`);
+            newState = Clone(state, false);
+            global.console.log(`Aft: ${new Date().toISOString()}`);
             process(newState, action);
         }
         return newState;
