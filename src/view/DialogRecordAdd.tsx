@@ -317,6 +317,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           id={this.elementIdFormDate}
                           value={this.state.formDate}
                           readOnly={true}
+                          onClick={() => {this.onFormDateClicked(); }}
                           />
                       </td>
                     </tr>
@@ -511,6 +512,11 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     this.setState({
       formKind: kind,
     });
+  }
+
+  /// 日付がクリックされたときの処理。
+  private onFormDateClicked() {
+    $(`#${this.elementIdFormDate}`).datepicker('show');
   }
 
   /// 口座値変更時の処理。
