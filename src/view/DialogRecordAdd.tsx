@@ -4,6 +4,7 @@ import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import { v4 as UUID } from 'uuid';
+import '../@types/bootstrap-datepicker/index';
 import * as DocActions from '../state/doc/Actions';
 import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
@@ -104,11 +105,12 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
   public componentDidMount() {
     // DatePicker セットアップ
-    flatpickr(`#${this.elementIdFormDate}`, {
-      locale: 'ja',
-      onClose: ((selectedDates, dateStr, instance) => {
-        this.setState({formDate: dateStr});
-      }),
+    $(`#${this.elementIdFormDate}`).datepicker({
+      format: 'yyyy-mm-dd',
+      todayBtn: 'linked',
+      language: 'ja',
+      autoclose: true,
+      todayHighlight: true,
     });
 
     // ContextMenu セットアップ
