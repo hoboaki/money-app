@@ -1,5 +1,38 @@
 # 開発記録
 
+## 2019-07-31 自前でで @types のファイルを用意する手順
+
+bootstrap-datepicker を使おうとして，何を勘違いしたのか @types モジュールが npm で取得できないと思い込み一度自前で用意してしまいました。
+まぁでも勉強になったのでメモとしてここに方法残しておきます。
+
+1. @types/bootstrap-datepicker/index.ts を用意
+
+中身はこんな感じ。js-contextmenu を参考にしました。
+
+```ts
+// Type definitions for boostracp-datepicker 1.9.0
+// Project: https://github.com/uxsolutions/bootstrap-datepicker
+// Definitions by: hoboaki
+// Definitions: ???
+// TypeScript Version: 2.3
+
+/// <reference types="jquery" />
+
+// interface JQueryStatic {
+//   contextMenu(options?: JQueryContextMenuOptions): JQuery;
+//   contextMenu(type: string, selector?: any): JQuery;
+// }
+
+interface JQuery {
+  datepicker(options?: any): JQuery;
+}
+```
+
+2. 使いたいところでこのファイルを import
+
+以上…！わりと簡単でした。
+この前諦めた mdb も世の中になければ手動で @types 作ってみようかな。
+
 ## 2019-07-24 vscode Mac 環境で単語左右カーソル移動しつつ選択ができない
 
 既定設定で cursorColumnSelectLeft cursorColumnSelectRight が同じキーバインドになっていたのが原因。既定設定で衝突してるってかなり致命的では…？ということでこのキーバインドを消しました。
