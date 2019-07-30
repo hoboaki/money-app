@@ -104,11 +104,13 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
   public componentDidMount() {
     // DatePicker セットアップ
-    flatpickr(`#${this.elementIdFormDate}`, {
-      locale: 'ja',
-      onClose: ((selectedDates, dateStr, instance) => {
-        this.setState({formDate: dateStr});
-      }),
+    $(`#${this.elementIdFormDate}`).datepicker({
+      format: 'yyyy-mm-dd',
+      todayBtn: 'linked',
+      language: 'ja',
+      autoclose: true,
+      todayHighlight: true,
+      showOnFocus: false,
     });
 
     // ContextMenu セットアップ
@@ -315,6 +317,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           id={this.elementIdFormDate}
                           value={this.state.formDate}
                           readOnly={true}
+                          onClick={() => {this.onFormDateClicked(); }}
                           />
                       </td>
                     </tr>
@@ -509,6 +512,11 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     this.setState({
       formKind: kind,
     });
+  }
+
+  /// 日付がクリックされたときの処理。
+  private onFormDateClicked() {
+    $(`#${this.elementIdFormDate}`).datepicker('show');
   }
 
   /// 口座値変更時の処理。
