@@ -1,4 +1,5 @@
 const path = require('path');
+const hardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 module.exports = {
     // node.js で動作することを指定する
@@ -49,7 +50,7 @@ module.exports = {
             {
                 // src 以下の css は名前衝突回避されたクラス名でロード
                 test: /src\/.*\.css$/,
-                loaders: ['style-loader', 'css-loader?modules'],
+                loaders: ['thread-loader', 'style-loader', 'css-loader?modules'],
             },
         ],
     },
@@ -61,4 +62,8 @@ module.exports = {
             '.js', // node_modulesのライブラリ読み込みに必要
         ]
     },
+    // プラグイン設定
+    plugins: [
+      new hardSourceWebpackPlugin()
+    ]
 };
