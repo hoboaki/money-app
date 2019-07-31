@@ -147,7 +147,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
             const base = parent.offset();
             const height = parent.height();
             if (base !== undefined && height !== undefined) {
-              menu.offset({top: base.top + height, left: base.left});
+              menu.offset({top: base.top + height, left: base.left - 20});
             }
           },
           className: Styles.ContextMenuRoot,
