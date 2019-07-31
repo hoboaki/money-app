@@ -142,10 +142,18 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
             const texts = key.split('-');
             onCategorySelected(Number(texts[1]));
           },
+          determinePosition: (menu) => {
+            const parent = $(selector);
+            const base = parent.offset();
+            const height = parent.height();
+            if (base !== undefined && height !== undefined) {
+              menu.offset({top: base.top + height, left: base.left});
+            }
+          },
           className: Styles.ContextMenuRoot,
           items: categoryItems,
           selector,
-          trigger: 'left',
+          trigger: 'none',
         });
     };
     categorySetup(
@@ -330,6 +338,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           className={formInputCategoryClass}
                           readOnly={true}
                           value={this.categoryOutgoDisplayText()}
+                          onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
                           />
                       </td>
                     </tr>
@@ -517,6 +526,11 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   /// 日付がクリックされたときの処理。
   private onFormDateClicked() {
     $(`#${this.elementIdFormDate}`).datepicker('show');
+  }
+
+  /// カテゴリがクリックされたときの処理。
+  private onFormCategoryClicked(sender: HTMLInputElement) {
+    $(`#${sender.id}`).contextMenu();
   }
 
   /// 口座値変更時の処理。
