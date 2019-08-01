@@ -15,7 +15,6 @@ import * as UiStates from '../state/ui/States';
 import IYearMonthDayDate from '../util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
 import * as Styles from './DialogRecordAdd.css';
-import * as LayoutStyles from './Layout.css';
 
 interface IProps {
   /** 入力フォームの初期日付。 */
@@ -336,6 +335,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           value={this.state.formDate}
                           readOnly={true}
                           onClick={() => {this.onFormDateClicked(); }}
+                          onKeyDown={(e) => {this.onFormDateKeyDown(e); }}
                           />
                         {addRecordNotice}
                       </td>
@@ -373,7 +373,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           className={formInputAccountSelectClass}
                           id={this.elementIdFormAccount}
                           onChange={(event) => {this.onFormAccountChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
                           >
                           {this.props.accounts.map((account) => {
                             return (
@@ -390,7 +390,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           className={formInputAccountSelectClass}
                           id={this.elementIdFormAccountFrom}
                           onChange={(event) => {this.onFormAccountFromChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
                           >
                           <option value={DocTypes.INVALID_ID}>（未選択）</option>
                           {this.props.accounts.map((account) => {
@@ -409,7 +409,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           className={formInputAccountSelectClass}
                           id={this.elementIdFormAccountTo}
                           onChange={(event) => {this.onFormAccountToChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
                           >
                           <option value={DocTypes.INVALID_ID}>（未選択）</option>
                           {this.props.accounts.map((account) => {
@@ -428,7 +428,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           id={this.elementIdFormAmount}
                           value={this.state.formAmount.toString()}
                           onChange={(event) => {this.onFormAmountChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
                           onFocus={(event) => {event.target.select(); }}
                           onClick={(event) => {event.currentTarget.select(); return false; }}
                           />
@@ -442,7 +442,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           id={this.elementIdFormAmountTransfer}
                           value={this.state.formAmountTransfer.toString()}
                           onChange={(event) => {this.onFormAmountTransferChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
                           onFocus={(event) => {event.target.select(); }}
                           onClick={(event) => {event.currentTarget.select(); return false; }}
                           />
@@ -456,7 +456,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           id={this.elementIdFormMemo}
                           value={this.state.formMemo}
                           onChange={(event) => {this.onFormMemoChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDown(event); }}
+                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
                           onFocus={(event) => {event.target.select(); }}
                           onClick={(event) => {event.currentTarget.select(); return false; }}
                           />
@@ -550,6 +550,11 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     $(`#${this.elementIdFormDate}`).datepicker('show');
   }
 
+  /// 日付でキー入力したときの処理。
+  private onFormDateKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    this.onKeyDownCommon(e);
+  }
+
   /// カテゴリがクリックされたときの処理。
   private onFormCategoryClicked(sender: HTMLInputElement) {
     $(`#${sender.id}`).contextMenu();
@@ -570,6 +575,9 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       e.stopPropagation();
       return;
     }
+
+    // 共通処理
+    this.onKeyDownCommon(e);
   }
 
   /// 口座値変更時の処理。
@@ -726,11 +734,13 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     new Function(`$('#${this.elementIdRoot}').modal('hide')`)();
   }
 
-  /// キーダウンイベント処理。
-  private onKeyDown(event: React.KeyboardEvent<HTMLElement>) {
+  /// 共通キーダウンイベント処理。
+  private onKeyDownCommon(event: React.KeyboardEvent<HTMLElement>) {
     // Command + Enter で追加ボタンを押下
     if (event.keyCode === 13 && event.metaKey) {
-      this.onAddButtonClicked();
+      $(`#${this.elementIdFormSubmit}`).click();
+      event.stopPropagation();
+      event.preventDefault();
       return;
     }
   }
