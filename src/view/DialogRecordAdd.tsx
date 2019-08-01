@@ -49,6 +49,7 @@ interface IState {
 
 class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
+  private elementIdCloseBtn: string;
   private elementIdFormCategoryOutgo: string;
   private elementIdFormCategoryIncome: string;
   private elementIdFormDate: string;
@@ -82,6 +83,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       accountToErrorMsg: null,
     };
     this.elementIdRoot = `elem-${UUID()}`;
+    this.elementIdCloseBtn = `elem-${UUID()}`;
     this.elementIdFormCategoryOutgo = `elem-${UUID()}`;
     this.elementIdFormCategoryIncome = `elem-${UUID()}`;
     this.elementIdFormDate = `elem-${UUID()}`;
@@ -142,10 +144,18 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
             const texts = key.split('-');
             onCategorySelected(Number(texts[1]));
           },
+          determinePosition: (menu) => {
+            const parent = $(selector);
+            const base = parent.offset();
+            const height = parent.height();
+            if (base !== undefined && height !== undefined) {
+              menu.offset({top: base.top + height, left: base.left - 20});
+            }
+          },
           className: Styles.ContextMenuRoot,
           items: categoryItems,
           selector,
-          trigger: 'left',
+          trigger: 'none',
         });
     };
     categorySetup(
@@ -265,12 +275,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
     return (
       <div className="modal fade" id={this.elementIdRoot} tabIndex={-1}
-        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-keyboard="false"
+        onKeyDown={(e) => {this.onRootKeyDown(e); }}
+        >
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="exampleModalLabel">レコードの追加</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" id={this.elementIdCloseBtn}
+                className="close" data-dismiss="modal" aria-label="Close"
+                >
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -330,6 +344,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           className={formInputCategoryClass}
                           readOnly={true}
                           value={this.categoryOutgoDisplayText()}
+                          onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
+                          onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
                           />
                       </td>
                     </tr>
@@ -466,6 +482,16 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     );
   }
 
+  /// ダイアログ全体のホットキー対応。
+  private onRootKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    // ESC でダイアログを閉じる。
+    if (e.keyCode === 27) {
+      e.stopPropagation();
+      $(`#${this.elementIdCloseBtn}`).trigger('click');
+      return;
+    }
+  }
+
   /// カテゴリインプットに表示するテキストを返す。
   private categoryOutgoDisplayText(): string {
     return this.categoryDisplayText(
@@ -517,6 +543,28 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   /// 日付がクリックされたときの処理。
   private onFormDateClicked() {
     $(`#${this.elementIdFormDate}`).datepicker('show');
+  }
+
+  /// カテゴリがクリックされたときの処理。
+  private onFormCategoryClicked(sender: HTMLInputElement) {
+    $(`#${sender.id}`).contextMenu();
+  }
+
+  // カテゴリでキー入力したときの処理。
+  private onFormCategoryKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    // コンテキストメニューが出ている状態の ESC がなぜか伝搬されているようなのでここでガードする。
+    const isContextMenuActive = $('#context-menu-layer').length !== 0;
+    if (e.keyCode === 27 && isContextMenuActive) {
+      e.stopPropagation();
+      return;
+    }
+
+    // 下キーを押したらコンテキストメニューを表示
+    if (e.keyCode === 40 && !isContextMenuActive) {
+      $(`#${e.currentTarget.id}`).contextMenu();
+      e.stopPropagation();
+      return;
+    }
   }
 
   /// 口座値変更時の処理。
