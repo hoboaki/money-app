@@ -4,6 +4,7 @@ import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import { v4 as UUID } from 'uuid';
+import '../@types/mdb/modal';
 import * as DocActions from '../state/doc/Actions';
 import * as DocStateMethods from '../state/doc/StateMethods';
 import * as DocStates from '../state/doc/States';
@@ -184,8 +185,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       title: '⌘Cmd + ⏎', delay: {show: 500, hide: 100}, placement:'bottom'
     })`)();
 
-    // ダイアログ表示（MDB が TypeScript 非対応なので文字列で実行）
-    new Function(`$('#${this.elementIdRoot}').modal('show')`)();
+    // ダイアログ表示
+    $(`#${this.elementIdRoot}`).modal('show');
 
     // ダイアログの閉じ終わった瞬間を感知するための監視
     // TypeScript 環境では MDB Modal に JavaScript イベントを登録できないため属性変更検知で代用
