@@ -490,9 +490,6 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       $(`#${this.elementIdCloseBtn}`).trigger('click');
       return;
     }
-
-    // 通常伝搬
-    e.preventDefault();
   }
 
   /// カテゴリインプットに表示するテキストを返す。
@@ -561,9 +558,6 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       e.stopPropagation();
       return;
     }
-
-    // 通常伝搬
-    e.preventDefault();
   }
 
   /// 口座値変更時の処理。
