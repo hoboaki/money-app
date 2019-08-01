@@ -467,19 +467,21 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
               </div>
             </div>
             <div className={formFooterRootClass}>
-              <label>
-                <input type="checkbox"
-                  id={this.elementIdFormIsContinueMode}
-                  checked={this.props.dialogRecordAdd.isContinueMode}
-                  onChange={(event) => {this.onIsContinueModeChanged(event.target); }}
-                  />続けて入力
-              </label>
-              <button type="button"
-                className="btn btn-primary"
-                id={this.elementIdFormSubmit}
-                data-toggle="tooltip"
-                onClick={() => {this.onAddButtonClicked(); }}
-                >追加</button>
+              <div className={LayoutStyles.RightToLeft}>
+                <button type="button"
+                  className="btn btn-primary"
+                  id={this.elementIdFormSubmit}
+                  data-toggle="tooltip"
+                  onClick={() => {this.onAddButtonClicked(); }}
+                  >追加</button>
+                <label>
+                  <input type="checkbox"
+                    id={this.elementIdFormIsContinueMode}
+                    checked={this.props.dialogRecordAdd.isContinueMode}
+                    onChange={(event) => {this.onIsContinueModeChanged(event.target); }}
+                    />続けて入力
+                </label>
+              </div>
             </div>
           </div>
         </div>
