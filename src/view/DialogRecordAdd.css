@@ -95,6 +95,7 @@
 }
 
 .FormInputRoot td {
+  align-items: center;
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-right: none;
   display: flex;
@@ -143,6 +144,13 @@
 .FormErrorMsg {
   color: #e44;
   display: block;
+  margin: 4px;
+}
+
+.FormNoticeMsg {
+  color: #3273ff;
+  display: block;
+  opacity: 0.0;
   margin: 4px;
 }
 

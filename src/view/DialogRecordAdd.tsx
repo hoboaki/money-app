@@ -15,6 +15,7 @@ import * as UiStates from '../state/ui/States';
 import IYearMonthDayDate from '../util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
 import * as Styles from './DialogRecordAdd.css';
+import * as LayoutStyles from './Layout.css';
 
 interface IProps {
   /** 入力フォームの初期日付。 */
@@ -45,6 +46,7 @@ interface IState {
   amountTransferErrorMsg: string | null;
   accountFromErrorMsg: string | null;
   accountToErrorMsg: string | null;
+  displayAddRecordNotice: boolean;
 }
 
 class DialogRecordAdd extends React.Component<ILocalProps, IState> {
@@ -81,6 +83,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       amountTransferErrorMsg: null,
       accountFromErrorMsg: null,
       accountToErrorMsg: null,
+      displayAddRecordNotice: false,
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
@@ -272,6 +275,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       <span className={Styles.FormErrorMsg}>{this.state.amountErrorMsg}</span>;
     const amountTransferErrorMsg = this.state.amountTransferErrorMsg == null ? null :
       <span className={Styles.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
+    const addRecordNotice = <span className={Styles.FormNoticeMsg}>追加しました</span>;
 
     return (
       <div className="modal fade" id={this.elementIdRoot} tabIndex={-1}
@@ -333,6 +337,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
                           readOnly={true}
                           onClick={() => {this.onFormDateClicked(); }}
                           />
+                        {addRecordNotice}
                       </td>
                     </tr>
                     <tr className={formInputRowCategoryOutgoClass}>
@@ -707,6 +712,12 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     // 続けて入力モード用の処理
     if (this.props.dialogRecordAdd.isContinueMode) {
       this.resetForNewInput();
+      $(`#${this.elementIdFormDate}`).focus();
+      $(`.${Styles.FormNoticeMsg}`)
+        .animate({opacity: 1.0}, 0)
+        .delay(1000)
+        .animate({opacity: 0.0}, 750);
+
       return;
     }
 
