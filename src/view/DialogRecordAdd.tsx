@@ -558,6 +558,13 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       e.stopPropagation();
       return;
     }
+
+    // 下キーを押したらコンテキストメニューを表示
+    if (e.keyCode === 40 && !isContextMenuActive) {
+      $(`#${e.currentTarget.id}`).contextMenu();
+      e.stopPropagation();
+      return;
+    }
   }
 
   /// 口座値変更時の処理。
