@@ -188,6 +188,12 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     // ダイアログ表示
     $(`#${this.elementIdRoot}`).modal('show');
 
+    // ダイアログ表示したら日付にフォーカス
+    $(`#${this.elementIdRoot}`).on('shown.bs.modal', () => {
+      global.console.log(`shown`);
+      $(`#${this.elementIdFormDate}`).focus();
+    });
+
     // ダイアログの閉じ終わった瞬間を感知するための監視
     // TypeScript 環境では MDB Modal に JavaScript イベントを登録できないため属性変更検知で代用
     const target = document.getElementById(this.elementIdRoot);
