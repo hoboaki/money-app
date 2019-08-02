@@ -63,7 +63,6 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
   private elementIdFormMemo: string;
   private elementIdFormIsContinueMode: string;
   private elementIdFormSubmit: string;
-  private closeObserver: MutationObserver;
 
   constructor(props: ILocalProps) {
     super(props);
@@ -98,13 +97,6 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
     this.elementIdFormMemo = `elem-${UUID()}`;
     this.elementIdFormIsContinueMode = `elem-${UUID()}`;
     this.elementIdFormSubmit = `elem-${UUID()}`;
-    this.closeObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'aria-modal' && mutation.oldValue === 'true') {
-          this.props.onClosed();
-        }
-      });
-    });
   }
 
   public componentDidMount() {
@@ -190,26 +182,13 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
     // ダイアログ表示したら日付にフォーカス
     $(`#${this.elementIdRoot}`).on('shown.bs.modal', () => {
-      global.console.log(`shown`);
       $(`#${this.elementIdFormDate}`).focus();
     });
 
-    // ダイアログの閉じ終わった瞬間を感知するための監視
-    // TypeScript 環境では MDB Modal に JavaScript イベントを登録できないため属性変更検知で代用
-    const target = document.getElementById(this.elementIdRoot);
-    if (target === null) {
-      throw new Error();
-    }
-    const config = {
-      attributeOldValue: true,
-      attributes: true,
-      subtree: false,
-    };
-    this.closeObserver.observe(target, config);
-  }
-
-  public componentWillUnmount() {
-    this.closeObserver.disconnect();
+    // ダイアログ閉じたらコールバック
+    $(`#${this.elementIdRoot}`).on('hidden.bs.modal', () => {
+      this.props.onClosed();
+    });
   }
 
   public render() {
