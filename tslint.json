@@ -8,5 +8,10 @@
         "object-literal-sort-keys" : false,
         "quotemark": [true, "single", "jsx-double"]
     },
-    "rulesDirectory": []
+    "rulesDirectory": [],
+    "linterOptions": {
+        "exclude": [
+            "./src/@types/**/*.ts"
+        ]
+    }
 }
