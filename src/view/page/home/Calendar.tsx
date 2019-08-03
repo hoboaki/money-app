@@ -11,7 +11,7 @@ import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
 import RecordAddDialog from 'src/view/widget/record-add-dialog';
 import * as LayoutStyles from '../../Layout.css';
-import * as Styles from './PageHomeCalendar.css';
+import * as Styles from './Calendar.css';
 
 interface IProps {
   doc: DocStates.IState;
@@ -23,7 +23,7 @@ interface IState {
   selectedDate: IYearMonthDayDate; // 選択中の日付。
 }
 
-class PageHomeCalendar extends React.Component<IProps, IState> {
+class Calendar extends React.Component<IProps, IState> {
   public constructor(props: IProps) {
     super(props);
     this.state = {
@@ -250,4 +250,4 @@ const mapStateToProps = (state: IStoreState) => {
     pageHome: state.ui.pageHome,
   };
 };
-export default ReactRedux.connect(mapStateToProps)(PageHomeCalendar);
+export default ReactRedux.connect(mapStateToProps)(Calendar);

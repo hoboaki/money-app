@@ -1,2 +1,2 @@
-import Home from './PageHome';
-export default Home;
+import {default as PageHome} from './Main';
+export default PageHome;

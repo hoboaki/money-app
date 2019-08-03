@@ -1,8 +1,8 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
-import * as Styles from './PageSheetBody.css';
+import * as Styles from './Body.css';
 
-class PageSheetBody extends React.Component<any, any> {
+class Body extends React.Component<any, any> {
   public render() {
     const rootClass = ClassNames(
       Styles.Root,
@@ -193,4 +193,4 @@ class PageSheetBody extends React.Component<any, any> {
 
 }
 
-export default PageSheetBody;
+export default Body;

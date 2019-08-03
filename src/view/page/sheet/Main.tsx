@@ -2,11 +2,11 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as LayoutStyles from '../../Layout.css';
 import * as PageStyles from '../Page.css';
-import PageHomeBody from './PageHomeBody';
-import PageHomeHeader from './PageHomeHeader';
+import Body from './Body';
+import Header from './Header';
 
-class PageHome extends React.Component<any, any> {
-  public static PageId: string = 'Home';
+class Main extends React.Component<any, any> {
+  public static PageId: string = 'Sheet';
 
   public render() {
     const rootClass = ClassNames(
@@ -15,12 +15,12 @@ class PageHome extends React.Component<any, any> {
     );
     return (
       <div className={rootClass}>
-        <PageHomeHeader />
-        <PageHomeBody />
+        <Header />
+        <Body />
       </div>
     );
   }
 
 }
 
-export default PageHome;
+export default Main;

@@ -1,22 +1,22 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import * as DocStates from '../../../state/doc/States';
-import IStoreState from '../../../state/IStoreState';
-import * as UiStates from '../../../state/ui/States';
-import BalanceCalculator from '../../../util/doc/BalanceCalculator';
-import RecordCollection from '../../../util/doc/RecordCollection';
-import * as RecordFilters from '../../../util/doc/RecordFilters';
-import * as IYearMonthDayDateUtils from '../../../util/IYearMonthDayDateUtils';
-import * as PriceUtils from '../../../util/PriceUtils';
-import * as Styles from './PageHomeBalance.css';
+import * as DocStates from 'src/state/doc/States';
+import IStoreState from 'src/state/IStoreState';
+import * as UiStates from 'src/state/ui/States';
+import BalanceCalculator from 'src/util/doc/BalanceCalculator';
+import RecordCollection from 'src/util/doc/RecordCollection';
+import * as RecordFilters from 'src/util/doc/RecordFilters';
+import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as PriceUtils from 'src/util/PriceUtils';
+import * as Styles from './Balance.css';
 
 interface IProps {
   doc: DocStates.IState;
   pageHome: UiStates.IPageHome;
 }
 
-class PageHomeBalance extends React.Component<IProps, any> {
+class Balance extends React.Component<IProps, any> {
   public render() {
     const startDate = this.props.pageHome.currentDate;
     const endDate = IYearMonthDayDateUtils.nextMonth(startDate);
@@ -131,4 +131,4 @@ const mapStateToProps = (state: IStoreState) => {
     pageHome: state.ui.pageHome,
   };
 };
-export default ReactRedux.connect(mapStateToProps)(PageHomeBalance);
+export default ReactRedux.connect(mapStateToProps)(Balance);

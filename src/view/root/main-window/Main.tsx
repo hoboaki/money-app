@@ -23,7 +23,7 @@ interface IState {
 enum Color {
   Red = 0,
 }
-class Main extends React.Component<any, IState> {
+class MainWindow extends React.Component<any, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -139,4 +139,4 @@ class Main extends React.Component<any, IState> {
   }
 }
 
-export default Main;
+export default MainWindow;

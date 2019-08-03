@@ -9,13 +9,13 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as LayoutStyles from 'src/view/Layout.css';
 import RecordAddDialog from 'src/view/widget/record-add-dialog';
-import * as Styles from './PageHomeHeader.css';
+import * as Styles from './Header.css';
 
 interface IState {
   modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
 }
 
-class PageHomeHeader extends React.Component<States.IPageHome, IState> {
+class Header extends React.Component<States.IPageHome, IState> {
   constructor(props: States.IPageHome) {
     super(props);
     this.state = {
@@ -142,4 +142,4 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
 const mapStateToProps = (state: IStoreState) => {
   return state.ui.pageHome;
 };
-export default ReactRedux.connect(mapStateToProps)(PageHomeHeader);
+export default ReactRedux.connect(mapStateToProps)(Header);
