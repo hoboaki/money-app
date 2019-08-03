@@ -138,10 +138,7 @@ export const toData = (state: States.IState) => {
   const result = new DataRoot();
 
   // 口座
-  for (const key in state.account.order) {
-    if (!state.account.accounts.hasOwnProperty(key)) {
-      continue;
-    }
+  state.account.order.forEach((key) => {
     const src = state.account.accounts[key];
     const data = new DataAccount();
     data.id = src.id;
@@ -149,7 +146,7 @@ export const toData = (state: States.IState) => {
     data.kind = Types.AccountKind[src.kind];
     result.accounts.push(data);
     data.initialAmount = src.initialAmount;
-  }
+  });
 
   // 入金
   {
