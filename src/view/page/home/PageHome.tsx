@@ -1,7 +1,7 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as LayoutStyles from '../../Layout.css';
-import * as PageStyles from '../../Page.css';
+import * as PageStyles from '../Page.css';
 import PageHomeBody from './PageHomeBody';
 import PageHomeHeader from './PageHomeHeader';
 

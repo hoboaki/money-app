@@ -8,7 +8,7 @@ import SampleDoc from 'src/state/SampleDoc';
 import Store from 'src/state/Store';
 import * as MmxfImporter from 'src/util/doc/MmxfImporter';
 import LayoutStyle from 'src/view/Layout.css';
-import PageStyles from 'src/view/Page.css';
+import PageStyles from 'src/view/page/Page.css';
 import PageHome from 'src/view/page/home/PageHome';
 import PageSheet from 'src/view/page/sheet/PageSheet';
 import * as MainWindowStyles from './MainWindow.css';
