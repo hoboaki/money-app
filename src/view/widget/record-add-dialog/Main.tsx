@@ -15,7 +15,7 @@ import * as UiActions from '../../../state/ui/Actions';
 import * as UiStates from '../../../state/ui/States';
 import IYearMonthDayDate from '../../../util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from '../../../util/IYearMonthDayDateUtils';
-import * as Styles from './DialogRecordAdd.css';
+import * as Styles from './Main.css';
 
 interface IProps {
   /** 入力フォームの初期日付。 */
@@ -51,7 +51,7 @@ interface IState {
   displayAddRecordNotice: boolean;
 }
 
-class DialogRecordAdd extends React.Component<ILocalProps, IState> {
+class Main extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdCloseBtn: string;
   private elementIdFormCategoryOutgo: string;
@@ -750,4 +750,4 @@ const mapStateToProps = (state: IStoreState, props: IProps) => {
   );
   return result;
 };
-export default ReactRedux.connect(mapStateToProps)(DialogRecordAdd);
+export default ReactRedux.connect(mapStateToProps)(Main);

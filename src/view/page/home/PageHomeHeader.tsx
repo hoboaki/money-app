@@ -8,7 +8,7 @@ import * as States from 'src/state/ui/States';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as LayoutStyles from 'src/view/Layout.css';
-import DialogRecordAdd from 'src/view/widget/record-add-dialog/DialogRecordAdd';
+import RecordAddDialog from 'src/view/widget/record-add-dialog';
 import * as Styles from './PageHomeHeader.css';
 
 interface IState {
@@ -73,7 +73,7 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
     );
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalAddRecord) {
-        modalDialog = <DialogRecordAdd
+        modalDialog = <RecordAddDialog
           formDefaultDate={IYearMonthDayDateUtils.today()}
           onClosed={() => {
             this.setState({modalAddRecord: false});
