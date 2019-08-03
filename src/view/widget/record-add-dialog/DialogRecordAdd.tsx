@@ -4,17 +4,17 @@ import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import { v4 as UUID } from 'uuid';
-import '../@types/mdb/modal';
-import * as DocActions from '../state/doc/Actions';
-import * as DocStateMethods from '../state/doc/StateMethods';
-import * as DocStates from '../state/doc/States';
-import * as DocTypes from '../state/doc/Types';
-import IStoreState from '../state/IStoreState';
-import Store from '../state/Store';
-import * as UiActions from '../state/ui/Actions';
-import * as UiStates from '../state/ui/States';
-import IYearMonthDayDate from '../util/IYearMonthDayDate';
-import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
+import '../../../@types/mdb/modal';
+import * as DocActions from '../../../state/doc/Actions';
+import * as DocStateMethods from '../../../state/doc/StateMethods';
+import * as DocStates from '../../../state/doc/States';
+import * as DocTypes from '../../../state/doc/Types';
+import IStoreState from '../../../state/IStoreState';
+import Store from '../../../state/Store';
+import * as UiActions from '../../../state/ui/Actions';
+import * as UiStates from '../../../state/ui/States';
+import IYearMonthDayDate from '../../../util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from '../../../util/IYearMonthDayDateUtils';
 import * as Styles from './DialogRecordAdd.css';
 
 interface IProps {

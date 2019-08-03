@@ -1,14 +1,14 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import IStoreState from '../state/IStoreState';
-import Store from '../state/Store';
-import * as UiActions from '../state/ui/Actions';
-import * as States from '../state/ui/States';
-import IYearMonthDayDate from '../util/IYearMonthDayDate';
-import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
-import DialogRecordAdd from './DialogRecordAdd';
-import * as LayoutStyles from './Layout.css';
+import IStoreState from 'src/state/IStoreState';
+import Store from 'src/state/Store';
+import * as UiActions from 'src/state/ui/Actions';
+import * as States from 'src/state/ui/States';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as LayoutStyles from 'src/view/Layout.css';
+import DialogRecordAdd from 'src/view/widget/record-add-dialog/DialogRecordAdd';
 import * as Styles from './PageHomeHeader.css';
 
 interface IState {
