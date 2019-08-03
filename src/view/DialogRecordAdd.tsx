@@ -737,7 +737,7 @@ const mapStateToProps = (state: IStoreState, props: IProps) => {
   const result: ILocalProps = Object.assign(
     props,
     {
-      accounts: Object.values(state.doc.accounts),
+      accounts: state.doc.account.orders.map((id) => state.doc.account.accounts[id]),
       incomeCategories: state.doc.income.categories,
       outgoCategories: state.doc.outgo.categories,
       dialogRecordAdd: state.ui.dialogAddRecord,

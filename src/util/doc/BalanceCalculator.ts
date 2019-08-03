@@ -29,7 +29,7 @@ class BalanceCalculator {
 
     const allRecords = new RecordCollection(state);
     if (accounts == null) {
-      accounts = Object.keys(state.accounts).map((text) => Number(text));
+      accounts = state.account.orders;
     }
     accounts.forEach((accountId) => {
       const cacheEnabled = cache != null && accountId in cache.balances && cache.endDate < endDate;
@@ -39,7 +39,7 @@ class BalanceCalculator {
         RecordFilters.createAccountFilter({accounts: [accountId]}),
       ]);
       const cacheBalance = (cache != null && cacheEnabled) ? cache.balances[accountId] : 0;
-      const account = state.accounts[accountId];
+      const account = state.account.accounts[accountId];
       const addInitialAmount = IYearMonthDayDateUtils.less(account.startDate, endDate) &&
         (startDate == null || IYearMonthDayDateUtils.lessEq(startDate, account.startDate));
       const initialAmount = addInitialAmount ? account.initialAmount : 0;

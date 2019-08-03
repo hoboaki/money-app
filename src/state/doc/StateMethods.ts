@@ -138,11 +138,11 @@ export const toData = (state: States.IState) => {
   const result = new DataRoot();
 
   // 口座
-  for (const key in state.accounts) {
-    if (!state.accounts.hasOwnProperty(key)) {
+  for (const key in state.account.orders) {
+    if (!state.account.accounts.hasOwnProperty(key)) {
       continue;
     }
-    const src = state.accounts[key];
+    const src = state.account.accounts[key];
     const data = new DataAccount();
     data.id = src.id;
     data.name = src.name;
@@ -268,7 +268,8 @@ export const accountAdd = (
   // 追加
   obj.id = state.nextId.account;
   state.nextId.account++;
-  state.accounts[obj.id] = obj;
+  state.account.accounts[obj.id] = obj;
+  state.account.orders.push(obj.id);
   return obj.id;
 };
 
@@ -277,9 +278,9 @@ export const accountByName = (
   state: States.IState,
   name: string,
   ): States.IAccount => {
-  const account = Object.values(state.accounts).find((ac) => ac.name === name);
+  const account = Object.values(state.account.accounts).find((ac) => ac.name === name);
   if (account === undefined) {
-    global.console.log(state.accounts);
+    global.console.log(state.account.accounts);
     throw new Error(`Not found account named '${name}'.`);
   }
   return account;

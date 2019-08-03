@@ -58,8 +58,14 @@ export interface IRecordTransfer extends IRecord {
 
 /** ドキュメントルート。 */
 export interface IState {
-  /** AccountId がキーの口座郡。 */
-  accounts: {[key: number]: IAccount};
+  /** 口座。 */
+  account: {
+    /** 口座の並び順（AccountId の配列）定義。 */
+    orders: number[];
+
+    /** AccountId がキーの口座群。 */
+    accounts: {[key: number]: IAccount};
+  };
 
   /** 入金。 */
   income: {
@@ -91,8 +97,12 @@ export interface IState {
   };
 }
 
+const AccountGroupAssets = Types.AccountGroup.Assets;
 export const defaultState: IState = {
-  accounts: {},
+  account: {
+    orders: [],
+    accounts: {},
+  },
   income: {
     categories: {},
     records: {},

@@ -46,7 +46,7 @@ class RecordCollection implements IRecordCollection {
     if (accounts != null) {
       accounts.forEach((id) => {accountsDict[id] = true; });
     } else {
-      accountsDict = this.state.accounts;
+      accountsDict = this.state.account.accounts;
     }
     return this.transfers.reduce((current, id) => {
       let result = current;
