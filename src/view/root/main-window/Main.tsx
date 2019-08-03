@@ -11,7 +11,7 @@ import LayoutStyle from 'src/view/Layout.css';
 import PageHome from 'src/view/page/home';
 import PageStyles from 'src/view/page/Page.css';
 import PageSheet from 'src/view/page/sheet';
-import * as MainWindowStyles from './MainWindow.css';
+import * as Styles from './Main.css';
 import SideBar from './SideBar';
 import TitleBar from './TitleBar';
 
@@ -23,7 +23,7 @@ interface IState {
 enum Color {
   Red = 0,
 }
-class MainWindow extends React.Component<any, IState> {
+class Main extends React.Component<any, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -107,7 +107,7 @@ class MainWindow extends React.Component<any, IState> {
     }
 
     const rootClass = ClassNames(
-      MainWindowStyles.Root,
+      Styles.Root,
       LayoutStyle.TopToBottom,
     );
     return (
@@ -139,4 +139,4 @@ class MainWindow extends React.Component<any, IState> {
   }
 }
 
-export default MainWindow;
+export default Main;

@@ -1,2 +1,2 @@
-import MainWindow from './MainWindow';
+import MainWindow from './Main';
 export default MainWindow;
