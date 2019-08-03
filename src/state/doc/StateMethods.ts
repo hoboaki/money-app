@@ -151,10 +151,12 @@ export const toData = (state: States.IState) => {
   // 入金
   {
     // カテゴリ
-    for (const key in state.income.categories) {
-      if (!state.income.categories.hasOwnProperty(key)) {
-        continue;
-      }
+    const categoryOrder = state.income.categoryRootOrder.concat(
+      Object.keys(state.income.categories).map((key) => Number(key)).filter(
+        (key) => state.income.categories[key].parent != null,
+      ),
+    );
+    categoryOrder.forEach((key) => {
       const src = state.income.categories[key];
       const data = new DataCategory();
       data.id = src.id;
@@ -163,7 +165,7 @@ export const toData = (state: States.IState) => {
         data.parent = src.parent;
       }
       result.income.categories.push(data);
-    }
+    });
 
     // レコード
     for (const key in state.income.records) {
@@ -186,10 +188,12 @@ export const toData = (state: States.IState) => {
   // 出金
   {
     // カテゴリ
-    for (const key in state.outgo.categories) {
-      if (!state.outgo.categories.hasOwnProperty(key)) {
-        continue;
-      }
+    const categoryOrder = state.outgo.categoryRootOrder.concat(
+      Object.keys(state.outgo.categories).map((key) => Number(key)).filter(
+        (key) => state.outgo.categories[key].parent != null,
+      ),
+    );
+    categoryOrder.forEach((key) => {
       const src = state.outgo.categories[key];
       const data = new DataCategory();
       data.id = src.id;
@@ -198,7 +202,7 @@ export const toData = (state: States.IState) => {
         data.parent = src.parent;
       }
       result.outgo.categories.push(data);
-    }
+    });
 
     // レコード
     for (const key in state.outgo.records) {
