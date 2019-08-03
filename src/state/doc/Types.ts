@@ -17,6 +17,25 @@ export enum AccountKind {
   LiabilitiesOther = 29, // 負債：その他。
 }
 
+/** AccountKind -> AccountGroup 変換関数。 */
+export const accountKindToAccountGroup = (kind: AccountKind) => {
+  switch (kind) {
+    case AccountKind.AssetsCash:
+    case AccountKind.AssetsBank:
+    case AccountKind.AssetsInvesting:
+    case AccountKind.AssetsOther:
+      return AccountGroup.Assets;
+
+    case AccountKind.LiabilitiesLoan:
+    case AccountKind.LiabilitiesCard:
+    case AccountKind.LiabilitiesOther:
+        return AccountGroup.Liabilities;
+
+    default:
+      return AccountGroup.Invalid;
+  }
+};
+
 /** カテゴリの種類。 */
 export enum CategoryKind {
   Invalid = 0, // 無効値。
