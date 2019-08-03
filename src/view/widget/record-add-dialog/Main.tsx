@@ -3,6 +3,8 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import { v4 as UUID } from 'uuid';
+
 import 'src/@types/mdb/modal';
 import * as DocActions from 'src/state/doc/Actions';
 import * as DocStateMethods from 'src/state/doc/StateMethods';
@@ -14,7 +16,6 @@ import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
-import { v4 as UUID } from 'uuid';
 import * as Styles from './Main.css';
 
 interface IProps {

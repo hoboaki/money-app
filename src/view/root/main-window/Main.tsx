@@ -3,6 +3,7 @@ import {ipcRenderer as IpcRenderer} from 'electron';
 import * as Fs from 'fs';
 import * as React from 'react';
 import Split from 'split.js';
+
 import * as DocActions from 'src/state/doc/Actions';
 import SampleDoc from 'src/state/SampleDoc';
 import Store from 'src/state/Store';

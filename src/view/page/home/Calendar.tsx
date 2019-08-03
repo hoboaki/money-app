@@ -1,6 +1,7 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+
 import * as DocStates from 'src/state/doc/States';
 import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
