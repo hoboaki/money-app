@@ -3,15 +3,16 @@ import {ipcRenderer as IpcRenderer} from 'electron';
 import * as Fs from 'fs';
 import * as React from 'react';
 import Split from 'split.js';
-import * as DocActions from '../state/doc/Actions';
-import SampleDoc from '../state/SampleDoc';
-import Store from '../state/Store';
-import * as MmxfImporter from '../util/doc/MmxfImporter';
-import LayoutStyle from './Layout.css';
-import * as MainWindowStyles from './MainWindow.css';
-import PageStyles from './Page.css';
-import PageHome from './PageHome';
-import PageSheet from './PageSheet';
+
+import * as DocActions from 'src/state/doc/Actions';
+import SampleDoc from 'src/state/SampleDoc';
+import Store from 'src/state/Store';
+import * as MmxfImporter from 'src/util/doc/MmxfImporter';
+import LayoutStyle from 'src/view/Layout.css';
+import PageHome from 'src/view/page/home';
+import PageStyles from 'src/view/page/Page.css';
+import PageSheet from 'src/view/page/sheet';
+import * as Styles from './Main.css';
 import SideBar from './SideBar';
 import TitleBar from './TitleBar';
 
@@ -107,7 +108,7 @@ class MainWindow extends React.Component<any, IState> {
     }
 
     const rootClass = ClassNames(
-      MainWindowStyles.Root,
+      Styles.Root,
       LayoutStyle.TopToBottom,
     );
     return (

@@ -1,6 +1,6 @@
 import Clone from 'clone';
-import IYearMonthDayDate from '../util/IYearMonthDayDate';
-import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
+
+import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as StateMethods from './doc/StateMethods';
 import * as States from './doc/States';
 import * as Types from './doc/Types';

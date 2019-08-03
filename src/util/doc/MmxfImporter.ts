@@ -1,10 +1,10 @@
 import * as Fs from 'fs';
 import * as Xmldom from 'xmldom';
 import * as Xpath from 'xpath-ts';
-import * as StateMethods from '../../state/doc/StateMethods';
-import * as States from '../../state/doc/States';
-import * as Types from '../../state/doc/Types';
-import IYearMonthDayDate from '../IYearMonthDayDate';
+
+import * as StateMethods from 'src/state/doc/StateMethods';
+import * as States from 'src/state/doc/States';
+import * as Types from 'src/state/doc/Types';
 import * as IYearMonthDayDateUtils from '../IYearMonthDayDateUtils';
 
 export interface IImportResult {

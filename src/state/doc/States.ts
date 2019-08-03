@@ -1,4 +1,4 @@
-import IYearMonthDayDate from '../../util/IYearMonthDayDate';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as Types from './Types';
 
 /** 口座。 */

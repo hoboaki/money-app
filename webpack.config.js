@@ -60,7 +60,10 @@ module.exports = {
             '.ts',
             '.tsx',
             '.js', // node_modulesのライブラリ読み込みに必要
-        ]
+        ],
+        alias: {
+            "src": path.resolve('./src')
+        }
     },
     // プラグイン設定
     plugins: [

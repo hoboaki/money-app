@@ -1,9 +1,10 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
-import * as LayoutStyles from './Layout.css';
-import * as Styles from './PageSheetHeader.css';
 
-class PageSheetHeader extends React.Component<any, any> {
+import * as LayoutStyles from '../../Layout.css';
+import * as Styles from './Header.css';
+
+class Header extends React.Component<any, any> {
   public render() {
     const rootClass = ClassNames(
       Styles.Root,
@@ -66,4 +67,4 @@ class PageSheetHeader extends React.Component<any, any> {
   }
 }
 
-export default PageSheetHeader;
+export default Header;

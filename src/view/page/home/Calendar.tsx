@@ -1,17 +1,18 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import * as DocStates from '../state/doc/States';
-import IStoreState from '../state/IStoreState';
-import * as UiStates from '../state/ui/States';
-import RecordCollection from '../util/doc/RecordCollection';
-import * as RecordFilters from '../util/doc/RecordFilters';
-import IYearMonthDayDate from '../util/IYearMonthDayDate';
-import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
-import * as PriceUtils from '../util/PriceUtils';
-import DialogRecordAdd from './DialogRecordAdd';
-import * as LayoutStyles from './Layout.css';
-import * as Styles from './PageHomeCalendar.css';
+
+import * as DocStates from 'src/state/doc/States';
+import IStoreState from 'src/state/IStoreState';
+import * as UiStates from 'src/state/ui/States';
+import RecordCollection from 'src/util/doc/RecordCollection';
+import * as RecordFilters from 'src/util/doc/RecordFilters';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as PriceUtils from 'src/util/PriceUtils';
+import RecordAddDialog from 'src/view/widget/record-add-dialog';
+import * as LayoutStyles from '../../Layout.css';
+import * as Styles from './Calendar.css';
 
 interface IProps {
   doc: DocStates.IState;
@@ -23,7 +24,7 @@ interface IState {
   selectedDate: IYearMonthDayDate; // 選択中の日付。
 }
 
-class PageHomeCalendar extends React.Component<IProps, IState> {
+class Calendar extends React.Component<IProps, IState> {
   public constructor(props: IProps) {
     super(props);
     this.state = {
@@ -207,7 +208,7 @@ class PageHomeCalendar extends React.Component<IProps, IState> {
 
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalAddRecord) {
-        modalDialog = <DialogRecordAdd
+        modalDialog = <RecordAddDialog
           formDefaultDate={this.state.selectedDate}
           onClosed={() => {
             this.setState({modalAddRecord: false});
@@ -250,4 +251,4 @@ const mapStateToProps = (state: IStoreState) => {
     pageHome: state.ui.pageHome,
   };
 };
-export default ReactRedux.connect(mapStateToProps)(PageHomeCalendar);
+export default ReactRedux.connect(mapStateToProps)(Calendar);

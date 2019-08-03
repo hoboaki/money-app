@@ -1,21 +1,22 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import IStoreState from '../state/IStoreState';
-import Store from '../state/Store';
-import * as UiActions from '../state/ui/Actions';
-import * as States from '../state/ui/States';
-import IYearMonthDayDate from '../util/IYearMonthDayDate';
-import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
-import DialogRecordAdd from './DialogRecordAdd';
-import * as LayoutStyles from './Layout.css';
-import * as Styles from './PageHomeHeader.css';
+
+import IStoreState from 'src/state/IStoreState';
+import Store from 'src/state/Store';
+import * as UiActions from 'src/state/ui/Actions';
+import * as States from 'src/state/ui/States';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as LayoutStyles from 'src/view/Layout.css';
+import RecordAddDialog from 'src/view/widget/record-add-dialog';
+import * as Styles from './Header.css';
 
 interface IState {
   modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
 }
 
-class PageHomeHeader extends React.Component<States.IPageHome, IState> {
+class Header extends React.Component<States.IPageHome, IState> {
   constructor(props: States.IPageHome) {
     super(props);
     this.state = {
@@ -73,7 +74,7 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
     );
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalAddRecord) {
-        modalDialog = <DialogRecordAdd
+        modalDialog = <RecordAddDialog
           formDefaultDate={IYearMonthDayDateUtils.today()}
           onClosed={() => {
             this.setState({modalAddRecord: false});
@@ -142,4 +143,4 @@ class PageHomeHeader extends React.Component<States.IPageHome, IState> {
 const mapStateToProps = (state: IStoreState) => {
   return state.ui.pageHome;
 };
-export default ReactRedux.connect(mapStateToProps)(PageHomeHeader);
+export default ReactRedux.connect(mapStateToProps)(Header);

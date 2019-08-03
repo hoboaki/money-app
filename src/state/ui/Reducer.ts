@@ -2,9 +2,8 @@ import Clone from 'clone';
 import Redux from 'redux';
 import { Action } from 'redux';
 
-import createA2RMapper from '../../util/ActionToReducerMapper';
-import IYearMonthDayDate from '../../util/IYearMonthDayDate';
-import * as IYearMonthDayDateUtils from '../../util/IYearMonthDayDateUtils';
+import createA2RMapper from 'src/util/ActionToReducerMapper';
+import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as Actions from './Actions';
 import * as States from './States';
 

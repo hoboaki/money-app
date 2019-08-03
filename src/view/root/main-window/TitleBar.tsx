@@ -1,5 +1,6 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+
 import * as Styles from './TitleBar.css';
 
 interface IProps {
