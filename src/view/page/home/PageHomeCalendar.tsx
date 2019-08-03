@@ -10,7 +10,7 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
 import DialogRecordAdd from 'src/view/widget/record-add-dialog/DialogRecordAdd';
-import * as LayoutStyles from './Layout.css';
+import * as LayoutStyles from '../../Layout.css';
 import * as Styles from './PageHomeCalendar.css';
 
 interface IProps {

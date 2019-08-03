@@ -1,14 +1,14 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import * as DocStates from '../state/doc/States';
-import IStoreState from '../state/IStoreState';
-import * as UiStates from '../state/ui/States';
-import BalanceCalculator from '../util/doc/BalanceCalculator';
-import RecordCollection from '../util/doc/RecordCollection';
-import * as RecordFilters from '../util/doc/RecordFilters';
-import * as IYearMonthDayDateUtils from '../util/IYearMonthDayDateUtils';
-import * as PriceUtils from '../util/PriceUtils';
+import * as DocStates from '../../../state/doc/States';
+import IStoreState from '../../../state/IStoreState';
+import * as UiStates from '../../../state/ui/States';
+import BalanceCalculator from '../../../util/doc/BalanceCalculator';
+import RecordCollection from '../../../util/doc/RecordCollection';
+import * as RecordFilters from '../../../util/doc/RecordFilters';
+import * as IYearMonthDayDateUtils from '../../../util/IYearMonthDayDateUtils';
+import * as PriceUtils from '../../../util/PriceUtils';
 import * as Styles from './PageHomeBalance.css';
 
 interface IProps {

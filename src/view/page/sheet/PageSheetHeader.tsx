@@ -1,6 +1,6 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
-import * as LayoutStyles from './Layout.css';
+import * as LayoutStyles from '../../Layout.css';
 import * as Styles from './PageSheetHeader.css';
 
 class PageSheetHeader extends React.Component<any, any> {
