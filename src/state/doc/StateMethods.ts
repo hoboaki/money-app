@@ -138,35 +138,50 @@ export const toData = (state: States.IState) => {
   const result = new DataRoot();
 
   // 口座
-  for (const key in state.account.orders) {
-    if (!state.account.accounts.hasOwnProperty(key)) {
-      continue;
-    }
+  const accountIdDict: {[key: number]: number} = {}; // AccountId -> エクスポート先のId 辞書
+  state.account.order.forEach((key) => {
     const src = state.account.accounts[key];
     const data = new DataAccount();
-    data.id = src.id;
+    data.id = result.accounts.length + 1;
     data.name = src.name;
     data.kind = Types.AccountKind[src.kind];
-    result.accounts.push(data);
     data.initialAmount = src.initialAmount;
-  }
+    result.accounts.push(data);
+    accountIdDict[src.id] = data.id;
+  });
 
   // 入金
   {
     // カテゴリ
-    for (const key in state.income.categories) {
-      if (!state.income.categories.hasOwnProperty(key)) {
-        continue;
-      }
+    const categoryIdDict: {[key: number]: number} = {}; // CategoryId -> エクスポート先のId 辞書
+    const collectChildCategoryId = (ids: number[]): number[] => {
+      return ids.reduce(
+        (resultIds: number[], id: number) => {
+          resultIds.push(id);
+          const childs = state.income.categories[id].childs;
+          if (childs.length !== 0) {
+            resultIds = resultIds.concat(collectChildCategoryId(childs));
+          }
+          return resultIds;
+        },
+        [],
+      );
+    };
+    const categoryOrder = collectChildCategoryId(state.income.categoryRootOrder);
+    categoryOrder.forEach((key) => {
       const src = state.income.categories[key];
       const data = new DataCategory();
-      data.id = src.id;
+      data.id = result.income.categories.length + 1;
       data.name = src.name;
       if (src.parent != null) {
-        data.parent = src.parent;
+        data.parent = categoryIdDict[src.parent];
+        if (data.parent === 0 || data.parent === undefined) {
+          throw new Error('Not found income category parent id.');
+        }
       }
       result.income.categories.push(data);
-    }
+      categoryIdDict[src.id] = data.id;
+    });
 
     // レコード
     for (const key in state.income.records) {
@@ -180,8 +195,8 @@ export const toData = (state: States.IState) => {
       data.date = IYearMonthDayDateUtils.toText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
-      data.category = src.category;
-      data.account = src.account;
+      data.category = categoryIdDict[src.category];
+      data.account = accountIdDict[src.account];
       result.income.records.push(data);
     }
   }
@@ -189,19 +204,35 @@ export const toData = (state: States.IState) => {
   // 出金
   {
     // カテゴリ
-    for (const key in state.outgo.categories) {
-      if (!state.outgo.categories.hasOwnProperty(key)) {
-        continue;
-      }
+    const categoryIdDict: {[key: number]: number} = {}; // CategoryId -> エクスポート先のId 辞書
+    const collectChildCategoryId = (ids: number[]): number[] => {
+      return ids.reduce(
+        (resultIds: number[], id: number) => {
+          resultIds.push(id);
+          const childs = state.outgo.categories[id].childs;
+          if (childs.length !== 0) {
+            resultIds = resultIds.concat(collectChildCategoryId(childs));
+          }
+          return resultIds;
+        },
+        [],
+      );
+    };
+    const categoryOrder = collectChildCategoryId(state.outgo.categoryRootOrder);
+    categoryOrder.forEach((key) => {
       const src = state.outgo.categories[key];
       const data = new DataCategory();
-      data.id = src.id;
+      data.id = result.outgo.categories.length + 1;
       data.name = src.name;
       if (src.parent != null) {
-        data.parent = src.parent;
+        data.parent = categoryIdDict[src.parent];
+        if (data.parent === 0 || data.parent === undefined) {
+          throw new Error('Not found outgo category parent id.');
+        }
       }
       result.outgo.categories.push(data);
-    }
+      categoryIdDict[src.id] = data.id;
+    });
 
     // レコード
     for (const key in state.outgo.records) {
@@ -215,8 +246,8 @@ export const toData = (state: States.IState) => {
       data.date = IYearMonthDayDateUtils.toText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
-      data.category = src.category;
-      data.account = src.account;
+      data.category = categoryIdDict[src.category];
+      data.account = accountIdDict[src.account];
       result.outgo.records.push(data);
     }
   }
@@ -235,8 +266,8 @@ export const toData = (state: States.IState) => {
       data.date = IYearMonthDayDateUtils.toText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
-      data.accountFrom = src.accountFrom;
-      data.accountTo = src.accountTo;
+      data.accountFrom = accountIdDict[src.accountFrom];
+      data.accountTo = accountIdDict[src.accountTo];
       result.transfer.records.push(data);
     }
   }
@@ -269,7 +300,7 @@ export const accountAdd = (
   obj.id = state.nextId.account;
   state.nextId.account++;
   state.account.accounts[obj.id] = obj;
-  state.account.orders.push(obj.id);
+  state.account.order.push(obj.id);
   return obj.id;
 };
 
@@ -312,6 +343,8 @@ export const incomeCategoryAdd = (
     } else {
       throw new Error(`Category parent (id: ${parentId}) is not exist.`);
     }
+  } else {
+    state.income.categoryRootOrder.push(obj.id);
   }
   return obj.id;
 };
@@ -375,6 +408,8 @@ export const outgoCategoryAdd = (
     } else {
       throw new Error(`Category parent (id: ${parentId}) is not exist.`);
     }
+  } else {
+    state.outgo.categoryRootOrder.push(obj.id);
   }
   return obj.id;
 };
