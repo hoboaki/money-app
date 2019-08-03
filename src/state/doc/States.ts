@@ -61,7 +61,7 @@ export interface IState {
   /** 口座。 */
   account: {
     /** 口座の並び順（AccountId の配列）定義。 */
-    orders: number[];
+    order: number[];
 
     /** AccountId がキーの口座群。 */
     accounts: {[key: number]: IAccount};
@@ -100,7 +100,7 @@ export interface IState {
 const AccountGroupAssets = Types.AccountGroup.Assets;
 export const defaultState: IState = {
   account: {
-    orders: [],
+    order: [],
     accounts: {},
   },
   income: {

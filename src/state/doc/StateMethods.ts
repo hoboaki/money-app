@@ -138,7 +138,7 @@ export const toData = (state: States.IState) => {
   const result = new DataRoot();
 
   // 口座
-  for (const key in state.account.orders) {
+  for (const key in state.account.order) {
     if (!state.account.accounts.hasOwnProperty(key)) {
       continue;
     }
@@ -269,7 +269,7 @@ export const accountAdd = (
   obj.id = state.nextId.account;
   state.nextId.account++;
   state.account.accounts[obj.id] = obj;
-  state.account.orders.push(obj.id);
+  state.account.order.push(obj.id);
   return obj.id;
 };
 

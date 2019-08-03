@@ -29,7 +29,7 @@ class BalanceCalculator {
 
     const allRecords = new RecordCollection(state);
     if (accounts == null) {
-      accounts = state.account.orders;
+      accounts = state.account.order;
     }
     accounts.forEach((accountId) => {
       const cacheEnabled = cache != null && accountId in cache.balances && cache.endDate < endDate;
