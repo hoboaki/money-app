@@ -62,21 +62,24 @@ export interface IState {
   account: {
     /** 口座の並び順（AccountId の配列）定義。 */
     order: number[];
-
     /** AccountId がキーの口座群。 */
     accounts: {[key: number]: IAccount};
   };
 
   /** 入金。 */
   income: {
+    /** 入金カテゴリのルート直下の並び順（CategoryId）定義。 */
+    categoryRootOrder: number[];
     /** 入金カテゴリの CategoryId がキーの入金カテゴリ郡。 */
     categories: {[key: number]: ICategory};
     /** 入金レコードの RecordId がキーの入金レコード。 */
     records: {[key: number]: IRecordIncome};
   };
 
-  /** 送金。 */
+  /** 出金。 */
   outgo: {
+    /** 出金カテゴリのルート直下の並び順（CategoryId）定義。 */
+    categoryRootOrder: number[];
     /** 出金カテゴリの CategoryId がキーの出金カテゴリ郡。 */
     categories: {[key: number]: ICategory};
     /** 出金レコードの RecordId がキーの出金レコード郡。 */
@@ -104,10 +107,12 @@ export const defaultState: IState = {
     accounts: {},
   },
   income: {
+    categoryRootOrder: [],
     categories: {},
     records: {},
   },
   outgo: {
+    categoryRootOrder: [],
     categories: {},
     records: {},
   },

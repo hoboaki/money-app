@@ -312,6 +312,8 @@ export const incomeCategoryAdd = (
     } else {
       throw new Error(`Category parent (id: ${parentId}) is not exist.`);
     }
+  } else {
+    state.income.categoryRootOrder.push(obj.id);
   }
   return obj.id;
 };
@@ -375,6 +377,8 @@ export const outgoCategoryAdd = (
     } else {
       throw new Error(`Category parent (id: ${parentId}) is not exist.`);
     }
+  } else {
+    state.outgo.categoryRootOrder.push(obj.id);
   }
   return obj.id;
 };

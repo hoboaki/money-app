@@ -25,7 +25,9 @@ interface IProps {
 
 interface ILocalProps extends IProps {
   accounts: DocStates.IAccount[];
+  incomeCategoryRootOrder: number[];
   incomeCategories: { [key: number]: DocStates.ICategory };
+  outgoCategoryRootOrder: number[];
   outgoCategories: { [key: number]: DocStates.ICategory };
   dialogRecordAdd: UiStates.IDialogAddRecord;
 }
@@ -112,6 +114,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
 
     // ContextMenu セットアップ
     const categorySetup = (
+      categoryRootOrder: number[],
       categories: {[key: number]: DocStates.ICategory},
       onCategorySelected: (categoryId: number) => void,
       selector: string,
@@ -129,10 +132,8 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
             items: Object.keys(items).length === 0 ? null : items,
           };
         };
-        Object.entries(categories).forEach(([key, value]) => {
-          if (value.parent == null) {
-            categoryConvertFunc(categoryItems, categories[value.id]);
-          }
+        categoryRootOrder.forEach((id) => {
+          categoryConvertFunc(categoryItems, categories[id]);
         });
         $.contextMenu({
           callback: (key, options) => {
@@ -154,6 +155,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
         });
     };
     categorySetup(
+      this.props.outgoCategoryRootOrder,
       this.props.outgoCategories,
       (categoryId) => {
         this.setState({
@@ -163,6 +165,7 @@ class DialogRecordAdd extends React.Component<ILocalProps, IState> {
       `#${this.elementIdFormCategoryOutgo}`,
     );
     categorySetup(
+      this.props.incomeCategoryRootOrder,
       this.props.incomeCategories,
       (categoryId) => {
         this.setState({
@@ -738,7 +741,9 @@ const mapStateToProps = (state: IStoreState, props: IProps) => {
     props,
     {
       accounts: state.doc.account.order.map((id) => state.doc.account.accounts[id]),
+      incomeCategoryRootOrder: state.doc.income.categoryRootOrder,
       incomeCategories: state.doc.income.categories,
+      outgoCategoryRootOrder: state.doc.outgo.categoryRootOrder,
       outgoCategories: state.doc.outgo.categories,
       dialogRecordAdd: state.ui.dialogAddRecord,
     },
