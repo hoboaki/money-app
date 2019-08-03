@@ -1,12 +1,13 @@
 import Clone from 'clone';
-import DataAccount from '../../data-model/doc/Account';
-import DataCategory from '../../data-model/doc/Category';
-import DataRecordIncome from '../../data-model/doc/RecordIncome';
-import DataRecordOutgo from '../../data-model/doc/RecordOutgo';
-import DataRecordTransfer from '../../data-model/doc/RecordTransfer';
-import DataRoot from '../../data-model/doc/Root';
-import IYearMonthDayDate from '../../util/IYearMonthDayDate';
-import * as IYearMonthDayDateUtils from '../../util/IYearMonthDayDateUtils';
+
+import DataAccount from 'src/data-model/doc/Account';
+import DataCategory from 'src/data-model/doc/Category';
+import DataRecordIncome from 'src/data-model/doc/RecordIncome';
+import DataRecordOutgo from 'src/data-model/doc/RecordOutgo';
+import DataRecordTransfer from 'src/data-model/doc/RecordTransfer';
+import DataRoot from 'src/data-model/doc/Root';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as States from './States';
 import * as Types from './Types';
 
