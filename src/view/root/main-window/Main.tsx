@@ -11,6 +11,7 @@ import * as MmxfImporter from 'src/util/doc/MmxfImporter';
 import LayoutStyle from 'src/view/Layout.css';
 import PageHome from 'src/view/page/home';
 import PageStyles from 'src/view/page/Page.css';
+import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
 import * as Styles from './Main.css';
 import SideBar from './SideBar';
@@ -105,6 +106,9 @@ class MainWindow extends React.Component<any, IState> {
       case PageSheet.PageId:
         pageContent = <PageSheet />;
         break;
+        case PageSetting.PageId:
+          pageContent = <PageSetting />;
+          break;
     }
 
     const rootClass = ClassNames(
