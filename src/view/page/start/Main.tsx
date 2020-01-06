@@ -3,10 +3,11 @@ import * as React from 'react';
 
 import * as PageStyles from '../Page.css';
 import * as Styles from './Main.css';
-import SettingBtn from './SettingBtn';
+import MainBtn from './MainBtn';
 
 class Main extends React.Component<any, any> {
   public static PageId: string = 'Start';
+  private static BtnIdOpenLatest: string = 'OpenLatest';
 
   public render() {
     const rootClass = ClassNames(
@@ -14,29 +15,44 @@ class Main extends React.Component<any, any> {
       Styles.Root,
     );
 
-    const btnInfos = [];
-    btnInfos.push({settingId: 'OpenLatest', title: '最近開いたファイルを開く', iconName: 'account_balance'});
-    btnInfos.push({settingId: 'Open', title: 'ファイルを指定して開く（準備中）', iconName: 'class'});
-    btnInfos.push({settingId: 'OpenMmxf', title: 'MasterMoney2 ファイル (mmxf) を開く（準備中）', iconName: 'class'});
+    const openBtnInfos = [];
+    openBtnInfos.push({btnId: Main.BtnIdOpenLatest, title: '最近開いたファイルを開く', iconName: 'account_balance'});
+    openBtnInfos.push({btnId: '', title: 'ファイルを指定して開く（準備中）', iconName: 'class'});
 
-    const btns: JSX.Element[] = [];
-    btnInfos.forEach((btnInfo) => {
-      btns.push(<SettingBtn
-        key={btnInfo.settingId}
-        onClicked={() => {this.onClicked(btnInfo.settingId); }}
+    const newBtnInfos = [];
+    newBtnInfos.push({btnId: '', title: 'MasterMoney ファイル (mmxf) を使って作成（準備中）', iconName: 'class'});
+
+    const openBtns: JSX.Element[] = [];
+    openBtnInfos.forEach((btnInfo) => {
+      openBtns.push(<MainBtn
+        key={btnInfo.btnId}
+        onClicked={() => {this.onClicked(btnInfo.btnId); }}
         title={btnInfo.title}
-        iconName={btnInfo.iconName}
+        />);
+    });
+
+    const newBtns: JSX.Element[] = [];
+    newBtnInfos.forEach((btnInfo) => {
+      newBtns.push(<MainBtn
+        key={btnInfo.btnId}
+        onClicked={() => {this.onClicked(btnInfo.btnId); }}
+        title={btnInfo.title}
         />);
     });
 
     return (
       <div className={rootClass}>
-        {btns}
+        <div className={Styles.BtnContainer}>
+          <span className={Styles.Label}>ファイルを開く</span>
+          {openBtns}
+          <span className={Styles.Label}>新規作成</span>
+          {newBtns}
+        </div>
       </div>
     );
   }
 
-  private onClicked(settingId: string) {
+  private onClicked(btnId: string) {
     // ...
   }
 }

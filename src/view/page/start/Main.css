@@ -1,5 +1,14 @@
 .Root {
   align-items: center;
-  flex-direction: column;
   justify-content: center;
+}
+
+.BtnContainer {
+  flex-direction: column;
+  width: 80%;
+}
+
+.Label{
+  font-weight: bold;
+  text-align: left;
 }
