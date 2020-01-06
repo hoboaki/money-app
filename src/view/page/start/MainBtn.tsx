@@ -5,6 +5,7 @@ import * as BasicStyles from './../../Basic.css';
 import * as Styles from './MainBtn.css';
 
 interface IProps {
+  isEnabled: boolean;
   onClicked: (() => void);
   title: string;
 }
@@ -23,6 +24,7 @@ class MainBtn extends React.Component<IProps> {
       <button
         className={rootClass}
         onClick={this.props.onClicked}
+        disabled={!this.props.isEnabled}
         title={this.props.title}>
         <span>{this.props.title}</span>
       </button>

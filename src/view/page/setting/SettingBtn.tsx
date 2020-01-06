@@ -29,6 +29,7 @@ class SideBarBtn extends React.Component<IProps> {
       <button
         className={rootClass}
         onClick={this.props.onClicked}
+        disabled={true}
         title={this.props.title}>
         <i className={iconClass}>{this.props.iconName}</i><span>{this.props.title}</span>
       </button>

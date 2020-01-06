@@ -24,18 +24,39 @@ class Main extends React.Component<IProps, any> {
     );
 
     const openBtnInfos = [];
-    openBtnInfos.push({btnId: Main.BtnIdOpenLatest, title: '最近開いたファイルを開く', iconName: 'account_balance'});
-    openBtnInfos.push({btnId: '', title: 'ファイルを指定して開く（準備中）', iconName: 'class'});
+    openBtnInfos.push({
+      btnId: Main.BtnIdOpenLatest,
+      title: '最近開いたファイルを開く',
+      iconName: 'account_balance',
+      isEnabled: true,
+    });
+    openBtnInfos.push({
+      btnId: '',
+      title: 'ファイルを指定して開く（準備中）',
+      iconName: 'class',
+      isEnabled: false,
+    });
 
     const newBtnInfos = [];
-    newBtnInfos.push({btnId: '', title: 'MasterMoney ファイル (mmxf) を使って作成（準備中）', iconName: 'class'});
-    newBtnInfos.push({btnId: '', title: 'テンプレートを使って作成（準備中）', iconName: 'class'});
+    newBtnInfos.push({
+      btnId: '',
+      title: 'MasterMoney ファイル (mmxf) を使って作成（準備中）',
+      iconName: 'class',
+      isEnabled: false,
+    });
+    newBtnInfos.push({
+      btnId: '',
+      title: 'テンプレートを使って作成（準備中）',
+      iconName: 'class',
+      isEnabled: false,
+    });
 
     const openBtns: JSX.Element[] = [];
     openBtnInfos.forEach((btnInfo) => {
       openBtns.push(<MainBtn
         key={btnInfo.btnId}
         onClicked={() => {this.onClicked(btnInfo.btnId); }}
+        isEnabled={btnInfo.isEnabled}
         title={btnInfo.title}
         />);
     });
@@ -45,6 +66,7 @@ class Main extends React.Component<IProps, any> {
       newBtns.push(<MainBtn
         key={btnInfo.btnId}
         onClicked={() => {this.onClicked(btnInfo.btnId); }}
+        isEnabled={btnInfo.isEnabled}
         title={btnInfo.title}
         />);
     });
