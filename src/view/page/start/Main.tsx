@@ -21,6 +21,7 @@ class Main extends React.Component<any, any> {
 
     const newBtnInfos = [];
     newBtnInfos.push({btnId: '', title: 'MasterMoney ファイル (mmxf) を使って作成（準備中）', iconName: 'class'});
+    newBtnInfos.push({btnId: '', title: 'テンプレートを使って作成（準備中）', iconName: 'class'});
 
     const openBtns: JSX.Element[] = [];
     openBtnInfos.forEach((btnInfo) => {
