@@ -1,6 +1,11 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 
+import PageHome from 'src/view/page/home';
+import PageStyles from 'src/view/page/Page.css';
+import PageSetting from 'src/view/page/setting';
+import PageSheet from 'src/view/page/sheet';
+import PageStart from 'src/view/page/start';
 import * as LayoutStyles from '../../Layout.css';
 import * as Styles from './SideBar.css';
 import SideBarBtn from './SideBarBtn';
@@ -22,10 +27,10 @@ class SideBar extends React.Component<IProps, any> {
     );
 
     const btnInfos = [];
-    btnInfos.push({pageId: 'Home', title: 'ホーム', iconName: 'home'});
-    btnInfos.push({pageId: 'Sheet', title: '一覧', iconName: 'view_week'});
+    btnInfos.push({pageId: PageHome.PageId, title: 'ホーム', iconName: 'home'});
+    btnInfos.push({pageId: PageSheet.PageId, title: '一覧', iconName: 'view_week'});
     btnInfos.push({pageId: 'Find', title: 'レコードの検索（準備中）', iconName: 'search'});
-    btnInfos.push({pageId: 'Setting', title: '設定', iconName: 'settings'});
+    btnInfos.push({pageId: PageSetting.PageId, title: '設定', iconName: 'settings'});
 
     const btns = [];
     for (const btnInfo of btnInfos) {
@@ -33,6 +38,7 @@ class SideBar extends React.Component<IProps, any> {
         key={btnInfo.pageId}
         onClicked={() => {this.onClicked(btnInfo.pageId); }}
         isActive={this.props.currentPageId === btnInfo.pageId}
+        isEnabled={this.props.currentPageId !== PageStart.PageId}
         title={btnInfo.title}
         iconName={btnInfo.iconName}
         />);

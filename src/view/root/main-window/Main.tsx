@@ -13,6 +13,7 @@ import PageHome from 'src/view/page/home';
 import PageStyles from 'src/view/page/Page.css';
 import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
+import PageStart from 'src/view/page/start';
 import * as Styles from './Main.css';
 import SideBar from './SideBar';
 import TitleBar from './TitleBar';
@@ -37,31 +38,6 @@ class MainWindow extends React.Component<any, IState> {
   public componentDidMount() {
     // テスト実行
     SampleDoc.Test();
-
-    // サンプルドキュメントで初期化
-    {
-      let resetDoc = SampleDoc.Create();
-      const localMmxfFilePath = `${process.env.HOME}/Desktop/MoneyAppTest.mmxf`;
-      let isExistSampleFile = false;
-      try {
-        Fs.accessSync(localMmxfFilePath, Fs.constants.R_OK);
-        isExistSampleFile = true;
-      } catch (err) {
-        global.console.log('Can\'t access test document.');
-        global.console.log(err.message);
-      }
-      if (isExistSampleFile) {
-        const result = MmxfImporter.importFile(localMmxfFilePath);
-        if (result.doc != null) {
-          resetDoc = result.doc;
-          global.console.log('Test document load successed.');
-        } else {
-          global.console.log('Test document load failed.');
-          global.console.log(result);
-        }
-      }
-      Store.dispatch(DocActions.resetDocument(resetDoc));
-    }
 
     // Focus/Unfocus 切替
     window.onload = () => {
@@ -94,12 +70,15 @@ class MainWindow extends React.Component<any, IState> {
     };
 
     // ページ有効化
-    this.activatePage(PageHome.PageId);
+    this.activatePage(PageStart.PageId);
   }
 
   public render() {
     let pageContent = <div className={PageStyles.Base}/>;
     switch (this.state.currentPageId) {
+      case PageStart.PageId:
+        pageContent = <PageStart onFileSelected={(filePath) => {this.onFileSelected(filePath); }} />;
+        break;
       case PageHome.PageId:
         pageContent = <PageHome />;
         break;
@@ -127,6 +106,34 @@ class MainWindow extends React.Component<any, IState> {
         </div>
       </div>
     );
+  }
+
+  private onFileSelected(filePath: string) {
+    // サンプルドキュメントで初期化
+    let resetDoc = SampleDoc.Create();
+    const localMmxfFilePath = filePath;
+    let isExistSampleFile = false;
+    try {
+      Fs.accessSync(localMmxfFilePath, Fs.constants.R_OK);
+      isExistSampleFile = true;
+    } catch (err) {
+      global.console.log('Can\'t access test document.');
+      global.console.log(err.message);
+    }
+    if (isExistSampleFile) {
+      const result = MmxfImporter.importFile(localMmxfFilePath);
+      if (result.doc != null) {
+        resetDoc = result.doc;
+        global.console.log('Test document load successed.');
+      } else {
+        global.console.log('Test document load failed.');
+        global.console.log(result);
+      }
+    }
+    Store.dispatch(DocActions.resetDocument(resetDoc));
+
+    // Page変更
+    this.activatePage(PageHome.PageId);
   }
 
   private onPageBtnClicked(pageId: string) {
