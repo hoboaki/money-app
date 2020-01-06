@@ -1,6 +1,7 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 
+import * as BasicStyles from '../../Basic.css';
 import * as Styles from './SettingBtn.css';
 
 interface IProps {
@@ -17,6 +18,7 @@ class SideBarBtn extends React.Component<IProps> {
   public render() {
     const rootClass = ClassNames(
       Styles.Root,
+      BasicStyles.StdButton,
     );
     const iconClass = ClassNames(
       'material-icons',
