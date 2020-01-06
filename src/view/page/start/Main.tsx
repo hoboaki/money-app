@@ -1,4 +1,5 @@
 import ClassNames from 'classnames';
+import { remote } from 'electron';
 import * as React from 'react';
 
 import * as PageStyles from '../Page.css';
@@ -12,6 +13,7 @@ interface IProps {
 class Main extends React.Component<IProps, any> {
   public static PageId: string = 'Start';
   private static BtnIdOpenLatest: string = 'OpenLatest';
+  private static BtnIdNewMmxf: string = 'NewFromMmxf';
 
   public constructor(props: IProps) {
     super(props);
@@ -26,9 +28,9 @@ class Main extends React.Component<IProps, any> {
     const openBtnInfos = [];
     openBtnInfos.push({
       btnId: Main.BtnIdOpenLatest,
-      title: '最近開いたファイルを開く',
+      title: '最近開いたファイルを開く（準備中）',
       iconName: 'account_balance',
-      isEnabled: true,
+      isEnabled: false,
     });
     openBtnInfos.push({
       btnId: '',
@@ -39,10 +41,10 @@ class Main extends React.Component<IProps, any> {
 
     const newBtnInfos = [];
     newBtnInfos.push({
-      btnId: '',
-      title: 'MasterMoney ファイル (mmxf) を使って作成（準備中）',
+      btnId: Main.BtnIdNewMmxf,
+      title: 'MasterMoney ファイル (mmxf) を使って作成',
       iconName: 'class',
-      isEnabled: false,
+      isEnabled: true,
     });
     newBtnInfos.push({
       btnId: '',
@@ -87,6 +89,28 @@ class Main extends React.Component<IProps, any> {
     switch (btnId) {
       case Main.BtnIdOpenLatest:
         this.props.onFileSelected(`${process.env.HOME}/Desktop/MoneyAppTest.mmxf`);
+        break;
+
+      case Main.BtnIdNewMmxf:
+        const dialog = remote.dialog;
+        dialog.showOpenDialog(
+          remote.getCurrentWindow(),
+          {
+            properties: ['openFile'],
+            filters: [
+              {
+                name: 'MasterMoney ファイル',
+                extensions: ['mmxf'],
+              },
+            ],
+          },
+          (filePaths) => {
+            if (filePaths === undefined || filePaths.length === 0) {
+              return;
+            }
+            this.props.onFileSelected(filePaths[0]);
+          },
+        );
         break;
     }
   }
