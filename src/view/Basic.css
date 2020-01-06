@@ -1,0 +1,16 @@
+.StdButton {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 5px;
+  color: rgba(0,0,0,0.87);
+  display: flex;
+  justify-content: center;
+  margin: 4px;
+  outline: none;
+  padding: 2px;
+}
+
+.StdButton:active {
+  background: #eeeeee;
+}

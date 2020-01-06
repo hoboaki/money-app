@@ -25,34 +25,9 @@
   height: 30px;
 }
 
-/* フレーム有りボタンの既定スタイル */
-.FrameBtn {
-  background: transparent;
-  border: 1px solid rgba(0,0,0,0.12);
-  border-radius: 5px;
-  outline: none;
-  padding: 2px;
-}
-.FrameBtn:hover {
-  color: #424242;
-}
-.FrameBtn:active {
-  color: rgba(0,0,0,0.87);
-}
-
 /* フレーム無しボタンの既定スタイル */
 .NoFrameBtn {
-  background: transparent;
   border: 0px;
-  color: rgba(0, 0, 0, 0.61);
-  outline: none;
-  padding: 2px;
-}
-.NoFrameBtn:hover {
-  color: #000000;
-}
-.NoFrameBtn:active {
-  color: rgba(0, 0, 0, 0.61);
 }
 
 /* 以下，それぞれのインプット専用設定 */

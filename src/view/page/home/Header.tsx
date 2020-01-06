@@ -8,6 +8,7 @@ import * as UiActions from 'src/state/ui/Actions';
 import * as States from 'src/state/ui/States';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import RecordAddDialog from 'src/view/widget/record-add-dialog';
 import * as Styles from './Header.css';
@@ -32,25 +33,25 @@ class Header extends React.Component<States.IPageHome, IState> {
       Styles.CurrentDate,
     );
     const movePrevBtnClass = ClassNames(
+      BasicStyles.StdButton,
       Styles.Btn,
-      Styles.FrameBtn,
       Styles.MoveBtn,
       Styles.MovePrevBtn,
     );
     const moveTodayBtnClass = ClassNames(
+      BasicStyles.StdButton,
       Styles.Btn,
-      Styles.FrameBtn,
       Styles.MoveBtn,
     );
     const moveNextBtnClass = ClassNames(
+      BasicStyles.StdButton,
       Styles.Btn,
-      Styles.FrameBtn,
       Styles.MoveBtn,
       Styles.MoveNextBtn,
     );
     const jumpBtnClass = ClassNames(
+      BasicStyles.StdButton,
       Styles.Btn,
-      Styles.FrameBtn,
       Styles.JumpBtn,
     );
     const filterBtnClass = ClassNames(
