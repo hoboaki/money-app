@@ -92,12 +92,11 @@ class Header extends React.Component<States.IPageHome, IState> {
         <button className={moveNextBtnClass} onClick={this.onMoveNextBtnPushed}>
           <i className={iconClass}>chevron_right</i>
         </button>
-        <button className={jumpBtnClass} onClick={this.onJumpBtnPushed}>移動</button>
+        {/* <button className={jumpBtnClass} onClick={this.onJumpBtnPushed}>移動</button> */}
         <select className={Styles.ViewUnitSelect} defaultValue="month" onChange={this.onViewUnitChanged}>
           <option value="month">月表示</option>
-          <option value="year">年表示</option>
         </select>
-        <button className={filterBtnClass} onClick={() => {this.onFilterBtnPushed(); }}>
+        <button className={filterBtnClass} onClick={() => {this.onFilterBtnPushed(); }} title={'フィルター（準備中）'}>
           <i className={iconClass}>filter_list</i>
         </button>
         <div className={rightAreaClass}>
