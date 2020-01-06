@@ -24,7 +24,7 @@ class SideBar extends React.Component<IProps, any> {
     const btnInfos = [];
     btnInfos.push({pageId: 'Home', title: 'ホーム', iconName: 'home'});
     btnInfos.push({pageId: 'Sheet', title: '一覧', iconName: 'view_week'});
-    btnInfos.push({pageId: 'Find', title: 'レコードの検索', iconName: 'search'});
+    btnInfos.push({pageId: 'Find', title: 'レコードの検索（準備中）', iconName: 'search'});
     btnInfos.push({pageId: 'Setting', title: '設定', iconName: 'settings'});
 
     const btns = [];
