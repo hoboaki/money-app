@@ -6,7 +6,7 @@ import * as Styles from './Main.css';
 import SettingBtn from './SettingBtn';
 
 class Main extends React.Component<any, any> {
-  public static PageId: string = 'Setting';
+  public static PageId: string = 'Start';
 
   public render() {
     const rootClass = ClassNames(

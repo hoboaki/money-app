@@ -8,6 +8,7 @@ interface IProps {
   title: string;
   iconName: string;
   isActive: boolean;
+  isEnabled: boolean;
 }
 
 class SideBarBtn extends React.Component<IProps> {
@@ -29,6 +30,7 @@ class SideBarBtn extends React.Component<IProps> {
       <button
         className={rootClass}
         onClick={this.props.onClicked}
+        disabled={!this.props.isEnabled}
         title={this.props.title}>
         <i className={iconClass}>{this.props.iconName}</i>
       </button>

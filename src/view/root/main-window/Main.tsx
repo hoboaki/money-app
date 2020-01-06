@@ -13,6 +13,7 @@ import PageHome from 'src/view/page/home';
 import PageStyles from 'src/view/page/Page.css';
 import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
+import PageStart from 'src/view/page/start';
 import * as Styles from './Main.css';
 import SideBar from './SideBar';
 import TitleBar from './TitleBar';
@@ -94,12 +95,15 @@ class MainWindow extends React.Component<any, IState> {
     };
 
     // ページ有効化
-    this.activatePage(PageHome.PageId);
+    this.activatePage(PageStart.PageId);
   }
 
   public render() {
     let pageContent = <div className={PageStyles.Base}/>;
     switch (this.state.currentPageId) {
+      case PageStart.PageId:
+        pageContent = <PageStart />;
+        break;
       case PageHome.PageId:
         pageContent = <PageHome />;
         break;
