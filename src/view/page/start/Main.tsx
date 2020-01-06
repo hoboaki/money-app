@@ -5,9 +5,17 @@ import * as PageStyles from '../Page.css';
 import * as Styles from './Main.css';
 import MainBtn from './MainBtn';
 
-class Main extends React.Component<any, any> {
+interface IProps {
+  onFileSelected: ((filePath: string) => void);
+}
+
+class Main extends React.Component<IProps, any> {
   public static PageId: string = 'Start';
   private static BtnIdOpenLatest: string = 'OpenLatest';
+
+  public constructor(props: IProps) {
+    super(props);
+  }
 
   public render() {
     const rootClass = ClassNames(
@@ -54,7 +62,11 @@ class Main extends React.Component<any, any> {
   }
 
   private onClicked(btnId: string) {
-    // ...
+    switch (btnId) {
+      case Main.BtnIdOpenLatest:
+        this.props.onFileSelected(`${process.env.HOME}/Desktop/MoneyAppTest.mmxf`);
+        break;
+    }
   }
 }
 
