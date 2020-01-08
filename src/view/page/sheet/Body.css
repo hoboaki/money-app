@@ -1,5 +1,4 @@
 .Root {
-  background: #ffffff;
   display: block;
   height: 100%;
   width: 100%;
@@ -9,18 +8,18 @@
   width: 100%;
 }
 .TableColhead {
-  background: #9ea7aa;
-  color: rgba(0, 0, 0, 0.73);
+  background: #f5f5f6;
+  color: rgba(0,0,0,0.87);
   text-align: center;
 }
 .TableColheadAccountName,
 .TableColheadAccountCategory,
 .TableColheadCarried,
 .TableColheadBalance {
-  color: rgba(0, 0, 0, 0.50);
+  color: rgba(0, 0, 0, 0.61);
 }
 .TableRowhead {
-  color: rgba(0, 0, 0, 0.43);
+  color: rgba(0, 0, 0, 0.61);
 }
 .TableColheadAccountName,
 .TableColheadAccountCategory,
@@ -76,19 +75,22 @@
   width: 94px;
 }
 .TableCell {
-  color: rgba(0, 0, 0, 0.90);
+  color: rgba(0,0,0,0.87);
 }
 .TableCellOdd,
 .TableCellEven,
 .TableCellSpace {
-  background: #e2f1f8;
+  background: #f5f5f6;
 }
 .TableRowheadRoot,
 .TableCellRoot {
-  background: #b0bec5;
+  background: #90caf9;
+}
+.TableRowheadRoot {
+  color: rgba(0,0,0,0.87);
 }
 .TableOpenerSpace,
 .TableRowheadAccount {
   width: 16px;
-  background: #e2f1f8;
+  background: #eeeeee;
 }
