@@ -114,7 +114,7 @@ class Body extends React.Component<IProps, any> {
     );
 
     const colInfos = new Array();
-    const colCount = 7;
+    const colCount = 6;
     {
       let date = this.props.page.currentDate;
       for (let colIdx = 0; colIdx < colCount; ++colIdx) {
@@ -156,7 +156,6 @@ class Body extends React.Component<IProps, any> {
           <td className={cellClass}>1,000,000</td>
           <td className={cellClass}>1,000,000</td>
           <td className={cellClass}>1,000,000</td>
-          <td className={cellClass}>1,000,000</td>
           <td className={cellSpaceClass}></td>
           <td className={rowHeadAccountBalance}>1,000,000</td>
         </tr>,
@@ -191,7 +190,6 @@ class Body extends React.Component<IProps, any> {
                 <td className={cellRootClass}>1,000,000</td>
                 <td className={cellRootClass}>1,000,000</td>
                 <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
                 <td className={cellSpaceRootClass}></td>
                 <td className={rowHeadRootBalance}>1,000,000</td>
               </tr>
@@ -202,7 +200,6 @@ class Body extends React.Component<IProps, any> {
                 <td className={rowHeadRootAccountCategoryClass}></td>
                 <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
                 <td className={cellRootClass}>10,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
                 <td className={cellRootClass}>1,000,000</td>
                 <td className={cellRootClass}>1,000,000</td>
                 <td className={cellRootClass}>1,000,000</td>

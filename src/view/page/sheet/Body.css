@@ -46,12 +46,12 @@
   font-size: 9pt;
 }
 .TableColheadAccountName {
-  width: 140px;
+  width: 172px;
 }
 .TableRowheadAccountName {
   padding-left: 4px;
   padding-right: 4px;
-  width: 124px;
+  width: 156px;
 }
 .TableColheadAccountCategory,
 .TableRowheadAccountCategory {
