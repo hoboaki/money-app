@@ -21,6 +21,7 @@ export interface IPageSheet {
 export interface IState {
   dialogAddRecord: IDialogAddRecord;
   pageHome: IPageHome;
+  pageSheet: IPageSheet;
 }
 
 export const defaultState: IState = {
@@ -28,6 +29,9 @@ export const defaultState: IState = {
     isContinueMode: false,
   },
   pageHome : {
+    currentDate: IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today()),
+  },
+  pageSheet: {
     currentDate: IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today()),
   },
 };

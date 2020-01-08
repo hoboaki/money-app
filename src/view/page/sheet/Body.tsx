@@ -1,9 +1,23 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+import * as ReactRedux from 'react-redux';
 
+import * as DocStates from 'src/state/doc/States';
+import IStoreState from 'src/state/IStoreState';
+import * as UiStates from 'src/state/ui/States';
+import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as Styles from './Body.css';
 
-class Body extends React.Component<any, any> {
+interface IProps {
+  doc: DocStates.IState;
+  page: UiStates.IPageSheet;
+}
+
+class Body extends React.Component<IProps, any> {
+  public constructor(props: IProps) {
+    super(props);
+  }
+
   public render() {
     const rootClass = ClassNames(
       Styles.Root,
@@ -97,6 +111,28 @@ class Body extends React.Component<any, any> {
     const cellSpaceClass = ClassNames(
       Styles.TableCellSpace,
     );
+
+    const colInfos = new Array();
+    {
+      let date = this.props.page.currentDate;
+      for (let colIdx = 0; colIdx < 7; ++colIdx) {
+        colInfos.push({
+          date,
+        });
+        date = IYearMonthDateUtils.nextDay(date);
+      }
+    }
+
+    const accountColHeadCells = new Array();
+    colInfos.forEach((colInfo) => {
+      accountColHeadCells.push(
+        <td className={colHeadCellClass}>
+        {('0' + colInfo.date.year).slice(-2)}/
+        {colInfo.date.month}/{colInfo.date.day} {IYearMonthDateUtils.localaizedDow(colInfo.date)}
+        </td>,
+      );
+    });
+
     return (
       <div className={rootClass}>
         <div id="pageSheetBodyTop">
@@ -106,13 +142,7 @@ class Body extends React.Component<any, any> {
                 <td className={colHeadAccountNameClass}>アカウント</td>
                 <td className={colHeadAccountCategoryClass}>*</td>
                 <td className={colHeadCarriedClass}>繰り越し</td>
-                <td className={colHeadCellClass}>18/01/01 月</td>
-                <td className={colHeadCellClass}>18/01/02 火</td>
-                <td className={colHeadCellClass}>18/01/03 水</td>
-                <td className={colHeadCellClass}>18/01/04 木</td>
-                <td className={colHeadCellClass}>18/01/05 金</td>
-                <td className={colHeadCellClass}>18/01/06 土</td>
-                <td className={colHeadCellClass}>18/01/07 日</td>
+                {accountColHeadCells}
                 <td className={colHeadSpaceClass}></td>
                 <td className={colHeadBalanceClass}>残高</td>
               </tr>
@@ -191,7 +221,12 @@ class Body extends React.Component<any, any> {
       </div>
     );
   }
-
 }
 
-export default Body;
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    doc: state.doc,
+    page: state.ui.pageSheet,
+  };
+};
+export default ReactRedux.connect(mapStateToProps)(Body);

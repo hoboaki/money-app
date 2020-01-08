@@ -44,6 +44,25 @@ export const nextDay = (date: IYearMonthDayDate): IYearMonthDayDate => {
   return fromDate(new Date(date.year, date.month - 1, date.day + 1));
 };
 
+/** 曜日（0:日曜日，6:土曜日） */
+export const dow = (date: IYearMonthDayDate): number => {
+  return toNativeDate(date).getDay();
+};
+
+/** 日本語化された曜日（'日','月',...） */
+export const localaizedDow = (date: IYearMonthDayDate): string => {
+  switch (dow(date)) {
+    case 0: return '日';
+    case 1: return '月';
+    case 2: return '火';
+    case 3: return '水';
+    case 4: return '木';
+    case 5: return '金';
+    case 6: return '土';
+    default: return '#';
+  }
+};
+
 /** 今指している月の初日。 */
 export const firstDayOfMonth = (date: IYearMonthDayDate): IYearMonthDayDate => {
   return fromDate(new Date(date.year, date.month - 1, 1));
