@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 
 import * as DocStates from 'src/state/doc/States';
+import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
 import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
@@ -113,9 +114,10 @@ class Body extends React.Component<IProps, any> {
     );
 
     const colInfos = new Array();
+    const colCount = 7;
     {
       let date = this.props.page.currentDate;
-      for (let colIdx = 0; colIdx < 7; ++colIdx) {
+      for (let colIdx = 0; colIdx < colCount; ++colIdx) {
         colInfos.push({
           date,
         });
@@ -130,6 +132,32 @@ class Body extends React.Component<IProps, any> {
         {('0' + colInfo.date.year).slice(-2)}/
         {colInfo.date.month}/{colInfo.date.day} {IYearMonthDateUtils.localaizedDow(colInfo.date)}
         </td>,
+      );
+    });
+
+    const accountRowDict: {[key: number]: JSX.Element[]} = {};
+    accountRowDict[DocTypes.AccountGroup.Assets] = new Array<JSX.Element>();
+    accountRowDict[DocTypes.AccountGroup.Liabilities] = new Array<JSX.Element>();
+    const accountRows = new Array();
+    this.props.doc.account.order.forEach((accountId) => {
+      const account = this.props.doc.account.accounts[accountId];
+      const accountGroup = DocTypes.accountKindToAccountGroup(account.kind);
+      accountRowDict[accountGroup].push(
+        <tr>
+          <td className={rowHeadAccountOpenerSpaceClass}></td>
+          <td className={rowHeadAccountAccountNameClass}>{account.name}</td>
+          <td className={rowHeadAccountAccountCategoryClass}>現</td>
+          <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
+          <td className={cellClass}>10,000,000</td>
+          <td className={cellClass}>1,000,000</td>
+          <td className={cellClass}>1,000,000</td>
+          <td className={cellClass}>1,000,000</td>
+          <td className={cellClass}>1,000,000</td>
+          <td className={cellClass}>1,000,000</td>
+          <td className={cellClass}>1,000,000</td>
+          <td className={cellSpaceClass}></td>
+          <td className={rowHeadAccountBalance}>1,000,000</td>
+        </tr>,
       );
     });
 
@@ -165,36 +193,7 @@ class Body extends React.Component<IProps, any> {
                 <td className={cellSpaceRootClass}></td>
                 <td className={rowHeadRootBalance}>1,000,000</td>
               </tr>
-              <tr>
-                <td className={rowHeadAccountOpenerSpaceClass}></td>
-                <td className={rowHeadAccountAccountNameClass}>財布</td>
-                <td className={rowHeadAccountAccountCategoryClass}>現</td>
-                <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
-                <td className={cellClass}>10,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellSpaceClass}></td>
-                <td className={rowHeadAccountBalance}>1,000,000</td>
-              </tr>
-              <tr>
-                <td className={rowHeadAccountOpenerSpaceClass}></td>
-                <td className={rowHeadAccountAccountNameClass}>アデリー銀行</td>
-                <td className={rowHeadAccountAccountCategoryClass}>銀</td>
-                <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
-                <td className={cellClass}>10,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellSpaceClass}></td>
-                <td className={rowHeadAccountBalance}>1,000,000</td>
-              </tr>
+              {accountRowDict[DocTypes.AccountGroup.Assets]}
             </tbody>
           </table>
         </div>
