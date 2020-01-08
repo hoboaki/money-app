@@ -12,6 +12,11 @@ export interface IPageHome {
   currentDate: IYearMonthDayDate;
 }
 
+/** PageSheet 用 state。 */
+export interface IPageSheet {
+  currentDate: IYearMonthDayDate;
+}
+
 /** State ルート。 */
 export interface IState {
   dialogAddRecord: IDialogAddRecord;
