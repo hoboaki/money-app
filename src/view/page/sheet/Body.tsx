@@ -146,7 +146,9 @@ class Body extends React.Component<IProps, any> {
         <tr>
           <td className={rowHeadAccountOpenerSpaceClass}></td>
           <td className={rowHeadAccountAccountNameClass}>{account.name}</td>
-          <td className={rowHeadAccountAccountCategoryClass}>現</td>
+          <td className={rowHeadAccountAccountCategoryClass}>
+            {DocTypes.shortLocalizedAccountKind(account.kind).slice(0, 1)}
+          </td>
           <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
           <td className={cellClass}>10,000,000</td>
           <td className={cellClass}>1,000,000</td>
@@ -194,6 +196,22 @@ class Body extends React.Component<IProps, any> {
                 <td className={rowHeadRootBalance}>1,000,000</td>
               </tr>
               {accountRowDict[DocTypes.AccountGroup.Assets]}
+              <tr>
+                <td className={rowHeadRootOpenerSpaceClass}></td>
+                <td className={rowHeadRootAccountNameClass}>負債アカウント</td>
+                <td className={rowHeadRootAccountCategoryClass}></td>
+                <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
+                <td className={cellRootClass}>10,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellSpaceRootClass}></td>
+                <td className={rowHeadRootBalance}>1,000,000</td>
+              </tr>
+              {accountRowDict[DocTypes.AccountGroup.Liabilities]}
             </tbody>
           </table>
         </div>
