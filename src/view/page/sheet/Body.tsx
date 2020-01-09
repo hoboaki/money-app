@@ -27,6 +27,8 @@ class Body extends React.Component<IProps, any> {
       Styles.Table,
       Styles.HeadTableRecord,
     );
+
+    // colHead
     const colHeadAccountNameClass = ClassNames(
       Styles.TableColHead,
       Styles.TableColHeadAccountName,
@@ -59,6 +61,8 @@ class Body extends React.Component<IProps, any> {
       Styles.TableColHead,
       Styles.TableColHeadTotal,
     );
+
+    // rowHead
     const rowHeadRootOpenerSpaceClass = ClassNames(
       Styles.TableRowHead,
       Styles.TableRowHeadRoot,
@@ -78,14 +82,6 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowHead,
       Styles.TableRowHeadRoot,
       Styles.TableRowHeadCarried,
-    );
-    const cellRootClass = ClassNames(
-      Styles.TableCell,
-      Styles.TableCellRoot,
-    );
-    const cellSpaceRootClass = ClassNames(
-      Styles.TableCellSpace,
-      Styles.TableCellRoot,
     );
     const rowHeadAccountOpenerSpaceClass = ClassNames(
       Styles.TableRowHead,
@@ -107,6 +103,8 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowHeadAccount,
       Styles.TableRowHeadCarried,
     );
+
+    // rowTail
     const rowTailRootAccountBalance = ClassNames(
       Styles.TableRowTail,
       Styles.TableRowTailRoot,
@@ -126,6 +124,16 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowTailRoot,
       Styles.TableRowTailTotal,
     );
+
+    // cell
+    const cellRootClass = ClassNames(
+      Styles.TableCell,
+      Styles.TableCellRoot,
+    );
+    const cellSpaceRootClass = ClassNames(
+      Styles.TableCellSpace,
+      Styles.TableCellRoot,
+    );
     const cellClass = ClassNames(
       Styles.TableCell,
       Styles.TableCellOdd,
@@ -134,6 +142,7 @@ class Body extends React.Component<IProps, any> {
       Styles.TableCellSpace,
     );
 
+    // 列情報生成
     const colInfos = new Array();
     const colCount = 6;
     {
@@ -146,6 +155,7 @@ class Body extends React.Component<IProps, any> {
       }
     }
 
+    // アカウントテーブルの列ヘッダ生成
     const accountColHeadCells = new Array();
     colInfos.forEach((colInfo) => {
       accountColHeadCells.push(
@@ -156,6 +166,7 @@ class Body extends React.Component<IProps, any> {
       );
     });
 
+    // アカウントテーブルの行生成
     const accountRowDict: {[key: number]: JSX.Element[]} = {};
     accountRowDict[DocTypes.AccountGroup.Assets] = new Array<JSX.Element>();
     accountRowDict[DocTypes.AccountGroup.Liabilities] = new Array<JSX.Element>();
@@ -183,12 +194,16 @@ class Body extends React.Component<IProps, any> {
       );
     });
 
+    // レコードテーブルの列ヘッダ生成
     const recordColHeadCells = new Array();
     colInfos.forEach((colInfo) => {
       recordColHeadCells.push(
         <td className={colHeadCellClass}></td>,
       );
     });
+
+    // レコードテーブルの行生成
+    // ...
 
     return (
       <div className={rootClass}>
