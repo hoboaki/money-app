@@ -23,6 +23,10 @@ class Body extends React.Component<IProps, any> {
     const rootClass = ClassNames(
       Styles.Root,
     );
+    const headTableRecordClass = ClassNames(
+      Styles.Table,
+      Styles.HeadTableRecord,
+    );
     const colHeadAccountNameClass = ClassNames(
       Styles.TableColhead,
       Styles.TableColheadAccountName,
@@ -47,6 +51,14 @@ class Body extends React.Component<IProps, any> {
       Styles.TableColhead,
       Styles.TableColheadBalance,
     );
+    const colHeadCategoryClass = ClassNames(
+      Styles.TableColhead,
+      Styles.TableColheadCategory,
+    );
+    const colHeadTotalClass = ClassNames(
+      Styles.TableColhead,
+      Styles.TableColheadTotal,
+    );
     const rowHeadRootOpenerSpaceClass = ClassNames(
       Styles.TableRowhead,
       Styles.TableRowheadRoot,
@@ -66,11 +78,6 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowhead,
       Styles.TableRowheadRoot,
       Styles.TableRowheadCarried,
-    );
-    const rowHeadRootBalance = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
-      Styles.TableRowheadBalance,
     );
     const cellRootClass = ClassNames(
       Styles.TableCell,
@@ -100,10 +107,14 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowheadAccount,
       Styles.TableRowheadCarried,
     );
-    const rowHeadAccountBalance = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadAccount,
-      Styles.TableRowheadBalance,
+    const rowTailRootAccountBalance = ClassNames(
+      Styles.TableRowtail,
+      Styles.TableRowtailRoot,
+      Styles.TableRowtailBalance,
+    );
+    const rowTailAccountBalance = ClassNames(
+      Styles.TableRowtail,
+      Styles.TableRowtailBalance,
     );
     const cellClass = ClassNames(
       Styles.TableCell,
@@ -157,8 +168,15 @@ class Body extends React.Component<IProps, any> {
           <td className={cellClass}>1,000,000</td>
           <td className={cellClass}>1,000,000</td>
           <td className={cellSpaceClass}></td>
-          <td className={rowHeadAccountBalance}>1,000,000</td>
+          <td className={rowTailAccountBalance}>1,000,000</td>
         </tr>,
+      );
+    });
+
+    const recordColHeadCells = new Array();
+    colInfos.forEach((colInfo) => {
+      recordColHeadCells.push(
+        <td className={colHeadCellClass}></td>,
       );
     });
 
@@ -191,7 +209,7 @@ class Body extends React.Component<IProps, any> {
                 <td className={cellRootClass}>1,000,000</td>
                 <td className={cellRootClass}>1,000,000</td>
                 <td className={cellSpaceRootClass}></td>
-                <td className={rowHeadRootBalance}>1,000,000</td>
+                <td className={rowTailRootAccountBalance}>1,000,000</td>
               </tr>
               {accountRowDict[DocTypes.AccountGroup.Assets]}
               <tr>
@@ -206,28 +224,20 @@ class Body extends React.Component<IProps, any> {
                 <td className={cellRootClass}>1,000,000</td>
                 <td className={cellRootClass}>1,000,000</td>
                 <td className={cellSpaceRootClass}></td>
-                <td className={rowHeadRootBalance}>1,000,000</td>
+                <td className={rowTailRootAccountBalance}>1,000,000</td>
               </tr>
               {accountRowDict[DocTypes.AccountGroup.Liabilities]}
             </tbody>
           </table>
         </div>
         <div id="pageSheetBodyBottom">
-          <table className={Styles.Table}>
+          <table className={headTableRecordClass}>
             <tbody>
               <tr>
-                <td className={colHeadAccountNameClass}>アカウント</td>
-                <td className={colHeadAccountCategoryClass}>*</td>
-                <td className={colHeadCarriedClass}>繰り越し</td>
-                <td className={colHeadCellClass}>18/01/01 月</td>
-                <td className={colHeadCellClass}>18/01/02 火</td>
-                <td className={colHeadCellClass}>18/01/03 水</td>
-                <td className={colHeadCellClass}>18/01/04 木</td>
-                <td className={colHeadCellClass}>18/01/05 金</td>
-                <td className={colHeadCellClass}>18/01/06 土</td>
-                <td className={colHeadCellClass}>18/01/07 日</td>
+                <td className={colHeadCategoryClass}>カテゴリ</td>
+                {recordColHeadCells}
                 <td className={colHeadSpaceClass}></td>
-                <td className={colHeadBalanceClass}>残高</td>
+                <td className={colHeadTotalClass}>合計</td>
               </tr>
             </tbody>
           </table>

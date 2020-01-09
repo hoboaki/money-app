@@ -7,24 +7,33 @@
   font-size: 9.0pt;
   width: 100%;
 }
+.HeadTableRecord {
+  border-top: 1px solid #cccccc;
+}
 .TableColhead {
   background: #f5f5f6;
+  border-bottom: 1px solid #cccccc;
   color: rgba(0,0,0,0.87);
   text-align: center;
 }
 .TableColheadAccountName,
 .TableColheadAccountCategory,
 .TableColheadCarried,
-.TableColheadBalance {
+.TableColheadBalance,
+.TableColheadCategory,
+.TableColheadTotal {
   color: rgba(0, 0, 0, 0.61);
 }
-.TableRowhead {
+.TableRowhead,
+.TableRowtail {
   color: rgba(0, 0, 0, 0.61);
 }
 .TableColheadAccountName,
 .TableColheadAccountCategory,
 .TableColheadCarried,
 .TableColheadBalance,
+.TableColheadCategory,
+.TableColheadTotal,
 .TableRowheadAccountName,
 .TableRowheadAccountCategory {
   font-size: 9pt;
@@ -38,7 +47,8 @@
 .TableColheadCell,
 .TableCell,
 .TableColheadSpace,
-.TableCellSpace {
+.TableCellSpace,
+.TableColheadCategory {
   border-right-width: 1px;
   border-right-color: rgba(0, 0, 0, 0.2);
   border-right-style: solid;
@@ -59,12 +69,16 @@
 }
 .TableColheadCarried,
 .TableColheadBalance,
+.TableColheadTotal,
 .TableRowheadCarried,
-.TableRowheadBalance {
+.TableRowtailBalance {
   width: 88px;
 }
+.TableColheadCategory {
+  width: calc(172px + 16px + 88px);
+}
 .TableRowheadCarried,
-.TableRowheadBalance,
+.TableRowtailBalance,
 .TableCell {
   font-size: 9pt;
   padding-right: 2px;
@@ -83,6 +97,7 @@
   background: #f5f5f6;
 }
 .TableRowheadRoot,
+.TableRowtailRoot,
 .TableCellRoot {
   background: #90caf9;
 }
