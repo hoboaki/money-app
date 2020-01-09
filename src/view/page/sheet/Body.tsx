@@ -54,9 +54,9 @@ class Body extends React.Component<IProps, any> {
       Styles.TableColHead,
       Styles.TableColHeadBalance,
     );
-    const colHeadRecordCategoryClass = ClassNames(
+    const colHeadCategoryClass = ClassNames(
       Styles.TableColHead,
-      Styles.TableColHeadRecordCategory,
+      Styles.TableColHeadCategory,
     );
     const colHeadTotalClass = ClassNames(
       Styles.TableColHead,
@@ -104,20 +104,20 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowHeadAccount,
       Styles.TableRowHeadCarried,
     );
-    const rowHeadRecordCategoryOpenerSpaceClass = ClassNames(
+    const rowHeadCategoryOpenerSpaceClass = ClassNames(
       Styles.TableRowHead,
-      Styles.TableRowHeadRecordCategory,
+      Styles.TableRowHeadCategory,
       Styles.TableOpenerSpace,
     );
     const rowHeadRootCategoryNameClass = ClassNames(
       Styles.TableRowHead,
       Styles.TableRowHeadRoot,
-      Styles.TableRowHeadRecordCategoryName,
+      Styles.TableRowHeadCategoryName,
     );
-    const rowHeadRecordCategoryNameClass = ClassNames(
+    const rowHeadCategoryNameClass = ClassNames(
       Styles.TableRowHead,
-      Styles.TableRowHeadRecordCategory,
-      Styles.TableRowHeadRecordCategoryName,
+      Styles.TableRowHeadCategory,
+      Styles.TableRowHeadCategoryName,
     );
 
     // rowTail
@@ -241,22 +241,22 @@ class Body extends React.Component<IProps, any> {
       );
     });
 
-    // レコードテーブルの列ヘッダ生成
-    const recordColHeadCells = new Array();
+    // カテゴリテーブルの列ヘッダ生成
+    const categoryColHeadCells = new Array();
     colInfos.forEach((colInfo) => {
-      recordColHeadCells.push(
+      categoryColHeadCells.push(
         <td className={colHeadCellClass}></td>,
       );
     });
 
-    // レコードテーブルのルート行生成
-    const recordKinds = [
+    // カテゴリテーブルのルート行生成
+    const categoryKinds = [
       DocTypes.RecordKind.Transfer,
       DocTypes.RecordKind.Income,
       DocTypes.RecordKind.Outgo,
     ];
-    const recordRootRowDict: {[key: number]: JSX.Element} = {};
-    recordKinds.forEach((recordKind) => {
+    const categoryRootRowDict: {[key: number]: JSX.Element} = {};
+    categoryKinds.forEach((recordKind) => {
       let label = '#';
       switch (recordKind) {
         case DocTypes.RecordKind.Transfer:
@@ -273,7 +273,7 @@ class Body extends React.Component<IProps, any> {
       colInfos.forEach((colInfo) => {
         cols.push(<td className={cellRootClass}></td>);
       });
-      recordRootRowDict[recordKind] =
+      categoryRootRowDict[recordKind] =
         <tr>
           <td className={rowHeadRootOpenerSpaceClass}></td>
           <td className={rowHeadRootCategoryNameClass}>{label}</td>
@@ -283,9 +283,9 @@ class Body extends React.Component<IProps, any> {
         </tr>;
     });
 
-    // レコードテーブルの非ルート行生成
-    const recordRowDict: {[key: number]: JSX.Element[]} = {};
-    recordKinds.forEach((recordKind) => {
+    // カテゴリテーブルの非ルート行生成
+    const categoryRowDict: {[key: number]: JSX.Element[]} = {};
+    categoryKinds.forEach((recordKind) => {
       let categoryRootOrder: number[] = [];
       let categories: {[key: number]: DocStates.ICategory} = {};
       switch (recordKind) {
@@ -311,14 +311,14 @@ class Body extends React.Component<IProps, any> {
         });
         result.push(
           <tr>
-            <td className={rowHeadRecordCategoryOpenerSpaceClass}></td>
-            <td className={rowHeadRecordCategoryNameClass}>{cat.name}</td>
+            <td className={rowHeadCategoryOpenerSpaceClass}></td>
+            <td className={rowHeadCategoryNameClass}>{cat.name}</td>
             {cols}
             <td className={cellSpaceClass}></td>
             <td className={rowTailTotal}></td>
           </tr>);
       });
-      recordRowDict[recordKind] = result;
+      categoryRowDict[recordKind] = result;
     });
 
     return (
@@ -349,8 +349,8 @@ class Body extends React.Component<IProps, any> {
           <table className={headTableRecordClass}>
             <tbody>
               <tr>
-                <td className={colHeadRecordCategoryClass}>カテゴリ</td>
-                {recordColHeadCells}
+                <td className={colHeadCategoryClass}>カテゴリ</td>
+                {categoryColHeadCells}
                 <td className={colHeadSpaceClass}></td>
                 <td className={colHeadTotalClass}>合計</td>
               </tr>
@@ -358,11 +358,11 @@ class Body extends React.Component<IProps, any> {
           </table>
           <table className={Styles.Table}>
             <tbody>
-              {recordRootRowDict[DocTypes.RecordKind.Transfer]}
-              {recordRootRowDict[DocTypes.RecordKind.Income]}
-              {recordRowDict[DocTypes.RecordKind.Income]}
-              {recordRootRowDict[DocTypes.RecordKind.Outgo]}
-              {recordRowDict[DocTypes.RecordKind.Outgo]}
+              {categoryRootRowDict[DocTypes.RecordKind.Transfer]}
+              {categoryRootRowDict[DocTypes.RecordKind.Income]}
+              {categoryRowDict[DocTypes.RecordKind.Income]}
+              {categoryRootRowDict[DocTypes.RecordKind.Outgo]}
+              {categoryRowDict[DocTypes.RecordKind.Outgo]}
             </tbody>
           </table>
         </div>
