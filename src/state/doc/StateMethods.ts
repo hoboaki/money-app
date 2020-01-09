@@ -519,3 +519,19 @@ export const firstLeafCategory = (categories: {[key: number]: States.ICategory})
   }
   return category;
 };
+
+/** ルート要素も考慮したソート済カテゴリID配列を取得。 */
+export const categoryIdArray = (categoryRootOrder: number[], categories: {[key: number]: States.ICategory}) => {
+  const result = new Array<number>();
+  const proc = (categoryId: number) => {
+    const cat = categories[categoryId];
+    result.push(cat.id);
+    cat.childs.forEach((childId) => {
+      proc(childId);
+    });
+  };
+  categoryRootOrder.forEach((categoryId) => {
+    proc(categoryId);
+  });
+  return result;
+};

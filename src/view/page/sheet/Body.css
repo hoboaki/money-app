@@ -49,7 +49,7 @@
 .TableColHeadSpace,
 .TableCellSpace,
 .TableColHeadRecordCategory,
-.TableRowHeadRecordCategory {
+.TableRowHeadRecordCategoryName {
   border-right-width: 1px;
   border-right-color: rgba(0, 0, 0, 0.2);
   border-right-style: solid;
@@ -79,7 +79,7 @@
 .TableColHeadRecordCategory {
   width: calc(172px + 16px + 88px);
 }
-.TableRowHeadRecordCategory {
+.TableRowHeadRecordCategoryName {
   padding-left: 4px;
   padding-right: 4px;
   width: calc(172px + 16px + 88px - 16px);
@@ -113,7 +113,10 @@
   color: rgba(0,0,0,0.87);
 }
 .TableOpenerSpace,
-.TableRowHeadAccount {
-  width: 16px;
+.TableRowHeadAccount,
+.TableRowHeadRecordCategory {
   background: #eeeeee;
+}
+.TableOpenerSpace {
+  width: 16px;
 }

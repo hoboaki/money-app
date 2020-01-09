@@ -2,6 +2,7 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 
+import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
@@ -103,6 +104,21 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowHeadAccount,
       Styles.TableRowHeadCarried,
     );
+    const rowHeadRecordCategoryOpenerSpaceClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadRecordCategory,
+      Styles.TableOpenerSpace,
+    );
+    const rowHeadRootCategoryNameClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
+      Styles.TableRowHeadRecordCategoryName,
+    );
+    const rowHeadRecordCategoryNameClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadRecordCategory,
+      Styles.TableRowHeadRecordCategoryName,
+    );
 
     // rowTail
     const rowTailRootAccountBalance = ClassNames(
@@ -114,14 +130,13 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowTail,
       Styles.TableRowTailBalance,
     );
-    const rowHeadRootRecordCategoryClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableRowHeadRecordCategory,
-    );
     const rowTailRootTotal = ClassNames(
       Styles.TableRowTail,
       Styles.TableRowTailRoot,
+      Styles.TableRowTailTotal,
+    );
+    const rowTailTotal = ClassNames(
+      Styles.TableRowTail,
       Styles.TableRowTailTotal,
     );
 
@@ -261,11 +276,49 @@ class Body extends React.Component<IProps, any> {
       recordRootRowDict[recordKind] =
         <tr>
           <td className={rowHeadRootOpenerSpaceClass}></td>
-          <td className={rowHeadRootRecordCategoryClass}>{label}</td>
+          <td className={rowHeadRootCategoryNameClass}>{label}</td>
           {cols}
           <td className={cellSpaceRootClass}></td>
-          <td className={rowTailRootTotal}>1,000,000</td>
+          <td className={rowTailRootTotal}></td>
         </tr>;
+    });
+
+    // レコードテーブルの非ルート行生成
+    const recordRowDict: {[key: number]: JSX.Element[]} = {};
+    recordKinds.forEach((recordKind) => {
+      let categoryRootOrder: number[] = [];
+      let categories: {[key: number]: DocStates.ICategory} = {};
+      switch (recordKind) {
+        case DocTypes.RecordKind.Transfer: return;
+        case DocTypes.RecordKind.Income:
+          categoryRootOrder = this.props.doc.income.categoryRootOrder;
+          categories = this.props.doc.income.categories;
+          break;
+        case DocTypes.RecordKind.Outgo:
+          categoryRootOrder = this.props.doc.outgo.categoryRootOrder;
+          categories = this.props.doc.outgo.categories;
+          break;
+        default:
+          return;
+      }
+      const categoryIdArray = DocStateMethods.categoryIdArray(categoryRootOrder, categories);
+      const result = new Array<JSX.Element>();
+      categoryIdArray.forEach((categoryId) => {
+        const cat = categories[categoryId];
+        const cols = new Array();
+        colInfos.forEach((colInfo) => {
+          cols.push(<td className={cellClass}></td>);
+        });
+        result.push(
+          <tr>
+            <td className={rowHeadRecordCategoryOpenerSpaceClass}></td>
+            <td className={rowHeadRecordCategoryNameClass}>{cat.name}</td>
+            {cols}
+            <td className={cellSpaceClass}></td>
+            <td className={rowTailTotal}></td>
+          </tr>);
+      });
+      recordRowDict[recordKind] = result;
     });
 
     return (
@@ -307,7 +360,9 @@ class Body extends React.Component<IProps, any> {
             <tbody>
               {recordRootRowDict[DocTypes.RecordKind.Transfer]}
               {recordRootRowDict[DocTypes.RecordKind.Income]}
+              {recordRowDict[DocTypes.RecordKind.Income]}
               {recordRootRowDict[DocTypes.RecordKind.Outgo]}
+              {recordRowDict[DocTypes.RecordKind.Outgo]}
             </tbody>
           </table>
         </div>
