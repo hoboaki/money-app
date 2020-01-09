@@ -49,6 +49,10 @@ class Header extends React.Component<States.IPageHome, IState> {
       Styles.MoveBtn,
       Styles.MoveNextBtn,
     );
+    const viewUnitSelectClass = ClassNames(
+      BasicStyles.StdSelect,
+      Styles.ViewUnitSelect,
+    );
     const jumpBtnClass = ClassNames(
       BasicStyles.StdButton,
       Styles.Btn,
@@ -94,7 +98,7 @@ class Header extends React.Component<States.IPageHome, IState> {
           <i className={iconClass}>chevron_right</i>
         </button>
         {/* <button className={jumpBtnClass} onClick={this.onJumpBtnPushed}>移動</button> */}
-        <select className={Styles.ViewUnitSelect} defaultValue="month" onChange={this.onViewUnitChanged}>
+        <select className={viewUnitSelectClass} defaultValue="month" onChange={this.onViewUnitChanged}>
           <option value="month">月表示</option>
         </select>
         <button className={filterBtnClass} onClick={() => {this.onFilterBtnPushed(); }} title={'フィルター（準備中）'}>

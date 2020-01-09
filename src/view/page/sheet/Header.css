@@ -52,19 +52,10 @@
 }
 
 .ViewUnitSelect {
-  background: transparent;
-  border: 1px solid rgba(0,0,0,0.12);
-  border-radius: 5px;
-  display: block;
   height: 30px;
-  outline: none;
   margin-left: 4px;
   margin-right: 8px;
   width: 80px;
-}
-
-.ViewUnitSelect:hover {
-  color: rgba(0,0,0,0.87);
 }
 
 .FilterBtn {

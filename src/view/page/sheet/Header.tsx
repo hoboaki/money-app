@@ -41,6 +41,10 @@ class Header extends React.Component<States.IPageSheet> {
       Styles.MoveBtn,
       Styles.MoveNextBtn,
     );
+    const viewUnitSelectClass = ClassNames(
+      BasicStyles.StdSelect,
+      Styles.ViewUnitSelect,
+    );
     const jumpBtnClass = ClassNames(
       BasicStyles.StdButton,
       Styles.Btn,
@@ -69,7 +73,7 @@ class Header extends React.Component<States.IPageSheet> {
     const currentDate = `${this.props.currentDate.year}年${this.props.currentDate.month}月`;
     return (
       <div className={rootClass}>
-        <select className={Styles.ViewUnitSelect} defaultValue="day" onChange={this.onViewUnitChanged}>
+        <select className={viewUnitSelectClass} defaultValue="day" onChange={this.onViewUnitChanged}>
           <option value="day">日別</option>
         </select>
         <button className={movePrevBtnClass} onClick={this.onMovePrevBtnPushed}>
