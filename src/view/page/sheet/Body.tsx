@@ -51,9 +51,9 @@ class Body extends React.Component<IProps, any> {
       Styles.TableColhead,
       Styles.TableColheadBalance,
     );
-    const colHeadCategoryClass = ClassNames(
+    const colHeadRecordCategoryClass = ClassNames(
       Styles.TableColhead,
-      Styles.TableColheadCategory,
+      Styles.TableColheadRecordCategory,
     );
     const colHeadTotalClass = ClassNames(
       Styles.TableColhead,
@@ -115,6 +115,16 @@ class Body extends React.Component<IProps, any> {
     const rowTailAccountBalance = ClassNames(
       Styles.TableRowtail,
       Styles.TableRowtailBalance,
+    );
+    const rowHeadRootRecordCategoryClass = ClassNames(
+      Styles.TableRowhead,
+      Styles.TableRowheadRoot,
+      Styles.TableRowheadRecordCategory,
+    );
+    const rowTailRootTotal = ClassNames(
+      Styles.TableRowtail,
+      Styles.TableRowtailRoot,
+      Styles.TableRowtailTotal,
     );
     const cellClass = ClassNames(
       Styles.TableCell,
@@ -234,10 +244,26 @@ class Body extends React.Component<IProps, any> {
           <table className={headTableRecordClass}>
             <tbody>
               <tr>
-                <td className={colHeadCategoryClass}>カテゴリ</td>
+                <td className={colHeadRecordCategoryClass}>カテゴリ</td>
                 {recordColHeadCells}
                 <td className={colHeadSpaceClass}></td>
                 <td className={colHeadTotalClass}>合計</td>
+              </tr>
+            </tbody>
+          </table>
+          <table className={Styles.Table}>
+            <tbody>
+              <tr>
+                <td className={rowHeadRootOpenerSpaceClass}></td>
+                <td className={rowHeadRootRecordCategoryClass}>資金移動</td>
+                <td className={cellRootClass}>10,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellRootClass}>1,000,000</td>
+                <td className={cellSpaceRootClass}></td>
+                <td className={rowTailRootTotal}>1,000,000</td>
               </tr>
             </tbody>
           </table>
