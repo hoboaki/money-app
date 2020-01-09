@@ -207,6 +207,10 @@ class Body extends React.Component<IProps, any> {
     this.props.doc.account.order.forEach((accountId) => {
       const account = this.props.doc.account.accounts[accountId];
       const accountGroup = DocTypes.accountKindToAccountGroup(account.kind);
+      const cols = new Array();
+      colInfos.forEach((colInfo) => {
+        cols.push(<td className={cellClass}>10,000,000</td>);
+      });
       accountRowDict[accountGroup].push(
         <tr>
           <td className={rowHeadAccountOpenerSpaceClass}></td>
@@ -215,12 +219,7 @@ class Body extends React.Component<IProps, any> {
             {DocTypes.shortLocalizedAccountKind(account.kind).slice(0, 1)}
           </td>
           <td className={rowHeadAccountCarriedClass}>10,000,000</td>
-          <td className={cellClass}>10,000,000</td>
-          <td className={cellClass}>1,000,000</td>
-          <td className={cellClass}>1,000,000</td>
-          <td className={cellClass}>1,000,000</td>
-          <td className={cellClass}>1,000,000</td>
-          <td className={cellClass}>1,000,000</td>
+          {cols}
           <td className={cellSpaceClass}></td>
           <td className={rowTailAccountBalance}>1,000,000</td>
         </tr>,
