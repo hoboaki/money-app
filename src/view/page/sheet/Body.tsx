@@ -28,56 +28,56 @@ class Body extends React.Component<IProps, any> {
       Styles.HeadTableRecord,
     );
     const colHeadAccountNameClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadAccountName,
+      Styles.TableColHead,
+      Styles.TableColHeadAccountName,
     );
     const colHeadAccountCategoryClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadAccountCategory,
+      Styles.TableColHead,
+      Styles.TableColHeadAccountCategory,
     );
     const colHeadCarriedClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadCarried,
+      Styles.TableColHead,
+      Styles.TableColHeadCarried,
     );
     const colHeadCellClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadCell,
+      Styles.TableColHead,
+      Styles.TableColHeadCell,
     );
     const colHeadSpaceClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadSpace,
+      Styles.TableColHead,
+      Styles.TableColHeadSpace,
     );
     const colHeadBalanceClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadBalance,
+      Styles.TableColHead,
+      Styles.TableColHeadBalance,
     );
     const colHeadRecordCategoryClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadRecordCategory,
+      Styles.TableColHead,
+      Styles.TableColHeadRecordCategory,
     );
     const colHeadTotalClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadTotal,
+      Styles.TableColHead,
+      Styles.TableColHeadTotal,
     );
     const rowHeadRootOpenerSpaceClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
       Styles.TableOpenerSpace,
     );
     const rowHeadRootAccountNameClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
-      Styles.TableRowheadAccountName,
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
+      Styles.TableRowHeadAccountName,
     );
     const rowHeadRootAccountCategoryClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
-      Styles.TableRowheadAccountCategory,
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
+      Styles.TableRowHeadAccountCategory,
     );
     const rowHeadRootAccountCarriedClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
-      Styles.TableRowheadCarried,
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
+      Styles.TableRowHeadCarried,
     );
     const cellRootClass = ClassNames(
       Styles.TableCell,
@@ -88,43 +88,43 @@ class Body extends React.Component<IProps, any> {
       Styles.TableCellRoot,
     );
     const rowHeadAccountOpenerSpaceClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadAccount,
+      Styles.TableRowHead,
+      Styles.TableRowHeadAccount,
       Styles.TableOpenerSpace,
     );
-    const rowHeadAccountAccountNameClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadAccount,
-      Styles.TableRowheadAccountName,
+    const rowHeadAccountNameClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadAccount,
+      Styles.TableRowHeadAccountName,
     );
-    const rowHeadAccountAccountCategoryClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadAccount,
-      Styles.TableRowheadAccountCategory,
+    const rowHeadAccountCategoryClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadAccount,
+      Styles.TableRowHeadAccountCategory,
     );
-    const rowHeadAccountAccountCarriedClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadAccount,
-      Styles.TableRowheadCarried,
+    const rowHeadAccountCarriedClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadAccount,
+      Styles.TableRowHeadCarried,
     );
     const rowTailRootAccountBalance = ClassNames(
-      Styles.TableRowtail,
-      Styles.TableRowtailRoot,
-      Styles.TableRowtailBalance,
+      Styles.TableRowTail,
+      Styles.TableRowTailRoot,
+      Styles.TableRowTailBalance,
     );
     const rowTailAccountBalance = ClassNames(
-      Styles.TableRowtail,
-      Styles.TableRowtailBalance,
+      Styles.TableRowTail,
+      Styles.TableRowTailBalance,
     );
     const rowHeadRootRecordCategoryClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
-      Styles.TableRowheadRecordCategory,
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
+      Styles.TableRowHeadRecordCategory,
     );
     const rowTailRootTotal = ClassNames(
-      Styles.TableRowtail,
-      Styles.TableRowtailRoot,
-      Styles.TableRowtailTotal,
+      Styles.TableRowTail,
+      Styles.TableRowTailRoot,
+      Styles.TableRowTailTotal,
     );
     const cellClass = ClassNames(
       Styles.TableCell,
@@ -166,11 +166,11 @@ class Body extends React.Component<IProps, any> {
       accountRowDict[accountGroup].push(
         <tr>
           <td className={rowHeadAccountOpenerSpaceClass}></td>
-          <td className={rowHeadAccountAccountNameClass}>{account.name}</td>
-          <td className={rowHeadAccountAccountCategoryClass}>
+          <td className={rowHeadAccountNameClass}>{account.name}</td>
+          <td className={rowHeadAccountCategoryClass}>
             {DocTypes.shortLocalizedAccountKind(account.kind).slice(0, 1)}
           </td>
-          <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
+          <td className={rowHeadAccountCarriedClass}>10,000,000</td>
           <td className={cellClass}>10,000,000</td>
           <td className={cellClass}>1,000,000</td>
           <td className={cellClass}>1,000,000</td>
