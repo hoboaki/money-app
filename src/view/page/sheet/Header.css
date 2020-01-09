@@ -1,58 +1,80 @@
 .Root {
   align-items: center;
-  background: #6d6d6d;
-  color: #424242;
+  background: #f5f5f6;
+  border-bottom: 1px solid #cccccc;
+  color: rgba(0,0,0,0.87);
   display: flex;
   flex-direction: row;
-  height: 40px;
-  justify-content: center;
-  padding-bottom: 4px;
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-top: 4px;
+  height: 72px;
+  padding-left: 12px;
+  padding-right: 12px;
   width: 100%;
 }
 
-.CellUnitSelect {
-  display:block;
-  margin-right: 8px;
-  outline: none;
-  width: 80px;
+/* 表示中の日付ラベル */
+.CurrentDate {
+  font-size: 24pt;
+  margin: 0px;
+  text-align: left;
+  width: 200px;
 }
+
+/* ボタンの既定スタイル */
+.Btn {
+  display: block;
+  height: 30px;
+}
+
+/* フレーム無しボタンの既定スタイル */
+.NoFrameBtn {
+  border: 0px;
+}
+
+/* 以下，それぞれのインプット専用設定 */
 
 .MoveBtn {
-  background: #424242;
-  border: 0px;
-  color: #bababa;
-  display:block;
-  height: 30px;
-  outline: none;
-  padding: 2px;
-  width: 56px;
-}
-
-.MoveBtn:hover {
-  color: #ffffff;
+  width: 52px;
 }
 
 .MovePrevBtn {
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
   margin-right: 1px;
+  width: 30px;
 }
 
 .MoveNextBtn {
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;  
   margin-left: 1px;
+  width: 30px;
 }
 
-.ZoomDiv {
-  width: 120px;
+.JumpBtn {
+  margin-left: 4px;
+  width: 52px;
 }
 
-.ZoomLabel {
-  color: rgba(255, 255, 255, 0.61);
-  font-size: 8pt;
-  margin-right: 4px;
+.ViewUnitSelect {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 5px;
+  display: block;
+  height: 30px;
+  outline: none;
+  margin-left: 4px;
+  margin-right: 8px;
+  width: 80px;
+}
+
+.ViewUnitSelect:hover {
+  color: rgba(0,0,0,0.87);
+}
+
+.FilterBtn {
+  margin-left: 4px;
+}
+
+.NewRecordBtn {
+  margin-left: 4px;
+}
+
+.RightArea {
+  align-items: center;
 }

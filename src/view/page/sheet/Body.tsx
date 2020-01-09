@@ -1,62 +1,146 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+import * as ReactRedux from 'react-redux';
 
+import * as DocStateMethods from 'src/state/doc/StateMethods';
+import * as DocStates from 'src/state/doc/States';
+import * as DocTypes from 'src/state/doc/Types';
+import IStoreState from 'src/state/IStoreState';
+import * as UiStates from 'src/state/ui/States';
+import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as Styles from './Body.css';
 
-class Body extends React.Component<any, any> {
+interface IProps {
+  doc: DocStates.IState;
+  page: UiStates.IPageSheet;
+}
+
+class Body extends React.Component<IProps, any> {
+  public constructor(props: IProps) {
+    super(props);
+  }
+
   public render() {
     const rootClass = ClassNames(
       Styles.Root,
     );
+    const headTableRecordClass = ClassNames(
+      Styles.Table,
+      Styles.HeadTableRecord,
+    );
+
+    // colHead
     const colHeadAccountNameClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadAccountName,
+      Styles.TableColHead,
+      Styles.TableColHeadAccountName,
     );
     const colHeadAccountCategoryClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadAccountCategory,
+      Styles.TableColHead,
+      Styles.TableColHeadAccountCategory,
     );
     const colHeadCarriedClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadCarried,
+      Styles.TableColHead,
+      Styles.TableColHeadCarried,
     );
     const colHeadCellClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadCell,
+      Styles.TableColHead,
+      Styles.TableColHeadCell,
     );
     const colHeadSpaceClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadSpace,
+      Styles.TableColHead,
+      Styles.TableColHeadSpace,
     );
     const colHeadBalanceClass = ClassNames(
-      Styles.TableColhead,
-      Styles.TableColheadBalance,
+      Styles.TableColHead,
+      Styles.TableColHeadBalance,
     );
+    const colHeadCategoryClass = ClassNames(
+      Styles.TableColHead,
+      Styles.TableColHeadCategory,
+    );
+    const colHeadTotalClass = ClassNames(
+      Styles.TableColHead,
+      Styles.TableColHeadTotal,
+    );
+
+    // rowHead
     const rowHeadRootOpenerSpaceClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
       Styles.TableOpenerSpace,
     );
     const rowHeadRootAccountNameClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
-      Styles.TableRowheadAccountName,
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
+      Styles.TableRowHeadAccountName,
     );
     const rowHeadRootAccountCategoryClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
-      Styles.TableRowheadAccountCategory,
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
+      Styles.TableRowHeadAccountCategory,
     );
     const rowHeadRootAccountCarriedClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
-      Styles.TableRowheadCarried,
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
+      Styles.TableRowHeadCarried,
     );
-    const rowHeadRootBalance = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadRoot,
-      Styles.TableRowheadBalance,
+    const rowHeadAccountOpenerSpaceClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadAccount,
+      Styles.TableOpenerSpace,
     );
+    const rowHeadAccountNameClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadAccount,
+      Styles.TableRowHeadAccountName,
+    );
+    const rowHeadAccountCategoryClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadAccount,
+      Styles.TableRowHeadAccountCategory,
+    );
+    const rowHeadAccountCarriedClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadAccount,
+      Styles.TableRowHeadCarried,
+    );
+    const rowHeadCategoryOpenerSpaceClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadCategory,
+      Styles.TableOpenerSpace,
+    );
+    const rowHeadRootCategoryNameClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadRoot,
+      Styles.TableRowHeadCategoryName,
+    );
+    const rowHeadCategoryNameClass = ClassNames(
+      Styles.TableRowHead,
+      Styles.TableRowHeadCategory,
+      Styles.TableRowHeadCategoryName,
+    );
+
+    // rowTail
+    const rowTailRootAccountBalance = ClassNames(
+      Styles.TableRowTail,
+      Styles.TableRowTailRoot,
+      Styles.TableRowTailBalance,
+    );
+    const rowTailAccountBalance = ClassNames(
+      Styles.TableRowTail,
+      Styles.TableRowTailBalance,
+    );
+    const rowTailRootTotal = ClassNames(
+      Styles.TableRowTail,
+      Styles.TableRowTailRoot,
+      Styles.TableRowTailTotal,
+    );
+    const rowTailTotal = ClassNames(
+      Styles.TableRowTail,
+      Styles.TableRowTailTotal,
+    );
+
+    // cell
     const cellRootClass = ClassNames(
       Styles.TableCell,
       Styles.TableCellRoot,
@@ -65,31 +149,6 @@ class Body extends React.Component<any, any> {
       Styles.TableCellSpace,
       Styles.TableCellRoot,
     );
-    const rowHeadAccountOpenerSpaceClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadAccount,
-      Styles.TableOpenerSpace,
-    );
-    const rowHeadAccountAccountNameClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadAccount,
-      Styles.TableRowheadAccountName,
-    );
-    const rowHeadAccountAccountCategoryClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadAccount,
-      Styles.TableRowheadAccountCategory,
-    );
-    const rowHeadAccountAccountCarriedClass = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadAccount,
-      Styles.TableRowheadCarried,
-    );
-    const rowHeadAccountBalance = ClassNames(
-      Styles.TableRowhead,
-      Styles.TableRowheadAccount,
-      Styles.TableRowheadBalance,
-    );
     const cellClass = ClassNames(
       Styles.TableCell,
       Styles.TableCellOdd,
@@ -97,6 +156,171 @@ class Body extends React.Component<any, any> {
     const cellSpaceClass = ClassNames(
       Styles.TableCellSpace,
     );
+
+    // 列情報生成
+    const colInfos = new Array();
+    const colCount = 6;
+    {
+      let date = this.props.page.currentDate;
+      for (let colIdx = 0; colIdx < colCount; ++colIdx) {
+        colInfos.push({
+          date,
+        });
+        date = IYearMonthDateUtils.nextDay(date);
+      }
+    }
+
+    // アカウントテーブルの列ヘッダ生成
+    const accountColHeadCells = new Array();
+    colInfos.forEach((colInfo) => {
+      accountColHeadCells.push(
+        <td className={colHeadCellClass}>
+        {('0' + colInfo.date.year).slice(-2)}/
+        {colInfo.date.month}/{colInfo.date.day} {IYearMonthDateUtils.localaizedDow(colInfo.date)}
+        </td>,
+      );
+    });
+
+    // アカウントテーブルのルート行生成
+    const accountGroups = [
+      DocTypes.AccountGroup.Assets,
+      DocTypes.AccountGroup.Liabilities,
+    ];
+    const accountRootRowDict: {[key: number]: JSX.Element} = {};
+    accountGroups.forEach((accountGroup) => {
+      let label = '#';
+      switch (accountGroup) {
+        case DocTypes.AccountGroup.Assets:
+          label = '資産アカウント';
+          break;
+        case DocTypes.AccountGroup.Liabilities:
+          label = '負債アカウント';
+          break;
+      }
+      const cols = new Array();
+      colInfos.forEach((colInfo) => {
+        cols.push(<td className={cellRootClass}>10,000,000</td>);
+      });
+      accountRootRowDict[accountGroup] =
+        <tr>
+          <td className={rowHeadRootOpenerSpaceClass}></td>
+          <td className={rowHeadRootAccountNameClass}>{label}</td>
+          <td className={rowHeadRootAccountCategoryClass}></td>
+          <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
+          {cols}
+          <td className={cellSpaceRootClass}></td>
+          <td className={rowTailRootAccountBalance}>1,000,000</td>
+        </tr>;
+    });
+
+    // アカウントテーブルの非ルート行生成
+    const accountRowDict: {[key: number]: JSX.Element[]} = {};
+    accountGroups.forEach((accountGroup) => {
+      accountRowDict[accountGroup] = new Array<JSX.Element>();
+    });
+    const accountRows = new Array();
+    this.props.doc.account.order.forEach((accountId) => {
+      const account = this.props.doc.account.accounts[accountId];
+      const accountGroup = DocTypes.accountKindToAccountGroup(account.kind);
+      const cols = new Array();
+      colInfos.forEach((colInfo) => {
+        cols.push(<td className={cellClass}>10,000,000</td>);
+      });
+      accountRowDict[accountGroup].push(
+        <tr>
+          <td className={rowHeadAccountOpenerSpaceClass}></td>
+          <td className={rowHeadAccountNameClass}>{account.name}</td>
+          <td className={rowHeadAccountCategoryClass}>
+            {DocTypes.shortLocalizedAccountKind(account.kind).slice(0, 1)}
+          </td>
+          <td className={rowHeadAccountCarriedClass}>10,000,000</td>
+          {cols}
+          <td className={cellSpaceClass}></td>
+          <td className={rowTailAccountBalance}>1,000,000</td>
+        </tr>,
+      );
+    });
+
+    // カテゴリテーブルの列ヘッダ生成
+    const categoryColHeadCells = new Array();
+    colInfos.forEach((colInfo) => {
+      categoryColHeadCells.push(
+        <td className={colHeadCellClass}></td>,
+      );
+    });
+
+    // カテゴリテーブルのルート行生成
+    const categoryKinds = [
+      DocTypes.RecordKind.Transfer,
+      DocTypes.RecordKind.Income,
+      DocTypes.RecordKind.Outgo,
+    ];
+    const categoryRootRowDict: {[key: number]: JSX.Element} = {};
+    categoryKinds.forEach((recordKind) => {
+      let label = '#';
+      switch (recordKind) {
+        case DocTypes.RecordKind.Transfer:
+          label = '振替';
+          break;
+        case DocTypes.RecordKind.Income:
+          label = '収入';
+          break;
+        case DocTypes.RecordKind.Outgo:
+          label = '支出';
+          break;
+      }
+      const cols = new Array();
+      colInfos.forEach((colInfo) => {
+        cols.push(<td className={cellRootClass}></td>);
+      });
+      categoryRootRowDict[recordKind] =
+        <tr>
+          <td className={rowHeadRootOpenerSpaceClass}></td>
+          <td className={rowHeadRootCategoryNameClass}>{label}</td>
+          {cols}
+          <td className={cellSpaceRootClass}></td>
+          <td className={rowTailRootTotal}></td>
+        </tr>;
+    });
+
+    // カテゴリテーブルの非ルート行生成
+    const categoryRowDict: {[key: number]: JSX.Element[]} = {};
+    categoryKinds.forEach((recordKind) => {
+      let categoryRootOrder: number[] = [];
+      let categories: {[key: number]: DocStates.ICategory} = {};
+      switch (recordKind) {
+        case DocTypes.RecordKind.Transfer: return;
+        case DocTypes.RecordKind.Income:
+          categoryRootOrder = this.props.doc.income.categoryRootOrder;
+          categories = this.props.doc.income.categories;
+          break;
+        case DocTypes.RecordKind.Outgo:
+          categoryRootOrder = this.props.doc.outgo.categoryRootOrder;
+          categories = this.props.doc.outgo.categories;
+          break;
+        default:
+          return;
+      }
+      const categoryIdArray = DocStateMethods.categoryIdArray(categoryRootOrder, categories);
+      const result = new Array<JSX.Element>();
+      categoryIdArray.forEach((categoryId) => {
+        const cat = categories[categoryId];
+        const cols = new Array();
+        colInfos.forEach((colInfo) => {
+          cols.push(<td className={cellClass}></td>);
+        });
+        result.push(
+          <tr>
+            <td className={rowHeadCategoryOpenerSpaceClass}></td>
+            <td className={rowHeadCategoryNameClass}>{cat.name}</td>
+            {cols}
+            <td className={cellSpaceClass}></td>
+            <td className={rowTailTotal}></td>
+          </tr>);
+      });
+      categoryRowDict[recordKind] = result;
+    });
+
     return (
       <div className={rootClass}>
         <div id="pageSheetBodyTop">
@@ -106,13 +330,7 @@ class Body extends React.Component<any, any> {
                 <td className={colHeadAccountNameClass}>アカウント</td>
                 <td className={colHeadAccountCategoryClass}>*</td>
                 <td className={colHeadCarriedClass}>繰り越し</td>
-                <td className={colHeadCellClass}>18/01/01 月</td>
-                <td className={colHeadCellClass}>18/01/02 火</td>
-                <td className={colHeadCellClass}>18/01/03 水</td>
-                <td className={colHeadCellClass}>18/01/04 木</td>
-                <td className={colHeadCellClass}>18/01/05 金</td>
-                <td className={colHeadCellClass}>18/01/06 土</td>
-                <td className={colHeadCellClass}>18/01/07 日</td>
+                {accountColHeadCells}
                 <td className={colHeadSpaceClass}></td>
                 <td className={colHeadBalanceClass}>残高</td>
               </tr>
@@ -120,78 +338,43 @@ class Body extends React.Component<any, any> {
           </table>
           <table className={Styles.Table}>
             <tbody>
-              <tr>
-                <td className={rowHeadRootOpenerSpaceClass}></td>
-                <td className={rowHeadRootAccountNameClass}>資産アカウント</td>
-                <td className={rowHeadRootAccountCategoryClass}></td>
-                <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
-                <td className={cellRootClass}>10,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellSpaceRootClass}></td>
-                <td className={rowHeadRootBalance}>1,000,000</td>
-              </tr>
-              <tr>
-                <td className={rowHeadAccountOpenerSpaceClass}></td>
-                <td className={rowHeadAccountAccountNameClass}>財布</td>
-                <td className={rowHeadAccountAccountCategoryClass}>現</td>
-                <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
-                <td className={cellClass}>10,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellSpaceClass}></td>
-                <td className={rowHeadAccountBalance}>1,000,000</td>
-              </tr>
-              <tr>
-                <td className={rowHeadAccountOpenerSpaceClass}></td>
-                <td className={rowHeadAccountAccountNameClass}>アデリー銀行</td>
-                <td className={rowHeadAccountAccountCategoryClass}>銀</td>
-                <td className={rowHeadAccountAccountCarriedClass}>10,000,000</td>
-                <td className={cellClass}>10,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellClass}>1,000,000</td>
-                <td className={cellSpaceClass}></td>
-                <td className={rowHeadAccountBalance}>1,000,000</td>
-              </tr>
+              {accountRootRowDict[DocTypes.AccountGroup.Assets]}
+              {accountRowDict[DocTypes.AccountGroup.Assets]}
+              {accountRootRowDict[DocTypes.AccountGroup.Liabilities]}
+              {accountRowDict[DocTypes.AccountGroup.Liabilities]}
             </tbody>
           </table>
         </div>
         <div id="pageSheetBodyBottom">
-          <table className={Styles.Table}>
+          <table className={headTableRecordClass}>
             <tbody>
               <tr>
-                <td className={colHeadAccountNameClass}>アカウント</td>
-                <td className={colHeadAccountCategoryClass}>*</td>
-                <td className={colHeadCarriedClass}>繰り越し</td>
-                <td className={colHeadCellClass}>18/01/01 月</td>
-                <td className={colHeadCellClass}>18/01/02 火</td>
-                <td className={colHeadCellClass}>18/01/03 水</td>
-                <td className={colHeadCellClass}>18/01/04 木</td>
-                <td className={colHeadCellClass}>18/01/05 金</td>
-                <td className={colHeadCellClass}>18/01/06 土</td>
-                <td className={colHeadCellClass}>18/01/07 日</td>
+                <td className={colHeadCategoryClass}>カテゴリ</td>
+                {categoryColHeadCells}
                 <td className={colHeadSpaceClass}></td>
-                <td className={colHeadBalanceClass}>残高</td>
+                <td className={colHeadTotalClass}>合計</td>
               </tr>
+            </tbody>
+          </table>
+          <table className={Styles.Table}>
+            <tbody>
+              {categoryRootRowDict[DocTypes.RecordKind.Transfer]}
+              {categoryRootRowDict[DocTypes.RecordKind.Income]}
+              {categoryRowDict[DocTypes.RecordKind.Income]}
+              {categoryRootRowDict[DocTypes.RecordKind.Outgo]}
+              {categoryRowDict[DocTypes.RecordKind.Outgo]}
             </tbody>
           </table>
         </div>
       </div>
     );
   }
-
 }
 
-export default Body;
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    doc: state.doc,
+    page: state.ui.pageSheet,
+  };
+};
+export default ReactRedux.connect(mapStateToProps)(Body);
