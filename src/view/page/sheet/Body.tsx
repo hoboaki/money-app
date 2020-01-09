@@ -166,10 +166,43 @@ class Body extends React.Component<IProps, any> {
       );
     });
 
-    // アカウントテーブルの行生成
+    // アカウントテーブルのルート行生成
+    const accountGroups = [
+      DocTypes.AccountGroup.Assets,
+      DocTypes.AccountGroup.Liabilities,
+    ];
+    const accountRootRowDict: {[key: number]: JSX.Element} = {};
+    accountGroups.forEach((accountGroup) => {
+      let label = '#';
+      switch (accountGroup) {
+        case DocTypes.AccountGroup.Assets:
+          label = '資産アカウント';
+          break;
+        case DocTypes.AccountGroup.Liabilities:
+          label = '負債アカウント';
+          break;
+      }
+      const cols = new Array();
+      colInfos.forEach((colInfo) => {
+        cols.push(<td className={cellRootClass}>10,000,000</td>);
+      });
+      accountRootRowDict[accountGroup] =
+        <tr>
+          <td className={rowHeadRootOpenerSpaceClass}></td>
+          <td className={rowHeadRootAccountNameClass}>{label}</td>
+          <td className={rowHeadRootAccountCategoryClass}></td>
+          <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
+          {cols}
+          <td className={cellSpaceRootClass}></td>
+          <td className={rowTailRootAccountBalance}>1,000,000</td>
+        </tr>;
+    });
+
+    // アカウントテーブルの非ルート行生成
     const accountRowDict: {[key: number]: JSX.Element[]} = {};
-    accountRowDict[DocTypes.AccountGroup.Assets] = new Array<JSX.Element>();
-    accountRowDict[DocTypes.AccountGroup.Liabilities] = new Array<JSX.Element>();
+    accountGroups.forEach((accountGroup) => {
+      accountRowDict[accountGroup] = new Array<JSX.Element>();
+    });
     const accountRows = new Array();
     this.props.doc.account.order.forEach((accountId) => {
       const account = this.props.doc.account.accounts[accountId];
@@ -202,8 +235,39 @@ class Body extends React.Component<IProps, any> {
       );
     });
 
-    // レコードテーブルの行生成
-    // ...
+    // レコードテーブルのルート行生成
+    const recordKinds = [
+      DocTypes.RecordKind.Transfer,
+      DocTypes.RecordKind.Income,
+      DocTypes.RecordKind.Outgo,
+    ];
+    const recordRootRowDict: {[key: number]: JSX.Element} = {};
+    recordKinds.forEach((recordKind) => {
+      let label = '#';
+      switch (recordKind) {
+        case DocTypes.RecordKind.Transfer:
+          label = '振替';
+          break;
+        case DocTypes.RecordKind.Income:
+          label = '収入';
+          break;
+        case DocTypes.RecordKind.Outgo:
+          label = '支出';
+          break;
+      }
+      const cols = new Array();
+      colInfos.forEach((colInfo) => {
+        cols.push(<td className={cellRootClass}></td>);
+      });
+      recordRootRowDict[recordKind] =
+        <tr>
+          <td className={rowHeadRootOpenerSpaceClass}></td>
+          <td className={rowHeadRootRecordCategoryClass}>{label}</td>
+          {cols}
+          <td className={cellSpaceRootClass}></td>
+          <td className={rowTailRootTotal}>1,000,000</td>
+        </tr>;
+    });
 
     return (
       <div className={rootClass}>
@@ -222,35 +286,9 @@ class Body extends React.Component<IProps, any> {
           </table>
           <table className={Styles.Table}>
             <tbody>
-              <tr>
-                <td className={rowHeadRootOpenerSpaceClass}></td>
-                <td className={rowHeadRootAccountNameClass}>資産アカウント</td>
-                <td className={rowHeadRootAccountCategoryClass}></td>
-                <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
-                <td className={cellRootClass}>10,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellSpaceRootClass}></td>
-                <td className={rowTailRootAccountBalance}>1,000,000</td>
-              </tr>
+              {accountRootRowDict[DocTypes.AccountGroup.Assets]}
               {accountRowDict[DocTypes.AccountGroup.Assets]}
-              <tr>
-                <td className={rowHeadRootOpenerSpaceClass}></td>
-                <td className={rowHeadRootAccountNameClass}>負債アカウント</td>
-                <td className={rowHeadRootAccountCategoryClass}></td>
-                <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
-                <td className={cellRootClass}>10,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellSpaceRootClass}></td>
-                <td className={rowTailRootAccountBalance}>1,000,000</td>
-              </tr>
+              {accountRootRowDict[DocTypes.AccountGroup.Liabilities]}
               {accountRowDict[DocTypes.AccountGroup.Liabilities]}
             </tbody>
           </table>
@@ -268,18 +306,9 @@ class Body extends React.Component<IProps, any> {
           </table>
           <table className={Styles.Table}>
             <tbody>
-              <tr>
-                <td className={rowHeadRootOpenerSpaceClass}></td>
-                <td className={rowHeadRootRecordCategoryClass}>資金移動</td>
-                <td className={cellRootClass}>10,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellRootClass}>1,000,000</td>
-                <td className={cellSpaceRootClass}></td>
-                <td className={rowTailRootTotal}>1,000,000</td>
-              </tr>
+              {recordRootRowDict[DocTypes.RecordKind.Transfer]}
+              {recordRootRowDict[DocTypes.RecordKind.Income]}
+              {recordRootRowDict[DocTypes.RecordKind.Outgo]}
             </tbody>
           </table>
         </div>
