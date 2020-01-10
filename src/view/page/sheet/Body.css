@@ -1,13 +1,22 @@
 .Root {
   display: block;
-  height: 100%;
+  height: calc(100% - 72px);
   width: 100%;
 }
 .BodyTop {
-  height: 200px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  border-bottom: 1px solid #cccccc;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
-.BodyBotton {
-  height: 300px;
+.BodyBottom {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .Table {
   font-size: 9.0pt;
