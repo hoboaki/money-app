@@ -52,21 +52,6 @@ class MainWindow extends React.Component<any, IState> {
             break;
         }
       });
-
-      // スプリッター設定
-      // PageSheet でスプリッターを使用しないことが確定したらこのコメントアウト群を消す。
-      // Split(['#pageSheetBodyTop', '#pageSheetBodyBottom'], {
-      //   direction: 'vertical',
-      //   elementStyle: (dimension, size, gutterSize) => {
-      //     const reservedHeight = 44; // タイトルバー + ヘッダーエリア
-      //     return {
-      //       height: `calc(${size}% - ${gutterSize}px - ${reservedHeight}px)`,
-      //     };
-      //   },
-      //   gutterSize: 8,
-      //   minSize: 200,
-      //   sizes: [25, 75],
-      // });
     };
 
     // ページ有効化

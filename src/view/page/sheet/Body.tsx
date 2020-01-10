@@ -1,6 +1,7 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import Split from 'split.js';
 
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
@@ -15,9 +16,25 @@ interface IProps {
   page: UiStates.IPageSheet;
 }
 
+const idPageSheetBodyTop = 'pageSheetBodyTop';
+const idPageSheetBodyBottom = 'pageSheetBodyBottom';
+
 class Body extends React.Component<IProps, any> {
   public constructor(props: IProps) {
     super(props);
+  }
+
+  public componentDidMount() {
+    // スピリッター登録
+    Split(
+      [`#${idPageSheetBodyTop}`, `#${idPageSheetBodyBottom}`],
+      {
+        sizes: [25, 75],
+        gutterSize: 12,
+        cursor: 'row-resize',
+        direction: 'vertical',
+      },
+    );
   }
 
   public render() {
@@ -323,7 +340,7 @@ class Body extends React.Component<IProps, any> {
 
     return (
       <div className={rootClass}>
-        <div id="pageSheetBodyTop">
+        <div id={idPageSheetBodyTop} className={Styles.BodyTop}>
           <table className={Styles.Table}>
             <tbody>
               <tr>
@@ -336,16 +353,18 @@ class Body extends React.Component<IProps, any> {
               </tr>
             </tbody>
           </table>
-          <table className={Styles.Table}>
-            <tbody>
-              {accountRootRowDict[DocTypes.AccountGroup.Assets]}
-              {accountRowDict[DocTypes.AccountGroup.Assets]}
-              {accountRootRowDict[DocTypes.AccountGroup.Liabilities]}
-              {accountRowDict[DocTypes.AccountGroup.Liabilities]}
-            </tbody>
-          </table>
+          <section className={Styles.AccountTableSection}>
+            <table className={Styles.Table}>
+              <tbody>
+                {accountRootRowDict[DocTypes.AccountGroup.Assets]}
+                {accountRowDict[DocTypes.AccountGroup.Assets]}
+                {accountRootRowDict[DocTypes.AccountGroup.Liabilities]}
+                {accountRowDict[DocTypes.AccountGroup.Liabilities]}
+              </tbody>
+            </table>
+          </section>
         </div>
-        <div id="pageSheetBodyBottom">
+        <div id={idPageSheetBodyBottom} className={Styles.BodyBottom}>
           <table className={headTableRecordClass}>
             <tbody>
               <tr>
@@ -356,15 +375,17 @@ class Body extends React.Component<IProps, any> {
               </tr>
             </tbody>
           </table>
-          <table className={Styles.Table}>
-            <tbody>
-              {categoryRootRowDict[DocTypes.RecordKind.Transfer]}
-              {categoryRootRowDict[DocTypes.RecordKind.Income]}
-              {categoryRowDict[DocTypes.RecordKind.Income]}
-              {categoryRootRowDict[DocTypes.RecordKind.Outgo]}
-              {categoryRowDict[DocTypes.RecordKind.Outgo]}
-            </tbody>
-          </table>
+          <section className={Styles.CategoryTableSection}>
+            <table className={Styles.Table}>
+              <tbody>
+                {categoryRootRowDict[DocTypes.RecordKind.Transfer]}
+                {categoryRootRowDict[DocTypes.RecordKind.Income]}
+                {categoryRowDict[DocTypes.RecordKind.Income]}
+                {categoryRootRowDict[DocTypes.RecordKind.Outgo]}
+                {categoryRowDict[DocTypes.RecordKind.Outgo]}
+              </tbody>
+            </table>
+          </section>
         </div>
       </div>
     );
