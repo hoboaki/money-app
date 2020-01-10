@@ -323,7 +323,7 @@ class Body extends React.Component<IProps, any> {
 
     return (
       <div className={rootClass}>
-        <div id="pageSheetBodyTop">
+        <div id="pageSheetBodyTop" className={Styles.BodyTop}>
           <table className={Styles.Table}>
             <tbody>
               <tr>
@@ -336,16 +336,18 @@ class Body extends React.Component<IProps, any> {
               </tr>
             </tbody>
           </table>
-          <table className={Styles.Table}>
-            <tbody>
-              {accountRootRowDict[DocTypes.AccountGroup.Assets]}
-              {accountRowDict[DocTypes.AccountGroup.Assets]}
-              {accountRootRowDict[DocTypes.AccountGroup.Liabilities]}
-              {accountRowDict[DocTypes.AccountGroup.Liabilities]}
-            </tbody>
-          </table>
+          <section className={Styles.AccountTableSection}>
+            <table className={Styles.Table}>
+              <tbody>
+                {accountRootRowDict[DocTypes.AccountGroup.Assets]}
+                {accountRowDict[DocTypes.AccountGroup.Assets]}
+                {accountRootRowDict[DocTypes.AccountGroup.Liabilities]}
+                {accountRowDict[DocTypes.AccountGroup.Liabilities]}
+              </tbody>
+            </table>
+          </section>
         </div>
-        <div id="pageSheetBodyBottom">
+        <div id="pageSheetBodyBottom" className={Styles.BodyBotton}>
           <table className={headTableRecordClass}>
             <tbody>
               <tr>
@@ -356,15 +358,17 @@ class Body extends React.Component<IProps, any> {
               </tr>
             </tbody>
           </table>
-          <table className={Styles.Table}>
-            <tbody>
-              {categoryRootRowDict[DocTypes.RecordKind.Transfer]}
-              {categoryRootRowDict[DocTypes.RecordKind.Income]}
-              {categoryRowDict[DocTypes.RecordKind.Income]}
-              {categoryRootRowDict[DocTypes.RecordKind.Outgo]}
-              {categoryRowDict[DocTypes.RecordKind.Outgo]}
-            </tbody>
-          </table>
+          <section className={Styles.CategoryTableSection}>
+            <table className={Styles.Table}>
+              <tbody>
+                {categoryRootRowDict[DocTypes.RecordKind.Transfer]}
+                {categoryRootRowDict[DocTypes.RecordKind.Income]}
+                {categoryRowDict[DocTypes.RecordKind.Income]}
+                {categoryRootRowDict[DocTypes.RecordKind.Outgo]}
+                {categoryRowDict[DocTypes.RecordKind.Outgo]}
+              </tbody>
+            </table>
+          </section>
         </div>
       </div>
     );
