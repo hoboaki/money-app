@@ -182,8 +182,8 @@
   width: 16px;
 }
 .HolderEntryOpenerSpaceIndent1 {
-  width: calc(16px + 24px * 1);
+  width: calc(16px + 16px * 1);
 }
 .HolderEntryOpenerSpaceIndent2 {
-  width: calc(16px + 24px * 2);
+  width: calc(16px + 16px * 2);
 }
