@@ -124,15 +124,17 @@
 .TableCell {
   color: rgba(0,0,0,0.87);
 }
+.TableCellEven {
+  background: rgba(99, 164, 255, 0.09375);
+}
 .TableCellOdd,
-.TableCellEven,
 .TableCellSpace {
   background: #f5f5f6;
 }
 .TableRowHeadRoot,
 .TableRowTailRoot,
 .TableCellRoot {
-  background: #90caf9;
+  background: rgba(25, 118, 210, 0.35);
 }
 .TableRowHeadRoot {
   color: rgba(0,0,0,0.87);

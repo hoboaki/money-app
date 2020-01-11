@@ -166,9 +166,13 @@ class Body extends React.Component<IProps, any> {
       Styles.TableCellSpace,
       Styles.TableCellRoot,
     );
-    const cellClass = ClassNames(
+    const cellOddClass = ClassNames(
       Styles.TableCell,
       Styles.TableCellOdd,
+    );
+    const cellEvenClass = ClassNames(
+      Styles.TableCell,
+      Styles.TableCellEven,
     );
     const cellSpaceClass = ClassNames(
       Styles.TableCellSpace,
@@ -208,10 +212,10 @@ class Body extends React.Component<IProps, any> {
       let label = '#';
       switch (accountGroup) {
         case DocTypes.AccountGroup.Assets:
-          label = '資産アカウント';
+          label = '資産';
           break;
         case DocTypes.AccountGroup.Liabilities:
-          label = '負債アカウント';
+          label = '負債';
           break;
       }
       const cols = new Array();
@@ -239,11 +243,12 @@ class Body extends React.Component<IProps, any> {
     this.props.doc.account.order.forEach((accountId) => {
       const account = this.props.doc.account.accounts[accountId];
       const accountGroup = DocTypes.accountKindToAccountGroup(account.kind);
+      const targetArray = accountRowDict[accountGroup];
       const cols = new Array();
       colInfos.forEach((colInfo) => {
-        cols.push(<td className={cellClass}>10,000,000</td>);
+        cols.push(<td className={(targetArray.length) % 2 === 0 ? cellEvenClass : cellOddClass}>10,000,000</td>);
       });
-      accountRowDict[accountGroup].push(
+      targetArray.push(
         <tr>
           <td className={rowHeadAccountOpenerSpaceClass}></td>
           <td className={rowHeadAccountNameClass}>{account.name}</td>
@@ -324,7 +329,7 @@ class Body extends React.Component<IProps, any> {
         const cat = categories[categoryId];
         const cols = new Array();
         colInfos.forEach((colInfo) => {
-          cols.push(<td className={cellClass}></td>);
+          cols.push(<td className={(result.length % 2) === 0 ? cellEvenClass : cellOddClass}></td>);
         });
         result.push(
           <tr>
@@ -344,7 +349,7 @@ class Body extends React.Component<IProps, any> {
           <table className={Styles.Table}>
             <tbody>
               <tr>
-                <td className={colHeadAccountNameClass}>アカウント</td>
+                <td className={colHeadAccountNameClass}>口座</td>
                 <td className={colHeadAccountCategoryClass}>*</td>
                 <td className={colHeadCarriedClass}>繰り越し</td>
                 {accountColHeadCells}
