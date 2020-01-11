@@ -81,15 +81,15 @@ class Body extends React.Component<IProps, any> {
     );
 
     // rowHead
-    const rowHeadRootOpenerSpaceClass = ClassNames(
+    const rowHeadHolderAccountClass = ClassNames(
       Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableOpenerSpace,
+      Styles.TableRowHeadHolder,
+      Styles.TableRowHeadHolderAccount,
     );
-    const rowHeadRootAccountNameClass = ClassNames(
+    const rowHeadHolderCategoryClass = ClassNames(
       Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableRowHeadAccountName,
+      Styles.TableRowHeadHolder,
+      Styles.TableRowHeadHolderCategory,
     );
     const rowHeadRootAccountCategoryClass = ClassNames(
       Styles.TableRowHead,
@@ -100,16 +100,6 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowHead,
       Styles.TableRowHeadRoot,
       Styles.TableRowHeadCarried,
-    );
-    const rowHeadAccountOpenerSpaceClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadAccount,
-      Styles.TableOpenerSpace,
-    );
-    const rowHeadAccountNameClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadAccount,
-      Styles.TableRowHeadAccountName,
     );
     const rowHeadAccountCategoryClass = ClassNames(
       Styles.TableRowHead,
@@ -124,17 +114,7 @@ class Body extends React.Component<IProps, any> {
     const rowHeadCategoryOpenerSpaceClass = ClassNames(
       Styles.TableRowHead,
       Styles.TableRowHeadCategory,
-      Styles.TableOpenerSpace,
-    );
-    const rowHeadRootCategoryNameClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableRowHeadCategoryName,
-    );
-    const rowHeadCategoryNameClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadCategory,
-      Styles.TableRowHeadCategoryName,
+      Styles.HolderEntryOpenerSpaceIndent1,
     );
 
     // rowTail
@@ -155,6 +135,41 @@ class Body extends React.Component<IProps, any> {
     const rowTailTotal = ClassNames(
       Styles.TableRowTail,
       Styles.TableRowTailTotal,
+    );
+
+    // holderEntry
+    const holderEntryRootOpenerSpaceClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryRoot,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryRootOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent0,
+    );
+    const holderEntryNormalOpenerSpaceClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent1,
+    );
+    const holderEntryRootAccountNameClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryRoot,
+      Styles.HolderEntryRootAccountName,
+    );
+    const holderEntryNormalAccountNameClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryAccountName,
+      Styles.HolderEntryNormalAccountName,
+    );
+    const holderEntryRootCategoryNameClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryRoot,
+      Styles.HolderEntryRootCategoryName,
+    );
+    const holderEntryNormalCategoryNameClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryCategoryName,
+      Styles.HolderEntryNormalCategoryName,
     );
 
     // cell
@@ -224,8 +239,12 @@ class Body extends React.Component<IProps, any> {
       });
       accountRootRowDict[accountGroup] =
         <tr>
-          <td className={rowHeadRootOpenerSpaceClass}></td>
-          <td className={rowHeadRootAccountNameClass}>{label}</td>
+          <td className={rowHeadHolderAccountClass}>
+            <div className={Styles.Holder}>
+              <span className={holderEntryRootOpenerSpaceClass}>▼</span>
+              <span className={holderEntryRootAccountNameClass}>{label}</span>
+            </div>
+          </td>
           <td className={rowHeadRootAccountCategoryClass}></td>
           <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
           {cols}
@@ -250,8 +269,12 @@ class Body extends React.Component<IProps, any> {
       });
       targetArray.push(
         <tr>
-          <td className={rowHeadAccountOpenerSpaceClass}></td>
-          <td className={rowHeadAccountNameClass}>{account.name}</td>
+          <td className={rowHeadHolderAccountClass}>
+            <div className={Styles.Holder}>
+              <span className={holderEntryNormalOpenerSpaceClass}>▼</span>
+              <span className={holderEntryNormalAccountNameClass}>{account.name}</span>
+            </div>
+          </td>
           <td className={rowHeadAccountCategoryClass}>
             {DocTypes.shortLocalizedAccountKind(account.kind).slice(0, 1)}
           </td>
@@ -297,8 +320,12 @@ class Body extends React.Component<IProps, any> {
       });
       categoryRootRowDict[recordKind] =
         <tr>
-          <td className={rowHeadRootOpenerSpaceClass}></td>
-          <td className={rowHeadRootCategoryNameClass}>{label}</td>
+          <td className={rowHeadHolderCategoryClass}>
+            <div className={Styles.Holder}>
+              <span className={holderEntryRootOpenerSpaceClass}>▼</span>
+              <span className={holderEntryRootCategoryNameClass}>{label}</span>
+            </div>
+          </td>
           {cols}
           <td className={cellSpaceRootClass}></td>
           <td className={rowTailRootTotal}></td>
@@ -333,8 +360,12 @@ class Body extends React.Component<IProps, any> {
         });
         result.push(
           <tr>
-            <td className={rowHeadCategoryOpenerSpaceClass}></td>
-            <td className={rowHeadCategoryNameClass}>{cat.name}</td>
+            <td className={rowHeadHolderCategoryClass}>
+              <div className={Styles.Holder}>
+                <span className={rowHeadCategoryOpenerSpaceClass}>▼</span>
+                <span className={holderEntryNormalCategoryNameClass}>{cat.name}</span>
+              </div>
+            </td>
             {cols}
             <td className={cellSpaceClass}></td>
             <td className={rowTailTotal}></td>
