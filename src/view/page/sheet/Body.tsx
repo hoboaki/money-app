@@ -80,6 +80,10 @@ class Body extends React.Component<IProps, any> {
       Styles.TableColHead,
       Styles.TableColHeadTotal,
     );
+    const colHeadScrollBarSpaceClass = ClassNames(
+      Styles.TableColHead,
+      Styles.TableColHeadScrollBarSpace,
+    );
 
     // rowHead
     const rowHeadHolderAccountClass = ClassNames(
@@ -475,6 +479,7 @@ class Body extends React.Component<IProps, any> {
                 {accountColHeadCells}
                 <td className={colHeadSpaceClass}></td>
                 <td className={colHeadBalanceClass}>残高</td>
+                <td className={colHeadScrollBarSpaceClass}></td>
               </tr>
             </tbody>
           </table>
@@ -497,6 +502,7 @@ class Body extends React.Component<IProps, any> {
                 {categoryColHeadCells}
                 <td className={colHeadSpaceClass}></td>
                 <td className={colHeadTotalClass}>合計</td>
+                <td className={colHeadScrollBarSpaceClass}></td>
               </tr>
             </tbody>
           </table>
