@@ -9,6 +9,7 @@ import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
 import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as BasicStyles from 'src/view/Basic.css';
 import * as Styles from './Body.css';
 
 interface IProps {
@@ -193,6 +194,16 @@ class Body extends React.Component<IProps, any> {
       Styles.TableCellSpace,
     );
 
+    // その他
+    const iconClass = ClassNames(
+      'material-icons',
+      'md-16',
+    );
+    const treeExpandCollapseBtnClass = ClassNames(
+      BasicStyles.IconButton,
+      Styles.TreeExpandCollapseBtn,
+    );
+
     // 列情報生成
     const colInfos = new Array();
     const colCount = 6;
@@ -241,7 +252,9 @@ class Body extends React.Component<IProps, any> {
         <tr>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
-              <span className={holderEntryRootOpenerSpaceClass}>▼</span>
+              <div className={holderEntryRootOpenerSpaceClass}>
+                <button className={treeExpandCollapseBtnClass}>▼</button>
+              </div>
               <span className={holderEntryRootAccountNameClass}>{label}</span>
             </div>
           </td>
@@ -271,7 +284,7 @@ class Body extends React.Component<IProps, any> {
         <tr>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
-              <span className={holderEntryNormalOpenerSpaceClass}>▼</span>
+              <div className={holderEntryNormalOpenerSpaceClass}></div>
               <span className={holderEntryNormalAccountNameClass}>{account.name}</span>
             </div>
           </td>
@@ -322,7 +335,9 @@ class Body extends React.Component<IProps, any> {
         <tr>
           <td className={rowHeadHolderCategoryClass}>
             <div className={Styles.Holder}>
-              <span className={holderEntryRootOpenerSpaceClass}>▼</span>
+              <div className={holderEntryRootOpenerSpaceClass}>
+                <button className={treeExpandCollapseBtnClass}>▼</button>
+              </div>
               <span className={holderEntryRootCategoryNameClass}>{label}</span>
             </div>
           </td>
@@ -362,7 +377,9 @@ class Body extends React.Component<IProps, any> {
           <tr>
             <td className={rowHeadHolderCategoryClass}>
               <div className={Styles.Holder}>
-                <span className={rowHeadCategoryOpenerSpaceClass}>▼</span>
+                <div className={holderEntryNormalOpenerSpaceClass}>
+                  <button className={treeExpandCollapseBtnClass}>▶</button>
+                </div>
                 <span className={holderEntryNormalCategoryNameClass}>{cat.name}</span>
               </div>
             </td>
