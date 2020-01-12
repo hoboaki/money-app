@@ -146,11 +146,47 @@ class Body extends React.Component<IProps, any> {
       Styles.HolderEntryRootOpenerSpace,
       Styles.HolderEntryOpenerSpaceIndent0,
     );
-    const holderEntryNormalOpenerSpaceClass = ClassNames(
+    const holderEntryNormalOpenerSpaceIndent1Class = ClassNames(
       Styles.HolderEntry,
       Styles.HolderEntryOpenerSpace,
       Styles.HolderEntryNormalOpenerSpace,
       Styles.HolderEntryOpenerSpaceIndent1,
+    );
+    const holderEntryNormalOpenerSpaceIndent2Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent2,
+    );
+    const holderEntryNormalOpenerSpaceIndent3Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent3,
+    );
+    const holderEntryNormalOpenerSpaceIndent4Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent4,
+    );
+    const holderEntryNormalOpenerSpaceIndent5Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent5,
+    );
+    const holderEntryNormalOpenerSpaceIndent6Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent6,
+    );
+    const holderEntryNormalOpenerSpaceIndent7Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent7,
     );
     const holderEntryRootAccountNameClass = ClassNames(
       Styles.HolderEntry,
@@ -284,7 +320,7 @@ class Body extends React.Component<IProps, any> {
         <tr>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
-              <div className={holderEntryNormalOpenerSpaceClass}></div>
+              <div className={holderEntryNormalOpenerSpaceIndent1Class}></div>
               <span className={holderEntryNormalAccountNameClass}>{account.name}</span>
             </div>
           </td>
@@ -367,9 +403,42 @@ class Body extends React.Component<IProps, any> {
       }
       const categoryIdArray = DocStateMethods.categoryIdArray(categoryRootOrder, categories);
       const result = new Array<JSX.Element>();
+      const calcIndent = (categoryId: number): number => {
+        const parent = categories[categoryId].parent;
+        if (parent === null) {
+          return 1;
+        } else {
+          return calcIndent(parent) + 1;
+        }
+      };
       categoryIdArray.forEach((categoryId) => {
         const cat = categories[categoryId];
         const cols = new Array();
+        const indent = calcIndent(categoryId);
+        let openerClass = holderEntryNormalOpenerSpaceIndent7Class;
+        switch (indent) {
+          case 1:
+            openerClass = holderEntryNormalOpenerSpaceIndent1Class;
+            break;
+          case 2:
+            openerClass = holderEntryNormalOpenerSpaceIndent2Class;
+            break;
+          case 3:
+            openerClass = holderEntryNormalOpenerSpaceIndent3Class;
+            break;
+          case 4:
+            openerClass = holderEntryNormalOpenerSpaceIndent4Class;
+            break;
+          case 5:
+            openerClass = holderEntryNormalOpenerSpaceIndent5Class;
+            break;
+          case 6:
+            openerClass = holderEntryNormalOpenerSpaceIndent6Class;
+            break;
+          case 7:
+            openerClass = holderEntryNormalOpenerSpaceIndent7Class;
+            break;
+        }
         colInfos.forEach((colInfo) => {
           cols.push(<td className={(result.length % 2) === 0 ? cellEvenClass : cellOddClass}></td>);
         });
@@ -377,8 +446,8 @@ class Body extends React.Component<IProps, any> {
           <tr>
             <td className={rowHeadHolderCategoryClass}>
               <div className={Styles.Holder}>
-                <div className={holderEntryNormalOpenerSpaceClass}>
-                  <button className={treeExpandCollapseBtnClass}>▶</button>
+                <div className={openerClass}>
+                  <button className={treeExpandCollapseBtnClass}>▼</button>
                 </div>
                 <span className={holderEntryNormalCategoryNameClass}>{cat.name}</span>
               </div>

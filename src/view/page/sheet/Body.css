@@ -179,6 +179,21 @@
 .HolderEntryOpenerSpaceIndent2 {
   width: calc(20px + 15px * 2);
 }
+.HolderEntryOpenerSpaceIndent3 {
+  width: calc(20px + 15px * 3);
+}
+.HolderEntryOpenerSpaceIndent4 {
+  width: calc(20px + 15px * 4);
+}
+.HolderEntryOpenerSpaceIndent5 {
+  width: calc(20px + 15px * 5);
+}
+.HolderEntryOpenerSpaceIndent6 {
+  width: calc(20px + 15px * 6);
+}
+.HolderEntryOpenerSpaceIndent7 {
+  width: calc(20px + 15px * 7);
+}
 .TreeExpandCollapseBtn {
   color: rgba(0, 0, 0, 0.61);
   font-size: 8pt;
