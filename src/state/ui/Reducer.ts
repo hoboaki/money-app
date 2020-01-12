@@ -37,6 +37,27 @@ a2RMapper.addWork<Action>(
   },
 );
 
+a2RMapper.addWork<Action>(
+  Actions.SHEET_MOVE_PREV,
+  (state, action) => {
+    state.pageSheet.currentDate = IYearMonthDayDateUtils.prevDay(state.pageSheet.currentDate);
+  },
+);
+
+a2RMapper.addWork<Action>(
+  Actions.SHEET_MOVE_NEXT,
+  (state, action) => {
+    state.pageSheet.currentDate = IYearMonthDayDateUtils.nextDay(state.pageSheet.currentDate);
+  },
+);
+
+a2RMapper.addWork<Action>(
+  Actions.SHEET_MOVE_TODAY,
+  (state, action) => {
+    state.pageSheet.currentDate = IYearMonthDayDateUtils.today();
+  },
+);
+
 // Reducer 本体。
 const Reducer: Redux.Reducer<States.IState> = (state = States.defaultState, action) => {
   return a2RMapper.execute(state, action);

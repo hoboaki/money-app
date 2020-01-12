@@ -77,15 +77,15 @@ class Header extends React.Component<States.IPageSheet> {
   }
 
   private onMovePrevBtnPushed() {
-    Store.dispatch(UiActions.calendarMovePrev());
+    Store.dispatch(UiActions.sheetMovePrev());
   }
 
   private onMoveTodayBtnPushed() {
-    Store.dispatch(UiActions.calendarMoveToday());
+    Store.dispatch(UiActions.sheetMoveToday());
   }
 
   private onMoveNextBtnPushed() {
-    Store.dispatch(UiActions.calendarMoveNext());
+    Store.dispatch(UiActions.sheetMoveNext());
   }
 }
 
