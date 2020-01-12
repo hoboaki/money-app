@@ -85,9 +85,6 @@ class Header extends React.Component<States.IPageSheet> {
         </button>
 
         <div className={rightAreaClass}>
-          <button className={newRecordBtnClass} onClick={() => {this.onNewRecordBtnPushed(); }}>
-            <i className={iconClass}>note_add</i>
-          </button>
           <div style={{width: '100%'}}/>
         </div>
       </div>
