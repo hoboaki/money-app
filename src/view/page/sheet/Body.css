@@ -35,6 +35,17 @@
   height: calc(100% - 22px);
   width: 100%;
 }
+.TableRowHeadHolder {
+  flex: auto;
+  padding: 0;
+}
+.Holder {
+  display: flex;
+  flex-direction: row;
+}
+.HolderEntry {
+  display: flex;
+}
 .TableColHead {
   background: #f5f5f6;
   border-bottom: 1px solid #cccccc;
@@ -49,22 +60,31 @@
 .TableColHeadTotal {
   color: rgba(0, 0, 0, 0.61);
 }
+.HolderEntry,
 .TableRowHead,
 .TableRowTail {
   color: rgba(0, 0, 0, 0.61);
 }
+.HolderEntryAccountName,
+.HolderEntryRootAccountName,
+.HolderEntryCategoryName,
+.HolderEntryRootCategoryName,
 .TableColHeadAccountName,
 .TableColHeadAccountCategory,
 .TableColHeadCarried,
 .TableColHeadBalance,
 .TableColHeadCategory,
 .TableColHeadTotal,
-.TableRowHeadAccountName,
-.TableRowHeadAccountCategory {
+.TableColHeadCell,
+.TableRowHeadRootAccountName,
+.TableRowHeadAccountCategory,
+.TableRowHeadCarried,
+.TableCell {
   font-size: 9pt;
 }
+.TableRowHeadHolder,
 .TableColHeadAccountName,
-.TableRowHeadAccountName,
+.TableRowHeadRootAccountName,
 .TableColHeadAccountCategory,
 .TableRowHeadAccountCategory,
 .TableColHeadCarried,
@@ -74,19 +94,25 @@
 .TableColHeadSpace,
 .TableCellSpace,
 .TableColHeadCategory,
-.TableRowHeadCategoryName {
+.TableColHeadBalance,
+.TableColHeadTotal {
   border-right-width: 1px;
   border-right-color: rgba(0, 0, 0, 0.2);
   border-right-style: solid;
-  font-size: 9pt;
 }
-.TableColHeadAccountName {
+.TableColHeadAccountName,
+.TableRowHeadHolderAccount {
   width: 172px;
 }
-.TableRowHeadAccountName {
-  padding-left: 4px;
-  padding-right: 4px;
-  width: 156px;
+.TableColHeadCategory,
+.TableRowHeadHolderCategory {
+  width: calc(172px + 16px + 88px);
+}
+.HolderEntryAccountName,
+.HolderEntryRootAccountName,
+.HolderEntryRootCategoryName,
+.HolderEntryCategoryName {
+  flex-grow: 1;
 }
 .TableColHeadAccountCategory,
 .TableRowHeadAccountCategory {
@@ -101,13 +127,8 @@
 .TableRowTailTotal {
   width: 88px;
 }
-.TableColHeadCategory {
-  width: calc(172px + 16px + 88px);
-}
-.TableRowHeadCategoryName {
-  padding-left: 4px;
-  padding-right: 4px;
-  width: calc(172px + 16px + 88px - 16px);
+.TableColHeadScrollBarSpace {
+  width: 15px;
 }
 .TableRowHeadCarried,
 .TableRowTailBalance,
@@ -124,24 +145,65 @@
 .TableCell {
   color: rgba(0,0,0,0.87);
 }
+.TableCellEven {
+  background: rgba(99, 164, 255, 0.09375);
+}
 .TableCellOdd,
-.TableCellEven,
 .TableCellSpace {
   background: #f5f5f6;
 }
+.HolderEntryRoot,
+.HolderEntryRootOpenerSpace,
 .TableRowHeadRoot,
 .TableRowTailRoot,
 .TableCellRoot {
-  background: #90caf9;
+  background: rgba(25, 118, 210, 0.35);
 }
+.HolderEntryRoot,
 .TableRowHeadRoot {
   color: rgba(0,0,0,0.87);
 }
-.TableOpenerSpace,
+.HolderEntryNormalOpenerSpace,
+.HolderEntryNormalAccountName,
+.HolderEntryNormalCategoryName,
 .TableRowHeadAccount,
 .TableRowHeadCategory {
   background: #eeeeee;
 }
-.TableOpenerSpace {
-  width: 16px;
+.HolderEntryOpenerSpace {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 21px;
+}
+.HolderEntryOpenerSpaceIndent0 {
+  width: 20px;
+}
+.HolderEntryOpenerSpaceIndent1 {
+  width: calc(20px + 15px * 1);
+}
+.HolderEntryOpenerSpaceIndent2 {
+  width: calc(20px + 15px * 2);
+}
+.HolderEntryOpenerSpaceIndent3 {
+  width: calc(20px + 15px * 3);
+}
+.HolderEntryOpenerSpaceIndent4 {
+  width: calc(20px + 15px * 4);
+}
+.HolderEntryOpenerSpaceIndent5 {
+  width: calc(20px + 15px * 5);
+}
+.HolderEntryOpenerSpaceIndent6 {
+  width: calc(20px + 15px * 6);
+}
+.HolderEntryOpenerSpaceIndent7 {
+  width: calc(20px + 15px * 7);
+}
+.OpenerBtn {
+  color: rgba(0, 0, 0, 0.61);
+  font-size: 8pt;
+  height: 100%;
+  padding-left: 6px;
+  padding-right: 4px;
+  width: 20px;
 }

@@ -9,6 +9,7 @@ import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
 import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as BasicStyles from 'src/view/Basic.css';
 import * as Styles from './Body.css';
 
 interface IProps {
@@ -79,17 +80,21 @@ class Body extends React.Component<IProps, any> {
       Styles.TableColHead,
       Styles.TableColHeadTotal,
     );
+    const colHeadScrollBarSpaceClass = ClassNames(
+      Styles.TableColHead,
+      Styles.TableColHeadScrollBarSpace,
+    );
 
     // rowHead
-    const rowHeadRootOpenerSpaceClass = ClassNames(
+    const rowHeadHolderAccountClass = ClassNames(
       Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableOpenerSpace,
+      Styles.TableRowHeadHolder,
+      Styles.TableRowHeadHolderAccount,
     );
-    const rowHeadRootAccountNameClass = ClassNames(
+    const rowHeadHolderCategoryClass = ClassNames(
       Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableRowHeadAccountName,
+      Styles.TableRowHeadHolder,
+      Styles.TableRowHeadHolderCategory,
     );
     const rowHeadRootAccountCategoryClass = ClassNames(
       Styles.TableRowHead,
@@ -100,16 +105,6 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowHead,
       Styles.TableRowHeadRoot,
       Styles.TableRowHeadCarried,
-    );
-    const rowHeadAccountOpenerSpaceClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadAccount,
-      Styles.TableOpenerSpace,
-    );
-    const rowHeadAccountNameClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadAccount,
-      Styles.TableRowHeadAccountName,
     );
     const rowHeadAccountCategoryClass = ClassNames(
       Styles.TableRowHead,
@@ -124,17 +119,7 @@ class Body extends React.Component<IProps, any> {
     const rowHeadCategoryOpenerSpaceClass = ClassNames(
       Styles.TableRowHead,
       Styles.TableRowHeadCategory,
-      Styles.TableOpenerSpace,
-    );
-    const rowHeadRootCategoryNameClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableRowHeadCategoryName,
-    );
-    const rowHeadCategoryNameClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadCategory,
-      Styles.TableRowHeadCategoryName,
+      Styles.HolderEntryOpenerSpaceIndent1,
     );
 
     // rowTail
@@ -157,6 +142,77 @@ class Body extends React.Component<IProps, any> {
       Styles.TableRowTailTotal,
     );
 
+    // holderEntry
+    const holderEntryRootOpenerSpaceClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryRoot,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryRootOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent0,
+    );
+    const holderEntryNormalOpenerSpaceIndent1Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent1,
+    );
+    const holderEntryNormalOpenerSpaceIndent2Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent2,
+    );
+    const holderEntryNormalOpenerSpaceIndent3Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent3,
+    );
+    const holderEntryNormalOpenerSpaceIndent4Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent4,
+    );
+    const holderEntryNormalOpenerSpaceIndent5Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent5,
+    );
+    const holderEntryNormalOpenerSpaceIndent6Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent6,
+    );
+    const holderEntryNormalOpenerSpaceIndent7Class = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryOpenerSpace,
+      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryOpenerSpaceIndent7,
+    );
+    const holderEntryRootAccountNameClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryRoot,
+      Styles.HolderEntryRootAccountName,
+    );
+    const holderEntryNormalAccountNameClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryAccountName,
+      Styles.HolderEntryNormalAccountName,
+    );
+    const holderEntryRootCategoryNameClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryRoot,
+      Styles.HolderEntryRootCategoryName,
+    );
+    const holderEntryNormalCategoryNameClass = ClassNames(
+      Styles.HolderEntry,
+      Styles.HolderEntryCategoryName,
+      Styles.HolderEntryNormalCategoryName,
+    );
+
     // cell
     const cellRootClass = ClassNames(
       Styles.TableCell,
@@ -166,12 +222,26 @@ class Body extends React.Component<IProps, any> {
       Styles.TableCellSpace,
       Styles.TableCellRoot,
     );
-    const cellClass = ClassNames(
+    const cellOddClass = ClassNames(
       Styles.TableCell,
       Styles.TableCellOdd,
     );
+    const cellEvenClass = ClassNames(
+      Styles.TableCell,
+      Styles.TableCellEven,
+    );
     const cellSpaceClass = ClassNames(
       Styles.TableCellSpace,
+    );
+
+    // その他
+    const iconClass = ClassNames(
+      'material-icons',
+      'md-16',
+    );
+    const openerBtnClass = ClassNames(
+      BasicStyles.IconButton,
+      Styles.OpenerBtn,
     );
 
     // 列情報生成
@@ -208,10 +278,10 @@ class Body extends React.Component<IProps, any> {
       let label = '#';
       switch (accountGroup) {
         case DocTypes.AccountGroup.Assets:
-          label = '資産アカウント';
+          label = '資産';
           break;
         case DocTypes.AccountGroup.Liabilities:
-          label = '負債アカウント';
+          label = '負債';
           break;
       }
       const cols = new Array();
@@ -220,8 +290,14 @@ class Body extends React.Component<IProps, any> {
       });
       accountRootRowDict[accountGroup] =
         <tr>
-          <td className={rowHeadRootOpenerSpaceClass}></td>
-          <td className={rowHeadRootAccountNameClass}>{label}</td>
+          <td className={rowHeadHolderAccountClass}>
+            <div className={Styles.Holder}>
+              <div className={holderEntryRootOpenerSpaceClass}>
+                <button className={openerBtnClass}>▼</button>
+              </div>
+              <span className={holderEntryRootAccountNameClass}>{label}</span>
+            </div>
+          </td>
           <td className={rowHeadRootAccountCategoryClass}></td>
           <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
           {cols}
@@ -239,14 +315,19 @@ class Body extends React.Component<IProps, any> {
     this.props.doc.account.order.forEach((accountId) => {
       const account = this.props.doc.account.accounts[accountId];
       const accountGroup = DocTypes.accountKindToAccountGroup(account.kind);
+      const targetArray = accountRowDict[accountGroup];
       const cols = new Array();
       colInfos.forEach((colInfo) => {
-        cols.push(<td className={cellClass}>10,000,000</td>);
+        cols.push(<td className={(targetArray.length) % 2 === 0 ? cellEvenClass : cellOddClass}>10,000,000</td>);
       });
-      accountRowDict[accountGroup].push(
+      targetArray.push(
         <tr>
-          <td className={rowHeadAccountOpenerSpaceClass}></td>
-          <td className={rowHeadAccountNameClass}>{account.name}</td>
+          <td className={rowHeadHolderAccountClass}>
+            <div className={Styles.Holder}>
+              <div className={holderEntryNormalOpenerSpaceIndent1Class}></div>
+              <span className={holderEntryNormalAccountNameClass}>{account.name}</span>
+            </div>
+          </td>
           <td className={rowHeadAccountCategoryClass}>
             {DocTypes.shortLocalizedAccountKind(account.kind).slice(0, 1)}
           </td>
@@ -292,8 +373,14 @@ class Body extends React.Component<IProps, any> {
       });
       categoryRootRowDict[recordKind] =
         <tr>
-          <td className={rowHeadRootOpenerSpaceClass}></td>
-          <td className={rowHeadRootCategoryNameClass}>{label}</td>
+          <td className={rowHeadHolderCategoryClass}>
+            <div className={Styles.Holder}>
+              <div className={holderEntryRootOpenerSpaceClass}>
+                <button className={openerBtnClass}>▼</button>
+              </div>
+              <span className={holderEntryRootCategoryNameClass}>{label}</span>
+            </div>
+          </td>
           {cols}
           <td className={cellSpaceRootClass}></td>
           <td className={rowTailRootTotal}></td>
@@ -320,16 +407,58 @@ class Body extends React.Component<IProps, any> {
       }
       const categoryIdArray = DocStateMethods.categoryIdArray(categoryRootOrder, categories);
       const result = new Array<JSX.Element>();
+      const calcIndent = (categoryId: number): number => {
+        const parent = categories[categoryId].parent;
+        if (parent === null) {
+          return 1;
+        } else {
+          return calcIndent(parent) + 1;
+        }
+      };
       categoryIdArray.forEach((categoryId) => {
         const cat = categories[categoryId];
         const cols = new Array();
+        const indent = calcIndent(categoryId);
+        let openerClass = holderEntryNormalOpenerSpaceIndent7Class;
+        switch (indent) {
+          case 1:
+            openerClass = holderEntryNormalOpenerSpaceIndent1Class;
+            break;
+          case 2:
+            openerClass = holderEntryNormalOpenerSpaceIndent2Class;
+            break;
+          case 3:
+            openerClass = holderEntryNormalOpenerSpaceIndent3Class;
+            break;
+          case 4:
+            openerClass = holderEntryNormalOpenerSpaceIndent4Class;
+            break;
+          case 5:
+            openerClass = holderEntryNormalOpenerSpaceIndent5Class;
+            break;
+          case 6:
+            openerClass = holderEntryNormalOpenerSpaceIndent6Class;
+            break;
+          case 7:
+            openerClass = holderEntryNormalOpenerSpaceIndent7Class;
+            break;
+        }
+        const openerElement = cat.childs.length === 0 ?
+          null :
+          <button className={openerBtnClass}>▼</button>;
         colInfos.forEach((colInfo) => {
-          cols.push(<td className={cellClass}></td>);
+          cols.push(<td className={(result.length % 2) === 0 ? cellEvenClass : cellOddClass}></td>);
         });
         result.push(
           <tr>
-            <td className={rowHeadCategoryOpenerSpaceClass}></td>
-            <td className={rowHeadCategoryNameClass}>{cat.name}</td>
+            <td className={rowHeadHolderCategoryClass}>
+              <div className={Styles.Holder}>
+                <div className={openerClass}>
+                  {openerElement}
+                </div>
+                <span className={holderEntryNormalCategoryNameClass}>{cat.name}</span>
+              </div>
+            </td>
             {cols}
             <td className={cellSpaceClass}></td>
             <td className={rowTailTotal}></td>
@@ -344,12 +473,13 @@ class Body extends React.Component<IProps, any> {
           <table className={Styles.Table}>
             <tbody>
               <tr>
-                <td className={colHeadAccountNameClass}>アカウント</td>
+                <td className={colHeadAccountNameClass}>口座</td>
                 <td className={colHeadAccountCategoryClass}>*</td>
                 <td className={colHeadCarriedClass}>繰り越し</td>
                 {accountColHeadCells}
                 <td className={colHeadSpaceClass}></td>
                 <td className={colHeadBalanceClass}>残高</td>
+                <td className={colHeadScrollBarSpaceClass}></td>
               </tr>
             </tbody>
           </table>
@@ -372,6 +502,7 @@ class Body extends React.Component<IProps, any> {
                 {categoryColHeadCells}
                 <td className={colHeadSpaceClass}></td>
                 <td className={colHeadTotalClass}>合計</td>
+                <td className={colHeadScrollBarSpaceClass}></td>
               </tr>
             </tbody>
           </table>

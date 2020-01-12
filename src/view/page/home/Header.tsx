@@ -59,8 +59,8 @@ class Header extends React.Component<States.IPageHome, IState> {
       Styles.JumpBtn,
     );
     const filterBtnClass = ClassNames(
+      BasicStyles.IconButton,
       Styles.Btn,
-      Styles.NoFrameBtn,
       Styles.FilterBtn,
     );
     const rightAreaClass = ClassNames(
@@ -68,14 +68,13 @@ class Header extends React.Component<States.IPageHome, IState> {
       Styles.RightArea,
     );
     const newRecordBtnClass = ClassNames(
+      BasicStyles.IconButton,
       Styles.Btn,
-      Styles.NoFrameBtn,
       Styles.NewRecordBtn,
     );
     const iconClass = ClassNames(
       'material-icons',
       'md-16',
-      'md-dark',
     );
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalAddRecord) {
