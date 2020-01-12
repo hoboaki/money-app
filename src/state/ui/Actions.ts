@@ -36,3 +36,27 @@ export const calendarMoveToday = (): Action => {
     type: CALENDAR_MOVE_TODAY,
   };
 };
+
+/// シート１つ前へ。
+export const SHEET_MOVE_PREV = UUID();
+export const sheetMovePrev = (): Action => {
+  return {
+    type: SHEET_MOVE_PREV,
+  };
+};
+
+/// シート１つ次へ。
+export const SHEET_MOVE_NEXT = UUID();
+export const sheetMoveNext = (): Action => {
+  return {
+    type: SHEET_MOVE_NEXT,
+  };
+};
+
+/// シート今日へ。
+export const SHEET_MOVE_TODAY = UUID();
+export const sheetMoveToday = (): Action => {
+  return {
+    type: SHEET_MOVE_TODAY,
+  };
+};

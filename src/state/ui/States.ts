@@ -32,6 +32,6 @@ export const defaultState: IState = {
     currentDate: IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today()),
   },
   pageSheet: {
-    currentDate: IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today()),
+    currentDate: IYearMonthDayDateUtils.today(),
   },
 };
