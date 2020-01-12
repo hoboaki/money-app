@@ -21,13 +21,7 @@
 
 /* ボタンの既定スタイル */
 .Btn {
-  display: block;
   height: 30px;
-}
-
-/* フレーム無しボタンの既定スタイル */
-.NoFrameBtn {
-  border: 0px;
 }
 
 /* 以下，それぞれのインプット専用設定 */
@@ -56,14 +50,6 @@
   margin-left: 4px;
   margin-right: 8px;
   width: 80px;
-}
-
-.FilterBtn {
-  margin-left: 4px;
-}
-
-.NewRecordBtn {
-  margin-left: 4px;
 }
 
 .RightArea {

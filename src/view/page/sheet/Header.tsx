@@ -21,9 +21,6 @@ class Header extends React.Component<States.IPageSheet> {
     const rootClass = ClassNames(
       Styles.Root,
     );
-    const currentDateClass = ClassNames(
-      Styles.CurrentDate,
-    );
     const movePrevBtnClass = ClassNames(
       BasicStyles.StdButton,
       Styles.Btn,
@@ -45,29 +42,13 @@ class Header extends React.Component<States.IPageSheet> {
       BasicStyles.StdSelect,
       Styles.ViewUnitSelect,
     );
-    const jumpBtnClass = ClassNames(
-      BasicStyles.StdButton,
-      Styles.Btn,
-      Styles.JumpBtn,
-    );
-    const filterBtnClass = ClassNames(
-      Styles.Btn,
-      Styles.NoFrameBtn,
-      Styles.FilterBtn,
-    );
     const rightAreaClass = ClassNames(
       LayoutStyles.RightToLeft,
       Styles.RightArea,
     );
-    const newRecordBtnClass = ClassNames(
-      Styles.Btn,
-      Styles.NoFrameBtn,
-      Styles.NewRecordBtn,
-    );
     const iconClass = ClassNames(
       'material-icons',
       'md-16',
-      'md-dark',
     );
 
     const currentDate = `${this.props.currentDate.year}年${this.props.currentDate.month}月`;
@@ -105,18 +86,6 @@ class Header extends React.Component<States.IPageSheet> {
 
   private onMoveNextBtnPushed() {
     Store.dispatch(UiActions.calendarMoveNext());
-  }
-
-  private onJumpBtnPushed() {
-    global.console.log('onJumpBtnPushed');
-  }
-
-  private onFilterBtnPushed() {
-    global.console.log('onFilterBtnPushed');
-  }
-
-  private onNewRecordBtnPushed() {
-    this.setState({modalAddRecord: true});
   }
 }
 
