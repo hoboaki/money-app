@@ -439,6 +439,9 @@ class Body extends React.Component<IProps, any> {
             openerClass = holderEntryNormalOpenerSpaceIndent7Class;
             break;
         }
+        const openerElement = cat.childs.length === 0 ?
+          null :
+          <button className={treeExpandCollapseBtnClass}>▼</button>;
         colInfos.forEach((colInfo) => {
           cols.push(<td className={(result.length % 2) === 0 ? cellEvenClass : cellOddClass}></td>);
         });
@@ -447,7 +450,7 @@ class Body extends React.Component<IProps, any> {
             <td className={rowHeadHolderCategoryClass}>
               <div className={Styles.Holder}>
                 <div className={openerClass}>
-                  <button className={treeExpandCollapseBtnClass}>▼</button>
+                  {openerElement}
                 </div>
                 <span className={holderEntryNormalCategoryNameClass}>{cat.name}</span>
               </div>
