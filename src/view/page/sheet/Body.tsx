@@ -235,9 +235,9 @@ class Body extends React.Component<IProps, any> {
       'material-icons',
       'md-16',
     );
-    const treeExpandCollapseBtnClass = ClassNames(
+    const openerBtnClass = ClassNames(
       BasicStyles.IconButton,
-      Styles.TreeExpandCollapseBtn,
+      Styles.OpenerBtn,
     );
 
     // 列情報生成
@@ -289,7 +289,7 @@ class Body extends React.Component<IProps, any> {
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
               <div className={holderEntryRootOpenerSpaceClass}>
-                <button className={treeExpandCollapseBtnClass}>▼</button>
+                <button className={openerBtnClass}>▼</button>
               </div>
               <span className={holderEntryRootAccountNameClass}>{label}</span>
             </div>
@@ -372,7 +372,7 @@ class Body extends React.Component<IProps, any> {
           <td className={rowHeadHolderCategoryClass}>
             <div className={Styles.Holder}>
               <div className={holderEntryRootOpenerSpaceClass}>
-                <button className={treeExpandCollapseBtnClass}>▼</button>
+                <button className={openerBtnClass}>▼</button>
               </div>
               <span className={holderEntryRootCategoryNameClass}>{label}</span>
             </div>
@@ -441,7 +441,7 @@ class Body extends React.Component<IProps, any> {
         }
         const openerElement = cat.childs.length === 0 ?
           null :
-          <button className={treeExpandCollapseBtnClass}>▼</button>;
+          <button className={openerBtnClass}>▼</button>;
         colInfos.forEach((colInfo) => {
           cols.push(<td className={(result.length % 2) === 0 ? cellEvenClass : cellOddClass}></td>);
         });
