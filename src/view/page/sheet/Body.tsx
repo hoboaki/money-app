@@ -344,26 +344,34 @@ class Body extends React.Component<IProps, any> {
         .reduce((prev, current) => prev + current);
     });
 
-    // カテゴリテーブルのデータ生成
+    // カテゴリテーブルのデータ生成の準備
     const recordAll = new RecordCollection(this.props.doc, null).filter([
       RecordFilters.createDateRangeFilter({startDate: colBeginDate, endDate: colEndDate}),
     ]);
     const recordKindCellDataArray: {[key: number]: Array<number | null>} = {};
+    const recordKindTotalArray: {[key: number]: number | null} = {};
     recordKinds.forEach((kind) => {
       recordKindCellDataArray[kind] = new Array<number | null>(colInfos.length);
+      recordKindTotalArray[kind] = null;
     });
     const incomeCellDataArray: {[key: number]: Array<number | null>} = {};
+    const incomeTotalArray: {[key: number]: number | null} = {};
     DocStateMethods.categoryIdArray(this.props.doc.income.categoryRootOrder, this.props.doc.income.categories)
       .forEach((id) => {
         incomeCellDataArray[id] = new Array<number | null>(colInfos.length);
         incomeCellDataArray[id].fill(null);
+        incomeTotalArray[id] = null;
       });
     const outgoCellDataArray: {[key: number]: Array<number | null>} = {};
+    const outgoTotalArray: {[key: number]: number | null} = {};
     DocStateMethods.categoryIdArray(this.props.doc.outgo.categoryRootOrder, this.props.doc.outgo.categories)
       .forEach((id) => {
         outgoCellDataArray[id] = new Array<number | null>(colInfos.length);
         outgoCellDataArray[id].fill(null);
+        outgoTotalArray[id] = null;
       });
+
+    // カテゴリテーブルの各列データ生成
     const toCellDataFuncs: {[key: number]: ((ids: number[]) => number | null)} = {};
     toCellDataFuncs[DocTypes.RecordKind.Transfer] = (ids) => {
       return ids.length === 0 ? null :
@@ -442,6 +450,32 @@ class Body extends React.Component<IProps, any> {
         const catId = Number(id);
         outgoCellDataArray[catId][colIdx] = calcFunc(catId, this.props.doc.outgo.categories, outgoCellDataArray);
       });
+    });
+
+    // カテゴリテーブルの合計データ生成
+    const calcTotalFunc = (
+      id: number,
+      data: {[key: number]: Array<number | null>},
+      ): number | null => {
+      let result: number | null = null;
+      data[id].forEach((val) => {
+        if (val !== null) {
+          result = (result === null ? 0 : result) + val;
+        }
+      });
+      return result;
+    };
+    Object.keys(recordKindTotalArray).forEach((key) => {
+      const id = Number(key);
+      recordKindTotalArray[id] = calcTotalFunc(id, recordKindCellDataArray);
+    });
+    Object.keys(incomeTotalArray).forEach((key) => {
+      const id = Number(key);
+      incomeTotalArray[id] = calcTotalFunc(id, incomeCellDataArray);
+    });
+    Object.keys(incomeTotalArray).forEach((key) => {
+      const id = Number(key);
+      incomeTotalArray[id] = calcTotalFunc(id, incomeCellDataArray);
     });
 
     // アカウントテーブルの列ヘッダ生成
@@ -575,7 +609,12 @@ class Body extends React.Component<IProps, any> {
           </td>
           {cols}
           <td className={cellSpaceRootClass}></td>
-          <td className={rowTailRootTotal}></td>
+          <td className={rowTailRootTotal}>
+            {
+              recordKindTotalArray[recordKind] === null ? null :
+                PriceUtils.numToLocaleString(Number(recordKindTotalArray[recordKind]))
+            }
+          </td>
         </tr>;
     });
 
@@ -585,17 +624,20 @@ class Body extends React.Component<IProps, any> {
       let categoryRootOrder: number[] = [];
       let categories: {[key: number]: DocStates.ICategory} = {};
       let cellDataArray: {[key: number]: Array<number | null>} = [];
+      let totalArray: {[key: number]: number | null} = [];
       switch (recordKind) {
         case DocTypes.RecordKind.Transfer: return;
         case DocTypes.RecordKind.Income:
           categoryRootOrder = this.props.doc.income.categoryRootOrder;
           categories = this.props.doc.income.categories;
           cellDataArray = incomeCellDataArray;
+          totalArray = incomeTotalArray;
           break;
         case DocTypes.RecordKind.Outgo:
           categoryRootOrder = this.props.doc.outgo.categoryRootOrder;
           categories = this.props.doc.outgo.categories;
           cellDataArray = outgoCellDataArray;
+          totalArray = outgoTotalArray;
           break;
         default:
           return;
@@ -661,7 +703,12 @@ class Body extends React.Component<IProps, any> {
             </td>
             {cols}
             <td className={cellSpaceClass}></td>
-            <td className={rowTailTotal}></td>
+            <td className={rowTailTotal}>
+              {
+                totalArray[categoryId] === null ? null :
+                  PriceUtils.numToLocaleString(Number(totalArray[categoryId]))
+              }
+            </td>
           </tr>);
       });
       categoryRowDict[recordKind] = result;
