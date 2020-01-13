@@ -7,13 +7,15 @@ import * as Styles from './Main.css';
 import MainBtn from './MainBtn';
 
 interface IProps {
-  onFileSelected: ((filePath: string) => void);
+  onNewFromMmxfSelected: ((filePath: string) => void);
+  onNewExampleSelected: (() => void);
 }
 
 class Main extends React.Component<IProps, any> {
   public static PageId: string = 'Start';
   private static BtnIdOpenLatest: string = 'OpenLatest';
-  private static BtnIdNewMmxf: string = 'NewFromMmxf';
+  private static BtnIdNewFromMmxf: string = 'NewFromMmxf';
+  private static BtnIdNewExample: string = 'NewExample';
 
   public constructor(props: IProps) {
     super(props);
@@ -41,7 +43,7 @@ class Main extends React.Component<IProps, any> {
 
     const newBtnInfos = [];
     newBtnInfos.push({
-      btnId: Main.BtnIdNewMmxf,
+      btnId: Main.BtnIdNewFromMmxf,
       title: 'MasterMoney ファイル (mmxf) を使って作成',
       iconName: 'class',
       isEnabled: true,
@@ -51,6 +53,12 @@ class Main extends React.Component<IProps, any> {
       title: 'テンプレートを使って作成（準備中）',
       iconName: 'class',
       isEnabled: false,
+    });
+    newBtnInfos.push({
+      btnId: Main.BtnIdNewExample,
+      title: 'デモ用データを使って作成',
+      iconName: 'class',
+      isEnabled: true,
     });
 
     const openBtns: JSX.Element[] = [];
@@ -88,10 +96,10 @@ class Main extends React.Component<IProps, any> {
   private onClicked(btnId: string) {
     switch (btnId) {
       case Main.BtnIdOpenLatest:
-        this.props.onFileSelected(`${process.env.HOME}/Desktop/MoneyAppTest.mmxf`);
+        this.props.onNewFromMmxfSelected(`${process.env.HOME}/Desktop/MoneyAppTest.mmxf`);
         break;
 
-      case Main.BtnIdNewMmxf:
+      case Main.BtnIdNewFromMmxf:
         const dialog = remote.dialog;
         dialog.showOpenDialog(
           remote.getCurrentWindow(),
@@ -108,9 +116,13 @@ class Main extends React.Component<IProps, any> {
             if (filePaths === undefined || filePaths.length === 0) {
               return;
             }
-            this.props.onFileSelected(filePaths[0]);
+            this.props.onNewFromMmxfSelected(filePaths[0]);
           },
         );
+        break;
+
+      case Main.BtnIdNewExample:
+        this.props.onNewExampleSelected();
         break;
     }
   }
