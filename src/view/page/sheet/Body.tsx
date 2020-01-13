@@ -352,25 +352,34 @@ class Body extends React.Component<IProps, any> {
     recordKinds.forEach((kind) => {
       recordKindDataArray[kind] = new Array<number | null>(colInfos.length);
     });
+    const toCellDataFuncs: {[key: number]: ((ids: number[]) => number | null)} = {};
+    toCellDataFuncs[DocTypes.RecordKind.Transfer] = (ids) => {
+      return ids.length === 0 ? null :
+        ids.map((id) => this.props.doc.transfer.records[id].amount)
+          .reduce((prev, cur) => prev + cur, 0);
+    };
+    toCellDataFuncs[DocTypes.RecordKind.Income] = (ids) => {
+      return ids.length === 0 ? null :
+        ids.map((id) => this.props.doc.income.records[id].amount)
+          .reduce((prev, cur) => prev + cur, 0);
+    };
+    toCellDataFuncs[DocTypes.RecordKind.Outgo] = (ids) => {
+      return ids.length === 0 ? null :
+        ids.map((id) => this.props.doc.outgo.records[id].amount)
+          .reduce((prev, cur) => prev + cur, 0);
+    };
     colInfos.forEach((colInfo, colIdx) => {
       const nextColIdx = colIdx + 1;
       const nextDate = nextColIdx < colInfos.length ? colInfos[nextColIdx].date : colEndDate;
       const records = recordAll.filter([
         RecordFilters.createDateRangeFilter({startDate: colInfo.date, endDate: nextDate}),
       ]);
-
       recordKindDataArray[DocTypes.RecordKind.Transfer][colIdx] =
-        records.transfers.length === 0 ? null :
-          records.transfers.map((id) => this.props.doc.transfer.records[id].amount)
-            .reduce((prev, cur) => prev + cur, 0);
+        toCellDataFuncs[DocTypes.RecordKind.Transfer](records.transfers);
       recordKindDataArray[DocTypes.RecordKind.Income][colIdx] =
-        records.incomes.length === 0 ? null :
-          records.incomes.map((id) => this.props.doc.income.records[id].amount)
-          .reduce((prev, cur) => prev + cur, 0);
+        toCellDataFuncs[DocTypes.RecordKind.Income](records.incomes);
       recordKindDataArray[DocTypes.RecordKind.Outgo][colIdx] =
-        records.outgos.length === 0 ? null :
-          records.outgos.map((id) => this.props.doc.outgo.records[id].amount)
-            .reduce((prev, cur) => prev + cur, 0);
+        toCellDataFuncs[DocTypes.RecordKind.Outgo](records.outgos);
     });
 
     // アカウントテーブルの列ヘッダ生成
