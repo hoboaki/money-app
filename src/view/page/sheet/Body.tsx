@@ -262,7 +262,13 @@ class Body extends React.Component<IProps, any> {
       colEndDate = date;
     }
 
-    // アカウントテーブルのデータを作成
+    // 使い回す値の定義
+    const accountGroups = [
+      DocTypes.AccountGroup.Assets,
+      DocTypes.AccountGroup.Liabilities,
+    ];
+
+    // アカウントテーブルのデータ作成
     const accountCarriedData: {[key: number]: number} = {};
     const accountCellDataArray: {[key: number]: number[]} = {};
     const accountBalanceData: {[key: number]: number} = {};
@@ -301,6 +307,37 @@ class Body extends React.Component<IProps, any> {
       accountBalanceData[accountId] = sign * calculator.sumBalance();
     });
 
+    // アカウントルート行のデータ作成
+    const accountGroupCarriedData: {[key: number]: number} = {};
+    const accountGroupCellDataArray: {[key: number]: number[]} = {};
+    const accountGroupBalanceData: {[key: number]: number} = {};
+    accountGroups.forEach((accountGroup) => {
+      // メモ
+      const accountIdArray =
+        Object.keys(accountCarriedData).filter((data) =>
+          DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[Number(data)].kind) === accountGroup);
+
+      // 繰り越しデータ計算
+      accountGroupCarriedData[accountGroup] =
+        accountIdArray.map((accountId) => accountCarriedData[Number(accountId)])
+        .reduce((prev, current) => prev + current);
+
+      // 各列のデータ
+      const cellDataArray: number[] = [];
+      colInfos.forEach((colInfo, colIdx) => {
+        cellDataArray[colIdx] =
+          accountIdArray.map((accountId) => accountCellDataArray[Number(accountId)][colIdx])
+          .reduce((prev, current) => prev + current);
+      });
+      accountGroupCellDataArray[accountGroup] = cellDataArray;
+
+      // 残高データ計算
+      accountGroupBalanceData[accountGroup] =
+        accountIdArray.map((accountId) => accountBalanceData[Number(accountId)])
+        .reduce((prev, current) => prev + current);
+
+    });
+
     // アカウントテーブルの列ヘッダ生成
     const accountColHeadCells = new Array();
     colInfos.forEach((colInfo) => {
@@ -313,10 +350,6 @@ class Body extends React.Component<IProps, any> {
     });
 
     // アカウントテーブルのルート行生成
-    const accountGroups = [
-      DocTypes.AccountGroup.Assets,
-      DocTypes.AccountGroup.Liabilities,
-    ];
     const accountRootRowDict: {[key: number]: JSX.Element} = {};
     accountGroups.forEach((accountGroup) => {
       let label = '#';
@@ -329,8 +362,10 @@ class Body extends React.Component<IProps, any> {
           break;
       }
       const cols = new Array();
-      colInfos.forEach((colInfo) => {
-        cols.push(<td className={cellRootClass}>10,000,000</td>);
+      colInfos.forEach((colInfo, colIdx) => {
+        cols.push(<td className={cellRootClass}>
+          {PriceUtils.numToLocaleString(accountGroupCellDataArray[accountGroup][colIdx])}
+          </td>);
       });
       accountRootRowDict[accountGroup] =
         <tr>
@@ -343,10 +378,14 @@ class Body extends React.Component<IProps, any> {
             </div>
           </td>
           <td className={rowHeadRootAccountCategoryClass}></td>
-          <td className={rowHeadRootAccountCarriedClass}>10,000,000</td>
+          <td className={rowHeadRootAccountCarriedClass}>
+            {PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup])}
+          </td>
           {cols}
           <td className={cellSpaceRootClass}></td>
-          <td className={rowTailRootAccountBalance}>1,000,000</td>
+          <td className={rowTailRootAccountBalance}>
+            {PriceUtils.numToLocaleString(accountGroupBalanceData[accountGroup])}
+          </td>
         </tr>;
     });
 
