@@ -348,10 +348,22 @@ class Body extends React.Component<IProps, any> {
     const recordAll = new RecordCollection(this.props.doc, null).filter([
       RecordFilters.createDateRangeFilter({startDate: colBeginDate, endDate: colEndDate}),
     ]);
-    const recordKindDataArray: {[key: number]: Array<number | null>} = {};
+    const recordKindCellDataArray: {[key: number]: Array<number | null>} = {};
     recordKinds.forEach((kind) => {
-      recordKindDataArray[kind] = new Array<number | null>(colInfos.length);
+      recordKindCellDataArray[kind] = new Array<number | null>(colInfos.length);
     });
+    const incomeCellDataArray: {[key: number]: Array<number | null>} = {};
+    DocStateMethods.categoryIdArray(this.props.doc.income.categoryRootOrder, this.props.doc.income.categories)
+      .forEach((id) => {
+        incomeCellDataArray[id] = new Array<number | null>(colInfos.length);
+        incomeCellDataArray[id].fill(null);
+      });
+    const outgoCellDataArray: {[key: number]: Array<number | null>} = {};
+    DocStateMethods.categoryIdArray(this.props.doc.outgo.categoryRootOrder, this.props.doc.outgo.categories)
+      .forEach((id) => {
+        outgoCellDataArray[id] = new Array<number | null>(colInfos.length);
+        outgoCellDataArray[id].fill(null);
+      });
     const toCellDataFuncs: {[key: number]: ((ids: number[]) => number | null)} = {};
     toCellDataFuncs[DocTypes.RecordKind.Transfer] = (ids) => {
       return ids.length === 0 ? null :
@@ -374,12 +386,62 @@ class Body extends React.Component<IProps, any> {
       const records = recordAll.filter([
         RecordFilters.createDateRangeFilter({startDate: colInfo.date, endDate: nextDate}),
       ]);
-      recordKindDataArray[DocTypes.RecordKind.Transfer][colIdx] =
+
+      // RecordKind 毎の全レコード集計
+      recordKindCellDataArray[DocTypes.RecordKind.Transfer][colIdx] =
         toCellDataFuncs[DocTypes.RecordKind.Transfer](records.transfers);
-      recordKindDataArray[DocTypes.RecordKind.Income][colIdx] =
+      recordKindCellDataArray[DocTypes.RecordKind.Income][colIdx] =
         toCellDataFuncs[DocTypes.RecordKind.Income](records.incomes);
-      recordKindDataArray[DocTypes.RecordKind.Outgo][colIdx] =
+      recordKindCellDataArray[DocTypes.RecordKind.Outgo][colIdx] =
         toCellDataFuncs[DocTypes.RecordKind.Outgo](records.outgos);
+
+      // 末端カテゴリ毎の集計
+      records.incomes.forEach((id) => {
+        const state = this.props.doc.income;
+        const record = state.records[id];
+        const categoryId = record.category;
+        const prevValue = incomeCellDataArray[categoryId][colIdx];
+        incomeCellDataArray[categoryId][colIdx] = (prevValue === null ? 0 : prevValue) + record.amount;
+      });
+      records.outgos.forEach((id) => {
+        const state = this.props.doc.outgo;
+        const record = state.records[id];
+        const categoryId = record.category;
+        const prevValue = outgoCellDataArray[categoryId][colIdx];
+        outgoCellDataArray[categoryId][colIdx] = (prevValue === null ? 0 : prevValue) + record.amount;
+      });
+
+      // 親カテゴリの集計
+      const calcFunc = (
+        catId: number,
+        cats: {[key: number]: DocStates.ICategory},
+        data: {[key: number]: Array<number | null>},
+        ): number | null => {
+        const cat = cats[catId];
+        if (cat.childs.length === 0) {
+          // 末端なら自身のデータを返す
+          return data[catId][colIdx];
+        }
+
+        // 親なら子供全部の合計を返す
+        let sum: number | null = null;
+        cat.childs.forEach((childId) => {
+          const childResult = calcFunc(childId, cats, data);
+          global.console.log(childResult);
+          if (childResult !== null) {
+            sum = (sum === null ? 0 : sum) + childResult;
+          }
+        });
+        return sum;
+      };
+      Object.keys(incomeCellDataArray).forEach((id) => {
+        const catId = Number(id);
+        incomeCellDataArray[catId][colIdx] = calcFunc(catId, this.props.doc.income.categories, incomeCellDataArray);
+      });
+      Object.keys(outgoCellDataArray).forEach((id) => {
+        const catId = Number(id);
+        outgoCellDataArray[catId][colIdx] = calcFunc(catId, this.props.doc.outgo.categories, outgoCellDataArray);
+      });
     });
 
     // アカウントテーブルの列ヘッダ生成
@@ -496,8 +558,8 @@ class Body extends React.Component<IProps, any> {
       colInfos.forEach((colInfo, colIdx) => {
         cols.push(<td className={cellRootClass}>
           {
-            recordKindDataArray[recordKind][colIdx] === null ? null :
-              PriceUtils.numToLocaleString(Number(recordKindDataArray[recordKind][colIdx]))
+            recordKindCellDataArray[recordKind][colIdx] === null ? null :
+              PriceUtils.numToLocaleString(Number(recordKindCellDataArray[recordKind][colIdx]))
           }
         </td>);
       });
@@ -522,15 +584,18 @@ class Body extends React.Component<IProps, any> {
     recordKinds.forEach((recordKind) => {
       let categoryRootOrder: number[] = [];
       let categories: {[key: number]: DocStates.ICategory} = {};
+      let cellDataArray: {[key: number]: Array<number | null>} = [];
       switch (recordKind) {
         case DocTypes.RecordKind.Transfer: return;
         case DocTypes.RecordKind.Income:
           categoryRootOrder = this.props.doc.income.categoryRootOrder;
           categories = this.props.doc.income.categories;
+          cellDataArray = incomeCellDataArray;
           break;
         case DocTypes.RecordKind.Outgo:
           categoryRootOrder = this.props.doc.outgo.categoryRootOrder;
           categories = this.props.doc.outgo.categories;
+          cellDataArray = outgoCellDataArray;
           break;
         default:
           return;
@@ -576,8 +641,13 @@ class Body extends React.Component<IProps, any> {
         const openerElement = cat.childs.length === 0 ?
           null :
           <button className={openerBtnClass}>▼</button>;
-        colInfos.forEach((colInfo) => {
-          cols.push(<td className={(result.length % 2) === 0 ? cellEvenClass : cellOddClass}></td>);
+        colInfos.forEach((colInfo, colIdx) => {
+          cols.push(<td className={(result.length % 2) === 0 ? cellEvenClass : cellOddClass}>
+            {
+              cellDataArray[categoryId][colIdx] === null ? null :
+                PriceUtils.numToLocaleString(Number(cellDataArray[categoryId][colIdx]))
+            }
+          </td>);
         });
         result.push(
           <tr>
