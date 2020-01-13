@@ -9,6 +9,8 @@ import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
 import BalanceCalculator from 'src/util/doc/BalanceCalculator';
+import RecordCollection from 'src/util/doc/RecordCollection';
+import * as RecordFilters from 'src/util/doc/RecordFilters';
 import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
@@ -267,6 +269,11 @@ class Body extends React.Component<IProps, any> {
       DocTypes.AccountGroup.Assets,
       DocTypes.AccountGroup.Liabilities,
     ];
+    const recordKinds = [
+      DocTypes.RecordKind.Transfer,
+      DocTypes.RecordKind.Income,
+      DocTypes.RecordKind.Outgo,
+    ];
 
     // アカウントテーブルのデータ作成
     const accountCarriedData: {[key: number]: number} = {};
@@ -335,7 +342,35 @@ class Body extends React.Component<IProps, any> {
       accountGroupBalanceData[accountGroup] =
         accountIdArray.map((accountId) => accountBalanceData[Number(accountId)])
         .reduce((prev, current) => prev + current);
+    });
 
+    // カテゴリテーブルのデータ生成
+    const recordAll = new RecordCollection(this.props.doc, null).filter([
+      RecordFilters.createDateRangeFilter({startDate: colBeginDate, endDate: colEndDate}),
+    ]);
+    const recordKindDataArray: {[key: number]: Array<number | null>} = {};
+    recordKinds.forEach((kind) => {
+      recordKindDataArray[kind] = new Array<number | null>(colInfos.length);
+    });
+    colInfos.forEach((colInfo, colIdx) => {
+      const nextColIdx = colIdx + 1;
+      const nextDate = nextColIdx < colInfos.length ? colInfos[nextColIdx].date : colEndDate;
+      const records = recordAll.filter([
+        RecordFilters.createDateRangeFilter({startDate: colInfo.date, endDate: nextDate}),
+      ]);
+
+      recordKindDataArray[DocTypes.RecordKind.Transfer][colIdx] =
+        records.transfers.length === 0 ? null :
+          records.transfers.map((id) => this.props.doc.transfer.records[id].amount)
+            .reduce((prev, cur) => prev + cur, 0);
+      recordKindDataArray[DocTypes.RecordKind.Income][colIdx] =
+        records.incomes.length === 0 ? null :
+          records.incomes.map((id) => this.props.doc.income.records[id].amount)
+          .reduce((prev, cur) => prev + cur, 0);
+      recordKindDataArray[DocTypes.RecordKind.Outgo][colIdx] =
+        records.outgos.length === 0 ? null :
+          records.outgos.map((id) => this.props.doc.outgo.records[id].amount)
+            .reduce((prev, cur) => prev + cur, 0);
     });
 
     // アカウントテーブルの列ヘッダ生成
@@ -434,13 +469,8 @@ class Body extends React.Component<IProps, any> {
     });
 
     // カテゴリテーブルのルート行生成
-    const categoryKinds = [
-      DocTypes.RecordKind.Transfer,
-      DocTypes.RecordKind.Income,
-      DocTypes.RecordKind.Outgo,
-    ];
     const categoryRootRowDict: {[key: number]: JSX.Element} = {};
-    categoryKinds.forEach((recordKind) => {
+    recordKinds.forEach((recordKind) => {
       let label = '#';
       switch (recordKind) {
         case DocTypes.RecordKind.Transfer:
@@ -454,8 +484,13 @@ class Body extends React.Component<IProps, any> {
           break;
       }
       const cols = new Array();
-      colInfos.forEach((colInfo) => {
-        cols.push(<td className={cellRootClass}></td>);
+      colInfos.forEach((colInfo, colIdx) => {
+        cols.push(<td className={cellRootClass}>
+          {
+            recordKindDataArray[recordKind][colIdx] === null ? null :
+              PriceUtils.numToLocaleString(Number(recordKindDataArray[recordKind][colIdx]))
+          }
+        </td>);
       });
       categoryRootRowDict[recordKind] =
         <tr>
@@ -475,7 +510,7 @@ class Body extends React.Component<IProps, any> {
 
     // カテゴリテーブルの非ルート行生成
     const categoryRowDict: {[key: number]: JSX.Element[]} = {};
-    categoryKinds.forEach((recordKind) => {
+    recordKinds.forEach((recordKind) => {
       let categoryRootOrder: number[] = [];
       let categories: {[key: number]: DocStates.ICategory} = {};
       switch (recordKind) {
