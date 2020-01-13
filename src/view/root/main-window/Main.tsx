@@ -5,6 +5,7 @@ import * as React from 'react';
 import Split from 'split.js';
 
 import * as DocActions from 'src/state/doc/Actions';
+import * as DocStates from 'src/state/doc/States';
 import SampleDoc from 'src/state/SampleDoc';
 import Store from 'src/state/Store';
 import * as MmxfImporter from 'src/util/doc/MmxfImporter';
@@ -97,8 +98,7 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   private onFileSelected(filePath: string) {
-    // サンプルドキュメントで初期化
-    let resetDoc = SampleDoc.Create();
+    let resetDoc: DocStates.IState | null = null;
     const localMmxfFilePath = filePath;
     let isExistSampleFile = false;
     try {
@@ -112,11 +112,14 @@ class MainWindow extends React.Component<any, IState> {
       const result = MmxfImporter.importFile(localMmxfFilePath);
       if (result.doc != null) {
         resetDoc = result.doc;
-        global.console.log('Test document load successed.');
+        global.console.log('Document load successed.');
       } else {
-        global.console.log('Test document load failed.');
+        global.console.log('Document load failed.');
         global.console.log(result);
       }
+    }
+    if (resetDoc === null) {
+      return;
     }
     Store.dispatch(DocActions.resetDocument(resetDoc));
 
