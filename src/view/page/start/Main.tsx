@@ -7,7 +7,7 @@ import * as Styles from './Main.css';
 import MainBtn from './MainBtn';
 
 interface IProps {
-  onFileSelected: ((filePath: string) => void);
+  onNewFromMmxfSelected: ((filePath: string) => void);
   onNewExampleSelected: (() => void);
 }
 
@@ -96,7 +96,7 @@ class Main extends React.Component<IProps, any> {
   private onClicked(btnId: string) {
     switch (btnId) {
       case Main.BtnIdOpenLatest:
-        this.props.onFileSelected(`${process.env.HOME}/Desktop/MoneyAppTest.mmxf`);
+        this.props.onNewFromMmxfSelected(`${process.env.HOME}/Desktop/MoneyAppTest.mmxf`);
         break;
 
       case Main.BtnIdNewFromMmxf:
@@ -116,7 +116,7 @@ class Main extends React.Component<IProps, any> {
             if (filePaths === undefined || filePaths.length === 0) {
               return;
             }
-            this.props.onFileSelected(filePaths[0]);
+            this.props.onNewFromMmxfSelected(filePaths[0]);
           },
         );
         break;

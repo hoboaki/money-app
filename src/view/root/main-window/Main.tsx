@@ -64,8 +64,8 @@ class MainWindow extends React.Component<any, IState> {
     switch (this.state.currentPageId) {
       case PageStart.PageId:
         pageContent = <PageStart
-          onFileSelected={(filePath) => {this.onFileSelected(filePath); }}
-          onNewExampleSelected={() => {this.onNewExampleSelected(); }}
+          onNewFromMmxfSelected={(filePath) => {this.pageStartOnNewFromMmxfSelected(filePath); }}
+          onNewExampleSelected={() => {this.pageStartOnNewExampleSelected(); }}
           />;
         break;
       case PageHome.PageId:
@@ -97,7 +97,7 @@ class MainWindow extends React.Component<any, IState> {
     );
   }
 
-  private onFileSelected(filePath: string) {
+  private pageStartOnNewFromMmxfSelected(filePath: string) {
     let resetDoc: DocStates.IState | null = null;
     const localMmxfFilePath = filePath;
     let isExistSampleFile = false;
@@ -127,7 +127,7 @@ class MainWindow extends React.Component<any, IState> {
     this.activatePage(PageHome.PageId);
   }
 
-  private onNewExampleSelected() {
+  private pageStartOnNewExampleSelected() {
     // サンプルドキュメントで初期化
     const resetDoc = SampleDoc.Create();
     Store.dispatch(DocActions.resetDocument(resetDoc));
