@@ -8,7 +8,9 @@ import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
+import BalanceCalculator from 'src/util/doc/BalanceCalculator';
 import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as Styles from './Body.css';
 
@@ -247,6 +249,8 @@ class Body extends React.Component<IProps, any> {
     // 列情報生成
     const colInfos = new Array();
     const colCount = 6;
+    const colBeginDate = this.props.page.currentDate;
+    let colEndDate = colBeginDate;
     {
       let date = this.props.page.currentDate;
       for (let colIdx = 0; colIdx < colCount; ++colIdx) {
@@ -255,7 +259,47 @@ class Body extends React.Component<IProps, any> {
         });
         date = IYearMonthDateUtils.nextDay(date);
       }
+      colEndDate = date;
     }
+
+    // アカウントテーブルのデータを作成
+    const accountCarriedData: {[key: number]: number} = {};
+    const accountCellDataArray: {[key: number]: number[]} = {};
+    const accountBalanceData: {[key: number]: number} = {};
+    this.props.doc.account.order.forEach((accountId) => {
+      // 繰り越しデータ計算
+      const account = this.props.doc.account.accounts[accountId];
+      const sign = DocTypes.accountKindToAccountGroup(account.kind) !== DocTypes.AccountGroup.Liabilities ?
+        1 : -1;
+      const firstCalculator = new BalanceCalculator(
+        this.props.doc,
+        colBeginDate,
+        [accountId],
+        null);
+      accountCarriedData[accountId] = sign * firstCalculator.sumBalance();
+
+      // 各列のデータ計算
+      const cellDataArray: number[] = [];
+      let calculator = firstCalculator;
+      colInfos.forEach((colInfo, colIdx) => {
+        const nextColIdx = colIdx + 1;
+        calculator = new BalanceCalculator(
+          this.props.doc,
+          nextColIdx < colInfos.length ? colInfos[nextColIdx].date : colEndDate,
+          [accountId],
+          calculator);
+        cellDataArray[colIdx] = sign * calculator.sumBalance();
+      });
+      accountCellDataArray[accountId] = cellDataArray;
+
+      // 残高データ計算
+      calculator = new BalanceCalculator(
+        this.props.doc,
+        IYearMonthDateUtils.nextMonth(colBeginDate),
+        [accountId],
+        firstCalculator);
+      accountBalanceData[accountId] = sign * calculator.sumBalance();
+    });
 
     // アカウントテーブルの列ヘッダ生成
     const accountColHeadCells = new Array();
@@ -317,8 +361,11 @@ class Body extends React.Component<IProps, any> {
       const accountGroup = DocTypes.accountKindToAccountGroup(account.kind);
       const targetArray = accountRowDict[accountGroup];
       const cols = new Array();
-      colInfos.forEach((colInfo) => {
-        cols.push(<td className={(targetArray.length) % 2 === 0 ? cellEvenClass : cellOddClass}>10,000,000</td>);
+      colInfos.forEach((colInfo, idx) => {
+        cols.push(
+          <td className={(targetArray.length) % 2 === 0 ?
+            cellEvenClass :
+            cellOddClass}>{PriceUtils.numToLocaleString(accountCellDataArray[accountId][idx])}</td>);
       });
       targetArray.push(
         <tr>
@@ -331,10 +378,10 @@ class Body extends React.Component<IProps, any> {
           <td className={rowHeadAccountCategoryClass}>
             {DocTypes.shortLocalizedAccountKind(account.kind).slice(0, 1)}
           </td>
-          <td className={rowHeadAccountCarriedClass}>10,000,000</td>
+          <td className={rowHeadAccountCarriedClass}>{PriceUtils.numToLocaleString(accountCarriedData[accountId])}</td>
           {cols}
           <td className={cellSpaceClass}></td>
-          <td className={rowTailAccountBalance}>1,000,000</td>
+          <td className={rowTailAccountBalance}>{PriceUtils.numToLocaleString(accountBalanceData[accountId])}</td>
         </tr>,
       );
     });
