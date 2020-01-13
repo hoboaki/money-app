@@ -62,7 +62,10 @@ class MainWindow extends React.Component<any, IState> {
     let pageContent = <div className={PageStyles.Base}/>;
     switch (this.state.currentPageId) {
       case PageStart.PageId:
-        pageContent = <PageStart onFileSelected={(filePath) => {this.onFileSelected(filePath); }} />;
+        pageContent = <PageStart
+          onFileSelected={(filePath) => {this.onFileSelected(filePath); }}
+          onNewExampleSelected={() => {this.onNewExampleSelected(); }}
+          />;
         break;
       case PageHome.PageId:
         pageContent = <PageHome />;
@@ -115,6 +118,15 @@ class MainWindow extends React.Component<any, IState> {
         global.console.log(result);
       }
     }
+    Store.dispatch(DocActions.resetDocument(resetDoc));
+
+    // Page変更
+    this.activatePage(PageHome.PageId);
+  }
+
+  private onNewExampleSelected() {
+    // サンプルドキュメントで初期化
+    const resetDoc = SampleDoc.Create();
     Store.dispatch(DocActions.resetDocument(resetDoc));
 
     // Page変更
