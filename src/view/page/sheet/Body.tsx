@@ -528,11 +528,21 @@ class Body extends React.Component<IProps, any> {
     // アカウントテーブルの列ヘッダ生成
     const accountColHeadCells = new Array();
     colInfos.forEach((colInfo) => {
+      let dateText = '#';
+      switch (this.props.page.viewUnit) {
+        case UiTypes.SheetViewUnit.Day:
+          dateText = `${('0' + colInfo.date.year).slice(-2)}/
+            ${colInfo.date.month}/${colInfo.date.day} ${IYearMonthDateUtils.localaizedDow(colInfo.date)}`;
+          break;
+        case UiTypes.SheetViewUnit.Month:
+          dateText = `${('000' + colInfo.date.year).slice(-4)}/${colInfo.date.month}`;
+          break;
+        case UiTypes.SheetViewUnit.Year:
+          dateText = `${('000' + colInfo.date.year).slice(-4)}`;
+          break;
+      }
       accountColHeadCells.push(
-        <td className={colHeadCellClass}>
-        {('0' + colInfo.date.year).slice(-2)}/
-        {colInfo.date.month}/{colInfo.date.day} {IYearMonthDateUtils.localaizedDow(colInfo.date)}
-        </td>,
+        <td className={colHeadCellClass}>{dateText}</td>,
       );
     });
 
