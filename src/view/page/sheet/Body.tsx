@@ -267,26 +267,33 @@ class Body extends React.Component<IProps, any> {
       }
       colEndDate = date;
     }
+
+    // 表示単位で変わる値の選択
     let totalBeginDate: IYearMonthDayDate | null = null;
     let totalEndDate: IYearMonthDayDate | null = null;
+    let carriedVisible = false;
     let labelBalance = '#';
     let labelTotal = '#';
     switch (this.props.page.viewUnit) {
       case UiTypes.SheetViewUnit.Day:
         totalBeginDate = IYearMonthDateUtils.firstDayOfMonth(colBeginDate);
         totalEndDate = IYearMonthDateUtils.nextMonth(totalBeginDate);
+        carriedVisible = true;
         labelBalance = '月末残高';
         labelTotal = '月間合計';
+        carriedVisible = true;
         break;
       case UiTypes.SheetViewUnit.Month:
         totalBeginDate = IYearMonthDateUtils.firstDayOfYear(colBeginDate);
         totalEndDate = IYearMonthDateUtils.nextYear(totalBeginDate);
+        carriedVisible = true;
         labelBalance = '年末残高';
         labelTotal = '年間合計';
         break;
       case UiTypes.SheetViewUnit.Year:
         totalBeginDate = null;
         totalEndDate = null;
+        carriedVisible = false;
         labelBalance = '残高';
         labelTotal = '合計';
         break;
@@ -584,7 +591,7 @@ class Body extends React.Component<IProps, any> {
           </td>
           <td className={rowHeadRootAccountCategoryClass}></td>
           <td className={rowHeadRootAccountCarriedClass}>
-            {PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup])}
+            {carriedVisible ? PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup]) : ''}
           </td>
           {cols}
           <td className={cellSpaceRootClass}></td>
@@ -622,7 +629,9 @@ class Body extends React.Component<IProps, any> {
           <td className={rowHeadAccountCategoryClass}>
             {DocTypes.shortLocalizedAccountKind(account.kind).slice(0, 1)}
           </td>
-          <td className={rowHeadAccountCarriedClass}>{PriceUtils.numToLocaleString(accountCarriedData[accountId])}</td>
+          <td className={rowHeadAccountCarriedClass}>
+            {carriedVisible ? PriceUtils.numToLocaleString(accountCarriedData[accountId]) : ''}
+          </td>
           {cols}
           <td className={cellSpaceClass}></td>
           <td className={rowTailAccountBalance}>{PriceUtils.numToLocaleString(accountBalanceData[accountId])}</td>
