@@ -328,7 +328,7 @@ class Body extends React.Component<IProps, any> {
       // 残高データ計算
       calculator = new BalanceCalculator(
         this.props.doc,
-        IYearMonthDateUtils.nextMonth(colBeginDate),
+        totalEndDate,
         [accountId],
         firstCalculator);
       accountBalanceData[accountId] = sign * calculator.sumBalance();
