@@ -461,13 +461,16 @@ class Body extends React.Component<IProps, any> {
       const id = Number(key);
       switch (id) {
         case DocTypes.RecordKind.Transfer:
-          recordKindTotalArray[id] = recordsForTotal.sumAmountTransfer();
+          recordKindTotalArray[id] = recordsForTotal.transfers.length === 0 ? null :
+            recordsForTotal.sumAmountTransfer();
           break;
         case DocTypes.RecordKind.Income:
-          recordKindTotalArray[id] = recordsForTotal.sumAmountIncome();
+          recordKindTotalArray[id] = recordsForTotal.incomes.length === 0 ? null :
+            recordsForTotal.sumAmountIncome();
           break;
         case DocTypes.RecordKind.Outgo:
-          recordKindTotalArray[id] = recordsForTotal.sumAmountOutgo();
+          recordKindTotalArray[id] = recordsForTotal.outgos.length === 0 ? null :
+            recordsForTotal.sumAmountOutgo();
           break;
       }
     });
