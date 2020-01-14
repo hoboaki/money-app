@@ -8,9 +8,11 @@ import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
+import * as UiTypes from 'src/state/ui/Types';
 import BalanceCalculator from 'src/util/doc/BalanceCalculator';
 import RecordCollection from 'src/util/doc/RecordCollection';
 import * as RecordFilters from 'src/util/doc/RecordFilters';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
@@ -259,12 +261,43 @@ class Body extends React.Component<IProps, any> {
         colInfos.push({
           date,
         });
-        date = IYearMonthDateUtils.nextDay(date);
+        date = IYearMonthDateUtils.nextDate(
+          date,
+          UiTypes.sheetViewUnitToDateUnit(this.props.page.viewUnit));
       }
       colEndDate = date;
     }
-    const totalBeginDate = IYearMonthDateUtils.firstDayOfMonth(this.props.page.currentDate);
-    const totalEndDate = IYearMonthDateUtils.nextMonth(totalBeginDate);
+
+    // 表示単位で変わる値の選択
+    let totalBeginDate: IYearMonthDayDate | null = null;
+    let totalEndDate: IYearMonthDayDate | null = null;
+    let carriedVisible = false;
+    let labelBalance = '#';
+    let labelTotal = '#';
+    switch (this.props.page.viewUnit) {
+      case UiTypes.SheetViewUnit.Day:
+        totalBeginDate = IYearMonthDateUtils.firstDayOfMonth(colBeginDate);
+        totalEndDate = IYearMonthDateUtils.nextMonth(totalBeginDate);
+        carriedVisible = true;
+        labelBalance = '月末残高';
+        labelTotal = '月間合計';
+        carriedVisible = true;
+        break;
+      case UiTypes.SheetViewUnit.Month:
+        totalBeginDate = IYearMonthDateUtils.firstDayOfYear(colBeginDate);
+        totalEndDate = IYearMonthDateUtils.nextYear(totalBeginDate);
+        carriedVisible = true;
+        labelBalance = '年末残高';
+        labelTotal = '年間合計';
+        break;
+      case UiTypes.SheetViewUnit.Year:
+        totalBeginDate = null;
+        totalEndDate = null;
+        carriedVisible = false;
+        labelBalance = '残高';
+        labelTotal = '合計';
+        break;
+    }
 
     // 使い回す値の定義
     const accountGroups = [
@@ -310,7 +343,7 @@ class Body extends React.Component<IProps, any> {
       // 残高データ計算
       calculator = new BalanceCalculator(
         this.props.doc,
-        IYearMonthDateUtils.nextMonth(colBeginDate),
+        totalEndDate,
         [accountId],
         firstCalculator);
       accountBalanceData[accountId] = sign * calculator.sumBalance();
@@ -510,11 +543,21 @@ class Body extends React.Component<IProps, any> {
     // アカウントテーブルの列ヘッダ生成
     const accountColHeadCells = new Array();
     colInfos.forEach((colInfo) => {
+      let dateText = '#';
+      switch (this.props.page.viewUnit) {
+        case UiTypes.SheetViewUnit.Day:
+          dateText = `${('0' + colInfo.date.year).slice(-2)}/
+            ${colInfo.date.month}/${colInfo.date.day} ${IYearMonthDateUtils.localaizedDow(colInfo.date)}`;
+          break;
+        case UiTypes.SheetViewUnit.Month:
+          dateText = `${('000' + colInfo.date.year).slice(-4)}/${colInfo.date.month}`;
+          break;
+        case UiTypes.SheetViewUnit.Year:
+          dateText = `${('000' + colInfo.date.year).slice(-4)}`;
+          break;
+      }
       accountColHeadCells.push(
-        <td className={colHeadCellClass}>
-        {('0' + colInfo.date.year).slice(-2)}/
-        {colInfo.date.month}/{colInfo.date.day} {IYearMonthDateUtils.localaizedDow(colInfo.date)}
-        </td>,
+        <td className={colHeadCellClass}>{dateText}</td>,
       );
     });
 
@@ -548,7 +591,7 @@ class Body extends React.Component<IProps, any> {
           </td>
           <td className={rowHeadRootAccountCategoryClass}></td>
           <td className={rowHeadRootAccountCarriedClass}>
-            {PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup])}
+            {carriedVisible ? PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup]) : ''}
           </td>
           {cols}
           <td className={cellSpaceRootClass}></td>
@@ -586,7 +629,9 @@ class Body extends React.Component<IProps, any> {
           <td className={rowHeadAccountCategoryClass}>
             {DocTypes.shortLocalizedAccountKind(account.kind).slice(0, 1)}
           </td>
-          <td className={rowHeadAccountCarriedClass}>{PriceUtils.numToLocaleString(accountCarriedData[accountId])}</td>
+          <td className={rowHeadAccountCarriedClass}>
+            {carriedVisible ? PriceUtils.numToLocaleString(accountCarriedData[accountId]) : ''}
+          </td>
           {cols}
           <td className={cellSpaceClass}></td>
           <td className={rowTailAccountBalance}>{PriceUtils.numToLocaleString(accountBalanceData[accountId])}</td>
@@ -754,7 +799,7 @@ class Body extends React.Component<IProps, any> {
                 <td className={colHeadCarriedClass}>繰り越し</td>
                 {accountColHeadCells}
                 <td className={colHeadSpaceClass}></td>
-                <td className={colHeadBalanceClass}>残高</td>
+                <td className={colHeadBalanceClass}>{labelBalance}</td>
                 <td className={colHeadScrollBarSpaceClass}></td>
               </tr>
             </tbody>
@@ -777,7 +822,7 @@ class Body extends React.Component<IProps, any> {
                 <td className={colHeadCategoryClass}>カテゴリ</td>
                 {categoryColHeadCells}
                 <td className={colHeadSpaceClass}></td>
-                <td className={colHeadTotalClass}>合計</td>
+                <td className={colHeadTotalClass}>{labelTotal}</td>
                 <td className={colHeadScrollBarSpaceClass}></td>
               </tr>
             </tbody>

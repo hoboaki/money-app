@@ -5,15 +5,16 @@ import * as ReactRedux from 'react-redux';
 import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
-import * as States from 'src/state/ui/States';
+import * as UiStates from 'src/state/ui/States';
+import * as UiTypes from 'src/state/ui/Types';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as Styles from './Header.css';
 
-class Header extends React.Component<States.IPageSheet> {
-  constructor(props: States.IPageSheet) {
+class Header extends React.Component<UiStates.IPageSheet> {
+  constructor(props: UiStates.IPageSheet) {
     super(props);
   }
 
@@ -54,8 +55,12 @@ class Header extends React.Component<States.IPageSheet> {
     const currentDate = `${this.props.currentDate.year}年${this.props.currentDate.month}月`;
     return (
       <div className={rootClass}>
-        <select className={viewUnitSelectClass} defaultValue="day" onChange={this.onViewUnitChanged}>
-          <option value="day">日別</option>
+        <select className={viewUnitSelectClass}
+          defaultValue={this.props.viewUnit.toString()}
+          onChange={(event) => this.onViewUnitChanged(event)}>
+          <option value={UiTypes.SheetViewUnit.Day}>日別</option>
+          <option value={UiTypes.SheetViewUnit.Month}>月間</option>
+          <option value={UiTypes.SheetViewUnit.Year}>年間</option>
         </select>
         <button className={movePrevBtnClass} onClick={this.onMovePrevBtnPushed}>
           <i className={iconClass}>chevron_left</i>
@@ -72,8 +77,8 @@ class Header extends React.Component<States.IPageSheet> {
     );
   }
 
-  private onViewUnitChanged() {
-    global.console.log('onViewUnitChanged');
+  private onViewUnitChanged(e: React.ChangeEvent<HTMLSelectElement>) {
+    Store.dispatch(UiActions.sheetChangeViewUnit(Number(e.target.value)));
   }
 
   private onMovePrevBtnPushed() {
@@ -90,6 +95,6 @@ class Header extends React.Component<States.IPageSheet> {
 }
 
 const mapStateToProps = (state: IStoreState) => {
-  return state.ui.pageHome;
+  return state.ui.pageSheet;
 };
 export default ReactRedux.connect(mapStateToProps)(Header);

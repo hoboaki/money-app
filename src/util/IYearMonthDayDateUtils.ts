@@ -1,5 +1,13 @@
 import IYearMonthDayDate from './IYearMonthDayDate';
 
+/** 単位。. */
+export enum Unit {
+  Invalid = 0, // 無効値。
+  Day = 1, // 日。
+  Month = 2, // 月。
+  Year = 3, // 年。
+}
+
 /** 今日で作成。 */
 export const today = (): IYearMonthDayDate => {
   return fromDate(new Date());
@@ -22,6 +30,16 @@ export const fromText = (text: string): IYearMonthDayDate => {
 /** Date に変換。（時刻は0時0分0秒） */
 export const toNativeDate = (date: IYearMonthDayDate): Date => {
   return new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
+};
+
+/** 前年の初日。 */
+export const prevYear = (date: IYearMonthDayDate): IYearMonthDayDate => {
+  return fromDate(new Date(date.year - 1, 0, 1));
+};
+
+/** 翌年の初日。 */
+export const nextYear = (date: IYearMonthDayDate): IYearMonthDayDate => {
+  return fromDate(new Date(date.year + 1, 0, 1));
 };
 
 /** 前月の初日。 */
@@ -63,6 +81,16 @@ export const localaizedDow = (date: IYearMonthDayDate): string => {
   }
 };
 
+/** 今指している年の初日。 */
+export const firstDayOfYear = (date: IYearMonthDayDate): IYearMonthDayDate => {
+  return fromDate(new Date(date.year, 0, 1));
+};
+
+/** 今指している年の末日。 */
+export const lastDayOfYear = (date: IYearMonthDayDate): IYearMonthDayDate => {
+  return fromDate(new Date(date.year + 1, 0, 0));
+};
+
 /** 今指している月の初日。 */
 export const firstDayOfMonth = (date: IYearMonthDayDate): IYearMonthDayDate => {
   return fromDate(new Date(date.year, date.month - 1, 1));
@@ -71,6 +99,34 @@ export const firstDayOfMonth = (date: IYearMonthDayDate): IYearMonthDayDate => {
 /** 今指している月の末日。 */
 export const lastDayOfMonth = (date: IYearMonthDayDate): IYearMonthDayDate => {
   return fromDate(new Date(date.year, date.month, 0));
+};
+
+/** 前の日付。 */
+export const prevDate = (date: IYearMonthDayDate, unit: Unit): IYearMonthDayDate => {
+  switch (unit) {
+    case Unit.Day:
+      return prevDay(date);
+    case Unit.Month:
+      return prevMonth(date);
+    case Unit.Year:
+      return prevYear(date);
+    default:
+      return date;
+  }
+};
+
+/** 次の日付。 */
+export const nextDate = (date: IYearMonthDayDate, unit: Unit): IYearMonthDayDate => {
+  switch (unit) {
+    case Unit.Day:
+      return nextDay(date);
+    case Unit.Month:
+      return nextMonth(date);
+    case Unit.Year:
+      return nextYear(date);
+    default:
+      return date;
+  }
 };
 
 /** yyyy-mm-dd 形式に変換。 */

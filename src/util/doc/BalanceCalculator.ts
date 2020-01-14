@@ -14,17 +14,24 @@ class BalanceCalculator {
   /**
    * コンストラクタ。
    * @param state データベース。
-   * @param endDate 残高の決算日。この日の前日まで（この日を含めない）の残高を求める。
+   * @param endDate 残高の決算日。この日の前日まで（この日を含めない）の残高を求める。null の場合は 99999年12月31日。
    * @param accounts 調査対象とする口座の AccountId 郡。null の場合は全口座が対象。
    * @param cache 計算結果を再利用するためのオブジェクト。endDate が cache.endDate より後ろの場合，このオブジェクトの結果を使って不要な計算処理をスキップする。
    */
   public constructor(
     state: States.IState,
-    endDate: IYearMonthDayDate,
+    endDate: IYearMonthDayDate | null,
     accounts: number[] | null = null,
     cache: BalanceCalculator | null = null,
     ) {
     this.state = state;
+    if (endDate === null) {
+      endDate = {
+        year: 99999,
+        month: 12,
+        day: 31,
+      };
+    }
     this.endDate = endDate;
 
     const allRecords = new RecordCollection(state);
@@ -32,7 +39,7 @@ class BalanceCalculator {
       accounts = state.account.order;
     }
     accounts.forEach((accountId) => {
-      const cacheEnabled = cache != null && accountId in cache.balances && cache.endDate < endDate;
+      const cacheEnabled = cache != null && accountId in cache.balances && cache.endDate < this.endDate;
       const startDate: IYearMonthDayDate | null = (cache != null && cacheEnabled) ? cache.endDate : null;
       const records = allRecords.filter([
         RecordFilters.createDateRangeFilter({startDate, endDate}),
@@ -40,7 +47,7 @@ class BalanceCalculator {
       ]);
       const cacheBalance = (cache != null && cacheEnabled) ? cache.balances[accountId] : 0;
       const account = state.account.accounts[accountId];
-      const addInitialAmount = IYearMonthDayDateUtils.less(account.startDate, endDate) &&
+      const addInitialAmount = IYearMonthDayDateUtils.less(account.startDate, this.endDate) &&
         (startDate == null || IYearMonthDayDateUtils.lessEq(startDate, account.startDate));
       const initialAmount = addInitialAmount ? account.initialAmount : 0;
       this.balances[accountId] = cacheBalance + initialAmount +
