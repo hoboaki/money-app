@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import { v4 as UUID } from 'uuid';
+import * as Types from './Types';
 
 /** 続けて入力するモードを変更。 */
 export const DIALOG_ADD_RECORD_SET_CONTINUE_MODE = UUID();
@@ -58,5 +59,17 @@ export const SHEET_MOVE_TODAY = UUID();
 export const sheetMoveToday = (): Action => {
   return {
     type: SHEET_MOVE_TODAY,
+  };
+};
+
+/// シート表示単位変更。
+export const SHEET_CHANGE_VIEW_UNIT = UUID();
+export interface ISheetChangeViewUnit extends Action {
+  viewUnit: Types.SheetViewUnit;
+}
+export const sheetChangeViewUnit = (viewUnit: Types.SheetViewUnit): ISheetChangeViewUnit => {
+  return {
+    type: SHEET_CHANGE_VIEW_UNIT,
+    viewUnit,
   };
 };

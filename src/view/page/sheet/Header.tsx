@@ -90,6 +90,6 @@ class Header extends React.Component<States.IPageSheet> {
 }
 
 const mapStateToProps = (state: IStoreState) => {
-  return state.ui.pageHome;
+  return state.ui.pageSheet;
 };
 export default ReactRedux.connect(mapStateToProps)(Header);

@@ -16,7 +16,7 @@ export interface IPageHome {
 /** PageSheet 用 state。 */
 export interface IPageSheet {
   currentDate: IYearMonthDayDate;
-  viewMode: Types.SheetViewMode;
+  viewUnit: Types.SheetViewUnit;
 }
 
 /** State ルート。 */
@@ -35,6 +35,6 @@ export const defaultState: IState = {
   },
   pageSheet: {
     currentDate: IYearMonthDayDateUtils.today(),
-    viewMode: Types.SheetViewMode.Day,
+    viewUnit: Types.SheetViewUnit.Day,
   },
 };
