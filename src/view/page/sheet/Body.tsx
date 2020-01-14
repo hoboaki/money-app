@@ -269,18 +269,26 @@ class Body extends React.Component<IProps, any> {
     }
     let totalBeginDate: IYearMonthDayDate | null = null;
     let totalEndDate: IYearMonthDayDate | null = null;
+    let labelBalance = '#';
+    let labelTotal = '#';
     switch (this.props.page.viewUnit) {
       case UiTypes.SheetViewUnit.Day:
         totalBeginDate = IYearMonthDateUtils.firstDayOfMonth(colBeginDate);
         totalEndDate = IYearMonthDateUtils.nextMonth(totalBeginDate);
+        labelBalance = '月末残高';
+        labelTotal = '月間合計';
         break;
       case UiTypes.SheetViewUnit.Month:
         totalBeginDate = IYearMonthDateUtils.firstDayOfYear(colBeginDate);
         totalEndDate = IYearMonthDateUtils.nextYear(totalBeginDate);
+        labelBalance = '年末残高';
+        labelTotal = '年間合計';
         break;
       case UiTypes.SheetViewUnit.Year:
         totalBeginDate = null;
         totalEndDate = null;
+        labelBalance = '残高';
+        labelTotal = '合計';
         break;
     }
 
@@ -782,7 +790,7 @@ class Body extends React.Component<IProps, any> {
                 <td className={colHeadCarriedClass}>繰り越し</td>
                 {accountColHeadCells}
                 <td className={colHeadSpaceClass}></td>
-                <td className={colHeadBalanceClass}>残高</td>
+                <td className={colHeadBalanceClass}>{labelBalance}</td>
                 <td className={colHeadScrollBarSpaceClass}></td>
               </tr>
             </tbody>
@@ -805,7 +813,7 @@ class Body extends React.Component<IProps, any> {
                 <td className={colHeadCategoryClass}>カテゴリ</td>
                 {categoryColHeadCells}
                 <td className={colHeadSpaceClass}></td>
-                <td className={colHeadTotalClass}>合計</td>
+                <td className={colHeadTotalClass}>{labelTotal}</td>
                 <td className={colHeadScrollBarSpaceClass}></td>
               </tr>
             </tbody>
