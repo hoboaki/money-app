@@ -8,9 +8,11 @@ import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
+import * as UiTypes from 'src/state/ui/Types';
 import BalanceCalculator from 'src/util/doc/BalanceCalculator';
 import RecordCollection from 'src/util/doc/RecordCollection';
 import * as RecordFilters from 'src/util/doc/RecordFilters';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
@@ -259,12 +261,28 @@ class Body extends React.Component<IProps, any> {
         colInfos.push({
           date,
         });
-        date = IYearMonthDateUtils.nextDay(date);
+        date = IYearMonthDateUtils.nextDate(
+          date,
+          UiTypes.sheetViewUnitToDateUnit(this.props.page.viewUnit));
       }
       colEndDate = date;
     }
-    const totalBeginDate = IYearMonthDateUtils.firstDayOfMonth(this.props.page.currentDate);
-    const totalEndDate = IYearMonthDateUtils.nextMonth(totalBeginDate);
+    let totalBeginDate: IYearMonthDayDate | null = null;
+    let totalEndDate: IYearMonthDayDate | null = null;
+    switch (this.props.page.viewUnit) {
+      case UiTypes.SheetViewUnit.Day:
+        totalBeginDate = IYearMonthDateUtils.firstDayOfMonth(colBeginDate);
+        totalEndDate = IYearMonthDateUtils.nextMonth(totalBeginDate);
+        break;
+      case UiTypes.SheetViewUnit.Month:
+        totalBeginDate = IYearMonthDateUtils.firstDayOfYear(colBeginDate);
+        totalEndDate = IYearMonthDateUtils.nextYear(totalBeginDate);
+        break;
+      case UiTypes.SheetViewUnit.Year:
+        totalBeginDate = null;
+        totalEndDate = null;
+        break;
+    }
 
     // 使い回す値の定義
     const accountGroups = [
