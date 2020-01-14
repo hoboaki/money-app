@@ -37,6 +37,11 @@ class RecordCollection implements IRecordCollection {
     return this.outgos.reduce((current, id) => current + this.state.outgo.records[id].amount, 0);
   }
 
+  /** コレクションにおける資金移動レコードの総額を求める。 */
+  public sumAmountTransfer() {
+    return this.transfers.reduce((current, id) => current + this.state.transfer.records[id].amount, 0);
+  }
+
   /**
    * コレクションにおける振替レコードの差額を求める。
    * @param accounts 対象となる口座の AccountId。 null の場合は全口座。

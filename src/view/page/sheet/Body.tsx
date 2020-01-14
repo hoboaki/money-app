@@ -263,6 +263,8 @@ class Body extends React.Component<IProps, any> {
       }
       colEndDate = date;
     }
+    const totalBeginDate = IYearMonthDateUtils.firstDayOfMonth(this.props.page.currentDate);
+    const totalEndDate = IYearMonthDateUtils.nextMonth(totalBeginDate);
 
     // 使い回す値の定義
     const accountGroups = [
@@ -345,8 +347,11 @@ class Body extends React.Component<IProps, any> {
     });
 
     // カテゴリテーブルのデータ生成の準備
-    const recordAll = new RecordCollection(this.props.doc, null).filter([
+    const recordsForCellData = new RecordCollection(this.props.doc, null).filter([
       RecordFilters.createDateRangeFilter({startDate: colBeginDate, endDate: colEndDate}),
+    ]);
+    const recordsForTotal = new RecordCollection(this.props.doc, null).filter([
+      RecordFilters.createDateRangeFilter({startDate: totalBeginDate, endDate: totalEndDate}),
     ]);
     const recordKindCellDataArray: {[key: number]: Array<number | null>} = {};
     const recordKindTotalArray: {[key: number]: number | null} = {};
@@ -391,7 +396,7 @@ class Body extends React.Component<IProps, any> {
     colInfos.forEach((colInfo, colIdx) => {
       const nextColIdx = colIdx + 1;
       const nextDate = nextColIdx < colInfos.length ? colInfos[nextColIdx].date : colEndDate;
-      const records = recordAll.filter([
+      const records = recordsForCellData.filter([
         RecordFilters.createDateRangeFilter({startDate: colInfo.date, endDate: nextDate}),
       ]);
 
@@ -435,7 +440,6 @@ class Body extends React.Component<IProps, any> {
         let sum: number | null = null;
         cat.childs.forEach((childId) => {
           const childResult = calcFunc(childId, cats, data);
-          global.console.log(childResult);
           if (childResult !== null) {
             sum = (sum === null ? 0 : sum) + childResult;
           }
@@ -453,30 +457,66 @@ class Body extends React.Component<IProps, any> {
     });
 
     // カテゴリテーブルの合計データ生成
-    const calcTotalFunc = (
-      id: number,
-      data: {[key: number]: Array<number | null>},
-      ): number | null => {
-      let result: number | null = null;
-      data[id].forEach((val) => {
-        if (val !== null) {
-          result = (result === null ? 0 : result) + val;
-        }
-      });
-      return result;
-    };
     Object.keys(recordKindTotalArray).forEach((key) => {
       const id = Number(key);
-      recordKindTotalArray[id] = calcTotalFunc(id, recordKindCellDataArray);
+      switch (id) {
+        case DocTypes.RecordKind.Transfer:
+          recordKindTotalArray[id] = recordsForTotal.sumAmountTransfer();
+          break;
+        case DocTypes.RecordKind.Income:
+          recordKindTotalArray[id] = recordsForTotal.sumAmountIncome();
+          break;
+        case DocTypes.RecordKind.Outgo:
+          recordKindTotalArray[id] = recordsForTotal.sumAmountOutgo();
+          break;
+      }
     });
-    Object.keys(incomeTotalArray).forEach((key) => {
-      const id = Number(key);
-      incomeTotalArray[id] = calcTotalFunc(id, incomeCellDataArray);
+    recordsForCellData.incomes.forEach((id) => {
+      const state = this.props.doc.income;
+      const record = state.records[id];
+      const categoryId = record.category;
+      const prevValue = incomeTotalArray[categoryId];
+      incomeTotalArray[categoryId] = (prevValue === null ? 0 : prevValue) + record.amount;
     });
-    Object.keys(incomeTotalArray).forEach((key) => {
-      const id = Number(key);
-      incomeTotalArray[id] = calcTotalFunc(id, incomeCellDataArray);
+    recordsForCellData.outgos.forEach((id) => {
+      const state = this.props.doc.outgo;
+      const record = state.records[id];
+      const categoryId = record.category;
+      const prevValue = outgoTotalArray[categoryId];
+      outgoTotalArray[categoryId] = (prevValue === null ? 0 : prevValue) + record.amount;
     });
+    {
+      // 親カテゴリの集計
+      const calcFunc = (
+        catId: number,
+        cats: {[key: number]: DocStates.ICategory},
+        data: {[key: number]: (number | null)},
+        ): number | null => {
+        const cat = cats[catId];
+        if (cat.childs.length === 0) {
+          // 末端なら自身のデータを返す
+          return data[catId];
+        }
+
+        // 親なら子供全部の合計を返す
+        let sum: number | null = null;
+        cat.childs.forEach((childId) => {
+          const childResult = calcFunc(childId, cats, data);
+          if (childResult !== null) {
+            sum = (sum === null ? 0 : sum) + childResult;
+          }
+        });
+        return sum;
+      };
+      Object.keys(incomeTotalArray).forEach((id) => {
+        const catId = Number(id);
+        incomeTotalArray[catId] = calcFunc(catId, this.props.doc.income.categories, incomeTotalArray);
+      });
+      Object.keys(outgoTotalArray).forEach((id) => {
+        const catId = Number(id);
+        outgoTotalArray[catId] = calcFunc(catId, this.props.doc.outgo.categories, outgoTotalArray);
+      });
+    }
 
     // アカウントテーブルの列ヘッダ生成
     const accountColHeadCells = new Array();
