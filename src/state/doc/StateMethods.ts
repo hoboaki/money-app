@@ -535,3 +535,19 @@ export const categoryIdArray = (categoryRootOrder: number[], categories: {[key: 
   });
   return result;
 };
+
+/** 指定のカテゴリ以下に所属する末端カテゴリID配列を取得。 */
+export const leafCategoryIdArray = (targetCategoryId: number, categories: {[key: number]: States.ICategory}) => {
+  const result = new Array<number>();
+  const proc = (categoryId: number) => {
+    const cat = categories[categoryId];
+    if (cat.childs.length === 0) {
+      result.push(categoryId);
+    } else {
+      cat.childs.forEach((childId) => {
+        proc(childId);
+      });
+    }
+  };
+  return result;
+};

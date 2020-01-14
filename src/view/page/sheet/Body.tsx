@@ -359,18 +359,22 @@ class Body extends React.Component<IProps, any> {
       recordKindCellDataArray[kind] = new Array<number | null>(colInfos.length);
       recordKindTotalArray[kind] = null;
     });
+    const incomeLeafCategoriesArray: {[key: number]: number[]} = {};
     const incomeCellDataArray: {[key: number]: Array<number | null>} = {};
     const incomeTotalArray: {[key: number]: number | null} = {};
     DocStateMethods.categoryIdArray(this.props.doc.income.categoryRootOrder, this.props.doc.income.categories)
       .forEach((id) => {
+        incomeLeafCategoriesArray[id] = DocStateMethods.leafCategoryIdArray(id, this.props.doc.income.categories);
         incomeCellDataArray[id] = new Array<number | null>(colInfos.length);
         incomeCellDataArray[id].fill(null);
         incomeTotalArray[id] = null;
       });
+    const outgoLeafCategoriesArray: {[key: number]: number[]} = {};
     const outgoCellDataArray: {[key: number]: Array<number | null>} = {};
     const outgoTotalArray: {[key: number]: number | null} = {};
     DocStateMethods.categoryIdArray(this.props.doc.outgo.categoryRootOrder, this.props.doc.outgo.categories)
       .forEach((id) => {
+        outgoLeafCategoriesArray[id] = DocStateMethods.leafCategoryIdArray(id, this.props.doc.outgo.categories);
         outgoCellDataArray[id] = new Array<number | null>(colInfos.length);
         outgoCellDataArray[id].fill(null);
         outgoTotalArray[id] = null;
@@ -426,33 +430,26 @@ class Body extends React.Component<IProps, any> {
 
       // 親カテゴリの集計
       const calcFunc = (
-        catId: number,
-        cats: {[key: number]: DocStates.ICategory},
+        catIds: number[],
         data: {[key: number]: Array<number | null>},
         ): number | null => {
-        const cat = cats[catId];
-        if (cat.childs.length === 0) {
-          // 末端なら自身のデータを返す
-          return data[catId][colIdx];
-        }
-
-        // 親なら子供全部の合計を返す
         let sum: number | null = null;
-        cat.childs.forEach((childId) => {
-          const childResult = calcFunc(childId, cats, data);
-          if (childResult !== null) {
-            sum = (sum === null ? 0 : sum) + childResult;
+        catIds.forEach((catId) => {
+          const val = data[catId][colIdx];
+          if (val === null) {
+            return;
           }
+          sum = (sum === null ? 0 : sum) + val;
         });
         return sum;
       };
       Object.keys(incomeCellDataArray).forEach((id) => {
         const catId = Number(id);
-        incomeCellDataArray[catId][colIdx] = calcFunc(catId, this.props.doc.income.categories, incomeCellDataArray);
+        incomeCellDataArray[catId][colIdx] = calcFunc(incomeLeafCategoriesArray[catId], incomeCellDataArray);
       });
       Object.keys(outgoCellDataArray).forEach((id) => {
         const catId = Number(id);
-        outgoCellDataArray[catId][colIdx] = calcFunc(catId, this.props.doc.outgo.categories, outgoCellDataArray);
+        outgoCellDataArray[catId][colIdx] = calcFunc(outgoLeafCategoriesArray[catId], outgoCellDataArray);
       });
     });
 
@@ -489,35 +486,27 @@ class Body extends React.Component<IProps, any> {
       outgoTotalArray[categoryId] = (prevValue === null ? 0 : prevValue) + record.amount;
     });
     {
-      // 親カテゴリの集計
       const calcFunc = (
-        catId: number,
-        cats: {[key: number]: DocStates.ICategory},
+        catIds: number[],
         data: {[key: number]: (number | null)},
         ): number | null => {
-        const cat = cats[catId];
-        if (cat.childs.length === 0) {
-          // 末端なら自身のデータを返す
-          return data[catId];
-        }
-
-        // 親なら子供全部の合計を返す
         let sum: number | null = null;
-        cat.childs.forEach((childId) => {
-          const childResult = calcFunc(childId, cats, data);
-          if (childResult !== null) {
-            sum = (sum === null ? 0 : sum) + childResult;
+        catIds.forEach((catId) => {
+          const val = data[catId];
+          if (val === null) {
+            return;
           }
+          sum = (sum === null ? 0 : sum) + val;
         });
         return sum;
       };
       Object.keys(incomeTotalArray).forEach((id) => {
         const catId = Number(id);
-        incomeTotalArray[catId] = calcFunc(catId, this.props.doc.income.categories, incomeTotalArray);
+        incomeTotalArray[catId] = calcFunc(incomeLeafCategoriesArray[catId], incomeTotalArray);
       });
       Object.keys(outgoTotalArray).forEach((id) => {
         const catId = Number(id);
-        outgoTotalArray[catId] = calcFunc(catId, this.props.doc.outgo.categories, outgoTotalArray);
+        outgoTotalArray[catId] = calcFunc(outgoLeafCategoriesArray[catId], outgoTotalArray);
       });
     }
 
