@@ -2,6 +2,7 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Split from 'split.js';
+import { v4 as UUID } from 'uuid';
 
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
@@ -23,12 +24,22 @@ interface IProps {
   page: UiStates.IPageSheet;
 }
 
+interface IState {
+  colCount: number;
+}
+
 const idPageSheetBodyTop = 'pageSheetBodyTop';
 const idPageSheetBodyBottom = 'pageSheetBodyBottom';
 
-class Body extends React.Component<IProps, any> {
+class Body extends React.Component<IProps, IState> {
+  private elementIdRoot: string;
+
   public constructor(props: IProps) {
     super(props);
+    this.state = {
+      colCount: 1,
+    };
+    this.elementIdRoot = `elem-${UUID()}`;
   }
 
   public componentDidMount() {
@@ -42,6 +53,12 @@ class Body extends React.Component<IProps, any> {
         direction: 'vertical',
       },
     );
+
+    // サイズ変更イベント登録＆初回更新
+    window.addEventListener('resize', () => {
+      this.updateColCount();
+    });
+    this.updateColCount();
   }
 
   public render() {
@@ -252,7 +269,7 @@ class Body extends React.Component<IProps, any> {
 
     // 列情報生成
     const colInfos = new Array();
-    const colCount = 6;
+    const colCount = this.state.colCount;
     const colBeginDate = this.props.page.currentDate;
     let colEndDate = colBeginDate;
     {
@@ -789,7 +806,7 @@ class Body extends React.Component<IProps, any> {
     });
 
     return (
-      <div className={rootClass}>
+      <div id={this.elementIdRoot} className={rootClass}>
         <div id={idPageSheetBodyTop} className={Styles.BodyTop}>
           <table className={Styles.Table}>
             <tbody>
@@ -841,6 +858,20 @@ class Body extends React.Component<IProps, any> {
         </div>
       </div>
     );
+  }
+
+  private updateColCount() {
+    const headWidth = 275;
+    const tailWidth = 107;
+    const colWidth = 94;
+    const elem = document.getElementById(this.elementIdRoot);
+    if (elem === null) {
+      return;
+    }
+    const clientWidth = elem.clientWidth;
+    this.setState({
+      colCount: Math.max(1, Math.floor((clientWidth - headWidth - tailWidth) / colWidth)),
+    });
   }
 }
 
