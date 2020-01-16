@@ -197,6 +197,15 @@ class Main extends React.Component<ILocalProps, IState> {
   }
 
   public render() {
+    const rootClass = ClassNames(
+      'modal',
+      'fade',
+    );
+    const dialogRootClass = ClassNames(
+      'modal-dialog',
+      Styles.DialogRoot,
+    );
+
     const formTabsRootClass = ClassNames(
       Styles.FormTabsRoot,
     );
@@ -272,11 +281,11 @@ class Main extends React.Component<ILocalProps, IState> {
     const addRecordNotice = <span className={Styles.FormNoticeMsg}>追加しました</span>;
 
     return (
-      <div className="modal fade" id={this.elementIdRoot} tabIndex={-1}
+      <div className={rootClass} id={this.elementIdRoot} tabIndex={-1}
         role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-keyboard="false"
         onKeyDown={(e) => {this.onRootKeyDown(e); }}
         >
-        <div className="modal-dialog" role="document">
+        <div className={dialogRootClass} role="document">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="exampleModalLabel">レコードの追加と編集</h5>

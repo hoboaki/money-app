@@ -1,3 +1,10 @@
+.DialogRoot {
+  margin-left: 10%;
+  margin-right: 10%;
+  max-width: none;
+  width: 80%;
+}
+
 .FormTabsRoot {
   background: #eeeeee;
   border-bottom: 1px solid #cccccc;
