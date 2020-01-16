@@ -33,18 +33,18 @@ class Header extends React.Component<States.IPageHome, IState> {
       Styles.CurrentDate,
     );
     const movePrevBtnClass = ClassNames(
-      BasicStyles.StdButton,
+      BasicStyles.StdBtnPrimary,
       Styles.Btn,
       Styles.MoveBtn,
       Styles.MovePrevBtn,
     );
     const moveTodayBtnClass = ClassNames(
-      BasicStyles.StdButton,
+      BasicStyles.StdBtnPrimary,
       Styles.Btn,
       Styles.MoveBtn,
     );
     const moveNextBtnClass = ClassNames(
-      BasicStyles.StdButton,
+      BasicStyles.StdBtnPrimary,
       Styles.Btn,
       Styles.MoveBtn,
       Styles.MoveNextBtn,
@@ -54,12 +54,12 @@ class Header extends React.Component<States.IPageHome, IState> {
       Styles.ViewUnitSelect,
     );
     const jumpBtnClass = ClassNames(
-      BasicStyles.StdButton,
+      BasicStyles.StdBtnPrimary,
       Styles.Btn,
       Styles.JumpBtn,
     );
     const filterBtnClass = ClassNames(
-      BasicStyles.IconButton,
+      BasicStyles.IconBtn,
       Styles.Btn,
       Styles.FilterBtn,
     );
@@ -68,7 +68,7 @@ class Header extends React.Component<States.IPageHome, IState> {
       Styles.RightArea,
     );
     const newRecordBtnClass = ClassNames(
-      BasicStyles.IconButton,
+      BasicStyles.IconBtn,
       Styles.Btn,
       Styles.NewRecordBtn,
     );

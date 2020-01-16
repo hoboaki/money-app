@@ -16,6 +16,7 @@ import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as BasicStyles from 'src/view/Basic.css';
 import * as Styles from './Main.css';
 
 interface IProps {
@@ -255,6 +256,10 @@ class Main extends React.Component<ILocalProps, IState> {
       'modal-footer',
       Styles.FormFooterRoot,
     );
+    const formInputSubmitBtnClass = ClassNames(
+      BasicStyles.StdBtnSecondary,
+      Styles.FormInputSubmit,
+    );
 
     const accountFromErrorMsg = this.state.accountFromErrorMsg == null ? null :
       <span className={Styles.FormErrorMsg}>{this.state.accountFromErrorMsg}</span>;
@@ -465,7 +470,7 @@ class Main extends React.Component<ILocalProps, IState> {
                   />続けて入力
               </label>
               <button type="button"
-                className="btn btn-primary"
+                className={formInputSubmitBtnClass}
                 id={this.elementIdFormSubmit}
                 data-toggle="tooltip"
                 onClick={() => {this.onAddButtonClicked(); }}

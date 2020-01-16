@@ -18,7 +18,7 @@ class SideBarBtn extends React.Component<IProps> {
   public render() {
     const rootClass = ClassNames(
       Styles.Root,
-      BasicStyles.StdButton,
+      BasicStyles.StdBtnPrimary,
     );
     const iconClass = ClassNames(
       'material-icons',
