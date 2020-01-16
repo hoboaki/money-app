@@ -549,5 +549,6 @@ export const leafCategoryIdArray = (targetCategoryId: number, categories: {[key:
       });
     }
   };
+  proc(targetCategoryId);
   return result;
 };
