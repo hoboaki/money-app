@@ -279,7 +279,7 @@ class Main extends React.Component<ILocalProps, IState> {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">レコードの追加</h5>
+              <h5 className="modal-title" id="exampleModalLabel">レコードの追加と編集</h5>
               <button type="button" id={this.elementIdCloseBtn}
                 className="close" data-dismiss="modal" aria-label="Close"
                 >
