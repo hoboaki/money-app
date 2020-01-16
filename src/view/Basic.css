@@ -1,4 +1,4 @@
-.StdButton {
+.StdBtnPrimary {
   align-items: center;
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.12);
@@ -11,23 +11,23 @@
   padding: 2px;
 }
 
-.StdButton:active {
+.StdBtnPrimary:active {
   background: #eeeeee;
 }
 
-.StdButton:disabled {
+.StdBtnPrimary:disabled {
   background: #eeeeee;
   color: #707070;
 }
 
-.IconButton {
+.IconBtn {
   background: transparent;
   border: none;
   color: rgba(0,0,0,0.87);
   display: flex;
 }
 
-.IconButton:active {
+.IconBtn:active {
   color: rgba(0,0,0,0.61);
 }
 

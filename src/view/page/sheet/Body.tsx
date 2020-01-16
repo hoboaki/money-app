@@ -263,7 +263,7 @@ class Body extends React.Component<IProps, IState> {
       'md-16',
     );
     const openerBtnClass = ClassNames(
-      BasicStyles.IconButton,
+      BasicStyles.IconBtn,
       Styles.OpenerBtn,
     );
 

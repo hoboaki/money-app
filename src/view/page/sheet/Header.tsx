@@ -23,18 +23,18 @@ class Header extends React.Component<UiStates.IPageSheet> {
       Styles.Root,
     );
     const movePrevBtnClass = ClassNames(
-      BasicStyles.StdButton,
+      BasicStyles.StdBtnPrimary,
       Styles.Btn,
       Styles.MoveBtn,
       Styles.MovePrevBtn,
     );
     const moveTodayBtnClass = ClassNames(
-      BasicStyles.StdButton,
+      BasicStyles.StdBtnPrimary,
       Styles.Btn,
       Styles.MoveBtn,
     );
     const moveNextBtnClass = ClassNames(
-      BasicStyles.StdButton,
+      BasicStyles.StdBtnPrimary,
       Styles.Btn,
       Styles.MoveBtn,
       Styles.MoveNextBtn,

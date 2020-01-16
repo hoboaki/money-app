@@ -18,7 +18,7 @@ class MainBtn extends React.Component<IProps> {
   public render() {
     const rootClass = ClassNames(
       Styles.Root,
-      BasicStyles.StdButton,
+      BasicStyles.StdBtnPrimary,
     );
     return (
       <button
