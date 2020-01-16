@@ -284,10 +284,24 @@ class Main extends React.Component<ILocalProps, IState> {
       <span className={Styles.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
     const addRecordNotice = <span className={Styles.FormNoticeMsg}>追加しました</span>;
 
+    const recordCells: JSX.Element[] = [];
+    for (let i = 0; i < 5; i++) {
+      recordCells.push(
+        <div className={Styles.RecordCell}>
+          <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
+          <span>2019/12/31</span>
+          <span>食費</span>
+          <span>アデリー銀行</span>
+          <span>13000</span>
+          <span>ペンギンカフェのディナー代</span>
+        </div>);
+    }
+    global.console.log(recordCells);
+
     const sectionLeftSide =
-      <div className={Styles.SectionLeftSideRoot}>
-        Hello
-      </div>;
+      <section className={Styles.SectionLeftSideRoot}>
+        {recordCells}
+      </section>;
 
     const sectionRightSide =
       <div className={Styles.SectionRightSideRoot}>

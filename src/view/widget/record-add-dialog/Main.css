@@ -18,10 +18,15 @@
 .SectionLeftSideRoot {
   border-right: 1px solid #cccccc;
   flex-grow: 1;
+  overflow-y: auto;
 }
 
 .SectionRightSideRoot {
   width: 400px;
+}
+
+.RecordCell {
+  display: flex;
 }
 
 .FormTabsRoot {
