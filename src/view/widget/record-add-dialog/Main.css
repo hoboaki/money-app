@@ -5,7 +5,7 @@
 }
 
 .DialogContent {
-  height: calc(100vh - 50px);
+  height: calc(100vh - 56px);
 }
 
 .DialogHeader {
@@ -33,7 +33,7 @@
 
 .ListCell {
   background: #ffffff;
-  border-bottom: 1px solid #cccccc;
+  border: 1px solid #cccccc;
   display: flex;
   padding: 6px 6px;
 }
@@ -63,6 +63,9 @@
 }
 
 .ListSvgIcon {
+  background: white;
+  border: 1px solid white;
+  border-radius: 12px;
   display: block;
   height: 24px;
   margin-top: 2px;
