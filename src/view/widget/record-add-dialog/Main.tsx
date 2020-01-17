@@ -16,6 +16,7 @@ import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import MaterialIcon from 'src/view/widget/material-icon';
 import * as Styles from './Main.css';
@@ -299,7 +300,7 @@ class Main extends React.Component<ILocalProps, IState> {
               <span>アデリー銀行</span>
             </div>
             <div className={Styles.ListCellBottom}>
-              <span className={Styles.ListPrice}>¥13000</span>
+              <span className={Styles.ListPrice}>¥{PriceUtils.numToLocaleString(500 + 3200 * i)}</span>
               <span className={Styles.ListMemo}>ペンギンカフェのディナー代</span>
             </div>
           </div>
