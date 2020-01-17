@@ -21,6 +21,7 @@
 }
 
 .SectionLeftSideRoot {
+  background: #eeeeee;
   border-right: 1px solid #cccccc;
   flex-grow: 1;
   overflow-y: auto;
@@ -31,6 +32,7 @@
 }
 
 .ListCell {
+  background: #ffffff;
   border-bottom: 1px solid #cccccc;
   display: flex;
   padding: 6px 6px;
