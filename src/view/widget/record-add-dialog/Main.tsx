@@ -207,6 +207,10 @@ class Main extends React.Component<ILocalProps, IState> {
       'modal-dialog',
       Styles.DialogRoot,
     );
+    const dialogContentClass = ClassNames(
+      'modal-content',
+      Styles.DialogContent,
+    );
     const dialogHeaderClass = ClassNames(
       'modal-header',
       Styles.DialogHeader,
@@ -301,7 +305,7 @@ class Main extends React.Component<ILocalProps, IState> {
             </div>
             <div className={Styles.ListCellBottom}>
               <span className={Styles.ListPrice}>¥{PriceUtils.numToLocaleString(500 + 3200 * i)}</span>
-              <span className={Styles.ListMemo}>ペンギンカフェのディナー代</span>
+              <span className={Styles.ListMemo}>{(i === 1 || i === 4) ? 'ペンギンカフェのディナー代' : ''}</span>
             </div>
           </div>
         </div>);
@@ -511,7 +515,7 @@ class Main extends React.Component<ILocalProps, IState> {
         onKeyDown={(e) => {this.onRootKeyDown(e); }}
         >
         <div className={dialogRootClass} role="document">
-          <div className="modal-content">
+          <div className={dialogContentClass}>
             <div className={dialogHeaderClass}>
               <h5 className="modal-title" id="exampleModalLabel">レコードの追加と編集</h5>
               <button type="button" id={this.elementIdCloseBtn}

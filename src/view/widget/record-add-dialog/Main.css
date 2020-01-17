@@ -4,6 +4,10 @@
   max-width: none;
 }
 
+.DialogContent {
+  height: calc(100vh - 50px);
+}
+
 .DialogHeader {
   background: #f5f5f6;
   border-bottom: 1px solid #cccccc;
@@ -13,6 +17,7 @@
 .SectionRoot {
   display: flex;
   flex-direction: row;
+  height: 100%
 }
 
 .SectionLeftSideRoot {
@@ -34,6 +39,7 @@
 .ListCellBody {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 }
 
 .ListCellTop {
@@ -50,7 +56,7 @@
 
 .ListCellBottom {
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   font-size: 13pt;
 }
 
@@ -66,9 +72,16 @@
   color: inherit;
 }
 
+.ListMemoHolder {
+}
+
 .ListMemo {
   color: #707070;
-  margin-left: 16px;
+  flex-grow: 1;
+  margin-right: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .FormTabsRoot {
