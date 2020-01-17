@@ -17,6 +17,7 @@ import * as UiStates from 'src/state/ui/States';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
+import MaterialIcon from 'src/view/widget/material-icon';
 import * as Styles from './Main.css';
 
 interface IProps {
@@ -287,13 +288,21 @@ class Main extends React.Component<ILocalProps, IState> {
     const recordCells: JSX.Element[] = [];
     for (let i = 0; i < 5; i++) {
       recordCells.push(
-        <div className={Styles.RecordCell}>
-          <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
-          <span>2019/12/31</span>
-          <span>食費</span>
-          <span>アデリー銀行</span>
-          <span>13000</span>
-          <span>ペンギンカフェのディナー代</span>
+        <div className={Styles.ListCell}>
+          <img className={Styles.ListSvgIcon} src="./image/icon-ex/outgo-outline.svg"/>
+          <div className={Styles.ListCellBody}>
+            <div className={Styles.ListCellTop}>
+              <span>2019/12/31</span>
+              <MaterialIcon name={'class'} iconSize={18} darkMode={true} />
+              <span>食費</span>
+              <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />
+              <span>アデリー銀行</span>
+            </div>
+            <div className={Styles.ListCellBottom}>
+              <span className={Styles.ListPrice}>¥13000</span>
+              <span className={Styles.ListMemo}>ペンギンカフェのディナー代</span>
+            </div>
+          </div>
         </div>);
     }
     global.console.log(recordCells);
