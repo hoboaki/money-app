@@ -28,14 +28,20 @@
 }
 
 .SectionRightSideRoot {
+  border-left: 1px solid #cccccc;
   width: 400px;
 }
 
 .ListCell {
   background: #ffffff;
-  border: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
   display: flex;
   padding: 6px 6px;
+}
+
+.ListCell:hover {
+  background: #eeeeee;
 }
 
 .ListCellBody {
@@ -45,7 +51,7 @@
 }
 
 .ListCellTop {
-  color: rgb(25, 118, 210);
+  color: #1976d2;
   display: flex;
   flex-direction: row;
   font-size: 10pt;
@@ -75,9 +81,6 @@
 
 .ListPrice {
   color: inherit;
-}
-
-.ListMemoHolder {
 }
 
 .ListMemo {

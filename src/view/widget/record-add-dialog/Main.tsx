@@ -3,6 +3,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import Split from 'split.js';
 import { v4 as UUID } from 'uuid';
 
 import 'src/@types/mdb/modal';
@@ -58,6 +59,8 @@ interface IState {
 class Main extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdCloseBtn: string;
+  private elementIdSectionLeftSide: string;
+  private elementIdSectionRightSide: string;
   private elementIdFormCategoryOutgo: string;
   private elementIdFormCategoryIncome: string;
   private elementIdFormDate: string;
@@ -92,6 +95,8 @@ class Main extends React.Component<ILocalProps, IState> {
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
+    this.elementIdSectionLeftSide = `elem-${UUID()}`;
+    this.elementIdSectionRightSide = `elem-${UUID()}`;
     this.elementIdFormCategoryOutgo = `elem-${UUID()}`;
     this.elementIdFormCategoryIncome = `elem-${UUID()}`;
     this.elementIdFormDate = `elem-${UUID()}`;
@@ -196,6 +201,17 @@ class Main extends React.Component<ILocalProps, IState> {
     $(`#${this.elementIdRoot}`).on('hidden.bs.modal', () => {
       this.props.onClosed();
     });
+
+    // スピリッター登録
+    Split(
+      [`#${this.elementIdSectionLeftSide}`, `#${this.elementIdSectionRightSide}`],
+      {
+        sizes: [50, 50],
+        gutterSize: 12,
+        cursor: 'col-resize',
+        direction: 'horizontal',
+      },
+    );
   }
 
   public render() {
@@ -313,12 +329,12 @@ class Main extends React.Component<ILocalProps, IState> {
     global.console.log(recordCells);
 
     const sectionLeftSide =
-      <section className={Styles.SectionLeftSideRoot}>
+      <section id={this.elementIdSectionLeftSide} className={Styles.SectionLeftSideRoot}>
         {recordCells}
       </section>;
 
     const sectionRightSide =
-      <div className={Styles.SectionRightSideRoot}>
+      <div id={this.elementIdSectionRightSide} className={Styles.SectionRightSideRoot}>
         <div className={formTabsRootClass}>
           <div className={formTabsBaseClass}>
             <div className={formTabOutgoClass}>
