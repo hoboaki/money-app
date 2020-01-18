@@ -33,13 +33,25 @@
 }
 
 .ListCard {
-  background: #ffffff;
   border-bottom: 1px solid #cccccc;
   display: flex;
   padding: 6px 6px;
 }
 
 .ListCard:hover {
+  cursor: pointer;
+}
+
+.ListCard[data-selected='false'] {
+  background: #ffffff;
+}
+
+.ListCard[data-selected='true'] {
+  background: #1976d2;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.ListCard[data-selected='false']:hover {
   background: #eeeeee;
 }
 
@@ -50,11 +62,18 @@
 }
 
 .ListCardTop {
-  color: #1976d2;
   display: flex;
   flex-direction: row;
   font-size: 10pt;
   margin-bottom: 4px;
+}
+
+.ListCardTop[data-selected='false'] {
+  color: #1976d2;
+}
+
+.ListCardTop[data-selected='true'] {
+  color: inherit;
 }
 
 .ListCardTop span {
@@ -89,6 +108,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.ListCardMemo[data-selected='false'] {
+  color: #707070;
+}
+
+.ListCardMemo[data-selected='true'] {
+  color: inherit;
 }
 
 .FormTabsRoot {

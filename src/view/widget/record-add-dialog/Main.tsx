@@ -307,8 +307,8 @@ class Main extends React.Component<ILocalProps, IState> {
     const addRecordNotice = <span className={Styles.FormNoticeMsg}>追加しました</span>;
 
     const sampleRecords = [
-      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: ``, amount: 500, selected: true},
-      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `ペンギンカフェのディナー代`, amount: 3700, selected: false},
+      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: ``, amount: 500, selected: false},
+      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `ペンギンカフェのディナー代`, amount: 3700, selected: true},
       {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: ``, amount: 6900, selected: false},
       {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: ``, amount: 10100, selected: false},
       {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `ペンギンカフェのディナー代`, amount: 13300, selected: false},
@@ -319,7 +319,7 @@ class Main extends React.Component<ILocalProps, IState> {
         <div className={Styles.ListCard} data-selected={record.selected}>
           <img className={Styles.ListSvgIcon} src="./image/icon-ex/outgo-outline.svg"/>
           <div className={Styles.ListCardBody}>
-            <div className={Styles.ListCardTop}>
+            <div className={Styles.ListCardTop} data-selected={record.selected}>
               <span>{record.date}</span>
               <MaterialIcon name={'class'} iconSize={18} darkMode={true} />
               <span>{record.category}</span>
@@ -327,8 +327,10 @@ class Main extends React.Component<ILocalProps, IState> {
               <span>{record.account}</span>
             </div>
             <div className={Styles.ListCardBottom}>
-              <span className={Styles.ListCardPrice}>¥{PriceUtils.numToLocaleString(record.amount)}</span>
-              <span className={Styles.ListCardMemo}>{record.memo}</span>
+              <span className={Styles.ListCardPrice} data-selected={record.selected}>
+                ¥{PriceUtils.numToLocaleString(record.amount)}
+              </span>
+              <span className={Styles.ListCardMemo} data-selected={record.selected}>{record.memo}</span>
             </div>
           </div>
         </div>);
