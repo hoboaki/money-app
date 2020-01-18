@@ -32,25 +32,24 @@
   width: 400px;
 }
 
-.ListCell {
+.ListCard {
   background: #ffffff;
-  border-top: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
   display: flex;
   padding: 6px 6px;
 }
 
-.ListCell:hover {
+.ListCard:hover {
   background: #eeeeee;
 }
 
-.ListCellBody {
+.ListCardBody {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.ListCellTop {
+.ListCardTop {
   color: #1976d2;
   display: flex;
   flex-direction: row;
@@ -58,11 +57,11 @@
   margin-bottom: 4px;
 }
 
-.ListCellTop span {
+.ListCardTop span {
   margin-right: 8px;
 }
 
-.ListCellBottom {
+.ListCardBottom {
   display: flex;
   flex-direction: row-reverse;
   font-size: 13pt;
@@ -79,11 +78,11 @@
   width: 24px;
 }
 
-.ListPrice {
+.ListCardPrice {
   color: inherit;
 }
 
-.ListMemo {
+.ListCardMemo {
   color: #707070;
   flex-grow: 1;
   margin-right: 16px;

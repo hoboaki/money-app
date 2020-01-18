@@ -309,19 +309,19 @@ class Main extends React.Component<ILocalProps, IState> {
     const recordCells: JSX.Element[] = [];
     for (let i = 0; i < 5; i++) {
       recordCells.push(
-        <div className={Styles.ListCell}>
+        <div className={Styles.ListCard}>
           <img className={Styles.ListSvgIcon} src="./image/icon-ex/outgo-outline.svg"/>
-          <div className={Styles.ListCellBody}>
-            <div className={Styles.ListCellTop}>
+          <div className={Styles.ListCardBody}>
+            <div className={Styles.ListCardTop}>
               <span>2019/12/31</span>
               <MaterialIcon name={'class'} iconSize={18} darkMode={true} />
               <span>食費</span>
               <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />
               <span>アデリー銀行</span>
             </div>
-            <div className={Styles.ListCellBottom}>
-              <span className={Styles.ListPrice}>¥{PriceUtils.numToLocaleString(500 + 3200 * i)}</span>
-              <span className={Styles.ListMemo}>{(i === 1 || i === 4) ? 'ペンギンカフェのディナー代' : ''}</span>
+            <div className={Styles.ListCardBottom}>
+              <span className={Styles.ListCardPrice}>¥{PriceUtils.numToLocaleString(500 + 3200 * i)}</span>
+              <span className={Styles.ListCardMemo}>{(i === 1 || i === 4) ? 'ペンギンカフェのディナー代' : ''}</span>
             </div>
           </div>
         </div>);
