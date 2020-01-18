@@ -306,27 +306,33 @@ class Main extends React.Component<ILocalProps, IState> {
       <span className={Styles.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
     const addRecordNotice = <span className={Styles.FormNoticeMsg}>追加しました</span>;
 
+    const sampleRecords = [
+      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: ``, amount: 500, selected: true},
+      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `ペンギンカフェのディナー代`, amount: 3700, selected: false},
+      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: ``, amount: 6900, selected: false},
+      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: ``, amount: 10100, selected: false},
+      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `ペンギンカフェのディナー代`, amount: 13300, selected: false},
+    ];
     const recordCells: JSX.Element[] = [];
-    for (let i = 0; i < 5; i++) {
+    sampleRecords.forEach((record) => {
       recordCells.push(
-        <div className={Styles.ListCard}>
+        <div className={Styles.ListCard} data-selected={record.selected}>
           <img className={Styles.ListSvgIcon} src="./image/icon-ex/outgo-outline.svg"/>
           <div className={Styles.ListCardBody}>
             <div className={Styles.ListCardTop}>
-              <span>2019/12/31</span>
+              <span>{record.date}</span>
               <MaterialIcon name={'class'} iconSize={18} darkMode={true} />
-              <span>食費</span>
+              <span>{record.category}</span>
               <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />
-              <span>アデリー銀行</span>
+              <span>{record.account}</span>
             </div>
             <div className={Styles.ListCardBottom}>
-              <span className={Styles.ListCardPrice}>¥{PriceUtils.numToLocaleString(500 + 3200 * i)}</span>
-              <span className={Styles.ListCardMemo}>{(i === 1 || i === 4) ? 'ペンギンカフェのディナー代' : ''}</span>
+              <span className={Styles.ListCardPrice}>¥{PriceUtils.numToLocaleString(record.amount)}</span>
+              <span className={Styles.ListCardMemo}>{record.memo}</span>
             </div>
           </div>
         </div>);
-    }
-    global.console.log(recordCells);
+    });
 
     const sectionLeftSide =
       <section id={this.elementIdSectionLeftSide} className={Styles.SectionLeftSideRoot}>
