@@ -81,6 +81,47 @@ export const createAccountFilter = (data: IAccountFilterData): IRecordFilter => 
   };
 };
 
+/** レコードIDフィルタのデータ。 */
+export interface IRecordIdRangeFilterData {
+  /** 最小値。このID以上のレコードがヒットする。 null の場合は無期限。 */
+  startId: number | null;
+  /** 末端値。このID未満のレコードがヒットする。 null の場合は無制限。 */
+  endId: number | null;
+}
+
+/** レコードIDフィルタを作成。 */
+export const createRecordIdRangeFilter = (data: IRecordIdRangeFilterData): IRecordFilter => {
+  return {
+    filter: (collection: IRecordCollection, state: States.IState) => {
+      let checkFunc: ((record: States.IRecord) => boolean) | null = null;
+
+      // 比較演算が少しでも少なくなるようにチェック関数を場合分け
+      if (data.startId != null && data.endId == null) {
+        const startId = data.startId;
+        checkFunc = (record) => {
+          return startId <= record.id;
+        };
+      } else if (data.startId == null && data.endId != null) {
+        const endId = data.endId;
+        checkFunc = (record) => {
+          return record.id < endId;
+        };
+      } else if (data.startId != null && data.endId != null) {
+        const startId = data.startId;
+        const endId = data.endId;
+        checkFunc = (record) => {
+          return startId <=  record.id && record.id < endId;
+        };
+      }
+
+      if (checkFunc != null) {
+        return filteredCollection(collection, state, checkFunc);
+      }
+      return collection;
+    },
+  };
+};
+
 /** フィルタを適用したコレクションを取得。 */
 const filteredCollection = (
   collection: IRecordCollection,
