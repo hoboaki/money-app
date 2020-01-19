@@ -1,6 +1,10 @@
 import * as States from 'src/state/doc/States';
+import { RecordKind } from 'src/state/doc/Types';
 import IRecordCollection from './IRecordCollection';
 import IRecordFilter from './IRecordFilter';
+import IRecordKey from './IRecordKey';
+import IRecordOrder from './IRecordOrder';
+import RecordOrderKind from './RecordOrderKind';
 
 /** レコード群を扱うための便利クラス。 */
 class RecordCollection implements IRecordCollection {
@@ -72,6 +76,50 @@ class RecordCollection implements IRecordCollection {
       this.state,
       filters.reduce((current, next) => next.filter(current, this.state), this as IRecordCollection),
     );
+  }
+
+  /** 並び順を適用したレコードキー配列を返す。 */
+  public keys(orders: IRecordOrder[]): IRecordKey[] {
+    // Key 化
+    let result: IRecordKey[] = [];
+    result = result.concat(this.incomes.map<IRecordKey>((recordId) => {
+      return {
+        id: recordId, kind: RecordKind.Income,
+      };
+    }));
+    result = result.concat(this.outgos.map<IRecordKey>((recordId) => {
+      return {
+        id: recordId, kind: RecordKind.Outgo,
+      };
+    }));
+    result = result.concat(this.transfers.map<IRecordKey>((recordId) => {
+      return {
+        id: recordId, kind: RecordKind.Transfer,
+      };
+    }));
+
+    // ソート
+    orders.forEach((order) => {
+      let compareFunc: ((lhs: IRecordKey, rhs: IRecordKey) => number) | null = null;
+      switch (order.kind) {
+        case RecordOrderKind.RecordId:
+          compareFunc = (lhs, rhs) => {
+            if (lhs < rhs) {
+              return order.reverse ? 1 : -1;
+            }
+            if (rhs < lhs) {
+              return order.reverse ? -1 : 1;
+            }
+            return 0;
+          };
+          break;
+      }
+      if (compareFunc !== null) {
+        result.sort(compareFunc);
+      }
+    });
+
+    return result;
   }
 }
 
