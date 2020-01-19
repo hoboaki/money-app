@@ -313,9 +313,9 @@ class Main extends React.Component<ILocalProps, IState> {
       {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `　`, amount: 10100, selected: false},
       {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `ペンギンカフェのディナー代`, amount: 13300, selected: false},
     ];
-    const recordCells: JSX.Element[] = [];
+    const recordElems: JSX.Element[] = [];
     sampleRecords.forEach((record) => {
-      recordCells.push(
+      recordElems.push(
         <div className={Styles.ListCard} data-selected={record.selected}>
           <img className={Styles.ListCardSvgIcon} src="./image/icon-ex/outgo-outline.svg"/>
           <div className={Styles.ListCardBody}>
@@ -337,10 +337,14 @@ class Main extends React.Component<ILocalProps, IState> {
           </div>
         </div>);
     });
+    recordElems.push(
+      <div className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
+        <div className={Styles.ListCardAddRecord}>新規レコードを追加</div>
+      </div>);
 
     const sectionLeftSide =
       <section id={this.elementIdSectionLeftSide} className={Styles.SectionLeftSideRoot}>
-        {recordCells}
+        {recordElems}
       </section>;
 
     const sectionRightSide =

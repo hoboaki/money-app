@@ -56,6 +56,11 @@
   background: #eeeeee;
 }
 
+.ListCard[data-is-add-record='true'] {
+  align-content: center;
+  height: 38px;
+}
+
 .ListCardBody {
   display: flex;
   flex-direction: column;
@@ -125,6 +130,11 @@
 
 .ListCardMemo[data-selected='true'] {
   color: inherit;
+}
+
+.ListCardAddRecord {
+  flex-grow: 1;
+  text-align: center;
 }
 
 .FormTabsRoot {
