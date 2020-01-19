@@ -832,7 +832,7 @@ class Main extends React.Component<ILocalProps, IState> {
           this.state.formMemo,
           this.state.formAccountFrom,
           this.state.formAccountTo,
-          this.state.formAmount != null ? this.state.formAmount : 0,
+          this.state.formAmountTransfer != null ? this.state.formAmountTransfer : 0,
           ));
         break;
     }
