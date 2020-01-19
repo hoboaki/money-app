@@ -1,3 +1,142 @@
+.DialogRoot {
+  margin-left: 6%;
+  margin-right: 6%;
+  max-width: none;
+}
+
+.DialogContent {
+  height: calc(100vh - 56px);
+}
+
+.DialogHeader {
+  background: #f5f5f6;
+  border-bottom: 1px solid #cccccc;
+  color: rgba(0,0,0,0.87);
+}
+
+.SectionRoot {
+  display: flex;
+  flex-direction: row;
+  height: 100%
+}
+
+.SectionLeftSideRoot {
+  background: #eeeeee;
+  border-right: 1px solid #cccccc;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.SectionRightSideRoot {
+  border-left: 1px solid #cccccc;
+  width: 400px;
+}
+
+.ListCard {
+  border-bottom: 1px solid #cccccc;
+  display: flex;
+  height: 54px;
+  padding: 6px 6px;
+}
+
+.ListCard:hover {
+  cursor: pointer;
+}
+
+.ListCard[data-selected='false'] {
+  background: #ffffff;
+}
+
+.ListCard[data-selected='true'] {
+  background: #1976d2;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.ListCard[data-selected='false']:hover {
+  background: #eeeeee;
+}
+
+.ListCard[data-is-add-record='true'] {
+  align-content: center;
+  height: 38px;
+}
+
+.ListCardBody {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.ListCardTop {
+  display: flex;
+  flex-direction: row;
+  font-size: 9pt;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+
+.ListCardTop[data-selected='false'] {
+  color: #1976d2;
+}
+
+.ListCardTop[data-selected='true'] {
+  color: inherit;
+}
+
+.ListCardTop span {
+  margin-right: 10px;
+}
+
+.ListCardBottom {
+  display: flex;
+  flex-direction: row-reverse;
+  font-size: 10pt;
+}
+
+.ListCardSvgIcon {
+  background: white;
+  border: 1px solid white;
+  border-radius: 12px;
+  display: block;
+  height: 24px;
+  margin-top: 2px;
+  margin-right: 10px;
+  width: 24px;
+}
+
+.ListCardAmountHolder {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-right: 2px;
+}
+
+.ListCardAmount {
+  color: inherit;
+  font-size: 13pt;
+}
+
+.ListCardMemo {
+  color: #707070;
+  flex-grow: 1;
+  margin-right: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ListCardMemo[data-selected='false'] {
+  color: #707070;
+}
+
+.ListCardMemo[data-selected='true'] {
+  color: inherit;
+}
+
+.ListCardAddRecord {
+  flex-grow: 1;
+  text-align: center;
+}
+
 .FormTabsRoot {
   background: #eeeeee;
   border-bottom: 1px solid #cccccc;
@@ -29,7 +168,7 @@
   justify-content: center;
   margin-bottom: -1px;
   padding-top: 2px;
-  width: 150px;
+  width: 30%;
 }
 
 .FormTabButton {

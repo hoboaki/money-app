@@ -2,18 +2,6 @@ import { Action } from 'redux';
 import { v4 as UUID } from 'uuid';
 import * as Types from './Types';
 
-/** 続けて入力するモードを変更。 */
-export const DIALOG_ADD_RECORD_SET_CONTINUE_MODE = UUID();
-export interface IDialogAddRecordSetContinueMode extends Action {
-  isContinueMode: boolean;
-}
-export const dialogAddRecordSetContinueMode = (isContinueMode: boolean): IDialogAddRecordSetContinueMode => {
-  return {
-    type: DIALOG_ADD_RECORD_SET_CONTINUE_MODE,
-    isContinueMode,
-  };
-};
-
 /// カレンダー１つ前へ。
 export const CALENDAR_MOVE_PREV = UUID();
 export const calendarMovePrev = (): Action => {

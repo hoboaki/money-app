@@ -11,13 +11,6 @@ import * as Types from './Types';
 
 const a2RMapper = createA2RMapper<States.IState>();
 
-a2RMapper.addWork<Actions.IDialogAddRecordSetContinueMode>(
-  Actions.DIALOG_ADD_RECORD_SET_CONTINUE_MODE,
-  (state, action) => {
-    state.dialogAddRecord.isContinueMode = action.isContinueMode;
-  },
-);
-
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_PREV,
   (state, action) => {

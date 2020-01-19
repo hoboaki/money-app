@@ -16,7 +16,7 @@ import * as Styles from './Calendar.css';
 
 interface IProps {
   doc: DocStates.IState;
-  pageHome: UiStates.IPageHome;
+  page: UiStates.IPageHome;
 }
 
 interface IState {
@@ -112,7 +112,7 @@ class Calendar extends React.Component<IProps, IState> {
     }
     const dayCountInWeek = 7;
     const rowCount = 6;
-    const baseDate = IYearMonthDayDateUtils.toNativeDate(this.props.pageHome.currentDate);
+    const baseDate = IYearMonthDayDateUtils.toNativeDate(this.props.page.currentDate);
     const startDate = IYearMonthDayDateUtils.fromDate(new Date(
       baseDate.getFullYear(),
       baseDate.getMonth(),
@@ -248,7 +248,7 @@ class Calendar extends React.Component<IProps, IState> {
 const mapStateToProps = (state: IStoreState) => {
   return {
     doc: state.doc,
-    pageHome: state.ui.pageHome,
+    page: state.ui.pageHome,
   };
 };
 export default ReactRedux.connect(mapStateToProps)(Calendar);

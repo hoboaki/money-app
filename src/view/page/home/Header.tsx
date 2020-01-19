@@ -2,10 +2,11 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 
+import * as DocStates from 'src/state/doc/States';
 import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
-import * as States from 'src/state/ui/States';
+import * as UiStates from 'src/state/ui/States';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
@@ -13,12 +14,17 @@ import * as LayoutStyles from 'src/view/Layout.css';
 import RecordAddDialog from 'src/view/widget/record-add-dialog';
 import * as Styles from './Header.css';
 
+interface IProps {
+  doc: DocStates.IState;
+  page: UiStates.IPageHome;
+}
+
 interface IState {
   modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
 }
 
-class Header extends React.Component<States.IPageHome, IState> {
-  constructor(props: States.IPageHome) {
+class Header extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       modalAddRecord: false,
@@ -85,7 +91,7 @@ class Header extends React.Component<States.IPageHome, IState> {
           }}
         />;
     }
-    const currentDate = `${this.props.currentDate.year}年${this.props.currentDate.month}月`;
+    const currentDate = `${this.props.page.currentDate.year}年${this.props.page.currentDate.month}月`;
     return (
       <div className={rootClass}>
         <span className={currentDateClass}>{currentDate}</span>
@@ -144,6 +150,9 @@ class Header extends React.Component<States.IPageHome, IState> {
 }
 
 const mapStateToProps = (state: IStoreState) => {
-  return state.ui.pageHome;
+  return {
+    doc: state.doc,
+    page: state.ui.pageHome,
+  };
 };
 export default ReactRedux.connect(mapStateToProps)(Header);

@@ -4,8 +4,7 @@ import * as Types from './Types';
 
 /** レコード追加ダイアログ用 state。 */
 export interface IDialogAddRecord {
-  /** 追加後に続けて入力するか。 */
-  isContinueMode: boolean;
+  dummy: boolean;
 }
 
 /** PageHome 用 state。 */
@@ -28,7 +27,7 @@ export interface IState {
 
 export const defaultState: IState = {
   dialogAddRecord: {
-    isContinueMode: false,
+    dummy: false,
   },
   pageHome : {
     currentDate: IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today()),

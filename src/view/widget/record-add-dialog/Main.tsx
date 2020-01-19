@@ -3,6 +3,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import Split from 'split.js';
 import { v4 as UUID } from 'uuid';
 
 import 'src/@types/mdb/modal';
@@ -14,23 +15,26 @@ import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
+import RecordCollection from 'src/util/doc/RecordCollection';
+import * as RecordFilters from 'src/util/doc/RecordFilters';
+import RecordOrderKind from 'src/util/doc/RecordOrderKind';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
+import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
+import MaterialIcon from 'src/view/widget/material-icon';
 import * as Styles from './Main.css';
 
 interface IProps {
   /** 入力フォームの初期日付。 */
   formDefaultDate: IYearMonthDayDate;
+
+  /** 閉じる際のコールバック。 */
   onClosed: (() => void);
 }
 
 interface ILocalProps extends IProps {
-  accounts: DocStates.IAccount[];
-  incomeCategoryRootOrder: number[];
-  incomeCategories: { [key: number]: DocStates.ICategory };
-  outgoCategoryRootOrder: number[];
-  outgoCategories: { [key: number]: DocStates.ICategory };
+  doc: DocStates.IState;
   dialogRecordAdd: UiStates.IDialogAddRecord;
 }
 
@@ -56,6 +60,8 @@ interface IState {
 class Main extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdCloseBtn: string;
+  private elementIdSectionLeftSide: string;
+  private elementIdSectionRightSide: string;
   private elementIdFormCategoryOutgo: string;
   private elementIdFormCategoryIncome: string;
   private elementIdFormDate: string;
@@ -65,17 +71,17 @@ class Main extends React.Component<ILocalProps, IState> {
   private elementIdFormAmount: string;
   private elementIdFormAmountTransfer: string;
   private elementIdFormMemo: string;
-  private elementIdFormIsContinueMode: string;
   private elementIdFormSubmit: string;
+  private viewRecordIdMin: number;
 
   constructor(props: ILocalProps) {
     super(props);
     this.state = {
       formKind: DocTypes.RecordKind.Outgo,
       formDate: IYearMonthDayDateUtils.toText(props.formDefaultDate),
-      formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
-      formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.incomeCategories).id,
-      formAccount: Number(Object.keys(props.accounts)[0]),
+      formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.doc.outgo.categories).id,
+      formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.doc.income.categories).id,
+      formAccount: this.props.doc.account.order[0],
       formAccountFrom: DocTypes.INVALID_ID,
       formAccountTo: DocTypes.INVALID_ID,
       formAmount: 0,
@@ -90,6 +96,8 @@ class Main extends React.Component<ILocalProps, IState> {
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
+    this.elementIdSectionLeftSide = `elem-${UUID()}`;
+    this.elementIdSectionRightSide = `elem-${UUID()}`;
     this.elementIdFormCategoryOutgo = `elem-${UUID()}`;
     this.elementIdFormCategoryIncome = `elem-${UUID()}`;
     this.elementIdFormDate = `elem-${UUID()}`;
@@ -99,8 +107,8 @@ class Main extends React.Component<ILocalProps, IState> {
     this.elementIdFormAmount = `elem-${UUID()}`;
     this.elementIdFormAmountTransfer = `elem-${UUID()}`;
     this.elementIdFormMemo = `elem-${UUID()}`;
-    this.elementIdFormIsContinueMode = `elem-${UUID()}`;
     this.elementIdFormSubmit = `elem-${UUID()}`;
+    this.viewRecordIdMin = this.props.doc.nextId.record;
   }
 
   public componentDidMount() {
@@ -157,8 +165,8 @@ class Main extends React.Component<ILocalProps, IState> {
         });
     };
     categorySetup(
-      this.props.outgoCategoryRootOrder,
-      this.props.outgoCategories,
+      this.props.doc.outgo.categoryRootOrder,
+      this.props.doc.outgo.categories,
       (categoryId) => {
         this.setState({
           formCategoryOutgo: categoryId,
@@ -167,8 +175,8 @@ class Main extends React.Component<ILocalProps, IState> {
       `#${this.elementIdFormCategoryOutgo}`,
     );
     categorySetup(
-      this.props.incomeCategoryRootOrder,
-      this.props.incomeCategories,
+      this.props.doc.income.categoryRootOrder,
+      this.props.doc.income.categories,
       (categoryId) => {
         this.setState({
           formCategoryIncome: categoryId,
@@ -194,9 +202,129 @@ class Main extends React.Component<ILocalProps, IState> {
     $(`#${this.elementIdRoot}`).on('hidden.bs.modal', () => {
       this.props.onClosed();
     });
+
+    // スピリッター登録
+    Split(
+      [`#${this.elementIdSectionLeftSide}`, `#${this.elementIdSectionRightSide}`],
+      {
+        sizes: [50, 50],
+        gutterSize: 12,
+        cursor: 'col-resize',
+        direction: 'horizontal',
+      },
+    );
   }
 
   public render() {
+
+    // 全体およびヘッダ関連
+    const rootClass = ClassNames(
+      'modal',
+      'fade',
+    );
+    const dialogRootClass = ClassNames(
+      'modal-dialog',
+      Styles.DialogRoot,
+    );
+    const dialogContentClass = ClassNames(
+      'modal-content',
+      Styles.DialogContent,
+    );
+    const dialogHeaderClass = ClassNames(
+      'modal-header',
+      Styles.DialogHeader,
+    );
+
+    // 左側関連
+    const records = new RecordCollection(this.props.doc).filter([
+      RecordFilters.createRecordIdRangeFilter({startId: this.viewRecordIdMin, endId: null}),
+    ]).keys([
+      {kind: RecordOrderKind.RecordId, reverse: false},
+    ]);
+    const recordElems: JSX.Element[] = [];
+    records.forEach((recordKey) => {
+      const selected = false;
+      let date = IYearMonthDayDateUtils.today();
+      let svgIconName = '';
+      let amount = 0;
+      let memo = '0:';
+      let additionalElems: JSX.Element[] = [];
+      switch (recordKey.kind) {
+        case DocTypes.RecordKind.Income: {
+          const record = this.props.doc.income.records[recordKey.id];
+          date = record.date;
+          svgIconName = 'income';
+          amount = record.amount;
+          memo = record.memo;
+          additionalElems = [
+            <MaterialIcon name={'class'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.income.categories[record.category].name}</span>,
+            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.account.accounts[record.account].name}</span>,
+          ];
+          break;
+        }
+
+        case DocTypes.RecordKind.Outgo: {
+          const record = this.props.doc.outgo.records[recordKey.id];
+          date = record.date;
+          svgIconName = 'outgo';
+          amount = record.amount;
+          memo = record.memo;
+          additionalElems = [
+            <MaterialIcon name={'class'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.outgo.categories[record.category].name}</span>,
+            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.account.accounts[record.account].name}</span>,
+          ];
+          break;
+        }
+
+        case DocTypes.RecordKind.Transfer: {
+          const record = this.props.doc.transfer.records[recordKey.id];
+          date = record.date;
+          svgIconName = 'transfer';
+          amount = record.amount;
+          memo = record.memo;
+          additionalElems = [
+            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
+            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.account.accounts[record.accountTo].name}</span>,
+          ];
+          break;
+      }
+      }
+      recordElems.push(
+        <div key={recordKey.id} className={Styles.ListCard} data-selected={selected}>
+          <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`}/>
+          <div className={Styles.ListCardBody}>
+            <div className={Styles.ListCardTop} data-selected={selected}>
+              <span>{IYearMonthDayDateUtils.toText(date)}</span>
+              {additionalElems}
+            </div>
+            <div className={Styles.ListCardBottom}>
+              <span className={Styles.ListCardMemo} data-selected={selected}>{memo}</span>
+            </div>
+          </div>
+          <div className={Styles.ListCardAmountHolder}>
+            <span className={Styles.ListCardAmount} data-selected={selected}>
+              ¥{PriceUtils.numToLocaleString(amount)}
+            </span>
+          </div>
+        </div>);
+    });
+    recordElems.push(
+      <div className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
+        <div className={Styles.ListCardAddRecord}>新規レコードを追加</div>
+      </div>);
+
+    const sectionLeftSide =
+      <section id={this.elementIdSectionLeftSide} className={Styles.SectionLeftSideRoot}>
+        {recordElems}
+      </section>;
+
+      // 右側関連
     const formTabsRootClass = ClassNames(
       Styles.FormTabsRoot,
     );
@@ -271,210 +399,212 @@ class Main extends React.Component<ILocalProps, IState> {
       <span className={Styles.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
     const addRecordNotice = <span className={Styles.FormNoticeMsg}>追加しました</span>;
 
+    const sectionRightSide =
+      <div id={this.elementIdSectionRightSide} className={Styles.SectionRightSideRoot}>
+        <div className={formTabsRootClass}>
+          <div className={formTabsBaseClass}>
+            <div className={formTabOutgoClass}>
+              <button className={Styles.FormTabButton}
+                disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
+                onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
+                >
+                <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
+                <span className={Styles.FormTabLabel}>支出</span>
+              </button>
+            </div>
+            <div className={formTabIncomeClass}>
+              <button className={Styles.FormTabButton}
+                disabled={this.state.formKind === DocTypes.RecordKind.Income}
+                onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
+                >
+                <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
+                <span className={Styles.FormTabLabel}>収入</span>
+              </button>
+            </div>
+            <div className={formTabTransferClass}>
+              <button className={Styles.FormTabButton}
+                disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
+                onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Transfer); }}
+                >
+                <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
+                <span className={Styles.FormTabLabel}>振替</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className={formInputRootClass}>
+          <table>
+            <tbody>
+              <tr>
+                <th scope="row">日付</th>
+                <td>
+                  <input
+                    type="text"
+                    id={this.elementIdFormDate}
+                    value={this.state.formDate}
+                    readOnly={true}
+                    onClick={() => {this.onFormDateClicked(); }}
+                    onKeyDown={(e) => {this.onFormDateKeyDown(e); }}
+                    />
+                  {addRecordNotice}
+                </td>
+              </tr>
+              <tr className={formInputRowCategoryOutgoClass}>
+                <th scope="row">カテゴリ</th>
+                <td>
+                  <input
+                    type="text"
+                    id={this.elementIdFormCategoryOutgo}
+                    className={formInputCategoryClass}
+                    readOnly={true}
+                    value={this.categoryOutgoDisplayText()}
+                    onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
+                    onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
+                    />
+                </td>
+              </tr>
+              <tr className={formInputRowCategoryIncomeClass}>
+                <th scope="row">カテゴリ</th>
+                <td>
+                  <input
+                    type="text"
+                    id={this.elementIdFormCategoryIncome}
+                    className={formInputCategoryClass}
+                    readOnly={true}
+                    value={this.categoryIncomeDisplayText()}
+                    />
+                </td>
+              </tr>
+              <tr className={formInputRowAcountClass}>
+                <th scope="row">口座</th>
+                <td>
+                  <select value={this.state.formAccount.toString()}
+                    className={formInputAccountSelectClass}
+                    id={this.elementIdFormAccount}
+                    onChange={(event) => {this.onFormAccountChanged(event.target); }}
+                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                    >
+                    {this.props.doc.account.order.map((accountId) => {
+                      const account = this.props.doc.account.accounts[accountId];
+                      return (
+                        <option key={account.id} value={account.id}>{account.name}</option>
+                      );
+                    })}
+                  </select>
+                </td>
+              </tr>
+              <tr className={formInputRowAcountFromToClass}>
+                <th scope="row">送金元</th>
+                <td>
+                  <select value={this.state.formAccountFrom}
+                    className={formInputAccountSelectClass}
+                    id={this.elementIdFormAccountFrom}
+                    onChange={(event) => {this.onFormAccountFromChanged(event.target); }}
+                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                    >
+                    <option value={DocTypes.INVALID_ID}>（未選択）</option>
+                    {this.props.doc.account.order.map((accountId) => {
+                      const account = this.props.doc.account.accounts[accountId];
+                      return (
+                        <option key={account.id} value={account.id}>{account.name}</option>
+                      );
+                    })}
+                  </select>
+                  {accountFromErrorMsg}
+                </td>
+              </tr>
+              <tr className={formInputRowAcountFromToClass}>
+                <th scope="row">送金先</th>
+                <td>
+                  <select value={this.state.formAccountTo}
+                    className={formInputAccountSelectClass}
+                    id={this.elementIdFormAccountTo}
+                    onChange={(event) => {this.onFormAccountToChanged(event.target); }}
+                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                    >
+                    <option value={DocTypes.INVALID_ID}>（未選択）</option>
+                    {this.props.doc.account.order.map((accountId) => {
+                      const account = this.props.doc.account.accounts[accountId];
+                      return (
+                        <option key={account.id} value={account.id}>{account.name}</option>
+                      );
+                    })}
+                  </select>
+                  {accountToErrorMsg}
+                </td>
+              </tr>
+              <tr className={formInputRowAmountClass}>
+                <th scope="row">金額</th>
+                <td>
+                  <input type="text"
+                    id={this.elementIdFormAmount}
+                    value={this.state.formAmount.toString()}
+                    onChange={(event) => {this.onFormAmountChanged(event.target); }}
+                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                    onFocus={(event) => {event.target.select(); }}
+                    onClick={(event) => {event.currentTarget.select(); return false; }}
+                    />
+                  {amountErrorMsg}
+                </td>
+              </tr>
+              <tr className={formInputRowAmountTransferClass}>
+                <th scope="row">送金額</th>
+                <td>
+                  <input type="text"
+                    id={this.elementIdFormAmountTransfer}
+                    value={this.state.formAmountTransfer.toString()}
+                    onChange={(event) => {this.onFormAmountTransferChanged(event.target); }}
+                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                    onFocus={(event) => {event.target.select(); }}
+                    onClick={(event) => {event.currentTarget.select(); return false; }}
+                    />
+                  {amountTransferErrorMsg}
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">メモ</th>
+                <td>
+                  <input className={Styles.FormInputMemo} type="text"
+                    id={this.elementIdFormMemo}
+                    value={this.state.formMemo}
+                    onChange={(event) => {this.onFormMemoChanged(event.target); }}
+                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                    onFocus={(event) => {event.target.select(); }}
+                    onClick={(event) => {event.currentTarget.select(); return false; }}
+                    />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className={formFooterRootClass}>
+          <button type="button"
+            className={formInputSubmitBtnClass}
+            id={this.elementIdFormSubmit}
+            data-toggle="tooltip"
+            onClick={() => {this.onAddButtonClicked(); }}
+            >追加</button>
+        </div>
+      </div>;
+
     return (
-      <div className="modal fade" id={this.elementIdRoot} tabIndex={-1}
+      <div className={rootClass} id={this.elementIdRoot} tabIndex={-1}
         role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-keyboard="false"
         onKeyDown={(e) => {this.onRootKeyDown(e); }}
         >
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">レコードの追加</h5>
+        <div className={dialogRootClass} role="document">
+          <div className={dialogContentClass}>
+            <div className={dialogHeaderClass}>
+              <h5 className="modal-title" id="exampleModalLabel">レコードの追加と編集</h5>
               <button type="button" id={this.elementIdCloseBtn}
                 className="close" data-dismiss="modal" aria-label="Close"
                 >
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div>
-              <div className={formTabsRootClass}>
-                <div className={formTabsBaseClass}>
-                  <div className={formTabOutgoClass}>
-                    <button className={Styles.FormTabButton}
-                      disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
-                      onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
-                      >
-                      <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
-                      <span className={Styles.FormTabLabel}>支出</span>
-                    </button>
-                  </div>
-                  <div className={formTabIncomeClass}>
-                    <button className={Styles.FormTabButton}
-                      disabled={this.state.formKind === DocTypes.RecordKind.Income}
-                      onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
-                      >
-                      <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
-                      <span className={Styles.FormTabLabel}>収入</span>
-                    </button>
-                  </div>
-                  <div className={formTabTransferClass}>
-                    <button className={Styles.FormTabButton}
-                      disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
-                      onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Transfer); }}
-                      >
-                      <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
-                      <span className={Styles.FormTabLabel}>振替</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className={formInputRootClass}>
-                <table>
-                  <tbody>
-                    <tr>
-                      <th scope="row">日付</th>
-                      <td>
-                        <input
-                          type="text"
-                          id={this.elementIdFormDate}
-                          value={this.state.formDate}
-                          readOnly={true}
-                          onClick={() => {this.onFormDateClicked(); }}
-                          onKeyDown={(e) => {this.onFormDateKeyDown(e); }}
-                          />
-                        {addRecordNotice}
-                      </td>
-                    </tr>
-                    <tr className={formInputRowCategoryOutgoClass}>
-                      <th scope="row">カテゴリ</th>
-                      <td>
-                        <input
-                          type="text"
-                          id={this.elementIdFormCategoryOutgo}
-                          className={formInputCategoryClass}
-                          readOnly={true}
-                          value={this.categoryOutgoDisplayText()}
-                          onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
-                          onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
-                          />
-                      </td>
-                    </tr>
-                    <tr className={formInputRowCategoryIncomeClass}>
-                      <th scope="row">カテゴリ</th>
-                      <td>
-                        <input
-                          type="text"
-                          id={this.elementIdFormCategoryIncome}
-                          className={formInputCategoryClass}
-                          readOnly={true}
-                          value={this.categoryIncomeDisplayText()}
-                          />
-                      </td>
-                    </tr>
-                    <tr className={formInputRowAcountClass}>
-                      <th scope="row">口座</th>
-                      <td>
-                        <select value={this.state.formAccount.toString()}
-                          className={formInputAccountSelectClass}
-                          id={this.elementIdFormAccount}
-                          onChange={(event) => {this.onFormAccountChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                          >
-                          {this.props.accounts.map((account) => {
-                            return (
-                              <option key={account.id} value={account.id}>{account.name}</option>
-                            );
-                          })}
-                        </select>
-                      </td>
-                    </tr>
-                    <tr className={formInputRowAcountFromToClass}>
-                      <th scope="row">送金元</th>
-                      <td>
-                        <select value={this.state.formAccountFrom}
-                          className={formInputAccountSelectClass}
-                          id={this.elementIdFormAccountFrom}
-                          onChange={(event) => {this.onFormAccountFromChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                          >
-                          <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                          {this.props.accounts.map((account) => {
-                            return (
-                              <option key={account.id} value={account.id}>{account.name}</option>
-                            );
-                          })}
-                        </select>
-                        {accountFromErrorMsg}
-                      </td>
-                    </tr>
-                    <tr className={formInputRowAcountFromToClass}>
-                      <th scope="row">送金先</th>
-                      <td>
-                        <select value={this.state.formAccountTo}
-                          className={formInputAccountSelectClass}
-                          id={this.elementIdFormAccountTo}
-                          onChange={(event) => {this.onFormAccountToChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                          >
-                          <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                          {this.props.accounts.map((account) => {
-                            return (
-                              <option key={account.id} value={account.id}>{account.name}</option>
-                            );
-                          })}
-                        </select>
-                        {accountToErrorMsg}
-                      </td>
-                    </tr>
-                    <tr className={formInputRowAmountClass}>
-                      <th scope="row">金額</th>
-                      <td>
-                        <input type="text"
-                          id={this.elementIdFormAmount}
-                          value={this.state.formAmount.toString()}
-                          onChange={(event) => {this.onFormAmountChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                          onFocus={(event) => {event.target.select(); }}
-                          onClick={(event) => {event.currentTarget.select(); return false; }}
-                          />
-                        {amountErrorMsg}
-                      </td>
-                    </tr>
-                    <tr className={formInputRowAmountTransferClass}>
-                      <th scope="row">送金額</th>
-                      <td>
-                        <input type="text"
-                          id={this.elementIdFormAmountTransfer}
-                          value={this.state.formAmountTransfer.toString()}
-                          onChange={(event) => {this.onFormAmountTransferChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                          onFocus={(event) => {event.target.select(); }}
-                          onClick={(event) => {event.currentTarget.select(); return false; }}
-                          />
-                        {amountTransferErrorMsg}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">メモ</th>
-                      <td>
-                        <input className={Styles.FormInputMemo} type="text"
-                          id={this.elementIdFormMemo}
-                          value={this.state.formMemo}
-                          onChange={(event) => {this.onFormMemoChanged(event.target); }}
-                          onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                          onFocus={(event) => {event.target.select(); }}
-                          onClick={(event) => {event.currentTarget.select(); return false; }}
-                          />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className={formFooterRootClass}>
-              <label>
-                <input type="checkbox"
-                  id={this.elementIdFormIsContinueMode}
-                  checked={this.props.dialogRecordAdd.isContinueMode}
-                  onChange={(event) => {this.onIsContinueModeChanged(event.target); }}
-                  />続けて入力
-              </label>
-              <button type="button"
-                className={formInputSubmitBtnClass}
-                id={this.elementIdFormSubmit}
-                data-toggle="tooltip"
-                onClick={() => {this.onAddButtonClicked(); }}
-                >追加</button>
+            <div className={Styles.SectionRoot}>
+              {sectionLeftSide}
+              {sectionRightSide}
             </div>
           </div>
         </div>
@@ -495,13 +625,13 @@ class Main extends React.Component<ILocalProps, IState> {
   /// カテゴリインプットに表示するテキストを返す。
   private categoryOutgoDisplayText(): string {
     return this.categoryDisplayText(
-      this.props.outgoCategories,
+      this.props.doc.outgo.categories,
       this.state.formCategoryOutgo,
     );
   }
   private categoryIncomeDisplayText(): string {
     return this.categoryDisplayText(
-      this.props.incomeCategories,
+      this.props.doc.income.categories,
       this.state.formCategoryIncome,
     );
   }
@@ -633,11 +763,6 @@ class Main extends React.Component<ILocalProps, IState> {
     this.setState({formMemo: sender.value});
   }
 
-  /// 続けて入力モードフラグ変更時の処理。
-  private onIsContinueModeChanged(sender: HTMLInputElement) {
-    Store.dispatch(UiActions.dialogAddRecordSetContinueMode(sender.checked));
-  }
-
   /// 追加ボタンクリック時処理。
   private onAddButtonClicked() {
     // エラーチェック
@@ -707,26 +832,18 @@ class Main extends React.Component<ILocalProps, IState> {
           this.state.formMemo,
           this.state.formAccountFrom,
           this.state.formAccountTo,
-          this.state.formAmount != null ? this.state.formAmount : 0,
+          this.state.formAmountTransfer != null ? this.state.formAmountTransfer : 0,
           ));
         break;
     }
 
-    // 続けて入力モード用の処理
-    if (this.props.dialogRecordAdd.isContinueMode) {
-      this.resetForNewInput();
-      $(`#${this.elementIdFormDate}`).focus();
-      $(`.${Styles.FormNoticeMsg}`)
-        .animate({opacity: 1.0}, 0)
-        .delay(1000)
-        .animate({opacity: 0.0}, 750);
-
-      return;
-    }
-
-    // ダイアログを閉じる
-    // MDB が TypeScript 非対応なので文字列で実行
-    new Function(`$('#${this.elementIdRoot}').modal('hide')`)();
+    // 続けて入力用の処理
+    this.resetForNewInput();
+    $(`#${this.elementIdFormDate}`).focus();
+    $(`.${Styles.FormNoticeMsg}`)
+      .animate({opacity: 1.0}, 0)
+      .delay(1000)
+      .animate({opacity: 0.0}, 750);
   }
 
   /// 共通キーダウンイベント処理。
@@ -746,11 +863,7 @@ const mapStateToProps = (state: IStoreState, props: IProps) => {
   const result: ILocalProps = Object.assign(
     props,
     {
-      accounts: state.doc.account.order.map((id) => state.doc.account.accounts[id]),
-      incomeCategoryRootOrder: state.doc.income.categoryRootOrder,
-      incomeCategories: state.doc.income.categories,
-      outgoCategoryRootOrder: state.doc.outgo.categoryRootOrder,
-      outgoCategories: state.doc.outgo.categories,
+      doc: state.doc,
       dialogRecordAdd: state.ui.dialogAddRecord,
     },
   );
