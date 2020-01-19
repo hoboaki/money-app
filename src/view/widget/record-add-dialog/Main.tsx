@@ -70,7 +70,6 @@ class Main extends React.Component<ILocalProps, IState> {
   private elementIdFormAmount: string;
   private elementIdFormAmountTransfer: string;
   private elementIdFormMemo: string;
-  private elementIdFormIsContinueMode: string;
   private elementIdFormSubmit: string;
 
   constructor(props: ILocalProps) {
@@ -106,7 +105,6 @@ class Main extends React.Component<ILocalProps, IState> {
     this.elementIdFormAmount = `elem-${UUID()}`;
     this.elementIdFormAmountTransfer = `elem-${UUID()}`;
     this.elementIdFormMemo = `elem-${UUID()}`;
-    this.elementIdFormIsContinueMode = `elem-${UUID()}`;
     this.elementIdFormSubmit = `elem-${UUID()}`;
   }
 
@@ -523,13 +521,6 @@ class Main extends React.Component<ILocalProps, IState> {
           </table>
         </div>
         <div className={formFooterRootClass}>
-          <label>
-            <input type="checkbox"
-              id={this.elementIdFormIsContinueMode}
-              checked={this.props.dialogRecordAdd.isContinueMode}
-              onChange={(event) => {this.onIsContinueModeChanged(event.target); }}
-              />続けて入力
-          </label>
           <button type="button"
             className={formInputSubmitBtnClass}
             id={this.elementIdFormSubmit}
@@ -715,11 +706,6 @@ class Main extends React.Component<ILocalProps, IState> {
     this.setState({formMemo: sender.value});
   }
 
-  /// 続けて入力モードフラグ変更時の処理。
-  private onIsContinueModeChanged(sender: HTMLInputElement) {
-    Store.dispatch(UiActions.dialogAddRecordSetContinueMode(sender.checked));
-  }
-
   /// 追加ボタンクリック時処理。
   private onAddButtonClicked() {
     // エラーチェック
@@ -794,21 +780,13 @@ class Main extends React.Component<ILocalProps, IState> {
         break;
     }
 
-    // 続けて入力モード用の処理
-    if (this.props.dialogRecordAdd.isContinueMode) {
-      this.resetForNewInput();
-      $(`#${this.elementIdFormDate}`).focus();
-      $(`.${Styles.FormNoticeMsg}`)
-        .animate({opacity: 1.0}, 0)
-        .delay(1000)
-        .animate({opacity: 0.0}, 750);
-
-      return;
-    }
-
-    // ダイアログを閉じる
-    // MDB が TypeScript 非対応なので文字列で実行
-    new Function(`$('#${this.elementIdRoot}').modal('hide')`)();
+    // 続けて入力用の処理
+    this.resetForNewInput();
+    $(`#${this.elementIdFormDate}`).focus();
+    $(`.${Styles.FormNoticeMsg}`)
+      .animate({opacity: 1.0}, 0)
+      .delay(1000)
+      .animate({opacity: 0.0}, 750);
   }
 
   /// 共通キーダウンイベント処理。
