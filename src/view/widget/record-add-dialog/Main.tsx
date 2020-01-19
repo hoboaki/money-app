@@ -25,10 +25,13 @@ import * as Styles from './Main.css';
 interface IProps {
   /** 入力フォームの初期日付。 */
   formDefaultDate: IYearMonthDayDate;
+
+  /** 閉じる際のコールバック。 */
   onClosed: (() => void);
 }
 
 interface ILocalProps extends IProps {
+  doc: DocStates.IState;
   accounts: DocStates.IAccount[];
   incomeCategoryRootOrder: number[];
   incomeCategories: { [key: number]: DocStates.ICategory };
@@ -71,6 +74,7 @@ class Main extends React.Component<ILocalProps, IState> {
   private elementIdFormAmountTransfer: string;
   private elementIdFormMemo: string;
   private elementIdFormSubmit: string;
+  private viewRecordIdMin: number;
 
   constructor(props: ILocalProps) {
     super(props);
@@ -106,6 +110,7 @@ class Main extends React.Component<ILocalProps, IState> {
     this.elementIdFormAmountTransfer = `elem-${UUID()}`;
     this.elementIdFormMemo = `elem-${UUID()}`;
     this.elementIdFormSubmit = `elem-${UUID()}`;
+    this.viewRecordIdMin = this.props.doc.nextId.record;
   }
 
   public componentDidMount() {
@@ -337,7 +342,7 @@ class Main extends React.Component<ILocalProps, IState> {
     });
     recordElems.push(
       <div className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
-        <div className={Styles.ListCardAddRecord}>新規レコードを追加</div>
+        <div className={Styles.ListCardAddRecord}>新規レコードを追加 {this.viewRecordIdMin}</div>
       </div>);
 
     const sectionLeftSide =
@@ -806,6 +811,7 @@ const mapStateToProps = (state: IStoreState, props: IProps) => {
   const result: ILocalProps = Object.assign(
     props,
     {
+      doc: state.doc,
       accounts: state.doc.account.order.map((id) => state.doc.account.accounts[id]),
       incomeCategoryRootOrder: state.doc.income.categoryRootOrder,
       incomeCategories: state.doc.income.categories,
