@@ -296,7 +296,7 @@ class Main extends React.Component<ILocalProps, IState> {
       }
       }
       recordElems.push(
-        <div className={Styles.ListCard} data-selected={selected}>
+        <div key={recordKey.id} className={Styles.ListCard} data-selected={selected}>
           <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`}/>
           <div className={Styles.ListCardBody}>
             <div className={Styles.ListCardTop} data-selected={selected}>
