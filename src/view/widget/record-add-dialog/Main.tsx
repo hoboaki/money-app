@@ -32,11 +32,6 @@ interface IProps {
 
 interface ILocalProps extends IProps {
   doc: DocStates.IState;
-  accounts: DocStates.IAccount[];
-  incomeCategoryRootOrder: number[];
-  incomeCategories: { [key: number]: DocStates.ICategory };
-  outgoCategoryRootOrder: number[];
-  outgoCategories: { [key: number]: DocStates.ICategory };
   dialogRecordAdd: UiStates.IDialogAddRecord;
 }
 
@@ -81,9 +76,9 @@ class Main extends React.Component<ILocalProps, IState> {
     this.state = {
       formKind: DocTypes.RecordKind.Outgo,
       formDate: IYearMonthDayDateUtils.toText(props.formDefaultDate),
-      formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.outgoCategories).id,
-      formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.incomeCategories).id,
-      formAccount: Number(Object.keys(props.accounts)[0]),
+      formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.doc.outgo.categories).id,
+      formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.doc.income.categories).id,
+      formAccount: this.props.doc.account.order[0],
       formAccountFrom: DocTypes.INVALID_ID,
       formAccountTo: DocTypes.INVALID_ID,
       formAmount: 0,
@@ -167,8 +162,8 @@ class Main extends React.Component<ILocalProps, IState> {
         });
     };
     categorySetup(
-      this.props.outgoCategoryRootOrder,
-      this.props.outgoCategories,
+      this.props.doc.outgo.categoryRootOrder,
+      this.props.doc.outgo.categories,
       (categoryId) => {
         this.setState({
           formCategoryOutgo: categoryId,
@@ -177,8 +172,8 @@ class Main extends React.Component<ILocalProps, IState> {
       `#${this.elementIdFormCategoryOutgo}`,
     );
     categorySetup(
-      this.props.incomeCategoryRootOrder,
-      this.props.incomeCategories,
+      this.props.doc.income.categoryRootOrder,
+      this.props.doc.income.categories,
       (categoryId) => {
         this.setState({
           formCategoryIncome: categoryId,
@@ -435,7 +430,8 @@ class Main extends React.Component<ILocalProps, IState> {
                     onChange={(event) => {this.onFormAccountChanged(event.target); }}
                     onKeyDown={(event) => {this.onKeyDownCommon(event); }}
                     >
-                    {this.props.accounts.map((account) => {
+                    {this.props.doc.account.order.map((accountId) => {
+                      const account = this.props.doc.account.accounts[accountId];
                       return (
                         <option key={account.id} value={account.id}>{account.name}</option>
                       );
@@ -453,7 +449,8 @@ class Main extends React.Component<ILocalProps, IState> {
                     onKeyDown={(event) => {this.onKeyDownCommon(event); }}
                     >
                     <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                    {this.props.accounts.map((account) => {
+                    {this.props.doc.account.order.map((accountId) => {
+                      const account = this.props.doc.account.accounts[accountId];
                       return (
                         <option key={account.id} value={account.id}>{account.name}</option>
                       );
@@ -472,7 +469,8 @@ class Main extends React.Component<ILocalProps, IState> {
                     onKeyDown={(event) => {this.onKeyDownCommon(event); }}
                     >
                     <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                    {this.props.accounts.map((account) => {
+                    {this.props.doc.account.order.map((accountId) => {
+                      const account = this.props.doc.account.accounts[accountId];
                       return (
                         <option key={account.id} value={account.id}>{account.name}</option>
                       );
@@ -573,13 +571,13 @@ class Main extends React.Component<ILocalProps, IState> {
   /// カテゴリインプットに表示するテキストを返す。
   private categoryOutgoDisplayText(): string {
     return this.categoryDisplayText(
-      this.props.outgoCategories,
+      this.props.doc.outgo.categories,
       this.state.formCategoryOutgo,
     );
   }
   private categoryIncomeDisplayText(): string {
     return this.categoryDisplayText(
-      this.props.incomeCategories,
+      this.props.doc.income.categories,
       this.state.formCategoryIncome,
     );
   }
@@ -812,11 +810,6 @@ const mapStateToProps = (state: IStoreState, props: IProps) => {
     props,
     {
       doc: state.doc,
-      accounts: state.doc.account.order.map((id) => state.doc.account.accounts[id]),
-      incomeCategoryRootOrder: state.doc.income.categoryRootOrder,
-      incomeCategories: state.doc.income.categories,
-      outgoCategoryRootOrder: state.doc.outgo.categoryRootOrder,
-      outgoCategories: state.doc.outgo.categories,
       dialogRecordAdd: state.ui.dialogAddRecord,
     },
   );
