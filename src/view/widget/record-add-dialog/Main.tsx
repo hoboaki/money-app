@@ -288,9 +288,9 @@ class Main extends React.Component<ILocalProps, IState> {
           memo = record.memo;
           additionalElems = [
             <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
-            <span>{this.props.doc.account.accounts[record.accountFrom]}</span>,
+            <span>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
             <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
-            <span>{this.props.doc.account.accounts[record.accountTo]}</span>,
+            <span>{this.props.doc.account.accounts[record.accountTo].name}</span>,
           ];
           break;
       }
