@@ -15,6 +15,9 @@ import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
+import RecordCollection from 'src/util/doc/RecordCollection';
+import * as RecordFilters from 'src/util/doc/RecordFilters';
+import RecordOrderKind from 'src/util/doc/RecordOrderKind';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
@@ -213,6 +216,8 @@ class Main extends React.Component<ILocalProps, IState> {
   }
 
   public render() {
+
+    // 全体およびヘッダ関連
     const rootClass = ClassNames(
       'modal',
       'fade',
@@ -230,6 +235,96 @@ class Main extends React.Component<ILocalProps, IState> {
       Styles.DialogHeader,
     );
 
+    // 左側関連
+    const records = new RecordCollection(this.props.doc).filter([
+      RecordFilters.createRecordIdRangeFilter({startId: this.viewRecordIdMin, endId: null}),
+    ]).keys([
+      {kind: RecordOrderKind.RecordId, reverse: false},
+    ]);
+    const recordElems: JSX.Element[] = [];
+    records.forEach((recordKey) => {
+      const selected = false;
+      let date = IYearMonthDayDateUtils.today();
+      let svgIconName = '';
+      let amount = 0;
+      let memo = '0:';
+      let additionalElems: JSX.Element[] = [];
+      switch (recordKey.kind) {
+        case DocTypes.RecordKind.Income: {
+          const record = this.props.doc.income.records[recordKey.id];
+          date = record.date;
+          svgIconName = 'income';
+          amount = record.amount;
+          memo = record.memo;
+          additionalElems = [
+            <MaterialIcon name={'class'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.income.categories[record.category].name}</span>,
+            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.account.accounts[record.account].name}</span>,
+          ];
+          break;
+        }
+
+        case DocTypes.RecordKind.Outgo: {
+          const record = this.props.doc.outgo.records[recordKey.id];
+          date = record.date;
+          svgIconName = 'outgo';
+          amount = record.amount;
+          memo = record.memo;
+          additionalElems = [
+            <MaterialIcon name={'class'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.outgo.categories[record.category].name}</span>,
+            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.account.accounts[record.account].name}</span>,
+          ];
+          break;
+        }
+
+        case DocTypes.RecordKind.Transfer: {
+          const record = this.props.doc.transfer.records[recordKey.id];
+          date = record.date;
+          svgIconName = 'transfer';
+          amount = record.amount;
+          memo = record.memo;
+          additionalElems = [
+            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.account.accounts[record.accountFrom]}</span>,
+            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <span>{this.props.doc.account.accounts[record.accountTo]}</span>,
+          ];
+          break;
+      }
+      }
+      recordElems.push(
+        <div className={Styles.ListCard} data-selected={selected}>
+          <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`}/>
+          <div className={Styles.ListCardBody}>
+            <div className={Styles.ListCardTop} data-selected={selected}>
+              <span>{IYearMonthDayDateUtils.toText(date)}</span>
+              {additionalElems}
+            </div>
+            <div className={Styles.ListCardBottom}>
+              <span className={Styles.ListCardMemo} data-selected={selected}>{memo}</span>
+            </div>
+          </div>
+          <div className={Styles.ListCardAmountHolder}>
+            <span className={Styles.ListCardAmount} data-selected={selected}>
+              ¥{PriceUtils.numToLocaleString(amount)}
+            </span>
+          </div>
+        </div>);
+    });
+    recordElems.push(
+      <div className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
+        <div className={Styles.ListCardAddRecord}>新規レコードを追加</div>
+      </div>);
+
+    const sectionLeftSide =
+      <section id={this.elementIdSectionLeftSide} className={Styles.SectionLeftSideRoot}>
+        {recordElems}
+      </section>;
+
+      // 右側関連
     const formTabsRootClass = ClassNames(
       Styles.FormTabsRoot,
     );
@@ -303,47 +398,6 @@ class Main extends React.Component<ILocalProps, IState> {
     const amountTransferErrorMsg = this.state.amountTransferErrorMsg == null ? null :
       <span className={Styles.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
     const addRecordNotice = <span className={Styles.FormNoticeMsg}>追加しました</span>;
-
-    const sampleRecords = [
-      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `　`, amount: 500, selected: false},
-      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `ペンギンカフェのディナー代`, amount: 3700, selected: true},
-      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `　`, amount: 6900, selected: false},
-      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `　`, amount: 10100, selected: false},
-      {date: `2019/12/31`, category: `食費`, account: `アデリー銀行`, memo: `ペンギンカフェのディナー代`, amount: 13300, selected: false},
-    ];
-    const recordElems: JSX.Element[] = [];
-    sampleRecords.forEach((record) => {
-      recordElems.push(
-        <div className={Styles.ListCard} data-selected={record.selected}>
-          <img className={Styles.ListCardSvgIcon} src="./image/icon-ex/outgo-outline.svg"/>
-          <div className={Styles.ListCardBody}>
-            <div className={Styles.ListCardTop} data-selected={record.selected}>
-              <span>{record.date}</span>
-              <MaterialIcon name={'class'} iconSize={18} darkMode={true} />
-              <span>{record.category}</span>
-              <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />
-              <span>{record.account}</span>
-            </div>
-            <div className={Styles.ListCardBottom}>
-              <span className={Styles.ListCardMemo} data-selected={record.selected}>{record.memo}</span>
-            </div>
-          </div>
-          <div className={Styles.ListCardAmountHolder}>
-            <span className={Styles.ListCardAmount} data-selected={record.selected}>
-              ¥{PriceUtils.numToLocaleString(record.amount)}
-            </span>
-          </div>
-        </div>);
-    });
-    recordElems.push(
-      <div className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
-        <div className={Styles.ListCardAddRecord}>新規レコードを追加 {this.viewRecordIdMin}</div>
-      </div>);
-
-    const sectionLeftSide =
-      <section id={this.elementIdSectionLeftSide} className={Styles.SectionLeftSideRoot}>
-        {recordElems}
-      </section>;
 
     const sectionRightSide =
       <div id={this.elementIdSectionRightSide} className={Styles.SectionRightSideRoot}>
