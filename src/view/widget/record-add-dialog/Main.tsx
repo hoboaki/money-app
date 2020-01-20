@@ -79,7 +79,7 @@ class Main extends React.Component<ILocalProps, IState> {
     super(props);
     this.state = {
       formKind: DocTypes.RecordKind.Outgo,
-      formDate: IYearMonthDayDateUtils.toText(props.formDefaultDate),
+      formDate: IYearMonthDayDateUtils.toDisplayFormatText(props.formDefaultDate),
       formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.doc.outgo.categories).id,
       formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.doc.income.categories).id,
       formAccount: this.props.doc.account.order[0],
@@ -116,7 +116,7 @@ class Main extends React.Component<ILocalProps, IState> {
   public componentDidMount() {
     // DatePicker セットアップ
     $(`#${this.elementIdFormDate}`).datepicker({
-      format: 'yyyy-mm-dd',
+      format: 'yyyy/mm/dd',
       todayBtn: 'linked',
       language: 'ja',
       autoclose: true,
@@ -303,7 +303,7 @@ class Main extends React.Component<ILocalProps, IState> {
           <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`}/>
           <div className={Styles.ListCardBody}>
             <div className={Styles.ListCardTop} data-selected={selected}>
-              <span>{IYearMonthDayDateUtils.toText(date)}</span>
+              <span>{IYearMonthDayDateUtils.toDisplayFormatText(date)}</span>
               {additionalElems}
             </div>
             <div className={Styles.ListCardBottom}>

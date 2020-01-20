@@ -130,7 +130,17 @@ export const nextDate = (date: IYearMonthDayDate, unit: Unit): IYearMonthDayDate
 };
 
 /** yyyy-mm-dd 形式に変換。 */
-export const toText = (date: IYearMonthDayDate): string => {
+export const toDataFormatText = (date: IYearMonthDayDate): string => {
+  return toText(date, '-');
+};
+
+/** yyyy/mm/dd 形式に変換。 */
+export const toDisplayFormatText = (date: IYearMonthDayDate): string => {
+  return toText(date, '/');
+};
+
+/** yyyysmmsdd 形式に変換。(s: separator） */
+export const toText = (date: IYearMonthDayDate, separator: string): string => {
   const toDoubleDigits = (num: number) => {
     let text = String(num);
     if (text.length === 1) {
@@ -141,7 +151,7 @@ export const toText = (date: IYearMonthDayDate): string => {
   const year = date.year;
   const month = toDoubleDigits(date.month);
   const day = toDoubleDigits(date.day);
-  return `${year}-${month}-${day}`;
+  return `${year}${separator}${month}${separator}${day}`;
 };
 
 /** 日付が lhs < rhs か。 */

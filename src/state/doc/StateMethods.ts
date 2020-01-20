@@ -193,7 +193,7 @@ export const toData = (state: States.IState) => {
       const data = new DataRecordIncome();
       data.createDate = src.createDate.toISOString();
       data.updateDate = src.updateDate.toISOString();
-      data.date = IYearMonthDayDateUtils.toText(src.date);
+      data.date = IYearMonthDayDateUtils.toDataFormatText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
       data.category = categoryIdDict[src.category];
@@ -244,7 +244,7 @@ export const toData = (state: States.IState) => {
       const data = new DataRecordOutgo();
       data.createDate = src.createDate.toISOString();
       data.updateDate = src.updateDate.toISOString();
-      data.date = IYearMonthDayDateUtils.toText(src.date);
+      data.date = IYearMonthDayDateUtils.toDataFormatText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
       data.category = categoryIdDict[src.category];
@@ -264,7 +264,7 @@ export const toData = (state: States.IState) => {
       const data = new DataRecordTransfer();
       data.createDate = src.createDate.toISOString();
       data.updateDate = src.updateDate.toISOString();
-      data.date = IYearMonthDayDateUtils.toText(src.date);
+      data.date = IYearMonthDayDateUtils.toDataFormatText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
       data.accountFrom = accountIdDict[src.accountFrom];
