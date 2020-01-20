@@ -291,6 +291,7 @@ class Main extends React.Component<ILocalProps, IState> {
           additionalElems = [
             <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
+            <span><MaterialIcon name={'arrow_forward'} iconSize={18} darkMode={true} /></span>,
             <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.account.accounts[record.accountTo].name}</span>,
           ];
