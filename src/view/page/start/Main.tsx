@@ -31,7 +31,7 @@ class Main extends React.Component<IProps, any> {
     openBtnInfos.push({
       btnId: Main.BtnIdOpenLatest,
       title: '最近開いたファイルを開く（準備中）',
-      iconName: 'account_balance',
+      iconName: 'payment',
       isEnabled: false,
     });
     openBtnInfos.push({

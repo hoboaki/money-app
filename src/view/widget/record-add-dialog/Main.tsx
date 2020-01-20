@@ -61,6 +61,7 @@ class Main extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdCloseBtn: string;
   private elementIdSectionLeftSide: string;
+  private elementIdAddRecord: string;
   private elementIdSectionRightSide: string;
   private elementIdFormCategoryOutgo: string;
   private elementIdFormCategoryIncome: string;
@@ -78,7 +79,7 @@ class Main extends React.Component<ILocalProps, IState> {
     super(props);
     this.state = {
       formKind: DocTypes.RecordKind.Outgo,
-      formDate: IYearMonthDayDateUtils.toText(props.formDefaultDate),
+      formDate: IYearMonthDayDateUtils.toDisplayFormatText(props.formDefaultDate),
       formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.doc.outgo.categories).id,
       formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.doc.income.categories).id,
       formAccount: this.props.doc.account.order[0],
@@ -108,13 +109,14 @@ class Main extends React.Component<ILocalProps, IState> {
     this.elementIdFormAmountTransfer = `elem-${UUID()}`;
     this.elementIdFormMemo = `elem-${UUID()}`;
     this.elementIdFormSubmit = `elem-${UUID()}`;
+    this.elementIdAddRecord = `elem-${UUID()}`;
     this.viewRecordIdMin = this.props.doc.nextId.record;
   }
 
   public componentDidMount() {
     // DatePicker セットアップ
     $(`#${this.elementIdFormDate}`).datepicker({
-      format: 'yyyy-mm-dd',
+      format: 'yyyy/mm/dd',
       todayBtn: 'linked',
       language: 'ja',
       autoclose: true,
@@ -259,7 +261,7 @@ class Main extends React.Component<ILocalProps, IState> {
           additionalElems = [
             <MaterialIcon name={'class'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.income.categories[record.category].name}</span>,
-            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.account.accounts[record.account].name}</span>,
           ];
           break;
@@ -274,7 +276,7 @@ class Main extends React.Component<ILocalProps, IState> {
           additionalElems = [
             <MaterialIcon name={'class'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.outgo.categories[record.category].name}</span>,
-            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.account.accounts[record.account].name}</span>,
           ];
           break;
@@ -287,9 +289,10 @@ class Main extends React.Component<ILocalProps, IState> {
           amount = record.amount;
           memo = record.memo;
           additionalElems = [
-            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
-            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <span><MaterialIcon name={'arrow_forward'} iconSize={18} darkMode={true} /></span>,
+            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.account.accounts[record.accountTo].name}</span>,
           ];
           break;
@@ -300,7 +303,7 @@ class Main extends React.Component<ILocalProps, IState> {
           <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`}/>
           <div className={Styles.ListCardBody}>
             <div className={Styles.ListCardTop} data-selected={selected}>
-              <span>{IYearMonthDayDateUtils.toText(date)}</span>
+              <span>{IYearMonthDayDateUtils.toDisplayFormatText(date)}</span>
               {additionalElems}
             </div>
             <div className={Styles.ListCardBottom}>
@@ -315,7 +318,7 @@ class Main extends React.Component<ILocalProps, IState> {
         </div>);
     });
     recordElems.push(
-      <div className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
+      <div key={this.elementIdAddRecord} className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
         <div className={Styles.ListCardAddRecord}>新規レコードを追加</div>
       </div>);
 
@@ -472,6 +475,8 @@ class Main extends React.Component<ILocalProps, IState> {
                     className={formInputCategoryClass}
                     readOnly={true}
                     value={this.categoryIncomeDisplayText()}
+                    onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
+                    onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
                     />
                 </td>
               </tr>
