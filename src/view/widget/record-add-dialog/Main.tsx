@@ -475,6 +475,8 @@ class Main extends React.Component<ILocalProps, IState> {
                     className={formInputCategoryClass}
                     readOnly={true}
                     value={this.categoryIncomeDisplayText()}
+                    onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
+                    onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
                     />
                 </td>
               </tr>
