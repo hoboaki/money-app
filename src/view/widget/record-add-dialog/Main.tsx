@@ -61,6 +61,7 @@ class Main extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdCloseBtn: string;
   private elementIdSectionLeftSide: string;
+  private elementIdAddRecord: string;
   private elementIdSectionRightSide: string;
   private elementIdFormCategoryOutgo: string;
   private elementIdFormCategoryIncome: string;
@@ -108,6 +109,7 @@ class Main extends React.Component<ILocalProps, IState> {
     this.elementIdFormAmountTransfer = `elem-${UUID()}`;
     this.elementIdFormMemo = `elem-${UUID()}`;
     this.elementIdFormSubmit = `elem-${UUID()}`;
+    this.elementIdAddRecord = `elem-${UUID()}`;
     this.viewRecordIdMin = this.props.doc.nextId.record;
   }
 
@@ -315,7 +317,7 @@ class Main extends React.Component<ILocalProps, IState> {
         </div>);
     });
     recordElems.push(
-      <div className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
+      <div key={this.elementIdAddRecord} className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
         <div className={Styles.ListCardAddRecord}>新規レコードを追加</div>
       </div>);
 
