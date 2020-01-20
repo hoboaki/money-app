@@ -261,7 +261,7 @@ class Main extends React.Component<ILocalProps, IState> {
           additionalElems = [
             <MaterialIcon name={'class'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.income.categories[record.category].name}</span>,
-            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.account.accounts[record.account].name}</span>,
           ];
           break;
@@ -276,7 +276,7 @@ class Main extends React.Component<ILocalProps, IState> {
           additionalElems = [
             <MaterialIcon name={'class'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.outgo.categories[record.category].name}</span>,
-            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.account.accounts[record.account].name}</span>,
           ];
           break;
@@ -289,9 +289,9 @@ class Main extends React.Component<ILocalProps, IState> {
           amount = record.amount;
           memo = record.memo;
           additionalElems = [
-            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
-            <MaterialIcon name={'account_balance'} iconSize={18} darkMode={true} />,
+            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
             <span>{this.props.doc.account.accounts[record.accountTo].name}</span>,
           ];
           break;

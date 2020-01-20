@@ -15,7 +15,7 @@ class Main extends React.Component<any, any> {
     );
 
     const btnInfos = [];
-    btnInfos.push({settingId: 'Account', title: '口座管理（準備中）', iconName: 'account_balance'});
+    btnInfos.push({settingId: 'Account', title: '口座管理（準備中）', iconName: 'payment'});
     btnInfos.push({settingId: 'Category', title: 'カテゴリ管理（準備中）', iconName: 'class'});
 
     const btns: JSX.Element[] = [];
