@@ -361,6 +361,13 @@ class Main extends React.Component<ILocalProps, IState> {
     const formTabsBaseClass = ClassNames(
       Styles.FormTabsBase,
     );
+    const formTabBorder = ClassNames(
+      Styles.FormTabBorder,
+    );
+    const formTabBorderHiddenOutgo = isEditMode && this.state.formKind !== DocTypes.RecordKind.Outgo;
+    const formTabBorderHiddenOutgoAndIncome = isEditMode && this.state.formKind === DocTypes.RecordKind.Transfer;
+    const formTabBorderHiddenIncomeAndTransfer = isEditMode && this.state.formKind === DocTypes.RecordKind.Outgo;
+    const formTabBorderHiddenTransfer = isEditMode && this.state.formKind !== DocTypes.RecordKind.Transfer;
     const formTabOutgoClass = ClassNames(
       Styles.FormTab,
       this.state.formKind === DocTypes.RecordKind.Outgo ? Styles.FormTabActive : null,
@@ -373,7 +380,6 @@ class Main extends React.Component<ILocalProps, IState> {
     );
     const formTabTransferClass = ClassNames(
       Styles.FormTab,
-      Styles.FormTabLast,
       this.state.formKind === DocTypes.RecordKind.Transfer ? Styles.FormTabActive : null,
       isEditMode && this.state.formKind !== DocTypes.RecordKind.Transfer ? Styles.FormTabHidden : null,
     );
@@ -435,6 +441,7 @@ class Main extends React.Component<ILocalProps, IState> {
     const formTabs =
       <div className={formTabsRootClass}>
         <div className={formTabsBaseClass}>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenOutgo}/>
           <div className={formTabOutgoClass} data-edit-mode={isEditMode}>
             <button className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
@@ -444,6 +451,7 @@ class Main extends React.Component<ILocalProps, IState> {
               <span className={Styles.FormTabLabel}>支出</span>
             </button>
           </div>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenOutgoAndIncome}/>
           <div className={formTabIncomeClass} data-edit-mode={isEditMode}>
             <button className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Income}
@@ -453,6 +461,7 @@ class Main extends React.Component<ILocalProps, IState> {
               <span className={Styles.FormTabLabel}>収入</span>
             </button>
           </div>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenIncomeAndTransfer}/>
           <div className={formTabTransferClass} data-edit-mode={isEditMode}>
             <button className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
@@ -462,6 +471,7 @@ class Main extends React.Component<ILocalProps, IState> {
               <span className={Styles.FormTabLabel}>振替</span>
             </button>
           </div>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenTransfer}/>
         </div>
       </div>;
 
