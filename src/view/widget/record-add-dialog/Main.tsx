@@ -25,6 +25,9 @@ import * as BasicStyles from 'src/view/Basic.css';
 import MaterialIcon from 'src/view/widget/material-icon';
 import * as Styles from './Main.css';
 
+/** 新規レコードを示す ID。 */
+const NEW_RECORD_ID = DocTypes.INVALID_ID;
+
 interface IProps {
   /** 入力フォームの初期日付。 */
   formDefaultDate: IYearMonthDayDate;
@@ -55,6 +58,9 @@ interface IState {
   accountFromErrorMsg: string | null;
   accountToErrorMsg: string | null;
   displayAddRecordNotice: boolean;
+
+  /** 選択中のレコードのID。NEW_RECORD_ID なら新規レコード。null なら何も選択していない状態。 */
+  selectedRecordId: number | null;
 }
 
 class Main extends React.Component<ILocalProps, IState> {
@@ -94,6 +100,7 @@ class Main extends React.Component<ILocalProps, IState> {
       accountFromErrorMsg: null,
       accountToErrorMsg: null,
       displayAddRecordNotice: false,
+      selectedRecordId: NEW_RECORD_ID,
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
@@ -243,9 +250,13 @@ class Main extends React.Component<ILocalProps, IState> {
     ]).keys([
       {kind: RecordOrderKind.RecordId, reverse: false},
     ]);
+    let isAnyRecordSelected = false;
     const recordElems: JSX.Element[] = [];
     records.forEach((recordKey) => {
-      const selected = false;
+      const selected = recordKey.id === this.state.selectedRecordId;
+      if (selected) {
+        isAnyRecordSelected = true;
+      }
       let date = IYearMonthDayDateUtils.today();
       let svgIconName = '';
       let amount = 0;
@@ -296,10 +307,15 @@ class Main extends React.Component<ILocalProps, IState> {
             <span>{this.props.doc.account.accounts[record.accountTo].name}</span>,
           ];
           break;
-      }
+        }
       }
       recordElems.push(
-        <div key={recordKey.id} className={Styles.ListCard} data-selected={selected}>
+        <div
+          key={recordKey.id}
+          className={Styles.ListCard}
+          onClick={(e) => this.onListCardClicked(e, recordKey.id)}
+          data-selected={selected}
+          >
           <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`}/>
           <div className={Styles.ListCardBody}>
             <div className={Styles.ListCardTop} data-selected={selected}>
@@ -317,13 +333,27 @@ class Main extends React.Component<ILocalProps, IState> {
           </div>
         </div>);
     });
-    recordElems.push(
-      <div key={this.elementIdAddRecord} className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
-        <div className={Styles.ListCardAddRecord}>新規レコードを追加</div>
-      </div>);
+    {
+      // 新規レコード
+      const selected = this.state.selectedRecordId === NEW_RECORD_ID;
+      recordElems.push(
+        <div key={this.elementIdAddRecord}
+          className={Styles.ListCard}
+          onClick={(e) => this.onListCardClicked(e, NEW_RECORD_ID)}
+          data-record-id={NEW_RECORD_ID}
+          data-selected={selected}
+          data-is-new-record={true}
+          >
+          <div className={Styles.ListCardAddRecord}>新規レコード</div>
+        </div>);
+    }
 
     const sectionLeftSide =
-      <section id={this.elementIdSectionLeftSide} className={Styles.SectionLeftSideRoot}>
+      <section
+        id={this.elementIdSectionLeftSide}
+        className={Styles.SectionLeftSideRoot}
+        onClick={(e) => {this.onListBackgroundClicked(e); }}
+        >
         {recordElems}
       </section>;
 
@@ -587,7 +617,7 @@ class Main extends React.Component<ILocalProps, IState> {
             className={formInputSubmitBtnClass}
             id={this.elementIdFormSubmit}
             data-toggle="tooltip"
-            onClick={() => {this.onAddButtonClicked(); }}
+            onClick={(e) => {this.onAddButtonClicked(e); }}
             >追加</button>
         </div>
       </div>;
@@ -625,6 +655,28 @@ class Main extends React.Component<ILocalProps, IState> {
       $(`#${this.elementIdCloseBtn}`).trigger('click');
       return;
     }
+  }
+
+  /// リスト背景がクリックされたときの処理。
+  private onListBackgroundClicked(e: React.MouseEvent<HTMLElement>) {
+    // イベント受理
+    e.stopPropagation();
+
+    // 状態変更
+    this.setState({
+      selectedRecordId: null,
+    });
+  }
+
+  /// リスト項目がクリックされたときの処理。
+  private onListCardClicked(e: React.MouseEvent<HTMLElement>, recordId: number) {
+    // イベント受理
+    e.stopPropagation();
+
+    // 状態変更
+    this.setState({
+      selectedRecordId: recordId,
+    });
   }
 
   /// カテゴリインプットに表示するテキストを返す。
@@ -769,7 +821,10 @@ class Main extends React.Component<ILocalProps, IState> {
   }
 
   /// 追加ボタンクリック時処理。
-  private onAddButtonClicked() {
+  private onAddButtonClicked(e: React.MouseEvent<HTMLElement>) {
+    // イベント受理
+    e.stopPropagation();
+
     // エラーチェック
     const errorMsgValidAmount = '0以外の値を入力してください';
     let amountErrorMsg: string | null = null;
