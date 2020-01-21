@@ -338,7 +338,7 @@ class Main extends React.Component<ILocalProps, IState> {
           data-selected={selected}
           data-is-add-record={true}
           >
-          <div className={Styles.ListCardAddRecord}>新規レコードを追加</div>
+          <div className={Styles.ListCardAddRecord}>新規レコード</div>
         </div>);
     }
 
