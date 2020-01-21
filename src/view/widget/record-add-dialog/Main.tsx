@@ -25,6 +25,9 @@ import * as BasicStyles from 'src/view/Basic.css';
 import MaterialIcon from 'src/view/widget/material-icon';
 import * as Styles from './Main.css';
 
+/** 新規レコードを示す ID。 */
+const NEW_RECORD_ID = DocTypes.INVALID_ID;
+
 interface IProps {
   /** 入力フォームの初期日付。 */
   formDefaultDate: IYearMonthDayDate;
@@ -55,6 +58,9 @@ interface IState {
   accountFromErrorMsg: string | null;
   accountToErrorMsg: string | null;
   displayAddRecordNotice: boolean;
+
+  /** 選択中のレコードのID。NEW_RECORD_ID なら新規レコード。null なら何も選択していない状態。 */
+  selectedRecordId: number | null;
 }
 
 class Main extends React.Component<ILocalProps, IState> {
@@ -94,6 +100,7 @@ class Main extends React.Component<ILocalProps, IState> {
       accountFromErrorMsg: null,
       accountToErrorMsg: null,
       displayAddRecordNotice: false,
+      selectedRecordId: NEW_RECORD_ID,
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
@@ -243,9 +250,13 @@ class Main extends React.Component<ILocalProps, IState> {
     ]).keys([
       {kind: RecordOrderKind.RecordId, reverse: false},
     ]);
+    let isAnyRecordSelected = false;
     const recordElems: JSX.Element[] = [];
     records.forEach((recordKey) => {
-      const selected = false;
+      const selected = recordKey.id === this.state.selectedRecordId;
+      if (selected) {
+        isAnyRecordSelected = true;
+      }
       let date = IYearMonthDayDateUtils.today();
       let svgIconName = '';
       let amount = 0;
@@ -317,10 +328,19 @@ class Main extends React.Component<ILocalProps, IState> {
           </div>
         </div>);
     });
-    recordElems.push(
-      <div key={this.elementIdAddRecord} className={Styles.ListCard} data-selected={true} data-is-add-record={true}>
-        <div className={Styles.ListCardAddRecord}>新規レコードを追加</div>
-      </div>);
+    {
+      // 新規レコード
+      const selected = this.state.selectedRecordId === NEW_RECORD_ID;
+      recordElems.push(
+        <div key={this.elementIdAddRecord}
+          className={Styles.ListCard}
+          data-record-id={NEW_RECORD_ID}
+          data-selected={selected}
+          data-is-add-record={true}
+          >
+          <div className={Styles.ListCardAddRecord}>新規レコードを追加</div>
+        </div>);
+    }
 
     const sectionLeftSide =
       <section id={this.elementIdSectionLeftSide} className={Styles.SectionLeftSideRoot}>
