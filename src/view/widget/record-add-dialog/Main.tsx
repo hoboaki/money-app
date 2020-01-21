@@ -296,7 +296,7 @@ class Main extends React.Component<ILocalProps, IState> {
             <span>{this.props.doc.account.accounts[record.accountTo].name}</span>,
           ];
           break;
-      }
+        }
       }
       recordElems.push(
         <div key={recordKey.id} className={Styles.ListCard} data-selected={selected}>
