@@ -310,7 +310,12 @@ class Main extends React.Component<ILocalProps, IState> {
         }
       }
       recordElems.push(
-        <div key={recordKey.id} className={Styles.ListCard} data-selected={selected}>
+        <div
+          key={recordKey.id}
+          className={Styles.ListCard}
+          onClick={(e) => this.onListCardClicked(e, recordKey.id)}
+          data-selected={selected}
+          >
           <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`}/>
           <div className={Styles.ListCardBody}>
             <div className={Styles.ListCardTop} data-selected={selected}>
@@ -334,6 +339,7 @@ class Main extends React.Component<ILocalProps, IState> {
       recordElems.push(
         <div key={this.elementIdAddRecord}
           className={Styles.ListCard}
+          onClick={(e) => this.onListCardClicked(e, NEW_RECORD_ID)}
           data-record-id={NEW_RECORD_ID}
           data-selected={selected}
           data-is-add-record={true}
@@ -343,7 +349,11 @@ class Main extends React.Component<ILocalProps, IState> {
     }
 
     const sectionLeftSide =
-      <section id={this.elementIdSectionLeftSide} className={Styles.SectionLeftSideRoot}>
+      <section
+        id={this.elementIdSectionLeftSide}
+        className={Styles.SectionLeftSideRoot}
+        onClick={(e) => {this.onListBackgroundClicked(e); }}
+        >
         {recordElems}
       </section>;
 
@@ -607,7 +617,7 @@ class Main extends React.Component<ILocalProps, IState> {
             className={formInputSubmitBtnClass}
             id={this.elementIdFormSubmit}
             data-toggle="tooltip"
-            onClick={() => {this.onAddButtonClicked(); }}
+            onClick={(e) => {this.onAddButtonClicked(e); }}
             >追加</button>
         </div>
       </div>;
@@ -645,6 +655,28 @@ class Main extends React.Component<ILocalProps, IState> {
       $(`#${this.elementIdCloseBtn}`).trigger('click');
       return;
     }
+  }
+
+  /// リスト背景がクリックされたときの処理。
+  private onListBackgroundClicked(e: React.MouseEvent<HTMLElement>) {
+    // イベント受理
+    e.stopPropagation();
+
+    // 状態変更
+    this.setState({
+      selectedRecordId: null,
+    });
+  }
+
+  /// リスト項目がクリックされたときの処理。
+  private onListCardClicked(e: React.MouseEvent<HTMLElement>, recordId: number) {
+    // イベント受理
+    e.stopPropagation();
+
+    // 状態変更
+    this.setState({
+      selectedRecordId: recordId,
+    });
   }
 
   /// カテゴリインプットに表示するテキストを返す。
@@ -789,7 +821,10 @@ class Main extends React.Component<ILocalProps, IState> {
   }
 
   /// 追加ボタンクリック時処理。
-  private onAddButtonClicked() {
+  private onAddButtonClicked(e: React.MouseEvent<HTMLElement>) {
+    // イベント受理
+    e.stopPropagation();
+
     // エラーチェック
     const errorMsgValidAmount = '0以外の値を入力してください';
     let amountErrorMsg: string | null = null;
