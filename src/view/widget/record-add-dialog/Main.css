@@ -56,7 +56,7 @@
   background: #eeeeee;
 }
 
-.ListCard[data-is-add-record='true'] {
+.ListCard[data-is-new-record='true'] {
   align-content: center;
   flex-direction: column;
   justify-content: center;

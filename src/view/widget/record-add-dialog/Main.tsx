@@ -342,7 +342,7 @@ class Main extends React.Component<ILocalProps, IState> {
           onClick={(e) => this.onListCardClicked(e, NEW_RECORD_ID)}
           data-record-id={NEW_RECORD_ID}
           data-selected={selected}
-          data-is-add-record={true}
+          data-is-new-record={true}
           >
           <div className={Styles.ListCardAddRecord}>新規レコード</div>
         </div>);
