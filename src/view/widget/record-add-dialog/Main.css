@@ -28,8 +28,9 @@
 }
 
 .SectionRightSideRoot {
+  background: #eeeeee;
   border-left: 1px solid #cccccc;
-  width: 400px;
+  height: fit-content;
 }
 
 .ListCard {
@@ -135,6 +136,16 @@
 
 .ListCardAddRecord {
   text-align: center;
+}
+
+.FormRoot {
+  background: #ffffff;
+  display: block;
+}
+
+.FormRoot[data-is-any-record-selected='false'] {
+  background: #eeeeee;
+  display: none;
 }
 
 .FormTabsRoot {

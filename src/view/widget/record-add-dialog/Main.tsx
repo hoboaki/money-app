@@ -432,193 +432,203 @@ class Main extends React.Component<ILocalProps, IState> {
       <span className={Styles.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
     const addRecordNotice = <span className={Styles.FormNoticeMsg}>追加しました</span>;
 
-    const sectionRightSide =
-      <div id={this.elementIdSectionRightSide} className={Styles.SectionRightSideRoot}>
-        <div className={formTabsRootClass}>
-          <div className={formTabsBaseClass}>
-            <div className={formTabOutgoClass}>
-              <button className={Styles.FormTabButton}
-                disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
-                onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
-                >
-                <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
-                <span className={Styles.FormTabLabel}>支出</span>
-              </button>
-            </div>
-            <div className={formTabIncomeClass}>
-              <button className={Styles.FormTabButton}
-                disabled={this.state.formKind === DocTypes.RecordKind.Income}
-                onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
-                >
-                <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
-                <span className={Styles.FormTabLabel}>収入</span>
-              </button>
-            </div>
-            <div className={formTabTransferClass}>
-              <button className={Styles.FormTabButton}
-                disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
-                onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Transfer); }}
-                >
-                <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
-                <span className={Styles.FormTabLabel}>振替</span>
-              </button>
-            </div>
+    const formTabs =
+      <div className={formTabsRootClass}>
+        <div className={formTabsBaseClass}>
+          <div className={formTabOutgoClass}>
+            <button className={Styles.FormTabButton}
+              disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
+              onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
+              >
+              <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
+              <span className={Styles.FormTabLabel}>支出</span>
+            </button>
+          </div>
+          <div className={formTabIncomeClass}>
+            <button className={Styles.FormTabButton}
+              disabled={this.state.formKind === DocTypes.RecordKind.Income}
+              onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
+              >
+              <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
+              <span className={Styles.FormTabLabel}>収入</span>
+            </button>
+          </div>
+          <div className={formTabTransferClass}>
+            <button className={Styles.FormTabButton}
+              disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
+              onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Transfer); }}
+              >
+              <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
+              <span className={Styles.FormTabLabel}>振替</span>
+            </button>
           </div>
         </div>
-        <div className={formInputRootClass}>
-          <table>
-            <tbody>
-              <tr>
-                <th scope="row">日付</th>
-                <td>
-                  <input
-                    type="text"
-                    id={this.elementIdFormDate}
-                    value={this.state.formDate}
-                    readOnly={true}
-                    onClick={() => {this.onFormDateClicked(); }}
-                    onKeyDown={(e) => {this.onFormDateKeyDown(e); }}
-                    />
-                  {addRecordNotice}
-                </td>
-              </tr>
-              <tr className={formInputRowCategoryOutgoClass}>
-                <th scope="row">カテゴリ</th>
-                <td>
-                  <input
-                    type="text"
-                    id={this.elementIdFormCategoryOutgo}
-                    className={formInputCategoryClass}
-                    readOnly={true}
-                    value={this.categoryOutgoDisplayText()}
-                    onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
-                    onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
-                    />
-                </td>
-              </tr>
-              <tr className={formInputRowCategoryIncomeClass}>
-                <th scope="row">カテゴリ</th>
-                <td>
-                  <input
-                    type="text"
-                    id={this.elementIdFormCategoryIncome}
-                    className={formInputCategoryClass}
-                    readOnly={true}
-                    value={this.categoryIncomeDisplayText()}
-                    onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
-                    onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
-                    />
-                </td>
-              </tr>
-              <tr className={formInputRowAcountClass}>
-                <th scope="row">口座</th>
-                <td>
-                  <select value={this.state.formAccount.toString()}
-                    className={formInputAccountSelectClass}
-                    id={this.elementIdFormAccount}
-                    onChange={(event) => {this.onFormAccountChanged(event.target); }}
-                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                    >
-                    {this.props.doc.account.order.map((accountId) => {
-                      const account = this.props.doc.account.accounts[accountId];
-                      return (
-                        <option key={account.id} value={account.id}>{account.name}</option>
-                      );
-                    })}
-                  </select>
-                </td>
-              </tr>
-              <tr className={formInputRowAcountFromToClass}>
-                <th scope="row">送金元</th>
-                <td>
-                  <select value={this.state.formAccountFrom}
-                    className={formInputAccountSelectClass}
-                    id={this.elementIdFormAccountFrom}
-                    onChange={(event) => {this.onFormAccountFromChanged(event.target); }}
-                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                    >
-                    <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                    {this.props.doc.account.order.map((accountId) => {
-                      const account = this.props.doc.account.accounts[accountId];
-                      return (
-                        <option key={account.id} value={account.id}>{account.name}</option>
-                      );
-                    })}
-                  </select>
-                  {accountFromErrorMsg}
-                </td>
-              </tr>
-              <tr className={formInputRowAcountFromToClass}>
-                <th scope="row">送金先</th>
-                <td>
-                  <select value={this.state.formAccountTo}
-                    className={formInputAccountSelectClass}
-                    id={this.elementIdFormAccountTo}
-                    onChange={(event) => {this.onFormAccountToChanged(event.target); }}
-                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                    >
-                    <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                    {this.props.doc.account.order.map((accountId) => {
-                      const account = this.props.doc.account.accounts[accountId];
-                      return (
-                        <option key={account.id} value={account.id}>{account.name}</option>
-                      );
-                    })}
-                  </select>
-                  {accountToErrorMsg}
-                </td>
-              </tr>
-              <tr className={formInputRowAmountClass}>
-                <th scope="row">金額</th>
-                <td>
-                  <input type="text"
-                    id={this.elementIdFormAmount}
-                    value={this.state.formAmount.toString()}
-                    onChange={(event) => {this.onFormAmountChanged(event.target); }}
-                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                    onFocus={(event) => {event.target.select(); }}
-                    onClick={(event) => {event.currentTarget.select(); return false; }}
-                    />
-                  {amountErrorMsg}
-                </td>
-              </tr>
-              <tr className={formInputRowAmountTransferClass}>
-                <th scope="row">送金額</th>
-                <td>
-                  <input type="text"
-                    id={this.elementIdFormAmountTransfer}
-                    value={this.state.formAmountTransfer.toString()}
-                    onChange={(event) => {this.onFormAmountTransferChanged(event.target); }}
-                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                    onFocus={(event) => {event.target.select(); }}
-                    onClick={(event) => {event.currentTarget.select(); return false; }}
-                    />
-                  {amountTransferErrorMsg}
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">メモ</th>
-                <td>
-                  <input className={Styles.FormInputMemo} type="text"
-                    id={this.elementIdFormMemo}
-                    value={this.state.formMemo}
-                    onChange={(event) => {this.onFormMemoChanged(event.target); }}
-                    onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                    onFocus={(event) => {event.target.select(); }}
-                    onClick={(event) => {event.currentTarget.select(); return false; }}
-                    />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className={formFooterRootClass}>
-          <button type="button"
-            className={formInputSubmitBtnClass}
-            id={this.elementIdFormSubmit}
-            data-toggle="tooltip"
-            onClick={(e) => {this.onAddButtonClicked(e); }}
-            >追加</button>
+      </div>;
+
+    const formInput =
+      <div className={formInputRootClass}>
+        <table>
+          <tbody>
+            <tr>
+              <th scope="row">日付</th>
+              <td>
+                <input
+                  type="text"
+                  id={this.elementIdFormDate}
+                  value={this.state.formDate}
+                  readOnly={true}
+                  onClick={() => {this.onFormDateClicked(); }}
+                  onKeyDown={(e) => {this.onFormDateKeyDown(e); }}
+                  />
+                {addRecordNotice}
+              </td>
+            </tr>
+            <tr className={formInputRowCategoryOutgoClass}>
+              <th scope="row">カテゴリ</th>
+              <td>
+                <input
+                  type="text"
+                  id={this.elementIdFormCategoryOutgo}
+                  className={formInputCategoryClass}
+                  readOnly={true}
+                  value={this.categoryOutgoDisplayText()}
+                  onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
+                  onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
+                  />
+              </td>
+            </tr>
+            <tr className={formInputRowCategoryIncomeClass}>
+              <th scope="row">カテゴリ</th>
+              <td>
+                <input
+                  type="text"
+                  id={this.elementIdFormCategoryIncome}
+                  className={formInputCategoryClass}
+                  readOnly={true}
+                  value={this.categoryIncomeDisplayText()}
+                  onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
+                  onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
+                  />
+              </td>
+            </tr>
+            <tr className={formInputRowAcountClass}>
+              <th scope="row">口座</th>
+              <td>
+                <select value={this.state.formAccount.toString()}
+                  className={formInputAccountSelectClass}
+                  id={this.elementIdFormAccount}
+                  onChange={(event) => {this.onFormAccountChanged(event.target); }}
+                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                  >
+                  {this.props.doc.account.order.map((accountId) => {
+                    const account = this.props.doc.account.accounts[accountId];
+                    return (
+                      <option key={account.id} value={account.id}>{account.name}</option>
+                    );
+                  })}
+                </select>
+              </td>
+            </tr>
+            <tr className={formInputRowAcountFromToClass}>
+              <th scope="row">送金元</th>
+              <td>
+                <select value={this.state.formAccountFrom}
+                  className={formInputAccountSelectClass}
+                  id={this.elementIdFormAccountFrom}
+                  onChange={(event) => {this.onFormAccountFromChanged(event.target); }}
+                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                  >
+                  <option value={DocTypes.INVALID_ID}>（未選択）</option>
+                  {this.props.doc.account.order.map((accountId) => {
+                    const account = this.props.doc.account.accounts[accountId];
+                    return (
+                      <option key={account.id} value={account.id}>{account.name}</option>
+                    );
+                  })}
+                </select>
+                {accountFromErrorMsg}
+              </td>
+            </tr>
+            <tr className={formInputRowAcountFromToClass}>
+              <th scope="row">送金先</th>
+              <td>
+                <select value={this.state.formAccountTo}
+                  className={formInputAccountSelectClass}
+                  id={this.elementIdFormAccountTo}
+                  onChange={(event) => {this.onFormAccountToChanged(event.target); }}
+                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                  >
+                  <option value={DocTypes.INVALID_ID}>（未選択）</option>
+                  {this.props.doc.account.order.map((accountId) => {
+                    const account = this.props.doc.account.accounts[accountId];
+                    return (
+                      <option key={account.id} value={account.id}>{account.name}</option>
+                    );
+                  })}
+                </select>
+                {accountToErrorMsg}
+              </td>
+            </tr>
+            <tr className={formInputRowAmountClass}>
+              <th scope="row">金額</th>
+              <td>
+                <input type="text"
+                  id={this.elementIdFormAmount}
+                  value={this.state.formAmount.toString()}
+                  onChange={(event) => {this.onFormAmountChanged(event.target); }}
+                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                  onFocus={(event) => {event.target.select(); }}
+                  onClick={(event) => {event.currentTarget.select(); return false; }}
+                  />
+                {amountErrorMsg}
+              </td>
+            </tr>
+            <tr className={formInputRowAmountTransferClass}>
+              <th scope="row">送金額</th>
+              <td>
+                <input type="text"
+                  id={this.elementIdFormAmountTransfer}
+                  value={this.state.formAmountTransfer.toString()}
+                  onChange={(event) => {this.onFormAmountTransferChanged(event.target); }}
+                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                  onFocus={(event) => {event.target.select(); }}
+                  onClick={(event) => {event.currentTarget.select(); return false; }}
+                  />
+                {amountTransferErrorMsg}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">メモ</th>
+              <td>
+                <input className={Styles.FormInputMemo} type="text"
+                  id={this.elementIdFormMemo}
+                  value={this.state.formMemo}
+                  onChange={(event) => {this.onFormMemoChanged(event.target); }}
+                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
+                  onFocus={(event) => {event.target.select(); }}
+                  onClick={(event) => {event.currentTarget.select(); return false; }}
+                  />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>;
+    const formFooter =
+      <div className={formFooterRootClass}>
+        <button type="button"
+          className={formInputSubmitBtnClass}
+          id={this.elementIdFormSubmit}
+          data-toggle="tooltip"
+          onClick={(e) => {this.onAddButtonClicked(e); }}
+          >追加</button>
+      </div>;
+
+    const sectionRightSide =
+      <div id={this.elementIdSectionRightSide} className={Styles.SectionRightSideRoot}>
+        <div className={Styles.FormRoot} data-is-any-record-selected={this.state.selectedRecordId !== null}>
+          {formTabs}
+          {formInput}
+          {formFooter}
         </div>
       </div>;
 
