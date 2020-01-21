@@ -250,13 +250,9 @@ class Main extends React.Component<ILocalProps, IState> {
     ]).keys([
       {kind: RecordOrderKind.RecordId, reverse: false},
     ]);
-    let isAnyRecordSelected = false;
     const recordElems: JSX.Element[] = [];
     records.forEach((recordKey) => {
       const selected = recordKey.id === this.state.selectedRecordId;
-      if (selected) {
-        isAnyRecordSelected = true;
-      }
       let date = IYearMonthDayDateUtils.today();
       let svgIconName = '';
       let amount = 0;
@@ -313,7 +309,7 @@ class Main extends React.Component<ILocalProps, IState> {
         <div
           key={recordKey.id}
           className={Styles.ListCard}
-          onClick={(e) => this.onListCardClicked(e, recordKey.id)}
+          onClick={(e) => this.onListCardClicked(e, recordKey.id, recordKey.kind)}
           data-selected={selected}
           >
           <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`}/>
@@ -339,7 +335,7 @@ class Main extends React.Component<ILocalProps, IState> {
       recordElems.push(
         <div key={this.elementIdAddRecord}
           className={Styles.ListCard}
-          onClick={(e) => this.onListCardClicked(e, NEW_RECORD_ID)}
+          onClick={(e) => this.onListCardClicked(e, NEW_RECORD_ID, DocTypes.RecordKind.Invalid)}
           data-record-id={NEW_RECORD_ID}
           data-selected={selected}
           data-is-new-record={true}
@@ -357,7 +353,8 @@ class Main extends React.Component<ILocalProps, IState> {
         {recordElems}
       </section>;
 
-      // 右側関連
+    // 右側関連
+    const isEditMode = this.state.selectedRecordId !== null && this.state.selectedRecordId !== NEW_RECORD_ID;
     const formTabsRootClass = ClassNames(
       Styles.FormTabsRoot,
     );
@@ -367,15 +364,18 @@ class Main extends React.Component<ILocalProps, IState> {
     const formTabOutgoClass = ClassNames(
       Styles.FormTab,
       this.state.formKind === DocTypes.RecordKind.Outgo ? Styles.FormTabActive : null,
+      isEditMode && this.state.formKind !== DocTypes.RecordKind.Outgo ? Styles.FormTabHidden : null,
     );
     const formTabIncomeClass = ClassNames(
       Styles.FormTab,
       this.state.formKind === DocTypes.RecordKind.Income ? Styles.FormTabActive : null,
+      isEditMode && this.state.formKind !== DocTypes.RecordKind.Income ? Styles.FormTabHidden : null,
     );
     const formTabTransferClass = ClassNames(
       Styles.FormTab,
       Styles.FormTabLast,
       this.state.formKind === DocTypes.RecordKind.Transfer ? Styles.FormTabActive : null,
+      isEditMode && this.state.formKind !== DocTypes.RecordKind.Transfer ? Styles.FormTabHidden : null,
     );
     const formSvgIconClass = ClassNames(
       Styles.FormSvgIcon,
@@ -435,7 +435,7 @@ class Main extends React.Component<ILocalProps, IState> {
     const formTabs =
       <div className={formTabsRootClass}>
         <div className={formTabsBaseClass}>
-          <div className={formTabOutgoClass}>
+          <div className={formTabOutgoClass} data-edit-mode={isEditMode}>
             <button className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
               onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
@@ -444,7 +444,7 @@ class Main extends React.Component<ILocalProps, IState> {
               <span className={Styles.FormTabLabel}>支出</span>
             </button>
           </div>
-          <div className={formTabIncomeClass}>
+          <div className={formTabIncomeClass} data-edit-mode={isEditMode}>
             <button className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Income}
               onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
@@ -453,7 +453,7 @@ class Main extends React.Component<ILocalProps, IState> {
               <span className={Styles.FormTabLabel}>収入</span>
             </button>
           </div>
-          <div className={formTabTransferClass}>
+          <div className={formTabTransferClass} data-edit-mode={isEditMode}>
             <button className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
               onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Transfer); }}
@@ -679,13 +679,23 @@ class Main extends React.Component<ILocalProps, IState> {
   }
 
   /// リスト項目がクリックされたときの処理。
-  private onListCardClicked(e: React.MouseEvent<HTMLElement>, recordId: number) {
+  private onListCardClicked(
+    e: React.MouseEvent<HTMLElement>,
+    recordId: number,
+    recordKind: DocTypes.RecordKind) {
     // イベント受理
     e.stopPropagation();
+
+    // レコードの対応するフォームを選択
+    let nextFormKind = recordKind;
+    if (recordKind === DocTypes.RecordKind.Invalid) {
+      nextFormKind = this.state.formKind;
+    }
 
     // 状態変更
     this.setState({
       selectedRecordId: recordId,
+      formKind: nextFormKind,
     });
   }
 

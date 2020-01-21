@@ -172,6 +172,7 @@
 .FormTab {
   border-collapse: collapse;
   border-left: 1px solid #cccccc;
+  border-right: 1px solid rgba(0, 0, 0, 0); /** 編集モードにしてもレイアウトがずれないようにするために border の領域を確保しておく */
   border-top: 1px solid #cccccc;
   display: flex;
   flex-direction: row;
@@ -198,6 +199,7 @@
   display: block;
 }
 
+.FormTab[data-edit-mode='true'],
 .FormTabLast {
   border-right: 1px solid #cccccc;
 }
@@ -205,6 +207,10 @@
 .FormTabActive {
   background: #ffffff;
   border-bottom: 1px solid #ffffff;
+}
+
+.FormTabHidden {
+  visibility: hidden;
 }
 
 .FormSvgIcon {
