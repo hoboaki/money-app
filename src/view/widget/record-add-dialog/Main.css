@@ -30,7 +30,6 @@
 .SectionRightSideRoot {
   background: #eeeeee;
   border-left: 1px solid #cccccc;
-  height: fit-content;
 }
 
 .ListCard {
@@ -140,11 +139,12 @@
 
 .FormRoot {
   background: #ffffff;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .FormRoot[data-is-any-record-selected='false'] {
-  background: #eeeeee;
   display: none;
 }
 
