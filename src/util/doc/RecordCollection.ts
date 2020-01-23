@@ -98,12 +98,12 @@ class RecordCollection implements IRecordCollection {
       };
     }));
 
-    // ソート
+    // ソート関数の用意
+    const cmpFuncs: Array<((lhs: IRecordKey, rhs: IRecordKey) => number)> = [];
     orders.forEach((order) => {
-      let compareFunc: ((lhs: IRecordKey, rhs: IRecordKey) => number) | null = null;
       switch (order.kind) {
         case RecordOrderKind.RecordId:
-          compareFunc = (lhs, rhs) => {
+          cmpFuncs.push((lhs, rhs) => {
             if (lhs < rhs) {
               return order.reverse ? 1 : -1;
             }
@@ -111,13 +111,24 @@ class RecordCollection implements IRecordCollection {
               return order.reverse ? -1 : 1;
             }
             return 0;
-          };
+          });
           break;
       }
-      if (compareFunc !== null) {
-        result.sort(compareFunc);
-      }
     });
+
+    // ソートを実行
+    if (0 < cmpFuncs.length) {
+      const cmpFunc = (lhs: IRecordKey, rhs: IRecordKey) => {
+        for (const func of cmpFuncs) {
+          const cmpResult = func(lhs, rhs);
+          if (cmpResult !== 0) {
+            return cmpResult;
+          }
+        }
+        return 0;
+      };
+      result.sort(cmpFunc);
+    }
 
     return result;
   }
