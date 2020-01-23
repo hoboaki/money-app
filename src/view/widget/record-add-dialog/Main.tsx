@@ -371,10 +371,10 @@ class Main extends React.Component<ILocalProps, IState> {
     const formTabBorder = ClassNames(
       Styles.FormTabBorder,
     );
-    const formTabBorderHiddenOutgo = isEditMode && this.state.formKind !== DocTypes.RecordKind.Outgo;
-    const formTabBorderHiddenOutgoAndIncome = isEditMode && this.state.formKind === DocTypes.RecordKind.Transfer;
-    const formTabBorderHiddenIncomeAndTransfer = isEditMode && this.state.formKind === DocTypes.RecordKind.Outgo;
     const formTabBorderHiddenTransfer = isEditMode && this.state.formKind !== DocTypes.RecordKind.Transfer;
+    const formTabBorderHiddenTransferAndIncome = isEditMode && this.state.formKind === DocTypes.RecordKind.Outgo;
+    const formTabBorderHiddenIncomeAndOutgo = isEditMode && this.state.formKind === DocTypes.RecordKind.Transfer;
+    const formTabBorderHiddenOutgo = isEditMode && this.state.formKind !== DocTypes.RecordKind.Outgo;
     const formTabOutgoClass = ClassNames(
       Styles.FormTab,
       this.state.formKind === DocTypes.RecordKind.Outgo ? Styles.FormTabActive : null,
@@ -448,27 +448,7 @@ class Main extends React.Component<ILocalProps, IState> {
     const formTabs =
       <div className={formTabsRootClass}>
         <div className={formTabsBaseClass}>
-          <div className={formTabBorder} data-hidden={formTabBorderHiddenOutgo}/>
-          <div className={formTabOutgoClass} data-edit-mode={isEditMode}>
-            <button className={Styles.FormTabButton}
-              disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
-              onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
-              >
-              <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
-              <span className={Styles.FormTabLabel}>支出</span>
-            </button>
-          </div>
-          <div className={formTabBorder} data-hidden={formTabBorderHiddenOutgoAndIncome}/>
-          <div className={formTabIncomeClass} data-edit-mode={isEditMode}>
-            <button className={Styles.FormTabButton}
-              disabled={this.state.formKind === DocTypes.RecordKind.Income}
-              onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
-              >
-              <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
-              <span className={Styles.FormTabLabel}>収入</span>
-            </button>
-          </div>
-          <div className={formTabBorder} data-hidden={formTabBorderHiddenIncomeAndTransfer}/>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenTransfer}/>
           <div className={formTabTransferClass} data-edit-mode={isEditMode}>
             <button className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
@@ -478,7 +458,27 @@ class Main extends React.Component<ILocalProps, IState> {
               <span className={Styles.FormTabLabel}>振替</span>
             </button>
           </div>
-          <div className={formTabBorder} data-hidden={formTabBorderHiddenTransfer}/>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenTransferAndIncome}/>
+          <div className={formTabIncomeClass} data-edit-mode={isEditMode}>
+            <button className={Styles.FormTabButton}
+              disabled={this.state.formKind === DocTypes.RecordKind.Income}
+              onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
+              >
+              <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
+              <span className={Styles.FormTabLabel}>収入</span>
+            </button>
+          </div>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenIncomeAndOutgo}/>
+          <div className={formTabOutgoClass} data-edit-mode={isEditMode}>
+            <button className={Styles.FormTabButton}
+              disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
+              onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
+              >
+              <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
+              <span className={Styles.FormTabLabel}>支出</span>
+            </button>
+          </div>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenOutgo}/>
         </div>
       </div>;
 

@@ -162,9 +162,9 @@ class RecordCollection implements IRecordCollection {
                   case RecordKind.Income:
                     return 2;
                   case RecordKind.Outgo:
-                    return 1;
-                  case RecordKind.Transfer:
                     return 3;
+                  case RecordKind.Transfer:
+                    return 1;
                   default:
                     return 0;
                 }
