@@ -136,7 +136,7 @@ class RecordCollection implements IRecordCollection {
                   date = this.state.outgo.records[key.id].date;
                   break;
                 case RecordKind.Transfer:
-                  date = this.state.outgo.records[key.id].date;
+                  date = this.state.transfer.records[key.id].date;
                   break;
               }
               return date.day + date.month * 32 + date.year * 370;
