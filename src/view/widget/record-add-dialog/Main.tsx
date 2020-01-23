@@ -129,6 +129,8 @@ class Main extends React.Component<ILocalProps, IState> {
       autoclose: true,
       todayHighlight: true,
       showOnFocus: false,
+    }).on('changeDate', (e) => {
+      this.onFormDateChanged(e.format('yyyy/mm/dd'));
     });
 
     // ContextMenu セットアップ
@@ -696,17 +698,66 @@ class Main extends React.Component<ILocalProps, IState> {
     // イベント受理
     e.stopPropagation();
 
-    // レコードの対応するフォームを選択
-    let nextFormKind = recordKind;
-    if (recordKind === DocTypes.RecordKind.Invalid) {
-      nextFormKind = this.state.formKind;
+    // 変更がなければ何もしない
+    if (recordId === this.state.selectedRecordId) {
+      return;
     }
 
-    // 状態変更
-    this.setState({
-      selectedRecordId: recordId,
-      formKind: nextFormKind,
-    });
+    // 新規レコード対応の場合
+    if (recordKind === DocTypes.RecordKind.Invalid) {
+      this.setState({
+        selectedRecordId: recordId,
+      });
+      this.resetForNewInput();
+      return;
+    }
+
+    // 既存レコードの場合
+    switch (recordKind) {
+      case DocTypes.RecordKind.Income: {
+        const record = this.props.doc.income.records[recordId];
+        this.setState({
+          selectedRecordId: recordId,
+          formKind: recordKind,
+          formDate: IYearMonthDayDateUtils.toDisplayFormatText(record.date),
+          formCategoryIncome: record.category,
+          formAccount: record.account,
+          formAmount: Math.abs(record.amount),
+          formAmountIsNegative: record.amount < 0,
+          formMemo: record.memo,
+        });
+        break;
+      }
+
+      case DocTypes.RecordKind.Outgo: {
+        const record = this.props.doc.outgo.records[recordId];
+        this.setState({
+          selectedRecordId: recordId,
+          formKind: recordKind,
+          formDate: IYearMonthDayDateUtils.toDisplayFormatText(record.date),
+          formCategoryOutgo: record.category,
+          formAccount: record.account,
+          formAmount: Math.abs(record.amount),
+          formAmountIsNegative: record.amount < 0,
+          formMemo: record.memo,
+        });
+        break;
+      }
+
+      case DocTypes.RecordKind.Transfer: {
+        const record = this.props.doc.transfer.records[recordId];
+        this.setState({
+          selectedRecordId: recordId,
+          formKind: recordKind,
+          formDate: IYearMonthDayDateUtils.toDisplayFormatText(record.date),
+          formAccountFrom: record.accountFrom,
+          formAccountTo: record.accountTo,
+          formAmountTransfer: record.amount,
+          formMemo: record.memo,
+        });
+        break;
+      }
+    }
   }
 
   /// カテゴリインプットに表示するテキストを返す。
@@ -757,6 +808,10 @@ class Main extends React.Component<ILocalProps, IState> {
     });
   }
 
+  /// 日付変更時の処理。
+  private onFormDateChanged(dateText: string) {
+    this.setState({formDate: dateText});
+  }
   /// 日付がクリックされたときの処理。
   private onFormDateClicked() {
     $(`#${this.elementIdFormDate}`).datepicker('show');
