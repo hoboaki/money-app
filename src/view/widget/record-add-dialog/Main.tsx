@@ -15,6 +15,7 @@ import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
+import IRecordKey from 'src/util/doc/IRecordKey';
 import RecordCollection from 'src/util/doc/RecordCollection';
 import * as RecordFilters from 'src/util/doc/RecordFilters';
 import RecordOrderKind from 'src/util/doc/RecordOrderKind';
@@ -31,6 +32,9 @@ const NEW_RECORD_ID = DocTypes.INVALID_ID;
 interface IProps {
   /** 入力フォームの初期日付。 */
   formDefaultDate: IYearMonthDayDate;
+
+  /** 一覧に追加表示するレコード群。 */
+  additionalRecords: IRecordKey[];
 
   /** 閉じる際のコールバック。 */
   onClosed: (() => void);
@@ -79,6 +83,7 @@ class Main extends React.Component<ILocalProps, IState> {
   private elementIdFormAmountTransfer: string;
   private elementIdFormMemo: string;
   private elementIdFormSubmit: string;
+  private additionalRecordKeys: IRecordKey[];
   private viewRecordIdMin: number;
 
   constructor(props: ILocalProps) {
@@ -117,6 +122,7 @@ class Main extends React.Component<ILocalProps, IState> {
     this.elementIdFormMemo = `elem-${UUID()}`;
     this.elementIdFormSubmit = `elem-${UUID()}`;
     this.elementIdAddRecord = `elem-${UUID()}`;
+    this.additionalRecordKeys = this.props.additionalRecords;
     this.viewRecordIdMin = this.props.doc.nextId.record;
   }
 
@@ -247,11 +253,10 @@ class Main extends React.Component<ILocalProps, IState> {
     );
 
     // 左側関連
-    const records = new RecordCollection(this.props.doc).filter([
-      RecordFilters.createRecordIdRangeFilter({startId: this.viewRecordIdMin, endId: null}),
-    ]).keys([
-      {kind: RecordOrderKind.RecordId, reverse: false},
-    ]);
+    const records = this.additionalRecordKeys.concat(
+      new RecordCollection(this.props.doc).filter([
+        RecordFilters.createRecordIdRangeFilter({startId: this.viewRecordIdMin, endId: null}),
+      ]).keys([{kind: RecordOrderKind.RecordId, reverse: false}]));
     const recordElems: JSX.Element[] = [];
     records.forEach((recordKey) => {
       const selected = recordKey.id === this.state.selectedRecordId;
