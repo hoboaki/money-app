@@ -1,5 +1,6 @@
 import * as States from 'src/state/doc/States';
 import { RecordKind } from 'src/state/doc/Types';
+import IYearMonthDayDate from '../IYearMonthDayDate';
 import IRecordCollection from './IRecordCollection';
 import IRecordFilter from './IRecordFilter';
 import IRecordKey from './IRecordKey';
@@ -78,6 +79,15 @@ class RecordCollection implements IRecordCollection {
     );
   }
 
+  /** 標準的な並び順にソート済のレコードキー配列を返す。 */
+  public standardSortedKeys() {
+    return this.keys([
+      {kind: RecordOrderKind.Date, reverse: false},
+      {kind: RecordOrderKind.Category, reverse: false},
+      {kind: RecordOrderKind.RecordId, reverse: false},
+    ]);
+  }
+
   /** 並び順を適用したレコードキー配列を返す。 */
   public keys(orders: IRecordOrder[]): IRecordKey[] {
     // Key 化
@@ -113,7 +123,70 @@ class RecordCollection implements IRecordCollection {
             return 0;
           });
           break;
+
+        case RecordOrderKind.Date:
+          cmpFuncs.push((lhs, rhs) => {
+            const toNumFunc = (key: IRecordKey) => {
+              let date: IYearMonthDayDate = {year: 0, month: 0, day: 0};
+              switch (key.kind) {
+                case RecordKind.Income:
+                  date = this.state.income.records[key.id].date;
+                  break;
+                case RecordKind.Outgo:
+                  date = this.state.outgo.records[key.id].date;
+                  break;
+                case RecordKind.Transfer:
+                  date = this.state.outgo.records[key.id].date;
+                  break;
+              }
+              return date.day + date.month * 32 + date.year * 370;
+            };
+            const lhsNum = toNumFunc(lhs);
+            const rhsNum = toNumFunc(rhs);
+            if (lhsNum < rhsNum) {
+              return order.reverse ? 1 : -1;
+            }
+            if (rhsNum < lhsNum) {
+              return order.reverse ? -1 : 1;
+            }
+            return 0;
+          });
+          break;
+
+        case RecordOrderKind.Category: {
+          cmpFuncs.push((lhs, rhs) => {
+            // まず RecordKind で比較
+            if (lhs.kind !== rhs.kind) {
+              const toNumFunc = (key: IRecordKey) => {
+                switch (key.kind) {
+                  case RecordKind.Income:
+                    return 2;
+                  case RecordKind.Outgo:
+                    return 1;
+                  case RecordKind.Transfer:
+                    return 3;
+                  default:
+                    return 0;
+                }
+              };
+              const lhsNum = toNumFunc(lhs);
+              const rhsNum = toNumFunc(rhs);
+              if (lhsNum < rhsNum) {
+                return order.reverse ? 1 : -1;
+              }
+              if (rhsNum < lhsNum) {
+                return order.reverse ? -1 : 1;
+              }
+              return 0;
+            }
+
+            // そうでなければカテゴリ順
+            // ... （将来実装）
+            return 0;
+          });
+          break;
       }
+    }
     });
 
     // ソートを実行
