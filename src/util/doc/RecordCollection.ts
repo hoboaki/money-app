@@ -114,10 +114,10 @@ class RecordCollection implements IRecordCollection {
       switch (order.kind) {
         case RecordOrderKind.RecordId:
           cmpFuncs.push((lhs, rhs) => {
-            if (lhs < rhs) {
+            if (lhs.id < rhs.id) {
               return order.reverse ? 1 : -1;
             }
-            if (rhs < lhs) {
+            if (rhs.id < lhs.id) {
               return order.reverse ? -1 : 1;
             }
             return 0;
