@@ -16,7 +16,7 @@ import * as Styles from './Calendar.css';
 
 interface IProps {
   doc: DocStates.IState;
-  page: UiStates.IPageHome;
+  page: UiStates.IPageCalendar;
 }
 
 interface IState {
@@ -253,7 +253,7 @@ class Calendar extends React.Component<IProps, IState> {
 const mapStateToProps = (state: IStoreState) => {
   return {
     doc: state.doc,
-    page: state.ui.pageHome,
+    page: state.ui.pageCalendar,
   };
 };
 export default ReactRedux.connect(mapStateToProps)(Calendar);

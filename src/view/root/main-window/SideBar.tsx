@@ -1,7 +1,7 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 
-import PageHome from 'src/view/page/home';
+import PageCalendar from 'src/view/page/calendar';
 import PageStyles from 'src/view/page/Page.css';
 import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
@@ -27,8 +27,8 @@ class SideBar extends React.Component<IProps, any> {
     );
 
     const btnInfos = [];
-    btnInfos.push({pageId: PageHome.PageId, title: 'ホーム', iconName: 'home'});
-    btnInfos.push({pageId: PageSheet.PageId, title: '一覧', iconName: 'view_week'});
+    btnInfos.push({pageId: PageCalendar.PageId, title: 'カレンダー', iconName: 'event_note'});
+    btnInfos.push({pageId: PageSheet.PageId, title: 'ワークシート', iconName: 'view_week'});
     btnInfos.push({pageId: 'Find', title: 'レコードの検索（準備中）', iconName: 'search'});
     btnInfos.push({pageId: PageSetting.PageId, title: '設定', iconName: 'settings'});
 

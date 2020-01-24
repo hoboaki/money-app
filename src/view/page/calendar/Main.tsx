@@ -7,7 +7,7 @@ import Body from './Body';
 import Header from './Header';
 
 class Main extends React.Component<any, any> {
-  public static PageId: string = 'Home';
+  public static PageId: string = 'Calendar';
 
   public render() {
     const rootClass = ClassNames(

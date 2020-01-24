@@ -14,12 +14,12 @@ import * as Styles from './Balance.css';
 
 interface IProps {
   doc: DocStates.IState;
-  pageHome: UiStates.IPageHome;
+  page: UiStates.IPageCalendar;
 }
 
 class Balance extends React.Component<IProps, any> {
   public render() {
-    const startDate = this.props.pageHome.currentDate;
+    const startDate = this.props.page.currentDate;
     const endDate = IYearMonthDayDateUtils.nextMonth(startDate);
 
     const currentRecords = new RecordCollection(this.props.doc).filter([
@@ -129,7 +129,7 @@ class Balance extends React.Component<IProps, any> {
 const mapStateToProps = (state: IStoreState) => {
   return {
     doc: state.doc,
-    pageHome: state.ui.pageHome,
+    page: state.ui.pageCalendar,
   };
 };
 export default ReactRedux.connect(mapStateToProps)(Balance);

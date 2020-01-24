@@ -16,7 +16,7 @@ import * as Styles from './Header.css';
 
 interface IProps {
   doc: DocStates.IState;
-  page: UiStates.IPageHome;
+  page: UiStates.IPageCalendar;
 }
 
 interface IState {
@@ -153,7 +153,7 @@ class Header extends React.Component<IProps, IState> {
 const mapStateToProps = (state: IStoreState) => {
   return {
     doc: state.doc,
-    page: state.ui.pageHome,
+    page: state.ui.pageCalendar,
   };
 };
 export default ReactRedux.connect(mapStateToProps)(Header);

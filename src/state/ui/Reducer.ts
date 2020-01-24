@@ -14,21 +14,21 @@ const a2RMapper = createA2RMapper<States.IState>();
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_PREV,
   (state, action) => {
-    state.pageHome.currentDate = IYearMonthDayDateUtils.prevMonth(state.pageHome.currentDate);
+    state.pageCalendar.currentDate = IYearMonthDayDateUtils.prevMonth(state.pageCalendar.currentDate);
   },
 );
 
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_NEXT,
   (state, action) => {
-    state.pageHome.currentDate = IYearMonthDayDateUtils.nextMonth(state.pageHome.currentDate);
+    state.pageCalendar.currentDate = IYearMonthDayDateUtils.nextMonth(state.pageCalendar.currentDate);
   },
 );
 
 a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_TODAY,
   (state, action) => {
-    state.pageHome.currentDate = IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today());
+    state.pageCalendar.currentDate = IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today());
   },
 );
 

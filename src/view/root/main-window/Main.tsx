@@ -10,7 +10,7 @@ import SampleDoc from 'src/state/SampleDoc';
 import Store from 'src/state/Store';
 import * as MmxfImporter from 'src/util/doc/MmxfImporter';
 import LayoutStyle from 'src/view/Layout.css';
-import PageHome from 'src/view/page/home';
+import PageCalendar from 'src/view/page/calendar';
 import PageStyles from 'src/view/page/Page.css';
 import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
@@ -68,8 +68,8 @@ class MainWindow extends React.Component<any, IState> {
           onNewExampleSelected={() => {this.pageStartOnNewExampleSelected(); }}
           />;
         break;
-      case PageHome.PageId:
-        pageContent = <PageHome />;
+      case PageCalendar.PageId:
+        pageContent = <PageCalendar />;
         break;
       case PageSheet.PageId:
         pageContent = <PageSheet />;
@@ -124,7 +124,7 @@ class MainWindow extends React.Component<any, IState> {
     Store.dispatch(DocActions.resetDocument(resetDoc));
 
     // Page変更
-    this.activatePage(PageHome.PageId);
+    this.activatePage(PageCalendar.PageId);
   }
 
   private pageStartOnNewExampleSelected() {
@@ -133,7 +133,7 @@ class MainWindow extends React.Component<any, IState> {
     Store.dispatch(DocActions.resetDocument(resetDoc));
 
     // Page変更
-    this.activatePage(PageHome.PageId);
+    this.activatePage(PageCalendar.PageId);
   }
 
   private onPageBtnClicked(pageId: string) {
