@@ -718,6 +718,12 @@ class Main extends React.Component<ILocalProps, IState> {
     }
 
     // 既存レコードの場合
+    this.setState({
+      amountErrorMsg: '',
+      amountTransferErrorMsg: '',
+      accountFromErrorMsg: '',
+      accountToErrorMsg: '',
+    });
     switch (recordKind) {
       case DocTypes.RecordKind.Income: {
         const record = this.props.doc.income.records[recordId];
