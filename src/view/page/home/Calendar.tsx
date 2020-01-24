@@ -10,7 +10,7 @@ import * as RecordFilters from 'src/util/doc/RecordFilters';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
-import RecordAddDialog from 'src/view/widget/record-add-dialog';
+import RecordAddDialog from 'src/view/widget/record-edit-dialog';
 import * as LayoutStyles from '../../Layout.css';
 import * as Styles from './Calendar.css';
 

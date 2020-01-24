@@ -361,7 +361,7 @@ class Main extends React.Component<ILocalProps, IState> {
       </section>;
 
     // 右側関連
-    const isEditMode = this.state.selectedRecordId !== null && this.state.selectedRecordId !== NEW_RECORD_ID;
+    const isUpdateMode = this.state.selectedRecordId !== null && this.state.selectedRecordId !== NEW_RECORD_ID;
     const formTabsRootClass = ClassNames(
       Styles.FormTabsRoot,
     );
@@ -371,24 +371,24 @@ class Main extends React.Component<ILocalProps, IState> {
     const formTabBorder = ClassNames(
       Styles.FormTabBorder,
     );
-    const formTabBorderHiddenTransfer = isEditMode && this.state.formKind !== DocTypes.RecordKind.Transfer;
-    const formTabBorderHiddenTransferAndIncome = isEditMode && this.state.formKind === DocTypes.RecordKind.Outgo;
-    const formTabBorderHiddenIncomeAndOutgo = isEditMode && this.state.formKind === DocTypes.RecordKind.Transfer;
-    const formTabBorderHiddenOutgo = isEditMode && this.state.formKind !== DocTypes.RecordKind.Outgo;
+    const formTabBorderHiddenTransfer = isUpdateMode && this.state.formKind !== DocTypes.RecordKind.Transfer;
+    const formTabBorderHiddenTransferAndIncome = isUpdateMode && this.state.formKind === DocTypes.RecordKind.Outgo;
+    const formTabBorderHiddenIncomeAndOutgo = isUpdateMode && this.state.formKind === DocTypes.RecordKind.Transfer;
+    const formTabBorderHiddenOutgo = isUpdateMode && this.state.formKind !== DocTypes.RecordKind.Outgo;
     const formTabOutgoClass = ClassNames(
       Styles.FormTab,
       this.state.formKind === DocTypes.RecordKind.Outgo ? Styles.FormTabActive : null,
-      isEditMode && this.state.formKind !== DocTypes.RecordKind.Outgo ? Styles.FormTabHidden : null,
+      isUpdateMode && this.state.formKind !== DocTypes.RecordKind.Outgo ? Styles.FormTabHidden : null,
     );
     const formTabIncomeClass = ClassNames(
       Styles.FormTab,
       this.state.formKind === DocTypes.RecordKind.Income ? Styles.FormTabActive : null,
-      isEditMode && this.state.formKind !== DocTypes.RecordKind.Income ? Styles.FormTabHidden : null,
+      isUpdateMode && this.state.formKind !== DocTypes.RecordKind.Income ? Styles.FormTabHidden : null,
     );
     const formTabTransferClass = ClassNames(
       Styles.FormTab,
       this.state.formKind === DocTypes.RecordKind.Transfer ? Styles.FormTabActive : null,
-      isEditMode && this.state.formKind !== DocTypes.RecordKind.Transfer ? Styles.FormTabHidden : null,
+      isUpdateMode && this.state.formKind !== DocTypes.RecordKind.Transfer ? Styles.FormTabHidden : null,
     );
     const formSvgIconClass = ClassNames(
       Styles.FormSvgIcon,
@@ -449,7 +449,7 @@ class Main extends React.Component<ILocalProps, IState> {
       <div className={formTabsRootClass}>
         <div className={formTabsBaseClass}>
           <div className={formTabBorder} data-hidden={formTabBorderHiddenTransfer}/>
-          <div className={formTabTransferClass} data-edit-mode={isEditMode}>
+          <div className={formTabTransferClass} data-update-mode={isUpdateMode}>
             <button className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
               onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Transfer); }}
@@ -459,7 +459,7 @@ class Main extends React.Component<ILocalProps, IState> {
             </button>
           </div>
           <div className={formTabBorder} data-hidden={formTabBorderHiddenTransferAndIncome}/>
-          <div className={formTabIncomeClass} data-edit-mode={isEditMode}>
+          <div className={formTabIncomeClass} data-update-mode={isUpdateMode}>
             <button className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Income}
               onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
@@ -469,7 +469,7 @@ class Main extends React.Component<ILocalProps, IState> {
             </button>
           </div>
           <div className={formTabBorder} data-hidden={formTabBorderHiddenIncomeAndOutgo}/>
-          <div className={formTabOutgoClass} data-edit-mode={isEditMode}>
+          <div className={formTabOutgoClass} data-update-mode={isUpdateMode}>
             <button className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
               onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
@@ -637,7 +637,7 @@ class Main extends React.Component<ILocalProps, IState> {
           id={this.elementIdFormSubmit}
           data-toggle="tooltip"
           onClick={(e) => {this.onFormSubmitButtonClicked(e); }}
-          >{isEditMode ? '更新' : '追加'}</button>
+          >{isUpdateMode ? '更新' : '追加'}</button>
       </div>;
 
     const sectionRightSide =
@@ -958,10 +958,10 @@ class Main extends React.Component<ILocalProps, IState> {
     }
 
     // 追加・更新イベントを実行
-    const isEditMode = this.state.selectedRecordId !== NEW_RECORD_ID;
+    const isUpdateMode = this.state.selectedRecordId !== NEW_RECORD_ID;
     switch (this.state.formKind) {
       case DocTypes.RecordKind.Outgo:
-        if (isEditMode) {
+        if (isUpdateMode) {
           if (this.state.selectedRecordId === null) {
             throw new Error();
           }
@@ -987,7 +987,7 @@ class Main extends React.Component<ILocalProps, IState> {
         break;
 
       case DocTypes.RecordKind.Income:
-        if (isEditMode) {
+        if (isUpdateMode) {
           if (this.state.selectedRecordId === null) {
             throw new Error();
           }
@@ -1013,7 +1013,7 @@ class Main extends React.Component<ILocalProps, IState> {
         break;
 
       case DocTypes.RecordKind.Transfer:
-        if (isEditMode) {
+        if (isUpdateMode) {
           if (this.state.selectedRecordId === null) {
             throw new Error();
           }
@@ -1041,11 +1041,11 @@ class Main extends React.Component<ILocalProps, IState> {
 
     // 成功メッセージ設定
     this.setState({
-      submitSuccessMsg: isEditMode ? '更新しました' : '追加しました',
+      submitSuccessMsg: isUpdateMode ? '更新しました' : '追加しました',
     });
 
     // 続けて入力用の処理
-    if (!isEditMode) {
+    if (!isUpdateMode) {
       this.resetForNewInput();
     }
     $(`#${this.elementIdFormDate}`).focus();
