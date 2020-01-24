@@ -198,3 +198,18 @@ export const updateRecordTransfer = (
     memo,
   };
 };
+
+/// レコードの削除。
+export const DELETE_RECORDS = UUID();
+export interface IDeleteRecords extends Action {
+  records: number[];
+}
+export const deleteRecords = (
+  /** 削除するレコードIDの配列。 */
+  records: number[],
+  ): IDeleteRecords => {
+  return {
+    type: DELETE_RECORDS,
+    records,
+  };
+};

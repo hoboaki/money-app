@@ -1,4 +1,5 @@
 import ClassNames from 'classnames';
+import { remote } from 'electron';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
@@ -253,10 +254,7 @@ class Main extends React.Component<ILocalProps, IState> {
     );
 
     // 左側関連
-    const records = this.additionalRecordKeys.concat(
-      new RecordCollection(this.props.doc).filter([
-        RecordFilters.createRecordIdRangeFilter({startId: this.viewRecordIdMin, endId: null}),
-      ]).keys([{kind: RecordOrderKind.RecordId, reverse: false}]));
+    const records = this.listRecords();
     const recordElems: JSX.Element[] = [];
     records.forEach((recordKey) => {
       const selected = recordKey.id === this.state.selectedRecordId;
@@ -273,10 +271,10 @@ class Main extends React.Component<ILocalProps, IState> {
           amount = record.amount;
           memo = record.memo;
           additionalElems = [
-            <MaterialIcon name={'class'} iconSize={18} darkMode={true} />,
-            <span>{this.props.doc.income.categories[record.category].name}</span>,
-            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
-            <span>{this.props.doc.account.accounts[record.account].name}</span>,
+            <MaterialIcon key={`${record.id}-0`} name={'class'} iconSize={18} darkMode={true} />,
+            <span key={`${record.id}-1`}>{this.props.doc.income.categories[record.category].name}</span>,
+            <MaterialIcon key={`${record.id}-2`} name={'payment'} iconSize={18} darkMode={true} />,
+            <span key={`${record.id}-3`}>{this.props.doc.account.accounts[record.account].name}</span>,
           ];
           break;
         }
@@ -288,10 +286,10 @@ class Main extends React.Component<ILocalProps, IState> {
           amount = record.amount;
           memo = record.memo;
           additionalElems = [
-            <MaterialIcon name={'class'} iconSize={18} darkMode={true} />,
-            <span>{this.props.doc.outgo.categories[record.category].name}</span>,
-            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
-            <span>{this.props.doc.account.accounts[record.account].name}</span>,
+            <MaterialIcon key={`${record.id}-0`} name={'class'} iconSize={18} darkMode={true} />,
+            <span key={`${record.id}-1`}>{this.props.doc.outgo.categories[record.category].name}</span>,
+            <MaterialIcon key={`${record.id}-2`} name={'payment'} iconSize={18} darkMode={true} />,
+            <span key={`${record.id}-3`}>{this.props.doc.account.accounts[record.account].name}</span>,
           ];
           break;
         }
@@ -303,11 +301,11 @@ class Main extends React.Component<ILocalProps, IState> {
           amount = record.amount;
           memo = record.memo;
           additionalElems = [
-            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
-            <span>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
-            <span><MaterialIcon name={'arrow_forward'} iconSize={18} darkMode={true} /></span>,
-            <MaterialIcon name={'payment'} iconSize={18} darkMode={true} />,
-            <span>{this.props.doc.account.accounts[record.accountTo].name}</span>,
+            <MaterialIcon key={`${record.id}-0`} name={'payment'} iconSize={18} darkMode={true} />,
+            <span key={`${record.id}-1`}>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
+            <span key={`${record.id}-2`}><MaterialIcon name={'arrow_forward'} iconSize={18} darkMode={true} /></span>,
+            <MaterialIcon key={`${record.id}-3`} name={'payment'} iconSize={18} darkMode={true} />,
+            <span key={`${record.id}-4`}>{this.props.doc.account.accounts[record.accountTo].name}</span>,
           ];
           break;
         }
@@ -632,6 +630,15 @@ class Main extends React.Component<ILocalProps, IState> {
       </div>;
     const formFooter =
       <div className={formFooterRootClass}>
+        <div className={Styles.FormDeleteBtnHolder} data-update-mode={isUpdateMode}>
+          <button className={BasicStyles.IconBtn} onClick={(e) => {this.onFormDeleteBtnPushed(e); }}>
+            <MaterialIcon
+              name={'delete'}
+              iconSize={24}
+              darkMode={false}
+              />
+          </button>
+        </div>
         <button type="button"
           className={formSubmitBtnClass}
           id={this.elementIdFormSubmit}
@@ -672,6 +679,20 @@ class Main extends React.Component<ILocalProps, IState> {
         </div>
       </div>
     );
+  }
+
+  /// リストに表示するレコードのキー群。
+  private listRecords() {
+    // 追加レコードに関しては削除されている可能性があるので存在チェックをする
+    const records = this.additionalRecordKeys.filter((key) => {
+      return (key.id in this.props.doc.income.records) ||
+        (key.id in this.props.doc.outgo.records) ||
+        (key.id in this.props.doc.transfer.records);
+    });
+    return records.concat(
+      new RecordCollection(this.props.doc).filter([
+        RecordFilters.createRecordIdRangeFilter({startId: this.viewRecordIdMin, endId: null}),
+      ]).keys([{kind: RecordOrderKind.RecordId, reverse: false}]));
   }
 
   /// ダイアログ全体のホットキー対応。
@@ -914,6 +935,56 @@ class Main extends React.Component<ILocalProps, IState> {
   /// メモ変更時の処理。
   private onFormMemoChanged(sender: HTMLInputElement) {
     this.setState({formMemo: sender.value});
+  }
+
+  /// 削除ボタンクリック時処理。
+  private onFormDeleteBtnPushed(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    // イベント受理
+    e.stopPropagation();
+
+    // 新規レコードや未選択状態でここにくることはないはず
+    if (this.state.selectedRecordId === null || this.state.selectedRecordId === NEW_RECORD_ID) {
+      throw new Error();
+    }
+    const deleteRecordId: number = this.state.selectedRecordId;
+
+    // ダイアログで確認
+    const dialog = remote.dialog;
+    const msgBoxResult = dialog.showMessageBox(
+      remote.getCurrentWindow(),
+      {
+        type: 'warning',
+        buttons: ['削除する', 'キャンセル'],
+        defaultId: 0,
+        cancelId: 1,
+        title: 'レコードの削除',
+        message: '選択中のレコードを削除しますか？',
+      });
+    if (msgBoxResult === 1) {
+      return;
+    }
+
+    // 選択状態を変更
+    const records = this.listRecords();
+    let nextSelectedId = NEW_RECORD_ID;
+    if (2 <= records.length) {
+      const idx = records.findIndex((key) => key.id === deleteRecordId);
+      if (idx + 1 === records.length) {
+        // 終端の場合は自分の前にあるレコードを選択
+        nextSelectedId = records[idx - 1].id;
+      } else {
+        // 通常は自分の次にあるレコードを選択
+        nextSelectedId = records[idx + 1].id;
+      }
+    }
+    this.setState({
+      selectedRecordId: nextSelectedId,
+    });
+
+    // レコードを削除
+    Store.dispatch(DocActions.deleteRecords([
+      deleteRecordId,
+    ]));
   }
 
   /// 追加・更新ボタンクリック時処理。
