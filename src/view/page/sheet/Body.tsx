@@ -193,16 +193,6 @@ class Body extends React.Component<IProps, IState> {
       Styles.HolderEntryNormalCategoryName,
     );
 
-    // cell
-    const cellRootClass = ClassNames(
-      Styles.TableCell,
-      Styles.TableCellRoot,
-    );
-    const cellSpaceRootClass = ClassNames(
-      Styles.TableCellSpace,
-      Styles.TableCellRoot,
-    );
-
     // その他
     const iconClass = ClassNames(
       'material-icons',
@@ -538,7 +528,7 @@ class Body extends React.Component<IProps, IState> {
       }
       const cols = new Array();
       colInfos.forEach((colInfo, colIdx) => {
-        cols.push(<td className={cellRootClass}>
+        cols.push(<td className={Styles.TableCell} data-cell-root={true}>
           {PriceUtils.numToLocaleString(accountGroupCellDataArray[accountGroup][colIdx])}
           </td>);
       });
@@ -557,7 +547,7 @@ class Body extends React.Component<IProps, IState> {
             {carriedVisible ? PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup]) : ''}
           </td>
           {cols}
-          <td className={cellSpaceRootClass}></td>
+          <td className={Styles.TableCellSpace} data-cell-root={true}/>
           <td className={rowTailRootAccountBalance}>
             {PriceUtils.numToLocaleString(accountGroupBalanceData[accountGroup])}
           </td>
@@ -627,7 +617,7 @@ class Body extends React.Component<IProps, IState> {
       }
       const cols = new Array();
       colInfos.forEach((colInfo, colIdx) => {
-        cols.push(<td className={cellRootClass}>
+        cols.push(<td className={Styles.TableCell} data-cell-root={true}>
           {
             recordKindCellDataDictArray[colIdx][recordKind] === null ? null :
               PriceUtils.numToLocaleString(Number(recordKindCellDataDictArray[colIdx][recordKind]))
@@ -645,7 +635,7 @@ class Body extends React.Component<IProps, IState> {
             </div>
           </td>
           {cols}
-          <td className={cellSpaceRootClass}></td>
+          <td className={Styles.TableCellSpace} data-cell-root={true}/>
           <td className={rowTailRootTotal}>
             {
               recordKindTotalArray[recordKind] === null ? null :

@@ -156,7 +156,8 @@
 .HolderEntryRootOpenerSpace,
 .TableRowHeadRoot,
 .TableRowTailRoot,
-.TableCellRoot {
+.TableCell[data-cell-root='true'],
+.TableCellSpace[data-cell-root='true'] {
   background: rgba(25, 118, 210, 0.35);
 }
 .HolderEntryRoot,
