@@ -11,7 +11,7 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
-import RecordAddDialog from 'src/view/widget/record-add-dialog';
+import RecordAddDialog from 'src/view/widget/record-edit-dialog';
 import * as Styles from './Header.css';
 
 interface IProps {
