@@ -7,8 +7,8 @@ export interface IDialogAddRecord {
   dummy: boolean;
 }
 
-/** PageHome 用 state。 */
-export interface IPageHome {
+/** PageCalendar 用 state。 */
+export interface IPageCalendar {
   currentDate: IYearMonthDayDate;
 }
 
@@ -21,7 +21,7 @@ export interface IPageSheet {
 /** State ルート。 */
 export interface IState {
   dialogAddRecord: IDialogAddRecord;
-  pageHome: IPageHome;
+  pageCalendar: IPageCalendar;
   pageSheet: IPageSheet;
 }
 
@@ -29,7 +29,7 @@ export const defaultState: IState = {
   dialogAddRecord: {
     dummy: false,
   },
-  pageHome : {
+  pageCalendar : {
     currentDate: IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today()),
   },
   pageSheet: {
