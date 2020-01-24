@@ -28,8 +28,8 @@
 }
 
 .SectionRightSideRoot {
+  background: #eeeeee;
   border-left: 1px solid #cccccc;
-  width: 400px;
 }
 
 .ListCard {
@@ -137,6 +137,17 @@
   text-align: center;
 }
 
+.FormRoot {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.FormRoot[data-is-any-record-selected='false'] {
+  display: none;
+}
+
 .FormTabsRoot {
   background: #eeeeee;
   border-bottom: 1px solid #cccccc;
@@ -160,7 +171,6 @@
 
 .FormTab {
   border-collapse: collapse;
-  border-left: 1px solid #cccccc;
   border-top: 1px solid #cccccc;
   display: flex;
   flex-direction: row;
@@ -169,6 +179,20 @@
   margin-bottom: -1px;
   padding-top: 2px;
   width: 30%;
+}
+
+.FormTabBorder {
+  border-bottom: 1px solid #cccccc;
+  border-left: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+  height: 100%;
+  margin-bottom: -1px;
+  padding-top: 2px;
+  width: 1px;
+}
+
+.FormTabBorder[data-hidden='true'] {
+  visibility: hidden;
 }
 
 .FormTabButton {
@@ -187,13 +211,13 @@
   display: block;
 }
 
-.FormTabLast {
-  border-right: 1px solid #cccccc;
-}
-
 .FormTabActive {
   background: #ffffff;
   border-bottom: 1px solid #ffffff;
+}
+
+.FormTabHidden {
+  visibility: hidden;
 }
 
 .FormSvgIcon {

@@ -86,6 +86,7 @@ class Header extends React.Component<IProps, IState> {
     if (this.state.modalAddRecord) {
         modalDialog = <RecordAddDialog
           formDefaultDate={IYearMonthDayDateUtils.today()}
+          additionalRecords={[]}
           onClosed={() => {
             this.setState({modalAddRecord: false});
           }}

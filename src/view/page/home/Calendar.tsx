@@ -208,12 +208,17 @@ class Calendar extends React.Component<IProps, IState> {
 
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalAddRecord) {
-        modalDialog = <RecordAddDialog
-          formDefaultDate={this.state.selectedDate}
-          onClosed={() => {
-            this.setState({modalAddRecord: false});
-          }}
-        />;
+      const additionalRecords = recordsInCalendar.filter([RecordFilters.createDateRangeFilter({
+        startDate: this.state.selectedDate,
+        endDate: IYearMonthDayDateUtils.nextDay(this.state.selectedDate),
+      })]).standardSortedKeys();
+      modalDialog = <RecordAddDialog
+        formDefaultDate={this.state.selectedDate}
+        additionalRecords={additionalRecords}
+        onClosed={() => {
+          this.setState({modalAddRecord: false});
+        }}
+      />;
     }
 
     return (
