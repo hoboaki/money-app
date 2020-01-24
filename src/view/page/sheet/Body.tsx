@@ -202,17 +202,6 @@ class Body extends React.Component<IProps, IState> {
       Styles.TableCellSpace,
       Styles.TableCellRoot,
     );
-    const cellOddClass = ClassNames(
-      Styles.TableCell,
-      Styles.TableCellOdd,
-    );
-    const cellEvenClass = ClassNames(
-      Styles.TableCell,
-      Styles.TableCellEven,
-    );
-    const cellSpaceClass = ClassNames(
-      Styles.TableCellSpace,
-    );
 
     // その他
     const iconClass = ClassNames(
@@ -588,9 +577,9 @@ class Body extends React.Component<IProps, IState> {
       const cols = new Array();
       colInfos.forEach((colInfo, idx) => {
         cols.push(
-          <td className={(targetArray.length) % 2 === 0 ?
-            cellEvenClass :
-            cellOddClass}>{PriceUtils.numToLocaleString(accountCellDataArray[accountId][idx])}</td>);
+          <td className={Styles.TableCell} data-cell-even={(targetArray.length) % 2 === 0}>
+            {PriceUtils.numToLocaleString(accountCellDataArray[accountId][idx])}
+          </td>);
       });
       targetArray.push(
         <tr>
@@ -607,7 +596,7 @@ class Body extends React.Component<IProps, IState> {
             {carriedVisible ? PriceUtils.numToLocaleString(accountCarriedData[accountId]) : ''}
           </td>
           {cols}
-          <td className={cellSpaceClass}></td>
+          <td className={Styles.TableCellSpace}></td>
           <td className={rowTailAccountBalance}>{PriceUtils.numToLocaleString(accountBalanceData[accountId])}</td>
         </tr>,
       );
@@ -709,7 +698,7 @@ class Body extends React.Component<IProps, IState> {
           null :
           <button className={openerBtnClass}>▼</button>;
         colInfos.forEach((colInfo, colIdx) => {
-          cols.push(<td className={(result.length % 2) === 0 ? cellEvenClass : cellOddClass}>
+          cols.push(<td className={Styles.TableCell} data-cell-even={(result.length % 2) === 0}>
             {
               cellDataDictArray[colIdx][categoryId] === null ? null :
                 PriceUtils.numToLocaleString(Number(cellDataDictArray[colIdx][categoryId]))
@@ -727,7 +716,7 @@ class Body extends React.Component<IProps, IState> {
               </div>
             </td>
             {cols}
-            <td className={cellSpaceClass}></td>
+            <td className={Styles.TableCellSpace}></td>
             <td className={rowTailTotal}>
               {
                 totalArray[categoryId] === null ? null :
