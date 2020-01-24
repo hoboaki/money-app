@@ -139,11 +139,6 @@ class Body extends React.Component<IProps, IState> {
       Styles.TableRowHeadAccount,
       Styles.TableRowHeadCarried,
     );
-    const rowHeadCategoryOpenerSpaceClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadCategory,
-      Styles.HolderEntryOpenerSpaceIndent1,
-    );
 
     // rowTail
     const rowTailRootAccountBalance = ClassNames(
@@ -171,49 +166,11 @@ class Body extends React.Component<IProps, IState> {
       Styles.HolderEntryRoot,
       Styles.HolderEntryOpenerSpace,
       Styles.HolderEntryRootOpenerSpace,
-      Styles.HolderEntryOpenerSpaceIndent0,
     );
-    const holderEntryNormalOpenerSpaceIndent1Class = ClassNames(
+    const holderEntryNormalOpenerSpaceClass = ClassNames(
       Styles.HolderEntry,
       Styles.HolderEntryOpenerSpace,
       Styles.HolderEntryNormalOpenerSpace,
-      Styles.HolderEntryOpenerSpaceIndent1,
-    );
-    const holderEntryNormalOpenerSpaceIndent2Class = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryOpenerSpace,
-      Styles.HolderEntryNormalOpenerSpace,
-      Styles.HolderEntryOpenerSpaceIndent2,
-    );
-    const holderEntryNormalOpenerSpaceIndent3Class = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryOpenerSpace,
-      Styles.HolderEntryNormalOpenerSpace,
-      Styles.HolderEntryOpenerSpaceIndent3,
-    );
-    const holderEntryNormalOpenerSpaceIndent4Class = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryOpenerSpace,
-      Styles.HolderEntryNormalOpenerSpace,
-      Styles.HolderEntryOpenerSpaceIndent4,
-    );
-    const holderEntryNormalOpenerSpaceIndent5Class = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryOpenerSpace,
-      Styles.HolderEntryNormalOpenerSpace,
-      Styles.HolderEntryOpenerSpaceIndent5,
-    );
-    const holderEntryNormalOpenerSpaceIndent6Class = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryOpenerSpace,
-      Styles.HolderEntryNormalOpenerSpace,
-      Styles.HolderEntryOpenerSpaceIndent6,
-    );
-    const holderEntryNormalOpenerSpaceIndent7Class = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryOpenerSpace,
-      Styles.HolderEntryNormalOpenerSpace,
-      Styles.HolderEntryOpenerSpaceIndent7,
     );
     const holderEntryRootAccountNameClass = ClassNames(
       Styles.HolderEntry,
@@ -234,27 +191,6 @@ class Body extends React.Component<IProps, IState> {
       Styles.HolderEntry,
       Styles.HolderEntryCategoryName,
       Styles.HolderEntryNormalCategoryName,
-    );
-
-    // cell
-    const cellRootClass = ClassNames(
-      Styles.TableCell,
-      Styles.TableCellRoot,
-    );
-    const cellSpaceRootClass = ClassNames(
-      Styles.TableCellSpace,
-      Styles.TableCellRoot,
-    );
-    const cellOddClass = ClassNames(
-      Styles.TableCell,
-      Styles.TableCellOdd,
-    );
-    const cellEvenClass = ClassNames(
-      Styles.TableCell,
-      Styles.TableCellEven,
-    );
-    const cellSpaceClass = ClassNames(
-      Styles.TableCellSpace,
     );
 
     // その他
@@ -592,7 +528,7 @@ class Body extends React.Component<IProps, IState> {
       }
       const cols = new Array();
       colInfos.forEach((colInfo, colIdx) => {
-        cols.push(<td className={cellRootClass}>
+        cols.push(<td className={Styles.TableCell} data-cell-root={true}>
           {PriceUtils.numToLocaleString(accountGroupCellDataArray[accountGroup][colIdx])}
           </td>);
       });
@@ -600,7 +536,7 @@ class Body extends React.Component<IProps, IState> {
         <tr>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
-              <div className={holderEntryRootOpenerSpaceClass}>
+              <div className={holderEntryRootOpenerSpaceClass} data-indent-level={0}>
                 <button className={openerBtnClass}>▼</button>
               </div>
               <span className={holderEntryRootAccountNameClass}>{label}</span>
@@ -611,7 +547,7 @@ class Body extends React.Component<IProps, IState> {
             {carriedVisible ? PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup]) : ''}
           </td>
           {cols}
-          <td className={cellSpaceRootClass}></td>
+          <td className={Styles.TableCellSpace} data-cell-root={true}/>
           <td className={rowTailRootAccountBalance}>
             {PriceUtils.numToLocaleString(accountGroupBalanceData[accountGroup])}
           </td>
@@ -631,15 +567,15 @@ class Body extends React.Component<IProps, IState> {
       const cols = new Array();
       colInfos.forEach((colInfo, idx) => {
         cols.push(
-          <td className={(targetArray.length) % 2 === 0 ?
-            cellEvenClass :
-            cellOddClass}>{PriceUtils.numToLocaleString(accountCellDataArray[accountId][idx])}</td>);
+          <td className={Styles.TableCell} data-cell-even={(targetArray.length) % 2 === 0}>
+            {PriceUtils.numToLocaleString(accountCellDataArray[accountId][idx])}
+          </td>);
       });
       targetArray.push(
         <tr>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
-              <div className={holderEntryNormalOpenerSpaceIndent1Class}></div>
+              <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={1}/>
               <span className={holderEntryNormalAccountNameClass}>{account.name}</span>
             </div>
           </td>
@@ -650,7 +586,7 @@ class Body extends React.Component<IProps, IState> {
             {carriedVisible ? PriceUtils.numToLocaleString(accountCarriedData[accountId]) : ''}
           </td>
           {cols}
-          <td className={cellSpaceClass}></td>
+          <td className={Styles.TableCellSpace}></td>
           <td className={rowTailAccountBalance}>{PriceUtils.numToLocaleString(accountBalanceData[accountId])}</td>
         </tr>,
       );
@@ -681,7 +617,7 @@ class Body extends React.Component<IProps, IState> {
       }
       const cols = new Array();
       colInfos.forEach((colInfo, colIdx) => {
-        cols.push(<td className={cellRootClass}>
+        cols.push(<td className={Styles.TableCell} data-cell-root={true}>
           {
             recordKindCellDataDictArray[colIdx][recordKind] === null ? null :
               PriceUtils.numToLocaleString(Number(recordKindCellDataDictArray[colIdx][recordKind]))
@@ -692,14 +628,14 @@ class Body extends React.Component<IProps, IState> {
         <tr>
           <td className={rowHeadHolderCategoryClass}>
             <div className={Styles.Holder}>
-              <div className={holderEntryRootOpenerSpaceClass}>
+              <div className={holderEntryRootOpenerSpaceClass} data-indent-level={0}>
                 <button className={openerBtnClass}>▼</button>
               </div>
               <span className={holderEntryRootCategoryNameClass}>{label}</span>
             </div>
           </td>
           {cols}
-          <td className={cellSpaceRootClass}></td>
+          <td className={Styles.TableCellSpace} data-cell-root={true}/>
           <td className={rowTailRootTotal}>
             {
               recordKindTotalArray[recordKind] === null ? null :
@@ -747,35 +683,12 @@ class Body extends React.Component<IProps, IState> {
         const cat = categories[categoryId];
         const cols = new Array();
         const indent = calcIndent(categoryId);
-        let openerClass = holderEntryNormalOpenerSpaceIndent7Class;
-        switch (indent) {
-          case 1:
-            openerClass = holderEntryNormalOpenerSpaceIndent1Class;
-            break;
-          case 2:
-            openerClass = holderEntryNormalOpenerSpaceIndent2Class;
-            break;
-          case 3:
-            openerClass = holderEntryNormalOpenerSpaceIndent3Class;
-            break;
-          case 4:
-            openerClass = holderEntryNormalOpenerSpaceIndent4Class;
-            break;
-          case 5:
-            openerClass = holderEntryNormalOpenerSpaceIndent5Class;
-            break;
-          case 6:
-            openerClass = holderEntryNormalOpenerSpaceIndent6Class;
-            break;
-          case 7:
-            openerClass = holderEntryNormalOpenerSpaceIndent7Class;
-            break;
-        }
+        const openerClass = holderEntryNormalOpenerSpaceClass;
         const openerElement = cat.childs.length === 0 ?
           null :
           <button className={openerBtnClass}>▼</button>;
         colInfos.forEach((colInfo, colIdx) => {
-          cols.push(<td className={(result.length % 2) === 0 ? cellEvenClass : cellOddClass}>
+          cols.push(<td className={Styles.TableCell} data-cell-even={(result.length % 2) === 0}>
             {
               cellDataDictArray[colIdx][categoryId] === null ? null :
                 PriceUtils.numToLocaleString(Number(cellDataDictArray[colIdx][categoryId]))
@@ -786,14 +699,14 @@ class Body extends React.Component<IProps, IState> {
           <tr>
             <td className={rowHeadHolderCategoryClass}>
               <div className={Styles.Holder}>
-                <div className={openerClass}>
+                <div className={openerClass} data-indent-level={indent}>
                   {openerElement}
                 </div>
                 <span className={holderEntryNormalCategoryNameClass}>{cat.name}</span>
               </div>
             </td>
             {cols}
-            <td className={cellSpaceClass}></td>
+            <td className={Styles.TableCellSpace}></td>
             <td className={rowTailTotal}>
               {
                 totalArray[categoryId] === null ? null :
