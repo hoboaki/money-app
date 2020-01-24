@@ -383,6 +383,37 @@ export const incomeRecordAdd = (
   return obj.id;
 };
 
+/**
+ * 入金レコードの更新。
+ */
+export const incomeRecordUpdate = (
+  state: States.IState,
+  recordId: number,
+  createDate: Date,
+  updateDate: Date,
+  date: IYearMonthDayDate,
+  memo: string,
+  accountId: number,
+  categoryId: number,
+  amount: number,
+  ) => {
+  // オブジェクト作成
+  const obj = {
+    id: recordId,
+    createDate,
+    updateDate,
+    date,
+    memo,
+    account: accountId,
+    category: categoryId,
+    amount,
+  };
+
+  // 更新
+  state.income.records[obj.id] = obj;
+  return obj.id;
+};
+
 /// 出金カテゴリ追加。
 /// @return {number} 追加したカテゴリの CategoryId。
 export const outgoCategoryAdd = (
@@ -449,6 +480,37 @@ export const outgoRecordAdd = (
 };
 
 /**
+ * 出金レコードの更新。
+ */
+export const outgoRecordUpdate = (
+  state: States.IState,
+  recordId: number,
+  createDate: Date,
+  updateDate: Date,
+  date: IYearMonthDayDate,
+  memo: string,
+  accountId: number,
+  categoryId: number,
+  amount: number,
+  ) => {
+  // オブジェクト作成
+  const obj = {
+    id: recordId,
+    createDate,
+    updateDate,
+    date,
+    memo,
+    account: accountId,
+    category: categoryId,
+    amount,
+  };
+
+  // 更新
+  state.outgo.records[obj.id] = obj;
+  return obj.id;
+};
+
+/**
  * 送金レコードの追加。
  * @param amount 金額。送金元口座からは減算され送金先口座に加算される。
  */
@@ -477,6 +539,37 @@ export const transferRecordAdd = (
   // 追加
   obj.id = state.nextId.record;
   state.nextId.record++;
+  state.transfer.records[obj.id] = obj;
+  return obj.id;
+};
+
+/**
+ * 送金レコードの更新。
+ */
+export const transferRecordUpdate = (
+  state: States.IState,
+  recordId: number,
+  createDate: Date,
+  updateDate: Date,
+  date: IYearMonthDayDate,
+  memo: string,
+  accountFromId: number,
+  accountToId: number,
+  amount: number,
+  ) => {
+  // オブジェクト作成
+  const obj = {
+    id: recordId,
+    createDate,
+    updateDate,
+    date,
+    memo,
+    accountFrom: accountFromId,
+    accountTo: accountToId,
+    amount,
+  };
+
+  // 追加
   state.transfer.records[obj.id] = obj;
   return obj.id;
 };

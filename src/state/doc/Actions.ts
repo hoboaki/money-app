@@ -45,6 +45,38 @@ export const addRecordIncome = (
   };
 };
 
+/// 入金レコードの更新。
+export const UPDATE_RECORD_INCOME = UUID();
+export interface IUpdateRecordIncome extends Action {
+  recordId: number;
+  updateDate: Date;
+  date: IYearMonthDayDate;
+  memo: string;
+  accountId: number;
+  categoryId: number;
+  amount: number;
+}
+export const updateRecordIncome = (
+  recordId: number,
+  updateDate: Date,
+  date: IYearMonthDayDate,
+  memo: string,
+  accountId: number,
+  categoryId: number,
+  amount: number,
+  ): IUpdateRecordIncome => {
+  return {
+    type: UPDATE_RECORD_INCOME,
+    recordId,
+    updateDate,
+    date,
+    accountId,
+    categoryId,
+    amount,
+    memo,
+  };
+};
+
 /// 出金レコードの追加。
 export const ADD_RECORD_OUTGO = UUID();
 export interface IAddRecordOutgo extends Action {
@@ -74,6 +106,38 @@ export const addRecordOutgo = (
   };
 };
 
+/// 出金レコードの更新。
+export const UPDATE_RECORD_OUTGO = UUID();
+export interface IUpdateRecordOutgo extends Action {
+  recordId: number;
+  updateDate: Date;
+  date: IYearMonthDayDate;
+  memo: string;
+  accountId: number;
+  categoryId: number;
+  amount: number;
+}
+export const updateRecordOutgo = (
+  recordId: number,
+  updateDate: Date,
+  date: IYearMonthDayDate,
+  memo: string,
+  accountId: number,
+  categoryId: number,
+  amount: number,
+  ): IUpdateRecordOutgo => {
+  return {
+    type: UPDATE_RECORD_OUTGO,
+    recordId,
+    updateDate,
+    date,
+    accountId,
+    categoryId,
+    amount,
+    memo,
+  };
+};
+
 /// 資金移動レコードの追加。
 export const ADD_RECORD_TRANSFER = UUID();
 export interface IAddRecordTransfer extends Action {
@@ -95,6 +159,38 @@ export const addRecordTransfer = (
   return {
     type: ADD_RECORD_TRANSFER,
     createDate,
+    date,
+    accountFromId,
+    accountToId,
+    amount,
+    memo,
+  };
+};
+
+/// 資金移動レコードの更新。
+export const UPDATE_RECORD_TRANSFER = UUID();
+export interface IUpdateRecordTransfer extends Action {
+  recordId: number;
+  updateDate: Date;
+  date: IYearMonthDayDate;
+  memo: string;
+  accountFromId: number;
+  accountToId: number;
+  amount: number;
+}
+export const updateRecordTransfer = (
+  recordId: number,
+  updateDate: Date,
+  date: IYearMonthDayDate,
+  memo: string,
+  accountFromId: number,
+  accountToId: number,
+  amount: number,
+  ): IUpdateRecordTransfer => {
+  return {
+    type: UPDATE_RECORD_TRANSFER,
+    recordId,
+    updateDate,
     date,
     accountFromId,
     accountToId,

@@ -57,11 +57,11 @@ interface IState {
   formAmountIsNegative: boolean;
   formAmountTransfer: number;
   formMemo: string;
+  submitSuccessMsg: string;
   amountErrorMsg: string | null;
   amountTransferErrorMsg: string | null;
   accountFromErrorMsg: string | null;
   accountToErrorMsg: string | null;
-  displayAddRecordNotice: boolean;
 
   /** 選択中のレコードのID。NEW_RECORD_ID なら新規レコード。null なら何も選択していない状態。 */
   selectedRecordId: number | null;
@@ -96,6 +96,7 @@ class Main extends React.Component<ILocalProps, IState> {
       formAccount: this.props.doc.account.order[0],
       formAccountFrom: DocTypes.INVALID_ID,
       formAccountTo: DocTypes.INVALID_ID,
+      submitSuccessMsg: '',
       formAmount: 0,
       formAmountIsNegative: false,
       formAmountTransfer: 0,
@@ -104,7 +105,6 @@ class Main extends React.Component<ILocalProps, IState> {
       amountTransferErrorMsg: null,
       accountFromErrorMsg: null,
       accountToErrorMsg: null,
-      displayAddRecordNotice: false,
       selectedRecordId: NEW_RECORD_ID,
     };
     this.elementIdRoot = `elem-${UUID()}`;
@@ -430,7 +430,7 @@ class Main extends React.Component<ILocalProps, IState> {
       'modal-footer',
       Styles.FormFooterRoot,
     );
-    const formInputSubmitBtnClass = ClassNames(
+    const formSubmitBtnClass = ClassNames(
       BasicStyles.StdBtnSecondary,
       Styles.FormInputSubmit,
     );
@@ -443,7 +443,7 @@ class Main extends React.Component<ILocalProps, IState> {
       <span className={Styles.FormErrorMsg}>{this.state.amountErrorMsg}</span>;
     const amountTransferErrorMsg = this.state.amountTransferErrorMsg == null ? null :
       <span className={Styles.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
-    const addRecordNotice = <span className={Styles.FormNoticeMsg}>追加しました</span>;
+    const submitSuccessNotice = <span className={Styles.FormNoticeMsg}>{this.state.submitSuccessMsg}</span>;
 
     const formTabs =
       <div className={formTabsRootClass}>
@@ -497,7 +497,7 @@ class Main extends React.Component<ILocalProps, IState> {
                   onClick={() => {this.onFormDateClicked(); }}
                   onKeyDown={(e) => {this.onFormDateKeyDown(e); }}
                   />
-                {addRecordNotice}
+                {submitSuccessNotice}
               </td>
             </tr>
             <tr className={formInputRowCategoryOutgoClass}>
@@ -633,11 +633,11 @@ class Main extends React.Component<ILocalProps, IState> {
     const formFooter =
       <div className={formFooterRootClass}>
         <button type="button"
-          className={formInputSubmitBtnClass}
+          className={formSubmitBtnClass}
           id={this.elementIdFormSubmit}
           data-toggle="tooltip"
-          onClick={(e) => {this.onAddButtonClicked(e); }}
-          >追加</button>
+          onClick={(e) => {this.onFormSubmitButtonClicked(e); }}
+          >{isEditMode ? '更新' : '追加'}</button>
       </div>;
 
     const sectionRightSide =
@@ -910,8 +910,8 @@ class Main extends React.Component<ILocalProps, IState> {
     this.setState({formMemo: sender.value});
   }
 
-  /// 追加ボタンクリック時処理。
-  private onAddButtonClicked(e: React.MouseEvent<HTMLElement>) {
+  /// 追加・更新ボタンクリック時処理。
+  private onFormSubmitButtonClicked(e: React.MouseEvent<HTMLElement>) {
     // イベント受理
     e.stopPropagation();
 
@@ -951,44 +951,97 @@ class Main extends React.Component<ILocalProps, IState> {
       return;
     }
 
-    // 追加イベントを実行
+    // 追加・更新イベントを実行
+    const isEditMode = this.state.selectedRecordId !== NEW_RECORD_ID;
     switch (this.state.formKind) {
       case DocTypes.RecordKind.Outgo:
-        Store.dispatch(DocActions.addRecordOutgo(
-          new Date(),
-          IYearMonthDayDateUtils.fromText(this.state.formDate),
-          this.state.formMemo,
-          this.state.formAccount,
-          this.state.formCategoryOutgo,
-          (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
-          ));
+        if (isEditMode) {
+          if (this.state.selectedRecordId === null) {
+            throw new Error();
+          }
+          Store.dispatch(DocActions.updateRecordOutgo(
+            this.state.selectedRecordId,
+            new Date(),
+            IYearMonthDayDateUtils.fromText(this.state.formDate),
+            this.state.formMemo,
+            this.state.formAccount,
+            this.state.formCategoryOutgo,
+            (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
+            ));
+        } else {
+          Store.dispatch(DocActions.addRecordOutgo(
+            new Date(),
+            IYearMonthDayDateUtils.fromText(this.state.formDate),
+            this.state.formMemo,
+            this.state.formAccount,
+            this.state.formCategoryOutgo,
+            (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
+            ));
+        }
         break;
 
       case DocTypes.RecordKind.Income:
-        Store.dispatch(DocActions.addRecordIncome(
-          new Date(),
-          IYearMonthDayDateUtils.fromText(this.state.formDate),
-          this.state.formMemo,
-          this.state.formAccount,
-          this.state.formCategoryIncome,
-          (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
-          ));
+        if (isEditMode) {
+          if (this.state.selectedRecordId === null) {
+            throw new Error();
+          }
+          Store.dispatch(DocActions.updateRecordIncome(
+            this.state.selectedRecordId,
+            new Date(),
+            IYearMonthDayDateUtils.fromText(this.state.formDate),
+            this.state.formMemo,
+            this.state.formAccount,
+            this.state.formCategoryIncome,
+            (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
+            ));
+        } else {
+          Store.dispatch(DocActions.addRecordIncome(
+            new Date(),
+            IYearMonthDayDateUtils.fromText(this.state.formDate),
+            this.state.formMemo,
+            this.state.formAccount,
+            this.state.formCategoryIncome,
+            (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
+            ));
+        }
         break;
 
       case DocTypes.RecordKind.Transfer:
-        Store.dispatch(DocActions.addRecordTransfer(
-          new Date(),
-          IYearMonthDayDateUtils.fromText(this.state.formDate),
-          this.state.formMemo,
-          this.state.formAccountFrom,
-          this.state.formAccountTo,
-          this.state.formAmountTransfer != null ? this.state.formAmountTransfer : 0,
-          ));
+        if (isEditMode) {
+          if (this.state.selectedRecordId === null) {
+            throw new Error();
+          }
+          Store.dispatch(DocActions.updateRecordTransfer(
+            this.state.selectedRecordId,
+            new Date(),
+            IYearMonthDayDateUtils.fromText(this.state.formDate),
+            this.state.formMemo,
+            this.state.formAccountFrom,
+            this.state.formAccountTo,
+            this.state.formAmountTransfer != null ? this.state.formAmountTransfer : 0,
+            ));
+        } else {
+          Store.dispatch(DocActions.addRecordTransfer(
+            new Date(),
+            IYearMonthDayDateUtils.fromText(this.state.formDate),
+            this.state.formMemo,
+            this.state.formAccountFrom,
+            this.state.formAccountTo,
+            this.state.formAmountTransfer != null ? this.state.formAmountTransfer : 0,
+            ));
+        }
         break;
     }
 
+    // 成功メッセージ設定
+    this.setState({
+      submitSuccessMsg: isEditMode ? '更新しました' : '追加しました',
+    });
+
     // 続けて入力用の処理
-    this.resetForNewInput();
+    if (!isEditMode) {
+      this.resetForNewInput();
+    }
     $(`#${this.elementIdFormDate}`).focus();
     $(`.${Styles.FormNoticeMsg}`)
       .animate({opacity: 1.0}, 0)
