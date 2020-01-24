@@ -575,6 +575,26 @@ export const transferRecordUpdate = (
 };
 
 /**
+ * レコードの削除。
+ */
+export const deleteRecords = (
+  state: States.IState,
+  recordIdArray: number[],
+  ) => {
+  recordIdArray.forEach((id) => {
+    if (id in state.income.records) {
+      delete state.income.records[id];
+    }
+    if (id in state.outgo.records) {
+      delete state.outgo.records[id];
+    }
+    if (id in state.transfer.records) {
+      delete state.transfer.records[id];
+    }
+  });
+};
+
+/**
  * パス形式文字列でカテゴリを検索し ICategory オブジェクトで返す。見つからない場合はエラー。
  * @param categories incomeCategories もしくは outgoCategories の参照。
  * @param path 階層をスラッシュで区切った文字列。（例：'家事費/食費'）

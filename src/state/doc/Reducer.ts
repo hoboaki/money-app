@@ -126,6 +126,16 @@ a2RMapper.addWork<Actions.IUpdateRecordTransfer>(
   },
 );
 
+a2RMapper.addWork<Actions.IDeleteRecords>(
+  Actions.DELETE_RECORDS,
+  (state, action) => {
+    StateMethods.deleteRecords(
+      state,
+      action.records,
+    );
+  },
+);
+
 // Reducer 本体。
 const Reducer: Redux.Reducer<States.IState> = (state = States.defaultState, action) => {
     return a2RMapper.execute(state, action);
