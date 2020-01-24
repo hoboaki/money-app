@@ -175,30 +175,33 @@
   flex-direction: row-reverse;
   height: 21px;
 }
-.HolderEntryOpenerSpaceIndent0 {
-  width: 20px;
-}
-.HolderEntryOpenerSpaceIndent1 {
-  width: calc(20px + 15px * 1);
-}
-.HolderEntryOpenerSpaceIndent2 {
-  width: calc(20px + 15px * 2);
-}
-.HolderEntryOpenerSpaceIndent3 {
-  width: calc(20px + 15px * 3);
-}
-.HolderEntryOpenerSpaceIndent4 {
-  width: calc(20px + 15px * 4);
-}
-.HolderEntryOpenerSpaceIndent5 {
-  width: calc(20px + 15px * 5);
-}
-.HolderEntryOpenerSpaceIndent6 {
-  width: calc(20px + 15px * 6);
-}
-.HolderEntryOpenerSpaceIndent7 {
+
+/** 7以上のサイズ */
+.HolderEntryOpenerSpace {
   width: calc(20px + 15px * 7);
 }
+.HolderEntryOpenerSpace[data-indent-level='0'] {
+  width: 20px;
+}
+.HolderEntryOpenerSpace[data-indent-level='1'] {
+  width: calc(20px + 15px * 1);
+}
+.HolderEntryOpenerSpace[data-indent-level='2'] {
+  width: calc(20px + 15px * 2);
+}
+.HolderEntryOpenerSpace[data-indent-level='3'] {
+  width: calc(20px + 15px * 3);
+}
+.HolderEntryOpenerSpace[data-indent-level='4'] {
+  width: calc(20px + 15px * 4);
+}
+.HolderEntryOpenerSpace[data-indent-level='5'] {
+  width: calc(20px + 15px * 5);
+}
+.HolderEntryOpenerSpace[data-indent-level='6'] {
+  width: calc(20px + 15px * 6);
+}
+
 .OpenerBtn {
   color: rgba(0, 0, 0, 0.61);
   font-size: 8pt;
