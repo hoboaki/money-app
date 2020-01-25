@@ -368,7 +368,7 @@ class Main extends React.Component<ILocalProps, IState> {
           <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`}/>
           <div className={Styles.ListCardBody}>
             <div className={Styles.ListCardTop} data-selected={selected}>
-              <span>{IYearMonthDayDateUtils.toDisplayFormatText(date)}</span>
+              <span className={Styles.ListCardDate}>{IYearMonthDayDateUtils.toDisplayFormatText(date)}</span>
               {additionalElems}
             </div>
             <div className={Styles.ListCardBottom}>

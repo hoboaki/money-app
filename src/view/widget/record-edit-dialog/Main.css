@@ -45,6 +45,7 @@
 
 .ListCard[data-selected='false'] {
   background: #ffffff;
+  color: rgba(0,0,0,0.87);
 }
 
 .ListCard[data-selected='true'] {
@@ -77,7 +78,7 @@
 }
 
 .ListCardTop[data-selected='false'] {
-  color: #1976d2;
+  color: rgba(0,0,0,0.87);
 }
 
 .ListCardTop[data-selected='true'] {
@@ -93,10 +94,14 @@
   margin-top: 1px;
 }
 
+.ListCardDate {
+  font-weight: bold;
+}
+
 .ListCardForwardIcon {
   font-size: 16px;
-  margin-left: -6px;
-  margin-right: 2px;
+  margin-left: -7px;
+  margin-right: 3px;
   margin-top: 1px;
 }
 
