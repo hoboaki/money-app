@@ -558,19 +558,17 @@ class Body extends React.Component<IProps, IState> {
       }
       const cols = new Array();
       colInfos.forEach((colInfo, colIdx) => {
-        const accountId = DocTypes.INVALID_ID;
         const cellInfo: ISelectedCellInfo = {
           colIdx,
           date: colInfo.date,
           accountGroup,
-          accountId,
+          accountId: null,
           recordKind: null,
           categoryId: null,
         };
         cols.push(<td
           className={Styles.TableCell}
           data-account-group={accountGroup}
-          data-account-id={accountId}
           data-cell-root={true}
           data-col-idx={colIdx}
           data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
@@ -942,13 +940,14 @@ class Body extends React.Component<IProps, IState> {
         endDate: IYearMonthDateUtils.nextDate(cellInfo.date, UiTypes.sheetViewUnitToDateUnit(this.props.page.viewUnit)),
       }));
       if (cellInfo.accountGroup !== null) {
-        const accounts: number[] = [];
+        // 口座による絞り込み
+        let accounts: number[] = [];
         if (cellInfo.accountId !== null) {
-          // 指定のアカウントのみ
+          // 指定の口座のみ
           accounts.push(cellInfo.accountId);
         } else {
-          // 指定の種類のアカウント全部
-          accounts.concat(this.props.doc.account.order.filter((id) =>
+          // 指定の種類の口座全部
+          accounts = accounts.concat(this.props.doc.account.order.filter((id) =>
             DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[id].kind) === cellInfo.accountGroup));
         }
         filters.push(RecordFilters.createAccountFilter({accounts}));
