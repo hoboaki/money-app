@@ -624,13 +624,13 @@ export const categoryByPath = (categories: {[key: number]: States.ICategory}, pa
   return categories[parentId];
 };
 
-/** 最初に見つかる末端カテゴリの ICategory を返す。見つからない場合はエラー。 */
-export const firstLeafCategory = (categories: {[key: number]: States.ICategory}) => {
-  const category = Object.values(categories).find((cat) => cat.childs.length === 0);
-  if (category === undefined) {
-    throw new Error(`Not found leaf category.`);
+/** 指定のカテゴリID から検索を開始し最初に見つかる末端カテゴリの ID を返す。見つからない場合はエラー。 */
+export const firstLeafCategoryId = (startCategoryId: number, categories: {[key: number]: States.ICategory}) => {
+  let id = startCategoryId;
+  while (categories[id].childs.length !== 0) {
+    id = categories[id].childs[0];
   }
-  return category;
+  return id;
 };
 
 /** ルート要素も考慮したソート済カテゴリID配列を取得。 */

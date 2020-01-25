@@ -97,10 +97,16 @@ class Main extends React.Component<ILocalProps, IState> {
     const formDefaultValue = this.props.formDefaultValue;
     const formCategoryOutgo =
       (formDefaultValue.recordKind === DocTypes.RecordKind.Outgo && formDefaultValue.categoryId !== null) ?
-      formDefaultValue.categoryId : DocStateMethods.firstLeafCategory(this.props.doc.outgo.categories).id;
+        formDefaultValue.categoryId :
+        DocStateMethods.firstLeafCategoryId(
+          this.props.doc.outgo.categoryRootOrder[0],
+          this.props.doc.outgo.categories);
     const formCategoryIncome =
       (formDefaultValue.recordKind === DocTypes.RecordKind.Income && formDefaultValue.categoryId !== null) ?
-      formDefaultValue.categoryId : DocStateMethods.firstLeafCategory(this.props.doc.income.categories).id;
+        formDefaultValue.categoryId :
+        DocStateMethods.firstLeafCategoryId(
+          this.props.doc.income.categoryRootOrder[0],
+          this.props.doc.income.categories);
     const formAccount = formDefaultValue.accountId !== null ?
       formDefaultValue.accountId : this.props.doc.account.order[0];
     this.state = {

@@ -913,14 +913,18 @@ class Body extends React.Component<IProps, IState> {
 
       // カテゴリの選択
       let categoryId = cellInfo.categoryId;
-      if (categoryId === null && cellInfo.recordKind !== null) {
-        // ルートを選択中なら１つめのカテゴリを選択
+      if (cellInfo.recordKind !== null) {
+        // １つめの子カテゴリを選択
         switch (cellInfo.recordKind) {
           case DocTypes.RecordKind.Income:
-            categoryId = DocStateMethods.firstLeafCategory(this.props.doc.income.categories).id;
+            categoryId = DocStateMethods.firstLeafCategoryId(
+              categoryId !== null ? categoryId : this.props.doc.income.categoryRootOrder[0],
+              this.props.doc.income.categories);
             break;
           case DocTypes.RecordKind.Outgo:
-            categoryId = DocStateMethods.firstLeafCategory(this.props.doc.outgo.categories).id;
+            categoryId = DocStateMethods.firstLeafCategoryId(
+              categoryId !== null ? categoryId : this.props.doc.outgo.categoryRootOrder[0],
+              this.props.doc.outgo.categories);
             break;
           default:
             break;
