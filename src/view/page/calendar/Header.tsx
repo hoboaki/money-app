@@ -11,7 +11,7 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
-import RecordAddDialog from 'src/view/widget/record-edit-dialog';
+import RecordEditDialog from 'src/view/widget/record-edit-dialog';
 import * as Styles from './Header.css';
 
 interface IProps {
@@ -20,14 +20,14 @@ interface IProps {
 }
 
 interface IState {
-  modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
+  modalRecordEdit: boolean; // レコード編集ダイアログ表示する場合に true を指定。
 }
 
 class Header extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      modalAddRecord: false,
+      modalRecordEdit: false,
     };
   }
 
@@ -83,12 +83,12 @@ class Header extends React.Component<IProps, IState> {
       'md-16',
     );
     let modalDialog: JSX.Element | null = null;
-    if (this.state.modalAddRecord) {
-        modalDialog = <RecordAddDialog
+    if (this.state.modalRecordEdit) {
+        modalDialog = <RecordEditDialog
           formDefaultDate={IYearMonthDayDateUtils.today()}
           additionalRecords={[]}
           onClosed={() => {
-            this.setState({modalAddRecord: false});
+            this.setState({modalRecordEdit: false});
           }}
         />;
     }
@@ -146,7 +146,7 @@ class Header extends React.Component<IProps, IState> {
   }
 
   private onNewRecordBtnPushed() {
-    this.setState({modalAddRecord: true});
+    this.setState({modalRecordEdit: true});
   }
 }
 
