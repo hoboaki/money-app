@@ -17,6 +17,7 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
+import RecordEditDialog from 'src/view/widget/record-edit-dialog';
 import * as Styles from './Body.css';
 
 interface ISelectedCellInfo {
@@ -36,6 +37,13 @@ interface IProps {
 interface IState {
   colCount: number;
   selectedCell: ISelectedCellInfo | null;
+  modalRecordEdit: boolean;
+  recordEditDefaultValue: {
+    recordKind: DocTypes.RecordKind;
+    date: IYearMonthDayDate;
+    accountId: number | null;
+    categoryId: number | null;
+  };
 }
 
 const idPageSheetBodyTop = 'pageSheetBodyTop';
@@ -49,6 +57,13 @@ class Body extends React.Component<IProps, IState> {
     this.state = {
       colCount: 1,
       selectedCell: null,
+      modalRecordEdit: false,
+      recordEditDefaultValue: {
+        recordKind: DocTypes.RecordKind.Invalid,
+        date: IYearMonthDateUtils.today(),
+        accountId: null,
+        categoryId: null,
+      },
     };
     this.elementIdRoot = `elem-${UUID()}`;
   }
@@ -793,8 +808,21 @@ class Body extends React.Component<IProps, IState> {
       categoryRowDict[recordKind] = result;
     });
 
+    // ダイアログ
+    let modalDialog: JSX.Element | null = null;
+    if (this.state.modalRecordEdit) {
+        modalDialog = <RecordEditDialog
+          formDefaultDate={this.state.recordEditDefaultValue.date}
+          additionalRecords={[]}
+          onClosed={() => {
+            this.setState({modalRecordEdit: false});
+          }}
+        />;
+    }
+
     return (
       <div id={this.elementIdRoot} className={rootClass}>
+        {modalDialog}
         <div id={idPageSheetBodyTop} className={Styles.BodyTop}>
           <table className={Styles.Table}>
             <tbody>
@@ -862,6 +890,52 @@ class Body extends React.Component<IProps, IState> {
   }
 
   private onCellClicked(e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>, cellInfo: ISelectedCellInfo) {
+    // イベント伝搬停止
+    e.stopPropagation();
+
+    // 既に選択中のセルならダイアログを開く
+    if (this.isSelectedCell(cellInfo)) {
+      // 口座の選択
+      let accountId = cellInfo.accountId;
+      if (accountId === null && cellInfo.accountGroup !== null) {
+        // ルートを選択中なら１つめの口座を選択
+        const targets = this.props.doc.account.order.map((id) => this.props.doc.account.accounts[id]).filter(
+          (account) => DocTypes.accountKindToAccountGroup(account.kind) === cellInfo.accountGroup);
+        if (0 < targets.length) {
+          accountId = targets[0].id;
+        }
+      }
+
+      // カテゴリの選択
+      let categoryId = cellInfo.categoryId;
+      if (categoryId === null && cellInfo.recordKind !== null) {
+        // ルートを選択中なら１つめのカテゴリを選択
+        switch (cellInfo.recordKind) {
+          case DocTypes.RecordKind.Income:
+            categoryId = DocStateMethods.firstLeafCategory(this.props.doc.income.categories).id;
+            break;
+          case DocTypes.RecordKind.Outgo:
+            categoryId = DocStateMethods.firstLeafCategory(this.props.doc.outgo.categories).id;
+            break;
+          default:
+            break;
+        }
+      }
+
+      // ダイアログオープン
+      this.setState({
+        modalRecordEdit: true,
+        recordEditDefaultValue: {
+          recordKind: cellInfo.recordKind !== null ? cellInfo.recordKind : DocTypes.RecordKind.Outgo,
+          date: cellInfo.date,
+          accountId,
+          categoryId,
+        },
+      });
+      return;
+    }
+
+    // 選択
     this.setState({
       selectedCell: cellInfo,
     });
