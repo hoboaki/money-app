@@ -550,11 +550,11 @@ class Body extends React.Component<IProps, IState> {
         };
         cols.push(<td
           className={Styles.TableCell}
-          data-cell-root={true}
           data-account-group={accountGroup}
           data-account-id={accountId}
-          data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+          data-cell-root={true}
           data-col-idx={colIdx}
+          data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
           data-selected={this.isSelectedCell(cellInfo)}
           onClick={(e) => this.onCellClicked(e, cellInfo)}
           >
@@ -608,9 +608,9 @@ class Body extends React.Component<IProps, IState> {
             className={Styles.TableCell}
             data-account-group={accountGroup}
             data-account-id={account.id}
-            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
-            data-col-idx={colIdx}
             data-cell-even={(targetArray.length) % 2 === 0}
+            data-col-idx={colIdx}
+            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
             data-selected={this.isSelectedCell(cellInfo)}
             onClick={(e) => this.onCellClicked(e, cellInfo)}
             >
@@ -663,12 +663,27 @@ class Body extends React.Component<IProps, IState> {
       }
       const cols = new Array();
       colInfos.forEach((colInfo, colIdx) => {
-        cols.push(<td className={Styles.TableCell} data-cell-root={true}>
-          {
-            recordKindCellDataDictArray[colIdx][recordKind] === null ? null :
-              PriceUtils.numToLocaleString(Number(recordKindCellDataDictArray[colIdx][recordKind]))
-          }
-        </td>);
+        const categoryId = DocTypes.INVALID_ID;
+        const cellInfo: ISelectedCellInfo = {
+          colIdx,
+          date: colInfo.date,
+          accountGroup: null,
+          accountId: null,
+          recordKind,
+          categoryId: null,
+        };
+        const amountText = recordKindCellDataDictArray[colIdx][recordKind] === null ? null :
+          PriceUtils.numToLocaleString(Number(recordKindCellDataDictArray[colIdx][recordKind]));
+        cols.push(<td
+          className={Styles.TableCell}
+          data-category-id={categoryId}
+          data-cell-root={true}
+          data-col-idx={colIdx}
+          data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+          data-record-kind={recordKind}
+          data-selected={this.isSelectedCell(cellInfo)}
+          onClick={(e) => this.onCellClicked(e, cellInfo)}
+          >{amountText}</td>);
       });
       categoryRootRowDict[recordKind] =
         <tr>
@@ -734,12 +749,26 @@ class Body extends React.Component<IProps, IState> {
           null :
           <button className={openerBtnClass}>▼</button>;
         colInfos.forEach((colInfo, colIdx) => {
-          cols.push(<td className={Styles.TableCell} data-cell-even={(result.length % 2) === 0}>
-            {
-              cellDataDictArray[colIdx][categoryId] === null ? null :
-                PriceUtils.numToLocaleString(Number(cellDataDictArray[colIdx][categoryId]))
-            }
-          </td>);
+          const cellInfo: ISelectedCellInfo = {
+            colIdx,
+            date: colInfo.date,
+            accountGroup: null,
+            accountId: null,
+            recordKind,
+            categoryId,
+          };
+          const amountText = cellDataDictArray[colIdx][categoryId] === null ? null :
+            PriceUtils.numToLocaleString(Number(cellDataDictArray[colIdx][categoryId]));
+          cols.push(<td
+            className={Styles.TableCell}
+            data-cell-even={(result.length % 2) === 0}
+            data-col-idx={colIdx}
+            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+            data-record-kind={recordKind}
+            data-category-id={categoryId}
+            data-selected={this.isSelectedCell(cellInfo)}
+            onClick={(e) => this.onCellClicked(e, cellInfo)}
+            >{amountText}</td>);
         });
         result.push(
           <tr>
