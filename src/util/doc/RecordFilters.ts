@@ -49,7 +49,7 @@ export const createDateRangeFilter = (data: IDateRangeFilterData): IRecordFilter
 
 /** レコード種類フィルタのデータ。 */
 export interface IRecordKindFilterData {
-  /** 対象に含める口 RecordKind 。 */
+  /** 対象に含める RecordKind 。 */
   kinds: Types.RecordKind[];
 }
 
@@ -65,6 +65,32 @@ export const createRecordKindFilter = (data: IRecordKindFilterData): IRecordFilt
         state,
         (record) => income,
         (record) => outgo,
+        (record) => transfer,
+      );
+    },
+  };
+};
+
+/** カテゴリフィルタのデータ。 */
+export interface ICategoryFilterData {
+  /** 対象たち。 categoryId に null を指定した場合は kind のレコード全てを対象とする。 */
+  targets: Array<{kind: Types.RecordKind, categoryId: number | null}>;
+}
+
+/** レコード種類フィルタを作成。 */
+export const createCategoryFilter = (data: ICategoryFilterData): IRecordFilter => {
+  return {
+    filter: (collection: IRecordCollection, state: States.IState) => {
+      const incomeTargets = data.targets.filter((target) => target.kind === Types.RecordKind.Income)
+        .map((target) => target.categoryId);
+      const outgoTargets = data.targets.filter((target) => target.kind === Types.RecordKind.Outgo)
+        .map((target) => target.categoryId);
+      const transfer = data.targets.some((target) => target.kind === Types.RecordKind.Transfer);
+      return filteredCollectionEach(
+        collection,
+        state,
+        (record) => incomeTargets.includes(record.category),
+        (record) => outgoTargets.includes(record.category),
         (record) => transfer,
       );
     },

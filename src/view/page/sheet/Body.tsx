@@ -954,11 +954,30 @@ class Body extends React.Component<IProps, IState> {
         filters.push(RecordFilters.createAccountFilter({accounts}));
       }
       if (cellInfo.recordKind !== null) {
+        const recordKind: DocTypes.RecordKind = cellInfo.recordKind;
         if (cellInfo.categoryId !== null) {
           // カテゴリによる絞り込み
+          let categories: {[key: number]: DocStates.ICategory} | null = null;
+          switch (cellInfo.recordKind) {
+            case DocTypes.RecordKind.Income:
+              categories = this.props.doc.income.categories;
+              break;
+            case DocTypes.RecordKind.Outgo:
+              categories = this.props.doc.outgo.categories;
+              break;
+            default:
+              break;
+          }
+          if (categories !== null) {
+            filters.push(RecordFilters.createCategoryFilter({
+              targets:
+                DocStateMethods.leafCategoryIdArray(cellInfo.categoryId, categories)
+                .map<{kind: DocTypes.RecordKind, categoryId: number}>((id) => ({kind: recordKind, categoryId: id})),
+            }));
+          }
         } else {
           // レコードの種類による絞り込み
-          filters.push(RecordFilters.createRecordKindFilter({kinds: [cellInfo.recordKind]}));
+          filters.push(RecordFilters.createRecordKindFilter({kinds: [recordKind]}));
         }
       }
       const recordKeys = new RecordCollection(this.props.doc).filter(filters).standardSortedKeys();
