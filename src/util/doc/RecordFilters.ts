@@ -1,4 +1,5 @@
 import * as States from 'src/state/doc/States';
+import * as Types from 'src/state/doc/Types';
 import IYearMonthDayDate from '../IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from '../IYearMonthDayDateUtils';
 import IRecordCollection from './IRecordCollection';
@@ -42,6 +43,30 @@ export const createDateRangeFilter = (data: IDateRangeFilterData): IRecordFilter
         return filteredCollection(collection, state, checkFunc);
       }
       return collection;
+    },
+  };
+};
+
+/** レコード種類フィルタのデータ。 */
+export interface IRecordKindFilterData {
+  /** 対象に含める口 RecordKind 。 */
+  kinds: Types.RecordKind[];
+}
+
+/** レコード種類フィルタを作成。 */
+export const createRecordKindFilter = (data: IRecordKindFilterData): IRecordFilter => {
+  return {
+    filter: (collection: IRecordCollection, state: States.IState) => {
+      const income = data.kinds.includes(Types.RecordKind.Income);
+      const outgo = data.kinds.includes(Types.RecordKind.Outgo);
+      const transfer = data.kinds.includes(Types.RecordKind.Transfer);
+      return filteredCollectionEach(
+        collection,
+        state,
+        (record) => income,
+        (record) => outgo,
+        (record) => transfer,
+      );
     },
   };
 };

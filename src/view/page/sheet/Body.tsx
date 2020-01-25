@@ -954,7 +954,12 @@ class Body extends React.Component<IProps, IState> {
         filters.push(RecordFilters.createAccountFilter({accounts}));
       }
       if (cellInfo.recordKind !== null) {
-        //
+        if (cellInfo.categoryId !== null) {
+          // カテゴリによる絞り込み
+        } else {
+          // レコードの種類による絞り込み
+          filters.push(RecordFilters.createRecordKindFilter({kinds: [cellInfo.recordKind]}));
+        }
       }
       const recordKeys = new RecordCollection(this.props.doc).filter(filters).standardSortedKeys();
 
