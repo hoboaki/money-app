@@ -11,6 +11,8 @@ import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
 import * as UiTypes from 'src/state/ui/Types';
 import BalanceCalculator from 'src/util/doc/BalanceCalculator';
+import IRecordFilter from 'src/util/doc/IRecordFilter';
+import IRecordKey from 'src/util/doc/IRecordKey';
 import RecordCollection from 'src/util/doc/RecordCollection';
 import * as RecordFilters from 'src/util/doc/RecordFilters';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
@@ -44,6 +46,7 @@ interface IState {
     accountId: number | null;
     categoryId: number | null;
   };
+  recordEditAdditionalRecordKeys: IRecordKey[];
 }
 
 const idPageSheetBodyTop = 'pageSheetBodyTop';
@@ -64,6 +67,7 @@ class Body extends React.Component<IProps, IState> {
         accountId: null,
         categoryId: null,
       },
+      recordEditAdditionalRecordKeys: [],
     };
     this.elementIdRoot = `elem-${UUID()}`;
   }
@@ -818,7 +822,7 @@ class Body extends React.Component<IProps, IState> {
             accountId: this.state.recordEditDefaultValue.accountId,
             categoryId: this.state.recordEditDefaultValue.categoryId,
           }}
-          additionalRecords={[]}
+          additionalRecords={this.state.recordEditAdditionalRecordKeys}
           onClosed={() => {
             this.setState({modalRecordEdit: false});
           }}
@@ -931,6 +935,20 @@ class Body extends React.Component<IProps, IState> {
         }
       }
 
+      // 初期表示するレコード群の設定
+      const filters: IRecordFilter[] = [];
+      filters.push(RecordFilters.createDateRangeFilter({
+        startDate: cellInfo.date,
+        endDate: IYearMonthDateUtils.nextDate(cellInfo.date, UiTypes.sheetViewUnitToDateUnit(this.props.page.viewUnit)),
+      }));
+      if (cellInfo.accountGroup !== null) {
+        //
+      }
+      if (cellInfo.recordKind !== null) {
+        //
+      }
+      const recordKeys = new RecordCollection(this.props.doc).filter(filters).standardSortedKeys();
+
       // ダイアログオープン
       this.setState({
         modalRecordEdit: true,
@@ -940,6 +958,7 @@ class Body extends React.Component<IProps, IState> {
           accountId,
           categoryId,
         },
+        recordEditAdditionalRecordKeys: recordKeys,
       });
       return;
     }
