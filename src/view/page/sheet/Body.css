@@ -152,6 +152,9 @@
 .TableCellSpace {
   background: #f5f5f6;
 }
+.TableCell:hover {
+  cursor: pointer;
+}
 .HolderEntryRoot,
 .HolderEntryRootOpenerSpace,
 .TableRowHeadRoot,
@@ -159,6 +162,10 @@
 .TableCell[data-cell-root='true'],
 .TableCellSpace[data-cell-root='true'] {
   background: rgba(25, 118, 210, 0.35);
+}
+.TableCell[data-selected='true'] {
+  background: #1976d2;
+  color: rgba(255, 255, 255, 0.87);
 }
 .HolderEntryRoot,
 .TableRowHeadRoot {

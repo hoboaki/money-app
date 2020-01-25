@@ -19,6 +19,15 @@ import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as Styles from './Body.css';
 
+interface ISelectedCellInfo {
+  colIdx: number;
+  date: IYearMonthDayDate;
+  accountGroup: DocTypes.AccountGroup | null;
+  accountId: number | null;
+  recordKind: DocTypes.RecordKind | null;
+  categoryId: number |null;
+}
+
 interface IProps {
   doc: DocStates.IState;
   page: UiStates.IPageSheet;
@@ -26,6 +35,7 @@ interface IProps {
 
 interface IState {
   colCount: number;
+  selectedCell: ISelectedCellInfo | null;
 }
 
 const idPageSheetBodyTop = 'pageSheetBodyTop';
@@ -38,6 +48,7 @@ class Body extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       colCount: 1,
+      selectedCell: null,
     };
     this.elementIdRoot = `elem-${UUID()}`;
   }
@@ -528,7 +539,25 @@ class Body extends React.Component<IProps, IState> {
       }
       const cols = new Array();
       colInfos.forEach((colInfo, colIdx) => {
-        cols.push(<td className={Styles.TableCell} data-cell-root={true}>
+        const accountId = DocTypes.INVALID_ID;
+        const cellInfo: ISelectedCellInfo = {
+          colIdx,
+          date: colInfo.date,
+          accountGroup,
+          accountId,
+          recordKind: null,
+          categoryId: null,
+        };
+        cols.push(<td
+          className={Styles.TableCell}
+          data-cell-root={true}
+          data-account-group={accountGroup}
+          data-account-id={accountId}
+          data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+          data-col-idx={colIdx}
+          data-selected={this.isSelectedCell(cellInfo)}
+          onClick={(e) => this.onCellClicked(e, cellInfo)}
+          >
           {PriceUtils.numToLocaleString(accountGroupCellDataArray[accountGroup][colIdx])}
           </td>);
       });
@@ -565,10 +594,27 @@ class Body extends React.Component<IProps, IState> {
       const accountGroup = DocTypes.accountKindToAccountGroup(account.kind);
       const targetArray = accountRowDict[accountGroup];
       const cols = new Array();
-      colInfos.forEach((colInfo, idx) => {
+      colInfos.forEach((colInfo, colIdx) => {
+        const cellInfo: ISelectedCellInfo = {
+          colIdx,
+          date: colInfo.date,
+          accountGroup,
+          accountId,
+          recordKind: null,
+          categoryId: null,
+        };
         cols.push(
-          <td className={Styles.TableCell} data-cell-even={(targetArray.length) % 2 === 0}>
-            {PriceUtils.numToLocaleString(accountCellDataArray[accountId][idx])}
+          <td
+            className={Styles.TableCell}
+            data-account-group={accountGroup}
+            data-account-id={account.id}
+            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+            data-col-idx={colIdx}
+            data-cell-even={(targetArray.length) % 2 === 0}
+            data-selected={this.isSelectedCell(cellInfo)}
+            onClick={(e) => this.onCellClicked(e, cellInfo)}
+            >
+            {PriceUtils.numToLocaleString(accountCellDataArray[accountId][colIdx])}
           </td>);
       });
       targetArray.push(
@@ -771,6 +817,25 @@ class Body extends React.Component<IProps, IState> {
         </div>
       </div>
     );
+  }
+
+  private isSelectedCell(cellInfo: ISelectedCellInfo) {
+    if (this.state.selectedCell === null) {
+      return false;
+    }
+
+    const current = this.state.selectedCell;
+    return current.colIdx === cellInfo.colIdx &&
+      current.accountGroup === cellInfo.accountGroup &&
+      current.accountId === cellInfo.accountId &&
+      current.recordKind === cellInfo.recordKind &&
+      current.categoryId === cellInfo.categoryId;
+  }
+
+  private onCellClicked(e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>, cellInfo: ISelectedCellInfo) {
+    this.setState({
+      selectedCell: cellInfo,
+    });
   }
 
   private updateColCount() {
