@@ -271,9 +271,17 @@ class Main extends React.Component<ILocalProps, IState> {
           amount = record.amount;
           memo = record.memo;
           additionalElems = [
-            <MaterialIcon key={`${record.id}-0`} name={'class'} iconSize={18} darkMode={true} />,
+            <MaterialIcon
+              key={`${record.id}-0`}
+              name={'class'}
+              classNames={[Styles.ListCardTopIcon]}
+              darkMode={true} />,
             <span key={`${record.id}-1`}>{this.props.doc.income.categories[record.category].name}</span>,
-            <MaterialIcon key={`${record.id}-2`} name={'payment'} iconSize={18} darkMode={true} />,
+            <MaterialIcon
+              key={`${record.id}-2`}
+              name={'payment'}
+              classNames={[Styles.ListCardTopIcon]}
+              darkMode={true} />,
             <span key={`${record.id}-3`}>{this.props.doc.account.accounts[record.account].name}</span>,
           ];
           break;
@@ -286,9 +294,17 @@ class Main extends React.Component<ILocalProps, IState> {
           amount = record.amount;
           memo = record.memo;
           additionalElems = [
-            <MaterialIcon key={`${record.id}-0`} name={'class'} iconSize={18} darkMode={true} />,
+            <MaterialIcon
+              key={`${record.id}-0`}
+              name={'class'}
+              classNames={[Styles.ListCardTopIcon]}
+              darkMode={true} />,
             <span key={`${record.id}-1`}>{this.props.doc.outgo.categories[record.category].name}</span>,
-            <MaterialIcon key={`${record.id}-2`} name={'payment'} iconSize={18} darkMode={true} />,
+            <MaterialIcon
+              key={`${record.id}-2`}
+              name={'payment'}
+              classNames={[Styles.ListCardTopIcon]}
+              darkMode={true} />,
             <span key={`${record.id}-3`}>{this.props.doc.account.accounts[record.account].name}</span>,
           ];
           break;
@@ -301,10 +317,22 @@ class Main extends React.Component<ILocalProps, IState> {
           amount = record.amount;
           memo = record.memo;
           additionalElems = [
-            <MaterialIcon key={`${record.id}-0`} name={'payment'} iconSize={18} darkMode={true} />,
+            <MaterialIcon
+              key={`${record.id}-0`}
+              name={'payment'}
+              classNames={[Styles.ListCardTopIcon]}
+              darkMode={true} />,
             <span key={`${record.id}-1`}>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
-            <span key={`${record.id}-2`}><MaterialIcon name={'arrow_forward'} iconSize={18} darkMode={true} /></span>,
-            <MaterialIcon key={`${record.id}-3`} name={'payment'} iconSize={18} darkMode={true} />,
+            <MaterialIcon
+              key={`${record.id}-2`}
+              name={'arrow_forward'}
+              classNames={[Styles.ListCardForwardIcon]}
+              darkMode={true} />,
+            <MaterialIcon
+              key={`${record.id}-3`}
+              name={'payment'}
+              classNames={[Styles.ListCardTopIcon]}
+              darkMode={true} />,
             <span key={`${record.id}-4`}>{this.props.doc.account.accounts[record.accountTo].name}</span>,
           ];
           break;
@@ -634,7 +662,7 @@ class Main extends React.Component<ILocalProps, IState> {
           <button className={BasicStyles.IconBtn} onClick={(e) => {this.onFormDeleteBtnPushed(e); }}>
             <MaterialIcon
               name={'delete'}
-              iconSize={24}
+              classNames={[Styles.FormDeleteBtnIcon]}
               darkMode={false}
               />
           </button>

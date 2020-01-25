@@ -1,12 +1,13 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+import styles from 'src/view/Layout.css';
 
 interface IProps {
   /** 使用するアイコンの名前。 */
   name: string;
 
-  /** アイコンサイズ。18 24 36 など。 */
-  iconSize: number;
+  /** 追加設定するクラス名。 */
+  classNames: string[];
 
   /** ダークモードアイコンを使う場合は true を指定。 */
   darkMode: boolean;
@@ -21,8 +22,8 @@ class Main extends React.Component<IProps, any> {
   public render() {
     const className = ClassNames(
       'material-icons',
-      `md-${this.props.iconSize}`,
       this.props.darkMode ? `md-dark` : null,
+      this.props.classNames,
     );
     return <i className={className}>{this.props.name}</i>;
   }
