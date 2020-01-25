@@ -812,7 +812,12 @@ class Body extends React.Component<IProps, IState> {
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalRecordEdit) {
         modalDialog = <RecordEditDialog
-          formDefaultDate={this.state.recordEditDefaultValue.date}
+          formDefaultValue={{
+            recordKind: this.state.recordEditDefaultValue.recordKind,
+            date: this.state.recordEditDefaultValue.date,
+            accountId: this.state.recordEditDefaultValue.accountId,
+            categoryId: this.state.recordEditDefaultValue.categoryId,
+          }}
           additionalRecords={[]}
           onClosed={() => {
             this.setState({modalRecordEdit: false});

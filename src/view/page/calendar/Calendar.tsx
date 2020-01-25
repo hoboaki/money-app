@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 
 import * as DocStates from 'src/state/doc/States';
+import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
 import RecordCollection from 'src/util/doc/RecordCollection';
@@ -10,7 +11,7 @@ import * as RecordFilters from 'src/util/doc/RecordFilters';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
-import RecordAddDialog from 'src/view/widget/record-edit-dialog';
+import RecordEditDialog from 'src/view/widget/record-edit-dialog';
 import * as LayoutStyles from '../../Layout.css';
 import * as Styles from './Calendar.css';
 
@@ -20,7 +21,7 @@ interface IProps {
 }
 
 interface IState {
-  modalAddRecord: boolean; // レコードの追加ダイアログ表示する場合に true を指定。
+  modalRecordEdit: boolean; // レコード編集ダイアログ表示する場合に true を指定。
   selectedDate: IYearMonthDayDate; // 選択中の日付。
 }
 
@@ -28,7 +29,7 @@ class Calendar extends React.Component<IProps, IState> {
   public constructor(props: IProps) {
     super(props);
     this.state = {
-      modalAddRecord: false,
+      modalRecordEdit: false,
       selectedDate: IYearMonthDayDateUtils.today(),
     };
   }
@@ -207,16 +208,21 @@ class Calendar extends React.Component<IProps, IState> {
       </tbody>;
 
     let modalDialog: JSX.Element | null = null;
-    if (this.state.modalAddRecord) {
+    if (this.state.modalRecordEdit) {
       const additionalRecords = recordsInCalendar.filter([RecordFilters.createDateRangeFilter({
         startDate: this.state.selectedDate,
         endDate: IYearMonthDayDateUtils.nextDay(this.state.selectedDate),
       })]).standardSortedKeys();
-      modalDialog = <RecordAddDialog
-        formDefaultDate={this.state.selectedDate}
+      modalDialog = <RecordEditDialog
+        formDefaultValue={{
+          recordKind: DocTypes.RecordKind.Outgo,
+          date: this.state.selectedDate,
+          accountId: null,
+          categoryId: null,
+        }}
         additionalRecords={additionalRecords}
         onClosed={() => {
-          this.setState({modalAddRecord: false});
+          this.setState({modalRecordEdit: false});
         }}
       />;
     }
@@ -244,7 +250,7 @@ class Calendar extends React.Component<IProps, IState> {
 
   private onNewRecordBtnPushed(date: IYearMonthDayDate) {
     this.setState({
-      modalAddRecord: true,
+      modalRecordEdit: true,
       selectedDate: date,
     });
   }

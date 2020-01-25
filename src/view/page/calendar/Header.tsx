@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 
 import * as DocStates from 'src/state/doc/States';
+import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
@@ -85,7 +86,12 @@ class Header extends React.Component<IProps, IState> {
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalRecordEdit) {
         modalDialog = <RecordEditDialog
-          formDefaultDate={IYearMonthDayDateUtils.today()}
+          formDefaultValue={{
+            recordKind: DocTypes.RecordKind.Outgo,
+            date: IYearMonthDayDateUtils.today(),
+            accountId: null,
+            categoryId: null,
+          }}
           additionalRecords={[]}
           onClosed={() => {
             this.setState({modalRecordEdit: false});

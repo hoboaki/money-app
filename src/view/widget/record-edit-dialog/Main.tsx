@@ -31,8 +31,13 @@ import * as Styles from './Main.css';
 const NEW_RECORD_ID = DocTypes.INVALID_ID;
 
 interface IProps {
-  /** 入力フォームの初期日付。 */
-  formDefaultDate: IYearMonthDayDate;
+  /** 入力フォームの新規レコード初期値。 */
+  formDefaultValue: {
+    recordKind: DocTypes.RecordKind;
+    date: IYearMonthDayDate;
+    accountId: number | null;
+    categoryId: number | null;
+  };
 
   /** 一覧に追加表示するレコード群。 */
   additionalRecords: IRecordKey[];
@@ -89,12 +94,21 @@ class Main extends React.Component<ILocalProps, IState> {
 
   constructor(props: ILocalProps) {
     super(props);
+    const formDefaultValue = this.props.formDefaultValue;
+    const formCategoryOutgo =
+      (formDefaultValue.recordKind === DocTypes.RecordKind.Outgo && formDefaultValue.categoryId !== null) ?
+      formDefaultValue.categoryId : DocStateMethods.firstLeafCategory(this.props.doc.outgo.categories).id;
+    const formCategoryIncome =
+      (formDefaultValue.recordKind === DocTypes.RecordKind.Income && formDefaultValue.categoryId !== null) ?
+      formDefaultValue.categoryId : DocStateMethods.firstLeafCategory(this.props.doc.income.categories).id;
+    const formAccount = formDefaultValue.accountId !== null ?
+      formDefaultValue.accountId : this.props.doc.account.order[0];
     this.state = {
-      formKind: DocTypes.RecordKind.Outgo,
-      formDate: IYearMonthDayDateUtils.toDisplayFormatText(props.formDefaultDate),
-      formCategoryOutgo: DocStateMethods.firstLeafCategory(this.props.doc.outgo.categories).id,
-      formCategoryIncome: DocStateMethods.firstLeafCategory(this.props.doc.income.categories).id,
-      formAccount: this.props.doc.account.order[0],
+      formKind: formDefaultValue.recordKind,
+      formDate: IYearMonthDayDateUtils.toDisplayFormatText(formDefaultValue.date),
+      formCategoryOutgo,
+      formCategoryIncome,
+      formAccount,
       formAccountFrom: DocTypes.INVALID_ID,
       formAccountTo: DocTypes.INVALID_ID,
       submitSuccessMsg: '',
