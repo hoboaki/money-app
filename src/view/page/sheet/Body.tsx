@@ -942,7 +942,16 @@ class Body extends React.Component<IProps, IState> {
         endDate: IYearMonthDateUtils.nextDate(cellInfo.date, UiTypes.sheetViewUnitToDateUnit(this.props.page.viewUnit)),
       }));
       if (cellInfo.accountGroup !== null) {
-        //
+        const accounts: number[] = [];
+        if (cellInfo.accountId !== null) {
+          // 指定のアカウントのみ
+          accounts.push(cellInfo.accountId);
+        } else {
+          // 指定の種類のアカウント全部
+          accounts.concat(this.props.doc.account.order.filter((id) =>
+            DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[id].kind) === cellInfo.accountGroup));
+        }
+        filters.push(RecordFilters.createAccountFilter({accounts}));
       }
       if (cellInfo.recordKind !== null) {
         //
