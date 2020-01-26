@@ -5,7 +5,7 @@ module.exports = {
     // node.js で動作することを指定する
     target: 'electron-renderer',
     // 起点となるファイル
-    entry: './src/index.tsx',
+    entry: './src/EntryPoint.tsx',
     // webpack watch したときに差分ビルドができる
     cache: true,
     // development は、 source map file を作成、再ビルド時間の短縮などの設定となる
