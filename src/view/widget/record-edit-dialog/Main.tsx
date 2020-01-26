@@ -345,7 +345,7 @@ class Main extends React.Component<ILocalProps, IState> {
             <span key={`${record.id}-1`}>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
             <MaterialIcon
               key={`${record.id}-2`}
-              name={'arrow_forward'}
+              name={'forward'}
               classNames={[Styles.ListCardForwardIcon]}
               darkMode={true} />,
             <MaterialIcon
