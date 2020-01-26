@@ -12,9 +12,16 @@ import * as Types from './Types';
 const a2RMapper = createA2RMapper<States.IState>();
 
 a2RMapper.addWork<Action>(
-  Actions.AUTO_SAVE_MANAGER_REQUEST_SAVE,
+  Actions.DOCUMENT_REQUEST_AUTO_SAVE,
   (state, action) => {
-    state.autoSaveManager.requestSave = true;
+    state.document.requestAutoSave = true;
+  },
+);
+
+a2RMapper.addWork<Action>(
+  Actions.DOCUMENT_RECEIVED_REQUEST_AUTO_SAVE,
+  (state, action) => {
+    state.document.requestAutoSave = false;
   },
 );
 

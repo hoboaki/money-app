@@ -2,11 +2,19 @@ import { Action } from 'redux';
 import { v4 as UUID } from 'uuid';
 import * as Types from './Types';
 
-/// 保存リクエスト。
-export const AUTO_SAVE_MANAGER_REQUEST_SAVE = UUID();
-export const autoSaveManagerRequestSave = (): Action => {
+/// 自動保存リクエスト。
+export const DOCUMENT_REQUEST_AUTO_SAVE = UUID();
+export const documentRequestAutoSave = (): Action => {
   return {
-    type: AUTO_SAVE_MANAGER_REQUEST_SAVE,
+    type: DOCUMENT_REQUEST_AUTO_SAVE,
+  };
+};
+
+/// 自動保存リクエスト受理。
+export const DOCUMENT_RECEIVED_REQUEST_AUTO_SAVE = UUID();
+export const documentReceivedRequestAutoSave = (): Action => {
+  return {
+    type: DOCUMENT_RECEIVED_REQUEST_AUTO_SAVE,
   };
 };
 

@@ -11,12 +11,13 @@ import Split from 'split.js';
 import { v4 as UUID } from 'uuid';
 
 import * as DocStates from 'src/state/doc/States';
-import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
+import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
 
 // Worker 定義
 import AutoSaveWorker from 'worker-loader!./AutoSaveWorker';
+import store from './state/Store';
 let worker: AutoSaveWorker | null = null;
 
 interface IProps {
@@ -40,21 +41,35 @@ class AutoSaveManager extends React.Component<IProps, IState> {
     // Worker 起動
     worker = new AutoSaveWorker();
 
-    // 一定時間毎に関数を実行して変数を監視
+    // 一定時間毎に関数を実行して自動保存リクエストを監視
     const watchAutoSaveRequest = () => {
       const intervalSec = 1;
       setTimeout(() => {
-        global.console.log(`Interval.`);
-        watchAutoSaveRequest();
+        // リクエストがなければ何もせず終了
+        if (!this.props.ui.document.requestAutoSave) {
+          watchAutoSaveRequest();
+          return;
+        }
+
+        // リクエスト受理処理
+        global.console.log(`Start auto save process.`);
+        store.dispatch(UiActions.documentReceivedRequestAutoSave());
+
+        // 自動保存処理を開始
+        if (worker === null) {
+          throw new Error(`AutoSaveWorker is null.`);
+        }
+        worker.postMessage({doc: this.props.doc, ui: this.props.ui});
       }, intervalSec * 1000);
     };
-    worker.postMessage({ a: 1 });
     worker.onmessage = (event) => {
-      // ...
+      // 監視を再開
+      watchAutoSaveRequest();
     };
-    worker.addEventListener('message', (event) => {
-      // ...
-    });
+    worker.onerror = (event) => {
+      // エラーが起きたことを通知
+      throw new Error(event.error);
+    };
     watchAutoSaveRequest();
   }
 
@@ -63,14 +78,11 @@ class AutoSaveManager extends React.Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state: IStoreState, props: any) => {
-  const result: IProps = Object.assign(
-    props,
-    {
-      doc: state.doc,
-      ui: state.ui,
-    },
-  );
+const mapStateToProps = (state: IStoreState) => {
+  const result: IProps = {
+    doc: state.doc,
+    ui: state.ui,
+  };
   return result;
 };
 export default ReactRedux.connect(mapStateToProps)(AutoSaveManager);
