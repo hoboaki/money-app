@@ -998,7 +998,7 @@ class Main extends React.Component<ILocalProps, IState> {
 
     // ダイアログで確認
     const dialog = remote.dialog;
-    const msgBoxResult = dialog.showMessageBox(
+    const msgBoxResult = dialog.showMessageBoxSync(
       remote.getCurrentWindow(),
       {
         type: 'warning',

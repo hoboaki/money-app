@@ -29,7 +29,7 @@
     "clone": "^2.1.2",
     "css-loader": "^3.0.0",
     "deep-clone": "^3.0.3",
-    "electron": "^5.0.6",
+    "electron": "^7.1.10",
     "fast-clone": "^1.5.13",
     "flatpickr": "^4.6.1",
     "hard-source-webpack-plugin": "^0.13.1",
