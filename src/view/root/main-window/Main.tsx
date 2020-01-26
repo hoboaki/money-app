@@ -5,6 +5,7 @@ import * as React from 'react';
 import Split from 'split.js';
 
 import * as DocActions from 'src/state/doc/Actions';
+import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import SampleDoc from 'src/state/SampleDoc';
 import Store from 'src/state/Store';
@@ -107,13 +108,13 @@ class MainWindow extends React.Component<any, IState> {
     } catch (err) {
       global.console.log(`Can\'t access document '${mmxfFilePath}'.`);
       global.console.log(err.message);
-      this.showErrorDialog('指定のファイルにアクセスできませんでした。ファイルが存在していることと，ファイルを読み取る権限があることを確認してください。');
+      this.showErrorDialog('指定のファイルにアクセスできませんでした。', 'ファイルが存在していることと，ファイルを読み取る権限があることを確認してください。');
       return;
     }
     {
       const result = MmxfImporter.importFile(mmxfFilePath);
       if (result.doc === null) {
-        this.showErrorDialog('ファイルのインポート処理中にエラーが発生しました。ファイルが壊れているか，未対応のデータフォーマットの可能性があります。');
+        this.showErrorDialog('ファイルのインポート処理中にエラーが発生しました。', 'ファイルが壊れているか，未対応のデータフォーマットの可能性があります。');
         return;
       }
       resetDoc = result.doc;
@@ -144,43 +145,46 @@ class MainWindow extends React.Component<any, IState> {
   // 自動保存先をユーザーに尋ねる。キャンセルされたら null が返る。
   private selectAutoSaveFilePath(): string | null {
     // 事前説明ダイアログ
-    // const dialog = remote.dialog;
-    // dialog.showMessageBox(
-    //   remote.getCurrentWindow(),
-    //   {
-    //     type: 'info',
-    //     buttons: ['OK'],
-    //     defaultId: 0,
-    //     title: '自動保存設定',
-    //     message: 'このあとに表示されるダイアログでファイルの保存先を決定してください。（本アプリケーションはファイルを自動保存します。）',
-    //   });
+    const dialog = remote.dialog;
+    dialog.showMessageBoxSync(
+      remote.getCurrentWindow(),
+      {
+        type: 'info',
+        buttons: ['OK'],
+        defaultId: 0,
+        title: '初期設定',
+        message: 'このあと表示されるダイアログを使用し，ファイルの保存先を設定してください。',
+        detail:  '本アプリケーションはファイルを自動保存します。そのため最初にファイルの保存先を設定する必要があります。',
+      });
 
-    // // 保存先選択
-    // const result = dialog.showSaveDialog(
-    //   remote.getCurrentWindow(),
-    //   {
-    //     filters: [
-    //       {
-    //         name: 'AdelMoney ドキュメント',
-    //         extensions: ['amdoc'],
-    //       },
-    //     ],
-    //   },
-    //   (filePaths) => {
-    //     if (filePaths === undefined || filePaths.length === 0) {
-    //       return;
-    //     }
-    //     this.props.onNewFromMmxfSelected(filePaths[0]);
-    //   },
-    // );
-    return '';
+    // 保存先選択
+    const filePath = dialog.showSaveDialogSync(
+      remote.getCurrentWindow(),
+      {
+        filters: [
+          {
+            name: 'AdelMoney ドキュメント',
+            extensions: ['amdoc'],
+          },
+        ],
+      },
+    );
+    if (filePath === undefined) {
+      return null;
+    }
+    return filePath;
   }
 
   // ドキュメント編集の開始処理
   private startEditDocument(doc: DocStates.IState, filePath: string, isNeedToSave: boolean) {
     // 保存
     if (isNeedToSave) {
-      // ...
+      try {
+        Fs.writeFileSync(filePath, JSON.stringify(DocStateMethods.toData(doc)), {encoding: 'utf-8'});
+      } catch (err) {
+        this.showErrorDialog(`ファイルの保存に失敗しました。`, `ストレージの容量が不足しているか，書き込み権限があるか確認してください。`);
+        throw err;
+      }
     }
 
     // リセット処理
@@ -191,7 +195,7 @@ class MainWindow extends React.Component<any, IState> {
     this.activatePage(PageCalendar.PageId);
   }
 
-  private showErrorDialog(msg: string) {
+  private showErrorDialog(msg: string, detail: string) {
     const dialog = remote.dialog;
     dialog.showMessageBox(
       remote.getCurrentWindow(),
