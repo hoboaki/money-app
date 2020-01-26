@@ -144,36 +144,33 @@ class MainWindow extends React.Component<any, IState> {
   // 自動保存先をユーザーに尋ねる。キャンセルされたら null が返る。
   private selectAutoSaveFilePath(): string | null {
     // 事前説明ダイアログ
-    // const dialog = remote.dialog;
-    // dialog.showMessageBox(
-    //   remote.getCurrentWindow(),
-    //   {
-    //     type: 'info',
-    //     buttons: ['OK'],
-    //     defaultId: 0,
-    //     title: '自動保存設定',
-    //     message: 'このあとに表示されるダイアログでファイルの保存先を決定してください。（本アプリケーションはファイルを自動保存します。）',
-    //   });
+    const dialog = remote.dialog;
+    dialog.showMessageBoxSync(
+      remote.getCurrentWindow(),
+      {
+        type: 'info',
+        buttons: ['OK'],
+        defaultId: 0,
+        title: '自動保存設定',
+        message: 'このあとに表示されるダイアログでファイルの保存先を決定してください。（本アプリケーションはファイルを自動保存します。）',
+      });
 
-    // // 保存先選択
-    // const result = dialog.showSaveDialog(
-    //   remote.getCurrentWindow(),
-    //   {
-    //     filters: [
-    //       {
-    //         name: 'AdelMoney ドキュメント',
-    //         extensions: ['amdoc'],
-    //       },
-    //     ],
-    //   },
-    //   (filePaths) => {
-    //     if (filePaths === undefined || filePaths.length === 0) {
-    //       return;
-    //     }
-    //     this.props.onNewFromMmxfSelected(filePaths[0]);
-    //   },
-    // );
-    return '';
+    // 保存先選択
+    const filePath = dialog.showSaveDialogSync(
+      remote.getCurrentWindow(),
+      {
+        filters: [
+          {
+            name: 'AdelMoney ドキュメント',
+            extensions: ['amdoc'],
+          },
+        ],
+      },
+    );
+    if (filePath === undefined) {
+      return null;
+    }
+    return filePath;
   }
 
   // ドキュメント編集の開始処理
