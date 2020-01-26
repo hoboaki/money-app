@@ -101,7 +101,7 @@ class Main extends React.Component<IProps, any> {
 
       case Main.BtnIdNewFromMmxf:
         const dialog = remote.dialog;
-        dialog.showOpenDialog(
+        const filePaths = dialog.showOpenDialogSync(
           remote.getCurrentWindow(),
           {
             properties: ['openFile'],
@@ -112,13 +112,11 @@ class Main extends React.Component<IProps, any> {
               },
             ],
           },
-          (filePaths) => {
-            if (filePaths === undefined || filePaths.length === 0) {
-              return;
-            }
-            this.props.onNewFromMmxfSelected(filePaths[0]);
-          },
         );
+        if (filePaths === undefined || filePaths.length === 0) {
+          return;
+        }
+        this.props.onNewFromMmxfSelected(filePaths[0]);
         break;
 
       case Main.BtnIdNewExample:
