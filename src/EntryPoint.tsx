@@ -17,9 +17,9 @@ function requireAll(r: any) {
 }
 requireAll((require as any).context('./', true, /\.css$/));
 
-// Worker
-import Worker from 'worker-loader!./Worker';
-const worker = new Worker();
+// AutoSaveWorker
+import AutoSaveWorker from 'worker-loader!./AutoSaveWorker';
+const worker = new AutoSaveWorker();
 worker.postMessage({ a: 1 });
 worker.onmessage = (event) => {
   // ...
