@@ -5,6 +5,7 @@ import ClassNames from 'classnames';
 import { remote } from 'electron';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
+import * as Fs from 'fs';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Split from 'split.js';
@@ -53,7 +54,6 @@ class AutoSaveManager extends React.Component<IProps, IState> {
         }
 
         // リクエスト受理処理
-        global.console.log(`Start auto save process.`);
         store.dispatch(UiActions.documentReceivedRequestAutoSave());
 
         // 自動保存処理を開始
@@ -68,8 +68,17 @@ class AutoSaveManager extends React.Component<IProps, IState> {
       }, intervalSec * 1000);
     };
     worker.onmessage = (event) => {
-      // 監視を再開
-      watchAutoSaveRequest();
+      // 受け取り
+      const jsonText: string = event.data;
+
+      // 保存
+      Fs.writeFile(this.props.ui.document.filePath, jsonText, {encoding: 'utf-8'}, (err) => {
+        if (err !== null) {
+          throw err;
+        }
+        // 成功したので監視を再開
+        watchAutoSaveRequest();
+      });
     };
     worker.onerror = (event) => {
       // エラーが起きたことを通知

@@ -1,15 +1,17 @@
 import IAutoSaveMsgData from 'src/IAutoSaveMsgData';
+import * as DocStateMethods from 'src/state/doc/StateMethods';
 
 // Worker 定義
 const ctx: Worker = self as any;
 
-// 自動保存処理要求があったときに呼ばれる。
+// State を JSON 文字列に変換して返すスレッド処理。
 ctx.onmessage = (event) => {
   // データ受信
   const data: IAutoSaveMsgData = event.data;
-  // tslint:disable-next-line:no-console
-  console.log(data);
 
-  // 終了
-  ctx.postMessage({});
+  // json 化
+  const jsonText = JSON.stringify(DocStateMethods.toData(data.doc));
+
+  // 結果を返却
+  ctx.postMessage(jsonText);
 };
