@@ -11,6 +11,13 @@ import * as Types from './Types';
 
 const a2RMapper = createA2RMapper<States.IState>();
 
+a2RMapper.addWork<Actions.IDocumentSetFilePath>(
+  Actions.DOCUMENT_SET_FILE_PATH,
+  (state, action) => {
+    state.document.filePath = action.filePath;
+  },
+);
+
 a2RMapper.addWork<Action>(
   Actions.DOCUMENT_REQUEST_AUTO_SAVE,
   (state, action) => {

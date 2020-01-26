@@ -4,6 +4,7 @@ import * as Types from './Types';
 
 /** ドキュメント操作用 state。 */
 export interface IDocument {
+  filePath: string;
   requestAutoSave: boolean;
 }
 
@@ -33,6 +34,7 @@ export interface IState {
 
 export const defaultState: IState = {
   document: {
+    filePath: '',
     requestAutoSave: false,
   },
   dialogAddRecord: {
