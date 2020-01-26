@@ -1033,6 +1033,9 @@ class Main extends React.Component<ILocalProps, IState> {
     Store.dispatch(DocActions.deleteRecords([
       deleteRecordId,
     ]));
+
+    // 自動保存リクエスト
+    Store.dispatch(UiActions.documentRequestAutoSave());
   }
 
   /// 追加・更新ボタンクリック時処理。
@@ -1157,6 +1160,9 @@ class Main extends React.Component<ILocalProps, IState> {
         }
         break;
     }
+
+    // 自動保存リクエスト
+    Store.dispatch(UiActions.documentRequestAutoSave());
 
     // 成功メッセージ設定
     this.setState({

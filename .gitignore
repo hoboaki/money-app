@@ -37,7 +37,8 @@ node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
-typings/
+src/typings/*
+!src/typings/custom.d.ts
 
 # Optional npm cache directory
 .npm
@@ -63,4 +64,6 @@ typings/
 # other
 public/index.js
 public/index.js.map
-*.d.ts
+public/*.worker.js
+public/*.worker.js.map
+*.css.d.ts

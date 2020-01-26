@@ -5,7 +5,7 @@ module.exports = {
     // node.js で動作することを指定する
     target: 'electron-renderer',
     // 起点となるファイル
-    entry: './src/index.tsx',
+    entry: './src/EntryPoint.tsx',
     // webpack watch したときに差分ビルドができる
     cache: true,
     // development は、 source map file を作成、再ビルド時間の短縮などの設定となる
@@ -41,6 +41,10 @@ module.exports = {
                     // airbnb というJavaScriptスタイルガイドに従うには下記が必要
                     typeCheck: true,
                 },
+            },
+            {
+              test: /\.worker\.js$/,
+              use: { loader: 'worker-loader' }
             },
             {
                 // node_modules 以下の css は元のクラス名でロード

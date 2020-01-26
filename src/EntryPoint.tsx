@@ -1,8 +1,12 @@
-// インポート。
+/**
+ * @fileoverview index.js に変換されるエントリーポイント。
+ */
 import React from 'react';
 import ReactDom from 'react-dom';
-import { Provider } from 'react-redux'; // 追加
-import Store from './state/Store'; // 追加
+import { Provider } from 'react-redux';
+
+import AutoSaveManager from './AutoSaveManager';
+import Store from './state/Store';
 import MainWindow from './view/root/main-window';
 
 // node_modules の css ロード
@@ -18,6 +22,7 @@ requireAll((require as any).context('./', true, /\.css$/));
 const container = document.getElementById('contents');
 ReactDom.render(
   <Provider store={Store}>
+    <AutoSaveManager/>
     <MainWindow/>
   </Provider>,
   container,

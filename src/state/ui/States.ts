@@ -2,6 +2,12 @@ import IYearMonthDayDate from '../../util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from '../../util/IYearMonthDayDateUtils';
 import * as Types from './Types';
 
+/** ドキュメント操作用 state。 */
+export interface IDocument {
+  filePath: string;
+  requestAutoSave: boolean;
+}
+
 /** レコード追加ダイアログ用 state。 */
 export interface IDialogAddRecord {
   dummy: boolean;
@@ -20,12 +26,17 @@ export interface IPageSheet {
 
 /** State ルート。 */
 export interface IState {
+  document: IDocument;
   dialogAddRecord: IDialogAddRecord;
   pageCalendar: IPageCalendar;
   pageSheet: IPageSheet;
 }
 
 export const defaultState: IState = {
+  document: {
+    filePath: '',
+    requestAutoSave: false,
+  },
   dialogAddRecord: {
     dummy: false,
   },

@@ -2,6 +2,34 @@ import { Action } from 'redux';
 import { v4 as UUID } from 'uuid';
 import * as Types from './Types';
 
+/// ファイルパス設定。
+export const DOCUMENT_SET_FILE_PATH = UUID();
+export interface IDocumentSetFilePath extends Action {
+  filePath: string;
+}
+export const documentSetFilePath = (filePath: string): IDocumentSetFilePath => {
+  return {
+    type: DOCUMENT_SET_FILE_PATH,
+    filePath,
+  };
+};
+
+/// 自動保存リクエスト。
+export const DOCUMENT_REQUEST_AUTO_SAVE = UUID();
+export const documentRequestAutoSave = (): Action => {
+  return {
+    type: DOCUMENT_REQUEST_AUTO_SAVE,
+  };
+};
+
+/// 自動保存リクエスト受理。
+export const DOCUMENT_RECEIVED_REQUEST_AUTO_SAVE = UUID();
+export const documentReceivedRequestAutoSave = (): Action => {
+  return {
+    type: DOCUMENT_RECEIVED_REQUEST_AUTO_SAVE,
+  };
+};
+
 /// カレンダー１つ前へ。
 export const CALENDAR_MOVE_PREV = UUID();
 export const calendarMovePrev = (): Action => {
