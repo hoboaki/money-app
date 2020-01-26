@@ -5,6 +5,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { Provider } from 'react-redux';
 
+import AutoSaveManager from './AutoSaveManager';
 import Store from './state/Store';
 import MainWindow from './view/root/main-window';
 
@@ -17,21 +18,11 @@ function requireAll(r: any) {
 }
 requireAll((require as any).context('./', true, /\.css$/));
 
-// AutoSaveWorker
-import AutoSaveWorker from 'worker-loader!./AutoSaveWorker';
-const worker = new AutoSaveWorker();
-worker.postMessage({ a: 1 });
-worker.onmessage = (event) => {
-  // ...
-};
-worker.addEventListener('message', (event) => {
-  // ...
-});
-
 // 描画
 const container = document.getElementById('contents');
 ReactDom.render(
   <Provider store={Store}>
+    <AutoSaveManager/>
     <MainWindow/>
   </Provider>,
   container,
