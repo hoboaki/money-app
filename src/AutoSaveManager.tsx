@@ -10,6 +10,7 @@ import * as ReactRedux from 'react-redux';
 import Split from 'split.js';
 import { v4 as UUID } from 'uuid';
 
+import IAutoSaveMsgData from 'src/IAutoSaveMsgData';
 import * as DocStates from 'src/state/doc/States';
 import IStoreState from 'src/state/IStoreState';
 import * as UiActions from 'src/state/ui/Actions';
@@ -59,7 +60,11 @@ class AutoSaveManager extends React.Component<IProps, IState> {
         if (worker === null) {
           throw new Error(`AutoSaveWorker is null.`);
         }
-        worker.postMessage({doc: this.props.doc, ui: this.props.ui});
+        const data: IAutoSaveMsgData = {
+          doc: this.props.doc,
+          ui: this.props.ui,
+        };
+        worker.postMessage(data);
       }, intervalSec * 1000);
     };
     worker.onmessage = (event) => {
