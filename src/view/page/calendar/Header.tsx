@@ -102,15 +102,15 @@ class Header extends React.Component<IProps, IState> {
     return (
       <div className={rootClass}>
         <span className={currentDateClass}>{currentDate}</span>
-        <button className={movePrevBtnClass} onClick={this.onMovePrevBtnPushed}>
+        <button className={movePrevBtnClass} onClick={() => {this.onMovePrevBtnPushed(); }}>
           <i className={iconClass}>chevron_left</i>
         </button>
-        <button className={moveTodayBtnClass} onClick={this.onMoveTodayBtnPushed}>今月</button>
-        <button className={moveNextBtnClass} onClick={this.onMoveNextBtnPushed}>
+        <button className={moveTodayBtnClass} onClick={() => {this.onMoveTodayBtnPushed(); }}>今月</button>
+        <button className={moveNextBtnClass} onClick={() => {this.onMoveNextBtnPushed(); }}>
           <i className={iconClass}>chevron_right</i>
         </button>
         {/* <button className={jumpBtnClass} onClick={this.onJumpBtnPushed}>移動</button> */}
-        <select className={viewUnitSelectClass} defaultValue="month" onChange={this.onViewUnitChanged}>
+        <select className={viewUnitSelectClass} defaultValue="month" onChange={() => {this.onViewUnitChanged(); }}>
           <option value="month">月表示</option>
         </select>
         <button className={filterBtnClass} onClick={() => {this.onFilterBtnPushed(); }} title={'フィルター（準備中）'}>
