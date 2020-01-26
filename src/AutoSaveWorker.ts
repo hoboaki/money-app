@@ -5,4 +5,7 @@ const ctx: Worker = self as any;
 ctx.onmessage = (event) => {
   // tslint:disable-next-line:no-console
   console.log(event);
+
+  // 終了
+  ctx.postMessage({});
 };
