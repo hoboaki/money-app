@@ -63,4 +63,6 @@ typings/
 # other
 public/index.js
 public/index.js.map
+public/*.worker.js
+public/*.worker.js.map
 *.d.ts

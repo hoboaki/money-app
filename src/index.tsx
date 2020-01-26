@@ -14,6 +14,13 @@ function requireAll(r: any) {
 }
 requireAll((require as any).context('./', true, /\.css$/));
 
+// Worker
+import Worker from 'worker-loader!./Worker';
+const worker = new Worker();
+worker.postMessage({ a: 1 });
+worker.onmessage = (event) => {};
+worker.addEventListener('message', (event) => {});
+
 // 描画
 const container = document.getElementById('contents');
 ReactDom.render(

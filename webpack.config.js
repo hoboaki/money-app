@@ -43,6 +43,10 @@ module.exports = {
                 },
             },
             {
+              test: /\.worker\.js$/,
+              use: { loader: 'worker-loader' }
+            },
+            {
                 // node_modules 以下の css は元のクラス名でロード
                 test: /node_modules\/.*\.css$/,
                 loaders: ['style-loader', 'css-loader'],
