@@ -1,5 +1,11 @@
 # 開発記録
 
+## 2020-01-26 TypeScript + WebPack + WebWorker 環境のセットアップ
+
+中々情報が出てこない。このページにある情報でいけるのかな？
+
+https://webpack.js.org/loaders/worker-loader/
+
 ## 2020-01-26 重い処理を並列実行させる方法
 
 ファイルの自動保存。大きなファイルになると JSON 作成部分だけでも1秒ぐらいかかってもおかしくなさそう。
@@ -8,11 +14,6 @@ Promise を使った方法はあくまで非同期処理であって，重い処
 WebWorker という仕組みを使うと良さそう。
 
 https://access-jp.co.jp/blogs/development/404
-
-更に調べると promise-worker というのがあるらしいのでそっちを使ってみます。
-
-https://medium.com/swlh/how-to-run-background-worker-processes-in-an-electron-app-e0dc310a93cc
-
 
 ## 2019-07-31 自前でで @types のファイルを用意する手順
 
