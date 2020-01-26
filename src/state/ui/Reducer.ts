@@ -12,6 +12,13 @@ import * as Types from './Types';
 const a2RMapper = createA2RMapper<States.IState>();
 
 a2RMapper.addWork<Action>(
+  Actions.AUTO_SAVE_MANAGER_REQUEST_SAVE,
+  (state, action) => {
+    state.autoSaveManager.requestSave = true;
+  },
+);
+
+a2RMapper.addWork<Action>(
   Actions.CALENDAR_MOVE_PREV,
   (state, action) => {
     state.pageCalendar.currentDate = IYearMonthDayDateUtils.prevMonth(state.pageCalendar.currentDate);

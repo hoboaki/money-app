@@ -2,6 +2,14 @@ import { Action } from 'redux';
 import { v4 as UUID } from 'uuid';
 import * as Types from './Types';
 
+/// 保存リクエスト。
+export const AUTO_SAVE_MANAGER_REQUEST_SAVE = UUID();
+export const autoSaveManagerRequestSave = (): Action => {
+  return {
+    type: AUTO_SAVE_MANAGER_REQUEST_SAVE,
+  };
+};
+
 /// カレンダー１つ前へ。
 export const CALENDAR_MOVE_PREV = UUID();
 export const calendarMovePrev = (): Action => {
