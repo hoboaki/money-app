@@ -4,6 +4,8 @@ import * as Fs from 'fs';
 import * as React from 'react';
 import Split from 'split.js';
 
+import DataModelDocRoot from 'src/data-model/doc/Root';
+import * as DataModelDocRootUtils from 'src/data-model/doc/RootUtils';
 import * as DocActions from 'src/state/doc/Actions';
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
@@ -66,6 +68,7 @@ class MainWindow extends React.Component<any, IState> {
     switch (this.state.currentPageId) {
       case PageStart.PageId:
         pageContent = <PageStart
+          onOpenFileSelected={(filePath) => {this.pageStartOnOpenFileSelected(filePath); }}
           onNewFromMmxfSelected={(filePath) => {this.pageStartOnNewFromMmxfSelected(filePath); }}
           onNewExampleSelected={() => {this.pageStartOnNewExampleSelected(); }}
           />;
@@ -97,6 +100,39 @@ class MainWindow extends React.Component<any, IState> {
         </div>
       </div>
     );
+  }
+
+  private pageStartOnOpenFileSelected(filePath: string) {
+    // ファイルリード
+    let jsonText = '';
+    try {
+      jsonText = Fs.readFileSync(filePath, {encoding: 'utf-8'});
+    } catch (err) {
+      global.console.log(`Can\'t read document '${filePath}'.`);
+      global.console.log(err.message);
+      this.showErrorDialog('ファイルの読み込みに失敗しました。', 'ファイルが存在していることと，ファイルを読み取る権限があることを確認してください。');
+      return;
+    }
+
+    // データ化
+    let data: DataModelDocRoot | null = null;
+    try {
+      data = DataModelDocRootUtils.fromJson(jsonText);
+    } catch (err) {
+      global.console.log(`Can\'t parse json '${filePath}'.`);
+      global.console.log(err.message);
+      this.showErrorDialog('ファイルの解析に失敗しました。', 'ファイルが壊れている可能性があります。');
+      return;
+    }
+    if (data === null) {
+      return;
+    }
+
+    // ドキュメント化
+    const doc = DocStateMethods.fromData(data);
+
+    // スタート
+    this.startEditDocument(doc, filePath, false);
   }
 
   private pageStartOnNewFromMmxfSelected(filePath: string) {
@@ -179,8 +215,9 @@ class MainWindow extends React.Component<any, IState> {
   private startEditDocument(doc: DocStates.IState, filePath: string, isNeedToSave: boolean) {
     // 保存
     if (isNeedToSave) {
+      const jsonText = DataModelDocRootUtils.toJson(DocStateMethods.toData(doc));
       try {
-        Fs.writeFileSync(filePath, JSON.stringify(DocStateMethods.toData(doc)), {encoding: 'utf-8'});
+        Fs.writeFileSync(filePath, jsonText, {encoding: 'utf-8'});
       } catch (err) {
         this.showErrorDialog(`ファイルの保存に失敗しました。`, `ストレージの容量が不足しているか，書き込み権限があるか確認してください。`);
         throw err;
