@@ -1,3 +1,4 @@
+import * as DataModelDocRootUtils from 'src/data-model/doc/RootUtils';
 import IAutoSaveMsgData from 'src/IAutoSaveMsgData';
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 
@@ -10,7 +11,7 @@ ctx.onmessage = (event) => {
   const data: IAutoSaveMsgData = event.data;
 
   // json 化
-  const jsonText = JSON.stringify(DocStateMethods.toData(data.doc));
+  const jsonText = DataModelDocRootUtils.toJson(DocStateMethods.toData(data.doc));
 
   // 結果を返却
   ctx.postMessage(jsonText);

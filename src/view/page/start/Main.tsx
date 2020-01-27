@@ -9,11 +9,13 @@ import MainBtn from './MainBtn';
 interface IProps {
   onNewFromMmxfSelected: ((filePath: string) => void);
   onNewExampleSelected: (() => void);
+  onOpenFileSelected: ((filePath: string) => void);
 }
 
 class Main extends React.Component<IProps, any> {
   public static PageId: string = 'Start';
   private static BtnIdOpenLatest: string = 'OpenLatest';
+  private static BtnIdOpenFile: string = 'OpenFile';
   private static BtnIdNewFromMmxf: string = 'NewFromMmxf';
   private static BtnIdNewExample: string = 'NewExample';
 
@@ -35,10 +37,10 @@ class Main extends React.Component<IProps, any> {
       isEnabled: false,
     });
     openBtnInfos.push({
-      btnId: '',
-      title: 'ファイルを指定して開く（準備中）',
+      btnId: Main.BtnIdOpenFile,
+      title: 'ファイルを指定して開く',
       iconName: 'class',
-      isEnabled: false,
+      isEnabled: true,
     });
 
     const newBtnInfos = [];
@@ -99,7 +101,28 @@ class Main extends React.Component<IProps, any> {
         this.props.onNewFromMmxfSelected(`${process.env.HOME}/Desktop/MoneyAppTest.mmxf`);
         break;
 
-      case Main.BtnIdNewFromMmxf:
+      case Main.BtnIdOpenFile: {
+        const dialog = remote.dialog;
+        const filePaths = dialog.showOpenDialogSync(
+          remote.getCurrentWindow(),
+          {
+            properties: ['openFile'],
+            filters: [
+              {
+                name: 'AdelMoney ドキュメント',
+                extensions: ['amdoc'],
+              },
+            ],
+          },
+        );
+        if (filePaths === undefined || filePaths.length === 0) {
+          return;
+        }
+        this.props.onOpenFileSelected(filePaths[0]);
+        break;
+      }
+
+      case Main.BtnIdNewFromMmxf: {
         const dialog = remote.dialog;
         const filePaths = dialog.showOpenDialogSync(
           remote.getCurrentWindow(),
@@ -118,6 +141,7 @@ class Main extends React.Component<IProps, any> {
         }
         this.props.onNewFromMmxfSelected(filePaths[0]);
         break;
+      }
 
       case Main.BtnIdNewExample:
         this.props.onNewExampleSelected();
