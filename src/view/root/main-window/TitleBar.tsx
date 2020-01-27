@@ -11,7 +11,7 @@ interface IProps {
 }
 
 interface ILocalProps extends IProps {
-  ui: UiStates.IState;
+  filePath: string;
 }
 
 class TitleBar extends React.Component<ILocalProps, any> {
@@ -26,8 +26,8 @@ class TitleBar extends React.Component<ILocalProps, any> {
       {[Styles.BgActive]: this.props.isActive},
     );
     const titleClass = ClassNames(Styles.Base, Styles.Title);
-    const titleText = this.props.ui.document.filePath.length === 0 ?
-      'スタートページ' : this.props.ui.document.filePath.slice(this.props.ui.document.filePath.lastIndexOf('/') + 1);
+    const titleText = this.props.filePath.length === 0 ?
+      'スタートページ' : this.props.filePath.slice(this.props.filePath.lastIndexOf('/') + 1);
     return (
       <div id="titleBar" className={rootClass}>
         <div className={titleClass}><div>{`\uD83D\uDC27 ${titleText}`}</div></div>
@@ -38,9 +38,10 @@ class TitleBar extends React.Component<ILocalProps, any> {
 
 const mapStateToProps = (state: IStoreState, props: IProps) => {
   const result: ILocalProps = Object.assign(
+    {},
     props,
     {
-      ui: state.ui,
+      filePath: state.ui.document.filePath,
     },
   );
   return result;
