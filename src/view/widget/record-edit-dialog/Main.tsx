@@ -1195,6 +1195,7 @@ class Main extends React.Component<ILocalProps, IState> {
 
 const mapStateToProps = (state: IStoreState, props: IProps) => {
   const result: ILocalProps = Object.assign(
+    {},
     props,
     {
       doc: state.doc,
