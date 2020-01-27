@@ -6,6 +6,7 @@ import Split from 'split.js';
 
 import DataModelDocRoot from 'src/data-model/doc/Root';
 import * as DataModelDocRootUtils from 'src/data-model/doc/RootUtils';
+import * as DataModelLocalSettingRootUtils from 'src/data-model/local-setting/RootUtils';
 import * as DocActions from 'src/state/doc/Actions';
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
@@ -230,6 +231,12 @@ class MainWindow extends React.Component<any, IState> {
 
     // Page変更
     this.activatePage(PageCalendar.PageId);
+
+    // 最後に開いたファイルの情報を保存
+    DataModelLocalSettingRootUtils.load((root) => {
+      root.latestOpenFilePath = filePath;
+      DataModelLocalSettingRootUtils.save(root);
+    });
   }
 
   private showErrorDialog(msg: string, detail: string) {

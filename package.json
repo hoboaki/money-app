@@ -4,6 +4,7 @@
   "main": "main.js",
   "license": "MIT",
   "dependencies": {
+    "electron-json-storage": "^4.1.8",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.1.0",
@@ -15,6 +16,7 @@
     "@types/bootstrap-datepicker": "^0.0.13",
     "@types/classnames": "^2.2.9",
     "@types/clone": "^0.1.30",
+    "@types/electron-json-storage": "^4.0.0",
     "@types/flatpickr": "^3.1.2",
     "@types/jquery.contextmenu": "^1.7.34",
     "@types/lodash": "^4.14.135",

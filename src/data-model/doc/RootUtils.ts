@@ -3,6 +3,7 @@ import Root from './Root';
 /** 現在のファイルバージョン。 */
 const versionCurrent = 1;
 
+/** Json フォーマット。 */
 interface IJsonRoot {
  /** ファイルバージョン。 */
  version: number;
