@@ -1,7 +1,9 @@
 import ClassNames from 'classnames';
 import { remote } from 'electron';
+import * as Fs from 'fs';
 import * as React from 'react';
 
+import * as LocalSettingRootUtils from 'src/data-model/local-setting/RootUtils';
 import * as PageStyles from '../Page.css';
 import * as Styles from './Main.css';
 import MainBtn from './MainBtn';
@@ -12,7 +14,11 @@ interface IProps {
   onOpenFileSelected: ((filePath: string) => void);
 }
 
-class Main extends React.Component<IProps, any> {
+interface IState {
+  latestOpenFilePath: string | null;
+}
+
+class Main extends React.Component<IProps, IState> {
   public static PageId: string = 'Start';
   private static BtnIdOpenLatest: string = 'OpenLatest';
   private static BtnIdOpenFile: string = 'OpenFile';
@@ -21,6 +27,23 @@ class Main extends React.Component<IProps, any> {
 
   public constructor(props: IProps) {
     super(props);
+    this.state = {
+      latestOpenFilePath: null,
+    };
+  }
+
+  public componentDidMount() {
+    // 最後に開いたファイルを開くための情報ロード
+    LocalSettingRootUtils.load((root) => {
+      const filePath = root.latestOpenFilePath;
+      Fs.access(filePath, Fs.constants.R_OK, (err) => {
+        if (err === null) {
+          this.setState({
+            latestOpenFilePath: filePath,
+          });
+        }
+      });
+    });
   }
 
   public render() {
@@ -32,9 +55,9 @@ class Main extends React.Component<IProps, any> {
     const openBtnInfos = [];
     openBtnInfos.push({
       btnId: Main.BtnIdOpenLatest,
-      title: '最近開いたファイルを開く（準備中）',
+      title: '最後に開いたファイルを開く',
       iconName: 'payment',
-      isEnabled: false,
+      isEnabled: this.state.latestOpenFilePath !== null,
     });
     openBtnInfos.push({
       btnId: Main.BtnIdOpenFile,
@@ -98,7 +121,9 @@ class Main extends React.Component<IProps, any> {
   private onClicked(btnId: string) {
     switch (btnId) {
       case Main.BtnIdOpenLatest:
-        this.props.onNewFromMmxfSelected(`${process.env.HOME}/Desktop/MoneyAppTest.mmxf`);
+        if (this.state.latestOpenFilePath !== null) {
+          this.props.onOpenFileSelected(this.state.latestOpenFilePath);
+        }
         break;
 
       case Main.BtnIdOpenFile: {
