@@ -10,6 +10,8 @@ class BalanceCalculator {
   public balances: {[key: number]: number} = {};
   public endDate: IYearMonthDayDate;
   private state: States.IState;
+  private allRecords: RecordCollection | null = null;
+  private futureRecords: RecordCollection | null = null;
 
   /**
    * コンストラクタ。
@@ -24,6 +26,7 @@ class BalanceCalculator {
     accounts: number[] | null = null,
     cache: BalanceCalculator | null = null,
     ) {
+    // 変数初期化
     this.state = state;
     if (endDate === null) {
       endDate = {
@@ -33,8 +36,7 @@ class BalanceCalculator {
       };
     }
     this.endDate = endDate;
-
-    const allRecords = new RecordCollection(state);
+    this.allRecords = (cache != null && cache.allRecords != null) ? cache.allRecords : new RecordCollection(state);
     if (accounts == null) {
       accounts = state.account.order;
     }
@@ -45,10 +47,15 @@ class BalanceCalculator {
       cache.endDate < this.endDate;
     const preCalculateStartDate: IYearMonthDayDate | null =
       (cache != null && allAccountCacheEnabled) ? cache.endDate : null;
+    const preCalculateRecords = (cache != null && cache.futureRecords != null && preCalculateStartDate != null) ?
+      cache.futureRecords : this.allRecords;
     const preCalculateRangeFilterdRecords =
-      allRecords.filter([
+      preCalculateRecords.filter([
         RecordFilters.createDateRangeFilter({startDate: preCalculateStartDate, endDate}),
       ]);
+    this.futureRecords = preCalculateRecords.filter([
+      RecordFilters.createDateRangeFilter({startDate: endDate, endDate: null}),
+    ]);
 
     // 口座毎に計算
     accounts.forEach((accountId) => {
