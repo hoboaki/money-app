@@ -38,17 +38,27 @@ class BalanceCalculator {
     if (accounts == null) {
       accounts = state.account.order;
     }
-    accounts.forEach((accountId) => {
-      const cacheEnabled = cache != null && accountId in cache.balances && cache.endDate < this.endDate;
-      const startDate: IYearMonthDayDate | null = (cache != null && cacheEnabled) ? cache.endDate : null;
-      const records = allRecords.filter([
-        RecordFilters.createDateRangeFilter({startDate, endDate}),
-        RecordFilters.createAccountFilter({accounts: [accountId]}),
+
+    // 処理最適化のためまず日付で絞り込んでおく
+    const allAccountCacheEnabled = cache != null &&
+      accounts.filter((id) => id in cache.balances).length === accounts.length &&
+      cache.endDate < this.endDate;
+    const preCalculateStartDate: IYearMonthDayDate | null =
+      (cache != null && allAccountCacheEnabled) ? cache.endDate : null;
+    const preCalculateRangeFilterdRecords =
+      allRecords.filter([
+        RecordFilters.createDateRangeFilter({startDate: preCalculateStartDate, endDate}),
       ]);
-      const cacheBalance = (cache != null && cacheEnabled) ? cache.balances[accountId] : 0;
+
+    // 口座毎に計算
+    accounts.forEach((accountId) => {
+      const records = preCalculateRangeFilterdRecords.filter([
+          RecordFilters.createAccountFilter({accounts: [accountId]}),
+        ]);
+      const cacheBalance = (cache != null && allAccountCacheEnabled) ? cache.balances[accountId] : 0;
       const account = state.account.accounts[accountId];
       const addInitialAmount = IYearMonthDayDateUtils.less(account.startDate, this.endDate) &&
-        (startDate == null || IYearMonthDayDateUtils.lessEq(startDate, account.startDate));
+        (preCalculateStartDate == null || IYearMonthDayDateUtils.lessEq(preCalculateStartDate, account.startDate));
       const initialAmount = addInitialAmount ? account.initialAmount : 0;
       this.balances[accountId] = cacheBalance + initialAmount +
         records.sumAmountIncome() - records.sumAmountOutgo() + records.totalDiffTransfer([accountId]);
