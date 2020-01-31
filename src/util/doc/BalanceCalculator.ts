@@ -57,11 +57,38 @@ class BalanceCalculator {
       RecordFilters.createDateRangeFilter({startDate: endDate, endDate: null}),
     ]);
 
-    // 口座毎に計算
+    // レコードを各口座毎に振り分ける
+    // RecordCollection.filter の機能を使うよりも更に高速化するためにカスタム実装する
+    const accountDataMap: {[key: number]: {incomes: number[], outgos: number[], transfers: number[]}} = {};
     accounts.forEach((accountId) => {
-      const records = preCalculateRangeFilterdRecords.filter([
-          RecordFilters.createAccountFilter({accounts: [accountId]}),
-        ]);
+      accountDataMap[accountId] = {
+        incomes: [],
+        outgos: [],
+        transfers: [],
+      };
+    });
+    preCalculateRecords.incomes.forEach((id) => {
+      accountDataMap[this.state.income.records[id].account].incomes.push(id);
+    });
+    preCalculateRecords.outgos.forEach((id) => {
+      accountDataMap[this.state.outgo.records[id].account].outgos.push(id);
+    });
+    preCalculateRecords.transfers.forEach((id) => {
+      const record = this.state.transfer.records[id];
+      accountDataMap[record.accountFrom].transfers.push(id);
+      if (record.accountFrom !== record.accountTo) { // RecordFilter と挙動を合わせるために二重登録防止判定
+        accountDataMap[record.accountTo].transfers.push(id);
+      }
+    });
+
+    // 口座毎の結果を代入
+    accounts.forEach((accountId) => {
+      const accountData = accountDataMap[accountId];
+      const records = new RecordCollection(state, {
+        incomes: accountData.incomes,
+        outgos: accountData.outgos,
+        transfers: accountData.transfers,
+      });
       const cacheBalance = (cache != null && allAccountCacheEnabled) ? cache.balances[accountId] : 0;
       const account = state.account.accounts[accountId];
       const addInitialAmount = IYearMonthDayDateUtils.less(account.startDate, this.endDate) &&
@@ -69,6 +96,7 @@ class BalanceCalculator {
       const initialAmount = addInitialAmount ? account.initialAmount : 0;
       this.balances[accountId] = cacheBalance + initialAmount +
         records.sumAmountIncome() - records.sumAmountOutgo() + records.totalDiffTransfer([accountId]);
+    });cords.sumAmountIncome() - records.sumAmountOutgo() + records.totalDiffTransfer([accountId]);
     });
   }
 
