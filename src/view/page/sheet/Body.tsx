@@ -294,45 +294,56 @@ class Body extends React.Component<IProps, IState> {
     ];
 
     // アカウントテーブルのデータ作成
+    const accountTableBuildTimeBegin = performance.now();
     const accountCarriedData: {[key: number]: number} = {};
     const accountCellDataArray: {[key: number]: number[]} = {};
     const accountBalanceData: {[key: number]: number} = {};
-    this.props.doc.account.order.forEach((accountId) => {
-      // 繰り越しデータ計算
-      const account = this.props.doc.account.accounts[accountId];
-      const sign = DocTypes.accountKindToAccountGroup(account.kind) !== DocTypes.AccountGroup.Liabilities ?
-        1 : -1;
-      const firstCalculator = new BalanceCalculator(
-        this.props.doc,
-        colBeginDate,
-        [accountId],
-        null);
-      accountCarriedData[accountId] = sign * firstCalculator.sumBalance();
-
-      // 各列のデータ計算
-      const cellDataArray: number[] = [];
-      let calculator = firstCalculator;
+    const calculateCarriedResult = new BalanceCalculator(
+      this.props.doc,
+      colBeginDate,
+      this.props.doc.account.order,
+      null);
+    const calculateColResults: BalanceCalculator[] = [];
+    {
+      let calculator = calculateCarriedResult;
       colInfos.forEach((colInfo, colIdx) => {
         const nextColIdx = colIdx + 1;
         calculator = new BalanceCalculator(
           this.props.doc,
           nextColIdx < colInfos.length ? colInfos[nextColIdx].date : colEndDate,
-          [accountId],
+          this.props.doc.account.order,
           calculator);
-        cellDataArray[colIdx] = sign * calculator.sumBalance();
+        global.console.assert(calculateColResults.length === colIdx);
+        calculateColResults.push(calculator);
+      });
+    }
+    const calculateBalanceResult = new BalanceCalculator(
+      this.props.doc,
+      totalEndDate,
+      this.props.doc.account.order,
+      calculateCarriedResult,
+      );
+    this.props.doc.account.order.forEach((accountId) => {
+      // 繰り越しデータ代入
+      const account = this.props.doc.account.accounts[accountId];
+      const sign = DocTypes.accountKindToAccountGroup(account.kind) !== DocTypes.AccountGroup.Liabilities ?
+        1 : -1;
+      accountCarriedData[accountId] = sign * calculateCarriedResult.balances[accountId];
+
+      // 各列のデータ代入
+      const cellDataArray: number[] = [];
+      colInfos.forEach((colInfo, colIdx) => {
+        cellDataArray[colIdx] = sign * calculateColResults[colIdx].balances[accountId];
       });
       accountCellDataArray[accountId] = cellDataArray;
 
-      // 残高データ計算
-      calculator = new BalanceCalculator(
-        this.props.doc,
-        totalEndDate,
-        [accountId],
-        firstCalculator);
-      accountBalanceData[accountId] = sign * calculator.sumBalance();
+      // 残高データ代入
+      accountBalanceData[accountId] = sign * calculateBalanceResult.balances[accountId];
     });
+    const accountTableBuildTimeEnd = performance.now();
 
     // アカウントルート行のデータ作成
+    const accountRootsBuildTimeBegin = performance.now();
     const accountGroupCarriedData: {[key: number]: number} = {};
     const accountGroupCellDataArray: {[key: number]: number[]} = {};
     const accountGroupBalanceData: {[key: number]: number} = {};
@@ -361,8 +372,10 @@ class Body extends React.Component<IProps, IState> {
         accountIdArray.map((accountId) => accountBalanceData[Number(accountId)])
         .reduce((prev, current) => prev + current);
     });
+    const accountRootsBuildTimeEnd = performance.now();
 
     // カテゴリテーブルのデータ生成の準備
+    const categoryPrepareTimeBegin = performance.now();
     const recordsForCellData = new RecordCollection(this.props.doc, null).filter([
       RecordFilters.createDateRangeFilter({startDate: colBeginDate, endDate: colEndDate}),
     ]);
@@ -404,8 +417,10 @@ class Body extends React.Component<IProps, IState> {
         });
         outgoTotalArray[id] = null;
       });
+    const categoryPrepareTimeEnd = performance.now();
 
     // カテゴリテーブルの各列データ生成
+    const categoryTableBuildTimeBegin = performance.now();
     const toCellDataFuncs: {[key: number]: ((ids: number[]) => number | null)} = {};
     toCellDataFuncs[DocTypes.RecordKind.Transfer] = (ids) => {
       return ids.length === 0 ? null :
@@ -479,8 +494,10 @@ class Body extends React.Component<IProps, IState> {
           calcSumFunc(outgoLeafCategoriesArray[catId], outgoCellDataDictArray[colIdx]);
       });
     });
+    const categoryTableBuildTimeEnd = performance.now();
 
     // カテゴリテーブルの合計データ生成
+    const categoryTotalBuildTimeBegin = performance.now();
     Object.keys(recordKindTotalArray).forEach((key) => {
       const id = Number(key);
       switch (id) {
@@ -520,6 +537,22 @@ class Body extends React.Component<IProps, IState> {
       Object.keys(outgoTotalArray).forEach((id) => {
         const catId = Number(id);
         outgoTotalArray[catId] = calcSumFunc(outgoLeafCategoriesArray[catId], outgoTotalArray);
+      });
+    }
+    const categoryTotalBuildTimeEnd = performance.now();
+
+    // 計測値ダンプ
+    if (true) {
+      const profileResults = [
+        {label: 'AccountTableBuild', time: accountTableBuildTimeEnd - accountTableBuildTimeBegin},
+        {label: 'AccountRootsBuild', time: accountRootsBuildTimeEnd - accountRootsBuildTimeBegin},
+        {label: 'CategoryPrepare', time: categoryPrepareTimeEnd - categoryPrepareTimeBegin},
+        {label: 'CategoryTableBuild', time: categoryTableBuildTimeEnd - categoryTableBuildTimeBegin},
+        {label: 'CategoryTotalBuild', time: categoryTotalBuildTimeEnd - categoryTotalBuildTimeBegin},
+      ];
+      global.console.log(`Profile:`);
+      profileResults.forEach((result) => {
+        global.console.log(`${result.label}: ${result.time.toFixed(3)}msec`);
       });
     }
 
