@@ -118,13 +118,6 @@ export const createAccountFilter = (data: IAccountFilterData): IRecordFilter => 
             return rec.accountFrom === targetAccount || rec.accountTo === targetAccount;
             }),
         };
-        // return filteredCollectionEach(
-        //   collection,
-        //   state,
-        //   (record) => record.account === targetAccount,
-        //   (record) => record.account === targetAccount,
-        //   (record) => (record.accountFrom === targetAccount || record.accountTo === targetAccount),
-        // );
       }
 
       // 全口座の場合は結果は変わらないのでそのまま返す
