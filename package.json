@@ -85,11 +85,11 @@
     "xmldom": "^0.2.1"
   },
   "scripts": {
-    "build": "tcm src && webpack",
-    "clean-public": "rm -f ./public/*.worker.*",
-    "release-build": "rm -f ./public/*.worker.* && rm -rf ./build/mac && tcm src && webpack --env.prod && NODE_ENV=production electron-builder --mac --x64",
-    "start": "electron ./",
-    "watch-css": "tcm --watch src",
-    "watch": "webpack --watch --info-verbosity verbose"
+    "build": "bash ./script/build.sh",
+    "clean-public": "bash ./script/clean-public.sh",
+    "release-build": "bash ./script/release-build.sh",
+    "start": "bash ./script/start.sh",
+    "watch-css": "bash ./script/watch-css.sh",
+    "watch": "bash ./script/watch.sh"
   }
 }
