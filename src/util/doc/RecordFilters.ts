@@ -107,6 +107,19 @@ export interface IAccountFilterData {
 export const createAccountFilter = (data: IAccountFilterData): IRecordFilter => {
   return {
     filter: (collection: IRecordCollection, state: States.IState) => {
+      // １つの口座の場合は高速化のために専用判定
+      if (data.accounts.length === 1) {
+        const targetAccount = data.accounts[0];
+        return {
+          incomes: collection.incomes.filter((id) => state.income.records[id].account === targetAccount),
+          outgos: collection.outgos.filter((id) => state.outgo.records[id].account === targetAccount),
+          transfers: collection.transfers.filter((id) => {
+            const rec = state.transfer.records[id];
+            return rec.accountFrom === targetAccount || rec.accountTo === targetAccount;
+            }),
+        };
+      }
+
       // 全口座の場合は結果は変わらないのでそのまま返す
       const accountCount = state.account.order.length;
       const targetAccountDict: {[key: number]: any} = {};
