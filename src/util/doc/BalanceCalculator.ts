@@ -47,13 +47,13 @@ class BalanceCalculator {
       cache.endDate < this.endDate;
     const preCalculateStartDate: IYearMonthDayDate | null =
       (cache != null && allAccountCacheEnabled) ? cache.endDate : null;
-    const preCalculateRecords = (cache != null && cache.futureRecords != null && preCalculateStartDate != null) ?
+    const srcRecords = (cache != null && cache.futureRecords != null && preCalculateStartDate != null) ?
       cache.futureRecords : this.allRecords;
-    const preCalculateRangeFilterdRecords =
-      preCalculateRecords.filter([
+    const preCalculateRecords =
+      srcRecords.filter([
         RecordFilters.createDateRangeFilter({startDate: preCalculateStartDate, endDate}),
       ]);
-    this.futureRecords = preCalculateRecords.filter([
+    this.futureRecords = srcRecords.filter([
       RecordFilters.createDateRangeFilter({startDate: endDate, endDate: null}),
     ]);
 
