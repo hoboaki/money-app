@@ -109,7 +109,7 @@ class RecordCollection implements IRecordCollection {
     }));
 
     // ソート関数の用意
-    const cmpFuncs: Array<((lhs: IRecordKey, rhs: IRecordKey) => number)> = [];
+    const cmpFuncs: ((lhs: IRecordKey, rhs: IRecordKey) => number)[] = [];
     orders.forEach((order) => {
       switch (order.kind) {
         case RecordOrderKind.RecordId:

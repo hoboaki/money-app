@@ -74,7 +74,7 @@ export const createRecordKindFilter = (data: IRecordKindFilterData): IRecordFilt
 /** カテゴリフィルタのデータ。 */
 export interface ICategoryFilterData {
   /** 対象たち。 categoryId に null を指定した場合は kind のレコード全てを対象とする。 */
-  targets: Array<{kind: Types.RecordKind, categoryId: number | null}>;
+  targets: {kind: Types.RecordKind, categoryId: number | null}[];
 }
 
 /** レコード種類フィルタを作成。 */

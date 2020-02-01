@@ -7,9 +7,9 @@ import * as Types from './doc/Types';
 
 interface ICategory {
   name: string;
-  items: Array<{
+  items: {
     name: string;
-  }>;
+  }[];
 }
 
 interface ISampleRecord {

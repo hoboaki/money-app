@@ -761,7 +761,7 @@ class Body extends React.Component<IProps, IState> {
     recordKinds.forEach((recordKind) => {
       let categoryRootOrder: number[] = [];
       let categories: {[key: number]: DocStates.ICategory} = {};
-      let cellDataDictArray: Array<{[key: number]: (number | null)}> = [];
+      let cellDataDictArray: {[key: number]: (number | null)}[] = [];
       let totalArray: {[key: number]: number | null} = [];
       switch (recordKind) {
         case DocTypes.RecordKind.Transfer: return;
