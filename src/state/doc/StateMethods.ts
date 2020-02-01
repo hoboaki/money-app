@@ -147,6 +147,7 @@ export const toData = (state: States.IState) => {
     data.name = src.name;
     data.kind = Types.AccountKind[src.kind];
     data.initialAmount = src.initialAmount;
+    data.startDate = IYearMonthDayDateUtils.toDataFormatText(src.startDate);
     result.accounts.push(data);
     accountIdDict[src.id] = data.id;
   });
