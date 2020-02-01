@@ -1,8 +1,42 @@
 {
-  "name": "MoneyApp",
-  "version": "1.0.0",
+  "name": "adel-money-preview",
+  "version": "0.5.0",
   "main": "main.js",
   "license": "MIT",
+  "build": {
+    "productName": "AdelMoney(Preview)",
+    "appId": "myid",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "main.js",
+      "public/**/*",
+      "resource/icon/*"
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "mac": {
+      "icon": "resource/icon/mac-app-icon.icns",
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.finance"
+    }
+  },
   "dependencies": {
     "electron-json-storage": "^4.1.8",
     "react": "^16.12.0",
@@ -25,11 +59,13 @@
     "@types/split.js": "^1.4.0",
     "@types/uuid": "^3.4.7",
     "@types/xmldom": "^0.1.29",
+    "asar": "^2.0.3",
     "classnames": "^2.2.6",
     "clone": "^2.1.2",
     "css-loader": "^3.4.2",
     "deep-clone": "^3.0.3",
     "electron": "^7.1.11",
+    "electron-builder": "^22.3.2",
     "fast-clone": "^1.5.13",
     "flatpickr": "^4.6.3",
     "hard-source-webpack-plugin": "^0.13.1",
@@ -50,6 +86,8 @@
   },
   "scripts": {
     "build": "tcm src && webpack",
+    "clean-public": "rm -f ./public/*.worker.*",
+    "release-build": "rm -f ./public/*.worker.* && rm -rf ./build/mac && tcm src && webpack --env.prod && NODE_ENV=production electron-builder --mac --x64",
     "start": "electron ./",
     "watch-css": "tcm --watch src",
     "watch": "webpack --watch --info-verbosity verbose"

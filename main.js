@@ -13,11 +13,12 @@ let mainWindow
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1000, 
-    height: 600, 
+    width: 1000,
+    height: 600,
     titleBarStyle: 'hidden',
     webPreferences: {
-        nodeIntegration: true
+      devTools: !app.isPackaged && process.env.NODE_ENV==='development',
+      nodeIntegration: true
     }
   })
   //mainWindow.setMenuBarVisibility(false);
@@ -65,21 +66,6 @@ app.on('activate', function () {
     createWindow()
   }
 })
-
-// For Debug
-if (process.env.NODE_ENV==='development') {
-  app.on('browser-window-focus', (event, focusedWindow) => {
-    globalShortcut.register(
-　　　　　　　　　　　　process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-　　　　　　　　　　　　() => focusedWindow.webContents.toggleDevTools()
-　　　　　　　　)
-  })
-  app.on('browser-window-blur', (event, focusedWindow) => {
-    globalShortcut.unregister(
-　　　　　　　　　　　　process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I'
-　　　　　　　　)
-  })
-}
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
