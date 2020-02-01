@@ -87,7 +87,7 @@
   "scripts": {
     "build": "tcm src && webpack",
     "clean-public": "rm -f ./public/*.worker.*",
-    "release-build": "rm -f ./public/*.worker.* && rm -rf ./build/mac && tcm src && webpack && electron-builder --mac --x64",
+    "release-build": "rm -f ./public/*.worker.* && rm -rf ./build/mac && tcm src && webpack --env.prod && electron-builder --mac --x64",
     "start": "electron ./",
     "watch-css": "tcm --watch src",
     "watch": "webpack --watch --info-verbosity verbose"
