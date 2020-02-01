@@ -2,6 +2,7 @@ const path = require('path');
 const hardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 module.exports = env => {
+  const prodMode = env !== undefined && env.prod;
   return {
     // node.js で動作することを指定する
     target: 'electron-renderer',
@@ -11,9 +12,9 @@ module.exports = env => {
     cache: true,
     // development は、 source map file を作成、再ビルド時間の短縮などの設定となる
     // production は、コードの圧縮やモジュールの最適化が行われる設定となる
-    mode: env.prod ? 'production' : 'development',
+    mode: prodMode ? 'production' : 'development',
     // ソースマップのタイプ
-    devtool: env.prod ?  '' : 'source-map',
+    devtool: prodMode ?  '' : 'source-map',
     // 出力先設定 __dirname は node でのカレントディレクトリのパスが格納される変数
     output: {
         path: path.join(__dirname, 'public'),
