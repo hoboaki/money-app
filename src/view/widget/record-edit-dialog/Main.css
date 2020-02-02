@@ -130,7 +130,7 @@
 
 .ListCardAmount {
   color: inherit;
-  font-size: 13pt;
+  font-size: 12pt;
 }
 
 .ListCardMemo {
@@ -213,6 +213,7 @@
 }
 
 .FormTabButton {
+  align-items: center;
   background: transparent;
   border: none;
   display: flex;
@@ -257,7 +258,7 @@
 }
 
 .FormInputRoot tr {
-  height: 48px;
+  height: 42px;
 }
 
 .FormInputRowHide {
@@ -288,7 +289,7 @@
   border-radius: 5px;
   color: rgba(0,0,0,0.87);
   display: block;
-  height: 30px;
+  height: 24px;
   outline: none;
   padding-left: 8px;
 }
