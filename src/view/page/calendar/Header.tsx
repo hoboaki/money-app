@@ -12,6 +12,7 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
+import MaterialIcon from 'src/view/widget/material-icon';
 import RecordEditDialog from 'src/view/widget/record-edit-dialog';
 import * as Styles from './Header.css';
 
@@ -103,11 +104,11 @@ class Header extends React.Component<IProps, IState> {
       <div className={rootClass}>
         <span className={currentDateClass}>{currentDate}</span>
         <button className={movePrevBtnClass} onClick={() => {this.onMovePrevBtnPushed(); }}>
-          <i className={iconClass}>chevron_left</i>
+          <MaterialIcon name="chevron_left" classNames={[]} darkMode={true} />
         </button>
         <button className={moveTodayBtnClass} onClick={() => {this.onMoveTodayBtnPushed(); }}>今月</button>
         <button className={moveNextBtnClass} onClick={() => {this.onMoveNextBtnPushed(); }}>
-          <i className={iconClass}>chevron_right</i>
+          <MaterialIcon name="chevron_right" classNames={[]} darkMode={true} />
         </button>
         {/* <button className={jumpBtnClass} onClick={this.onJumpBtnPushed}>移動</button> */}
         <select className={viewUnitSelectClass} defaultValue="month" onChange={() => {this.onViewUnitChanged(); }}>
