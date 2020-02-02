@@ -11,6 +11,7 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
+import MaterialIcon from 'src/view/widget/material-icon';
 import * as Styles from './Header.css';
 
 class Header extends React.Component<UiStates.IPageSheet> {
@@ -63,11 +64,11 @@ class Header extends React.Component<UiStates.IPageSheet> {
           <option value={UiTypes.SheetViewUnit.Year}>年間</option>
         </select>
         <button className={movePrevBtnClass} onClick={this.onMovePrevBtnPushed}>
-          <i className={iconClass}>chevron_left</i>
+          <MaterialIcon name="chevron_left" classNames={[]} darkMode={true} />
         </button>
         <button className={moveTodayBtnClass} onClick={this.onMoveTodayBtnPushed}>今日</button>
         <button className={moveNextBtnClass} onClick={this.onMoveNextBtnPushed}>
-          <i className={iconClass}>chevron_right</i>
+          <MaterialIcon name="chevron_right" classNames={[]} darkMode={true} />
         </button>
 
         <div className={rightAreaClass}>

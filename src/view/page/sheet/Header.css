@@ -11,23 +11,18 @@
   width: 100%;
 }
 
-/* 表示中の日付ラベル */
-.CurrentDate {
-  font-size: 24pt;
-  margin: 0px;
-  text-align: left;
-  width: 200px;
-}
-
 /* ボタンの既定スタイル */
 .Btn {
-  height: 30px;
+  height: 26px;
 }
 
 /* 以下，それぞれのインプット専用設定 */
 
 .MoveBtn {
   width: 52px;
+}
+.MoveBtn i{
+  font-size: 20px;
 }
 
 .MovePrevBtn {
@@ -46,7 +41,7 @@
 }
 
 .ViewUnitSelect {
-  height: 30px;
+  height: 26px;
   margin-left: 4px;
   margin-right: 8px;
   width: 80px;
