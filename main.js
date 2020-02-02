@@ -16,6 +16,7 @@ function createWindow () {
     width: 1000,
     height: 600,
     titleBarStyle: 'hidden',
+    backgroundColor: '#f5f5f6',
     webPreferences: {
       devTools: !app.isPackaged && process.env.NODE_ENV==='development',
       nodeIntegration: true
