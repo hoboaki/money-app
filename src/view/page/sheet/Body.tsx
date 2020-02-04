@@ -542,7 +542,7 @@ class Body extends React.Component<IProps, IState> {
     const categoryTotalBuildTimeEnd = performance.now();
 
     // 計測値ダンプ
-    if (true) {
+    if (false) {
       const profileResults = [
         {label: 'AccountTableBuild', time: accountTableBuildTimeEnd - accountTableBuildTimeBegin},
         {label: 'AccountRootsBuild', time: accountRootsBuildTimeEnd - accountRootsBuildTimeBegin},
@@ -558,7 +558,7 @@ class Body extends React.Component<IProps, IState> {
 
     // アカウントテーブルの列ヘッダ生成
     const accountColHeadCells = new Array();
-    colInfos.forEach((colInfo) => {
+    colInfos.forEach((colInfo, colIdx) => {
       let dateText = '#';
       switch (this.props.page.viewUnit) {
         case UiTypes.SheetViewUnit.Day:
@@ -573,7 +573,7 @@ class Body extends React.Component<IProps, IState> {
           break;
       }
       accountColHeadCells.push(
-        <td className={colHeadCellClass}>{dateText}</td>,
+        <td key={`account-table-head-col-${colIdx}`} className={colHeadCellClass}>{dateText}</td>,
       );
     });
 
@@ -600,6 +600,7 @@ class Body extends React.Component<IProps, IState> {
           categoryId: null,
         };
         cols.push(<td
+          key={`account-root-${accountGroup}-col-${colIdx}`}
           className={Styles.TableCell}
           data-account-group={accountGroup}
           data-cell-root={true}
@@ -612,7 +613,7 @@ class Body extends React.Component<IProps, IState> {
           </td>);
       });
       accountRootRowDict[accountGroup] =
-        <tr>
+        <tr key={`account-root-${accountGroup}`}>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
               <div className={holderEntryRootOpenerSpaceClass} data-indent-level={0}>
@@ -655,6 +656,7 @@ class Body extends React.Component<IProps, IState> {
         };
         cols.push(
           <td
+            key={`account-${accountId}-col-${colIdx}`}
             className={Styles.TableCell}
             data-account-group={accountGroup}
             data-account-id={account.id}
@@ -668,7 +670,7 @@ class Body extends React.Component<IProps, IState> {
           </td>);
       });
       targetArray.push(
-        <tr>
+        <tr key={`account-${accountId}`}>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
               <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={1}/>
@@ -690,9 +692,9 @@ class Body extends React.Component<IProps, IState> {
 
     // カテゴリテーブルの列ヘッダ生成
     const categoryColHeadCells = new Array();
-    colInfos.forEach((colInfo) => {
+    colInfos.forEach((colInfo, colIdx) => {
       categoryColHeadCells.push(
-        <td className={colHeadCellClass}></td>,
+        <td key={`category-table-header-${colIdx}`} className={colHeadCellClass}></td>,
       );
     });
 
@@ -725,6 +727,7 @@ class Body extends React.Component<IProps, IState> {
         const amountText = recordKindCellDataDictArray[colIdx][recordKind] === null ? null :
           PriceUtils.numToLocaleString(Number(recordKindCellDataDictArray[colIdx][recordKind]));
         cols.push(<td
+          key={`category-root-${recordKind}-col-${colIdx}`}
           className={Styles.TableCell}
           data-category-id={categoryId}
           data-cell-root={true}
@@ -736,7 +739,7 @@ class Body extends React.Component<IProps, IState> {
           >{amountText}</td>);
       });
       categoryRootRowDict[recordKind] =
-        <tr>
+        <tr key={`category-root-${recordKind}`}>
           <td className={rowHeadHolderCategoryClass}>
             <div className={Styles.Holder}>
               <div className={holderEntryRootOpenerSpaceClass} data-indent-level={0}>
@@ -810,6 +813,7 @@ class Body extends React.Component<IProps, IState> {
           const amountText = cellDataDictArray[colIdx][categoryId] === null ? null :
             PriceUtils.numToLocaleString(Number(cellDataDictArray[colIdx][categoryId]));
           cols.push(<td
+            key={`category-${categoryId}-col-${colIdx}`}
             className={Styles.TableCell}
             data-cell-even={(result.length % 2) === 0}
             data-col-idx={colIdx}
@@ -821,7 +825,7 @@ class Body extends React.Component<IProps, IState> {
             >{amountText}</td>);
         });
         result.push(
-          <tr>
+          <tr key={`category-${categoryId}`}>
             <td className={rowHeadHolderCategoryClass}>
               <div className={Styles.Holder}>
                 <div className={openerClass} data-indent-level={indent}>
