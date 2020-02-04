@@ -151,7 +151,9 @@ class MainWindow extends React.Component<any, IState> {
     {
       const result = MmxfImporter.importFile(mmxfFilePath);
       if (result.doc === null) {
-        this.showErrorDialog('ファイルのインポート処理中にエラーが発生しました。', 'ファイルが壊れているか，未対応のデータフォーマットの可能性があります。');
+        const appendErrMsg = `\n\nエラー詳細：\n・${result.errorMsgs.join('\n・')}`;
+        this.showErrorDialog('ファイルのインポート処理中にエラーが発生しました。', 'ファイルが壊れているか，未対応のデータフォーマットの可能性があります。' + appendErrMsg);
+        global.console.log(result.errorMsgs);
         return;
       }
       resetDoc = result.doc;
@@ -249,6 +251,7 @@ class MainWindow extends React.Component<any, IState> {
         defaultId: 0,
         title: 'スタートページ',
         message: msg,
+        detail,
       });
   }
 
