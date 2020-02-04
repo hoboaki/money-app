@@ -542,7 +542,7 @@ class Body extends React.Component<IProps, IState> {
     const categoryTotalBuildTimeEnd = performance.now();
 
     // 計測値ダンプ
-    if (true) {
+    if (false) {
       const profileResults = [
         {label: 'AccountTableBuild', time: accountTableBuildTimeEnd - accountTableBuildTimeBegin},
         {label: 'AccountRootsBuild', time: accountRootsBuildTimeEnd - accountRootsBuildTimeBegin},
