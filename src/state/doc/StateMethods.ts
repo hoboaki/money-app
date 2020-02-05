@@ -169,6 +169,21 @@ export const toData = (state: States.IState) => {
         [],
       );
     };
+    const categoryOrder = collectChildCategoryId([state.income.rootCategoryId]);
+    categoryOrder.forEach((key) => {
+      const src = state.income.categories[key];
+      const data = new DataCategory();
+      data.id = result.income.categories.length + 1;
+      data.name = src.name;
+      if (src.parent != null) {
+        data.parent = categoryIdDict[src.parent];
+        if (data.parent === 0 || data.parent === undefined) {
+          throw new Error('Not found income category parent id.');
+        }
+      }
+      result.income.categories.push(data);
+      categoryIdDict[src.id] = data.id;
+    });
 
     // レコード
     for (const key in state.income.records) {
@@ -205,6 +220,21 @@ export const toData = (state: States.IState) => {
         [],
       );
     };
+    const categoryOrder = collectChildCategoryId([state.outgo.rootCategoryId]);
+    categoryOrder.forEach((key) => {
+      const src = state.outgo.categories[key];
+      const data = new DataCategory();
+      data.id = result.outgo.categories.length + 1;
+      data.name = src.name;
+      if (src.parent != null) {
+        data.parent = categoryIdDict[src.parent];
+        if (data.parent === 0 || data.parent === undefined) {
+          throw new Error('Not found outgo category parent id.');
+        }
+      }
+      result.outgo.categories.push(data);
+      categoryIdDict[src.id] = data.id;
+    });
 
     // レコード
     for (const key in state.outgo.records) {
@@ -299,7 +329,7 @@ export const incomeCategoryAdd = (
   // オブジェクト作成
   const obj = {
     id: 0,
-    name,
+    name: parentId == null ? '' : name,
     parent: parentId,
     childs: [],
   };
@@ -404,7 +434,7 @@ export const outgoCategoryAdd = (
   // オブジェクト作成
   const obj = {
     id: 0,
-    name,
+    name: parentId == null ? '' : name,
     parent: parentId,
     childs: [],
   };
@@ -599,7 +629,7 @@ export const categoryByPath = (categories: {[key: number]: States.ICategory}, pa
   let parentId: number = 0;
   names.forEach((name) => {
     const cats = parentId === 0 ?
-      Object.keys(categories).filter((cat) => categories[Number(cat)].parent == null).map((cat) => Number(cat)) :
+      Object.keys(categories).filter((cat) => categories[Number(cat)].parent == null).map((cat) => categories[Number(cat)])[0].childs :
       categories[parentId].childs;
     const nextId = cats.find((catId) => categories[catId].name === name);
     if (nextId === undefined) {

@@ -81,8 +81,9 @@ class SampleDoc {
           items: [],
         },
       ];
+      const rootCategoryId = StateMethods.incomeCategoryAdd(state, '', null);
       sampleCategories.forEach((parent) => {
-        const parentId = StateMethods.incomeCategoryAdd(state, parent.name, null);
+        const parentId = StateMethods.incomeCategoryAdd(state, parent.name, rootCategoryId);
         parent.items.forEach((child) => {
           StateMethods.incomeCategoryAdd(state, child.name, parentId);
         });
@@ -175,8 +176,9 @@ class SampleDoc {
           ],
         },
       ];
+      const rootCategoryId = StateMethods.outgoCategoryAdd(state, '', null);
       sampleCategories.forEach((parent) => {
-        const parentId = StateMethods.outgoCategoryAdd(state, parent.name, null);
+        const parentId = StateMethods.outgoCategoryAdd(state, parent.name, rootCategoryId);
         parent.items.forEach((child) => {
           StateMethods.outgoCategoryAdd(state, child.name, parentId);
         });
