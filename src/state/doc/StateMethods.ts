@@ -47,7 +47,7 @@ export const fromData = (src: DataRoot) => {
       }
       const key = incomeCategoryAdd(r, data.name, parentId);
       if (data.collapse) {
-        setCategoryIsCollapsed(r, key, true);
+        categoryCollapsedStateUpdate(r, key, true);
       }
       categoryIdDict[data.id] = key;
     }
@@ -86,7 +86,7 @@ export const fromData = (src: DataRoot) => {
       }
       const key = outgoCategoryAdd(r, data.name, parentId);
       if (data.collapse) {
-        setCategoryIsCollapsed(r, key, true);
+        categoryCollapsedStateUpdate(r, key, true);
       }
       categoryIdDict[data.id] = key;
     }
@@ -623,22 +623,22 @@ export const deleteRecords = (
   });
 };
 
-/** カテゴリの展開しないフラグの設定。 */
-export const setCategoryIsCollapsed = (
+/** カテゴリの展開状態の更新。 */
+export const categoryCollapsedStateUpdate = (
   state: States.IState,
   categoryId: number,
-  collapsed: boolean,
+  isCollapsed: boolean,
   ) => {
   {
     const cat = state.income.categories[categoryId];
     if (cat != null) {
-      cat.collapse = collapsed;
+      cat.collapse = isCollapsed;
     }
   }
   {
     const cat = state.outgo.categories[categoryId];
     if (cat != null) {
-      cat.collapse = collapsed;
+      cat.collapse = isCollapsed;
     }
   }
 };

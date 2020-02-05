@@ -139,7 +139,7 @@ a2RMapper.addWork<Actions.IDeleteRecords>(
 a2RMapper.addWork<Actions.IUpdateCategoryCollapse>(
   Actions.UPDATE_CATEGORY_COLLAPSE,
   (state, action) => {
-    StateMethods.setCategoryIsCollapsed(
+    StateMethods.categoryCollapsedStateUpdate(
       state,
       action.categoryId,
       action.isCollapsed,

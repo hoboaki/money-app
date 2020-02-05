@@ -91,7 +91,7 @@ class SampleDoc {
       sampleCategories.forEach((parent) => {
         const parentId = StateMethods.incomeCategoryAdd(state, parent.name, rootCategoryId);
         if (parent.collapse) {
-          StateMethods.setCategoryIsCollapsed(state, parentId, true);
+          StateMethods.categoryCollapsedStateUpdate(state, parentId, true);
         }
         parent.items.forEach((child) => {
           StateMethods.incomeCategoryAdd(state, child.name, parentId);
@@ -192,7 +192,7 @@ class SampleDoc {
       sampleCategories.forEach((parent) => {
         const parentId = StateMethods.outgoCategoryAdd(state, parent.name, rootCategoryId);
         if (parent.collapse) {
-          StateMethods.setCategoryIsCollapsed(state, parentId, true);
+          StateMethods.categoryCollapsedStateUpdate(state, parentId, true);
         }
         parent.items.forEach((child) => {
           StateMethods.outgoCategoryAdd(state, child.name, parentId);
