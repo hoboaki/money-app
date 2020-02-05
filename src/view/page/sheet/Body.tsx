@@ -766,6 +766,7 @@ class Body extends React.Component<IProps, IState> {
       let categories: {[key: number]: DocStates.ICategory} = {};
       let cellDataDictArray: {[key: number]: (number | null)}[] = [];
       let totalArray: {[key: number]: number | null} = [];
+      let rootName = '';
       switch (recordKind) {
         case DocTypes.RecordKind.Transfer: return;
         case DocTypes.RecordKind.Income:
@@ -773,12 +774,14 @@ class Body extends React.Component<IProps, IState> {
           categories = this.props.doc.income.categories;
           cellDataDictArray = incomeCellDataDictArray;
           totalArray = incomeTotalArray;
+          rootName = '収入';
           break;
         case DocTypes.RecordKind.Outgo:
           rootCategoryId = this.props.doc.outgo.rootCategoryId;
           categories = this.props.doc.outgo.categories;
           cellDataDictArray = outgoCellDataDictArray;
           totalArray = outgoTotalArray;
+          rootName = '支出';
           break;
         default:
           return;
@@ -795,6 +798,7 @@ class Body extends React.Component<IProps, IState> {
       };
       categoryIdArray.forEach((categoryId) => {
         const cat = categories[categoryId];
+        const catName = cat.parent == null ? rootName : cat.name;
         const cols = new Array();
         const indent = calcIndent(categoryId);
         const openerClass = holderEntryNormalOpenerSpaceClass;
@@ -833,7 +837,7 @@ class Body extends React.Component<IProps, IState> {
                 <div className={openerClass} data-indent-level={indent} data-root-row={rootRow}>
                   {openerElement}
                 </div>
-                <span className={holderEntryNormalCategoryNameClass} data-root-row={rootRow}>{cat.name}</span>
+                <span className={holderEntryNormalCategoryNameClass} data-root-row={rootRow}>{catName}</span>
               </div>
             </td>
             {cols}
