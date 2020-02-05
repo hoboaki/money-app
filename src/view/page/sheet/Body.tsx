@@ -212,12 +212,7 @@ class Body extends React.Component<IProps, IState> {
       Styles.HolderEntryAccountName,
       Styles.HolderEntryNormalAccountName,
     );
-    const holderEntryRootCategoryNameClass = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryRoot,
-      Styles.HolderEntryRootCategoryName,
-    );
-    const holderEntryNormalCategoryNameClass = ClassNames(
+    const holderEntryCategoryNameClass = ClassNames(
       Styles.HolderEntry,
       Styles.HolderEntryCategoryName,
       Styles.HolderEntryNormalCategoryName,
@@ -741,16 +736,16 @@ class Body extends React.Component<IProps, IState> {
       categoryRootRowDict[recordKind] =
         <tr key={`category-root-${recordKind}`}>
           <td className={rowHeadHolderCategoryClass}>
-            <div className={Styles.Holder}>
-              <div className={holderEntryRootOpenerSpaceClass} data-indent-level={0}>
+            <div className={Styles.Holder} data-root-row={true}>
+              <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={0} data-root-row={true}>
                 <button className={openerBtnClass}>▼</button>
               </div>
-              <span className={holderEntryRootCategoryNameClass}>{label}</span>
+              <span className={holderEntryCategoryNameClass} data-root-row={true}>{label}</span>
             </div>
           </td>
           {cols}
           <td className={Styles.TableCellSpace} data-root-row={true}/>
-          <td className={rowTailRootTotal}>
+          <td className={rowTailTotal} data-root-row={true}>
             {
               recordKindTotalArray[recordKind] === null ? null :
                 PriceUtils.numToLocaleString(Number(recordKindTotalArray[recordKind]))
@@ -837,7 +832,7 @@ class Body extends React.Component<IProps, IState> {
                 <div className={openerClass} data-indent-level={indent} data-root-row={rootRow}>
                   {openerElement}
                 </div>
-                <span className={holderEntryNormalCategoryNameClass} data-root-row={rootRow}>{catName}</span>
+                <span className={holderEntryCategoryNameClass} data-root-row={rootRow}>{catName}</span>
               </div>
             </td>
             {cols}
