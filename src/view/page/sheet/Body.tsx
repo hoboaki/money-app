@@ -758,6 +758,16 @@ class Body extends React.Component<IProps, IState> {
           return calcIndent(parent) + 1;
         }
       };
+      const calcIsCollapsed = (categoryId: number): boolean => {
+        const parent = categories[categoryId].parent;
+        if (parent === null) {
+          return false;
+        }
+        if (categories[parent].collapse) {
+          return true;
+        }
+        return calcIsCollapsed(parent);
+      };
       categoryIdArray.forEach((categoryId) => {
         const cat = categories[categoryId];
         const catName = cat.parent == null ? rootName : cat.name;
@@ -794,7 +804,7 @@ class Body extends React.Component<IProps, IState> {
             >{amountText}</td>);
         });
         result.push(
-          <tr key={`category-${categoryId}`}>
+          <tr key={`category-${categoryId}`} className={Styles.TableRow} data-is-collapsed={calcIsCollapsed(categoryId)}>
             <td className={rowHeadHolderCategoryClass}>
               <div className={Styles.Holder} data-root-row={rootRow}>
                 <div className={openerClass} data-indent-level={indent} data-root-row={rootRow}>
