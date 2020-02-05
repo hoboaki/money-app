@@ -149,16 +149,6 @@ class Body extends React.Component<IProps, IState> {
       Styles.TableRowHeadHolder,
       Styles.TableRowHeadHolderCategory,
     );
-    const rowHeadRootAccountCategoryClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableRowHeadAccountCategory,
-    );
-    const rowHeadRootAccountCarriedClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableRowHeadCarried,
-    );
     const rowHeadAccountCategoryClass = ClassNames(
       Styles.TableRowHead,
       Styles.TableRowHeadAccount,
@@ -171,19 +161,9 @@ class Body extends React.Component<IProps, IState> {
     );
 
     // rowTail
-    const rowTailRootAccountBalance = ClassNames(
-      Styles.TableRowTail,
-      Styles.TableRowTailRoot,
-      Styles.TableRowTailBalance,
-    );
     const rowTailAccountBalance = ClassNames(
       Styles.TableRowTail,
       Styles.TableRowTailBalance,
-    );
-    const rowTailRootTotal = ClassNames(
-      Styles.TableRowTail,
-      Styles.TableRowTailRoot,
-      Styles.TableRowTailTotal,
     );
     const rowTailTotal = ClassNames(
       Styles.TableRowTail,
@@ -191,23 +171,12 @@ class Body extends React.Component<IProps, IState> {
     );
 
     // holderEntry
-    const holderEntryRootOpenerSpaceClass = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryRoot,
-      Styles.HolderEntryOpenerSpace,
-      Styles.HolderEntryRootOpenerSpace,
-    );
     const holderEntryNormalOpenerSpaceClass = ClassNames(
       Styles.HolderEntry,
       Styles.HolderEntryOpenerSpace,
       Styles.HolderEntryNormalOpenerSpace,
     );
-    const holderEntryRootAccountNameClass = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryRoot,
-      Styles.HolderEntryRootAccountName,
-    );
-    const holderEntryNormalAccountNameClass = ClassNames(
+    const holderEntryAccountNameClass = ClassNames(
       Styles.HolderEntry,
       Styles.HolderEntryAccountName,
       Styles.HolderEntryNormalAccountName,
@@ -219,10 +188,6 @@ class Body extends React.Component<IProps, IState> {
     );
 
     // その他
-    const iconClass = ClassNames(
-      'material-icons',
-      'md-16',
-    );
     const openerBtnClass = ClassNames(
       BasicStyles.IconBtn,
       Styles.OpenerBtn,
@@ -598,9 +563,9 @@ class Body extends React.Component<IProps, IState> {
           key={`account-root-${accountGroup}-col-${colIdx}`}
           className={Styles.TableCell}
           data-account-group={accountGroup}
-          data-root-row={true}
           data-col-idx={colIdx}
           data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+          data-root-row={true}
           data-selected={this.isSelectedCell(cellInfo)}
           onClick={(e) => this.onCellClicked(e, cellInfo)}
           >
@@ -610,20 +575,20 @@ class Body extends React.Component<IProps, IState> {
       accountRootRowDict[accountGroup] =
         <tr key={`account-root-${accountGroup}`}>
           <td className={rowHeadHolderAccountClass}>
-            <div className={Styles.Holder}>
-              <div className={holderEntryRootOpenerSpaceClass} data-indent-level={0}>
+            <div className={Styles.Holder} data-root-row={true}>
+              <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={0} data-root-row={true}>
                 <button className={openerBtnClass}>▼</button>
               </div>
-              <span className={holderEntryRootAccountNameClass}>{label}</span>
+              <span className={holderEntryAccountNameClass} data-root-row={true}>{label}</span>
             </div>
           </td>
-          <td className={rowHeadRootAccountCategoryClass}></td>
-          <td className={rowHeadRootAccountCarriedClass}>
+          <td className={rowHeadAccountCategoryClass} data-root-row={true}></td>
+          <td className={rowHeadAccountCarriedClass} data-root-row={true}>
             {carriedVisible ? PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup]) : ''}
           </td>
           {cols}
           <td className={Styles.TableCellSpace} data-root-row={true}/>
-          <td className={rowTailRootAccountBalance}>
+          <td className={rowTailAccountBalance} data-root-row={true}>
             {PriceUtils.numToLocaleString(accountGroupBalanceData[accountGroup])}
           </td>
         </tr>;
@@ -669,7 +634,7 @@ class Body extends React.Component<IProps, IState> {
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
               <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={1}/>
-              <span className={holderEntryNormalAccountNameClass}>{account.name}</span>
+              <span className={holderEntryAccountNameClass}>{account.name}</span>
             </div>
           </td>
           <td className={rowHeadAccountCategoryClass}>

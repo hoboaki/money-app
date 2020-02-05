@@ -66,9 +66,7 @@
   color: rgba(0, 0, 0, 0.61);
 }
 .HolderEntryAccountName,
-.HolderEntryRootAccountName,
 .HolderEntryCategoryName,
-.HolderEntryRootCategoryName,
 .TableColHeadAccountName,
 .TableColHeadAccountCategory,
 .TableColHeadCarried,
@@ -76,7 +74,6 @@
 .TableColHeadCategory,
 .TableColHeadTotal,
 .TableColHeadCell,
-.TableRowHeadRootAccountName,
 .TableRowHeadAccountCategory,
 .TableRowHeadCarried,
 .TableCell {
@@ -84,7 +81,6 @@
 }
 .TableRowHeadHolder,
 .TableColHeadAccountName,
-.TableRowHeadRootAccountName,
 .TableColHeadAccountCategory,
 .TableRowHeadAccountCategory,
 .TableColHeadCarried,
@@ -109,8 +105,6 @@
   width: calc(172px + 16px + 88px);
 }
 .HolderEntryAccountName,
-.HolderEntryRootAccountName,
-.HolderEntryRootCategoryName,
 .HolderEntryCategoryName {
   flex-grow: 1;
 }
@@ -154,10 +148,6 @@
 }
 .HolderEntry[data-root-row='true'],
 .HolderEntryOpenerSpace[data-root-row='true'],
-.HolderEntryRoot,
-.HolderEntryRootOpenerSpace,
-.TableRowHeadRoot,
-.TableRowTailRoot,
 .TableRowHead[data-root-row='true'],
 .TableRowTail[data-root-row='true'],
 .TableCell[data-root-row='true'],
@@ -172,8 +162,8 @@
   background: #1976d2;
   color: rgba(255, 255, 255, 0.87);
 }
-.HolderEntryRoot,
-.TableRowHeadRoot {
+.HolderEntry[data-root-row='true'],
+.TableRowHead[data-root-row='true'] {
   color: rgba(0,0,0,0.61);
 }
 .HolderEntryNormalOpenerSpace,
