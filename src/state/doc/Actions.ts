@@ -213,3 +213,20 @@ export const deleteRecords = (
     records,
   };
 };
+
+/// 開閉状態の更新。
+export const UPDATE_CATEGORY_COLLAPSE = UUID();
+export interface IUpdateCategoryCollapse extends Action {
+  categoryId: number;
+  isCollapsed: boolean;
+}
+export const updateCategoryCollapse = (
+  categoryId: number,
+  isCollapsed: boolean,
+  ): IUpdateCategoryCollapse => {
+  return {
+    type: UPDATE_CATEGORY_COLLAPSE,
+    categoryId,
+    isCollapsed,
+  };
+};
