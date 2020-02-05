@@ -10,6 +10,7 @@ import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
+import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
 import * as UiTypes from 'src/state/ui/Types';
 import BalanceCalculator from 'src/util/doc/BalanceCalculator';
@@ -914,13 +915,16 @@ class Body extends React.Component<IProps, IState> {
     // イベント伝搬停止
     e.stopPropagation();
 
-    // 状態を反転
-    Store.dispatch(DocActions.updateCategoryCollapse(categoryId, !currentIsCollapsed));
-
     // 選択中のセルを非選択に
     this.setState({
       selectedCell: null,
     });
+
+    // 状態を反転
+    Store.dispatch(DocActions.updateCategoryCollapse(categoryId, !currentIsCollapsed));
+
+    // 自動保存リクエスト
+    Store.dispatch(UiActions.documentRequestAutoSave());
   }
 
   private onCellClicked(e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>, cellInfo: ISelectedCellInfo) {
