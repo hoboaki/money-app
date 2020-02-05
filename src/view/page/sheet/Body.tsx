@@ -603,7 +603,7 @@ class Body extends React.Component<IProps, IState> {
           key={`account-root-${accountGroup}-col-${colIdx}`}
           className={Styles.TableCell}
           data-account-group={accountGroup}
-          data-cell-root={true}
+          data-root-row={true}
           data-col-idx={colIdx}
           data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
           data-selected={this.isSelectedCell(cellInfo)}
@@ -627,7 +627,7 @@ class Body extends React.Component<IProps, IState> {
             {carriedVisible ? PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup]) : ''}
           </td>
           {cols}
-          <td className={Styles.TableCellSpace} data-cell-root={true}/>
+          <td className={Styles.TableCellSpace} data-root-row={true}/>
           <td className={rowTailRootAccountBalance}>
             {PriceUtils.numToLocaleString(accountGroupBalanceData[accountGroup])}
           </td>
@@ -730,7 +730,7 @@ class Body extends React.Component<IProps, IState> {
           key={`category-root-${recordKind}-col-${colIdx}`}
           className={Styles.TableCell}
           data-category-id={categoryId}
-          data-cell-root={true}
+          data-root-row={true}
           data-col-idx={colIdx}
           data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
           data-record-kind={recordKind}
@@ -749,7 +749,7 @@ class Body extends React.Component<IProps, IState> {
             </div>
           </td>
           {cols}
-          <td className={Styles.TableCellSpace} data-cell-root={true}/>
+          <td className={Styles.TableCellSpace} data-root-row={true}/>
           <td className={rowTailRootTotal}>
             {
               recordKindTotalArray[recordKind] === null ? null :
@@ -788,7 +788,7 @@ class Body extends React.Component<IProps, IState> {
       const calcIndent = (categoryId: number): number => {
         const parent = categories[categoryId].parent;
         if (parent === null) {
-          return 1;
+          return 0;
         } else {
           return calcIndent(parent) + 1;
         }
@@ -801,6 +801,7 @@ class Body extends React.Component<IProps, IState> {
         const openerElement = cat.childs.length === 0 ?
           null :
           <button className={openerBtnClass}>▼</button>;
+        const rootRow = cat.parent == null;
         colInfos.forEach((colInfo, colIdx) => {
           const cellInfo: ISelectedCellInfo = {
             colIdx,
@@ -816,10 +817,10 @@ class Body extends React.Component<IProps, IState> {
             key={`category-${categoryId}-col-${colIdx}`}
             className={Styles.TableCell}
             data-cell-even={(result.length % 2) === 0}
-            data-cell-root={cat.parent == null}
             data-col-idx={colIdx}
             data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
             data-record-kind={recordKind}
+            data-root-row={rootRow}
             data-category-id={categoryId}
             data-selected={this.isSelectedCell(cellInfo)}
             onClick={(e) => this.onCellClicked(e, cellInfo)}
@@ -828,16 +829,16 @@ class Body extends React.Component<IProps, IState> {
         result.push(
           <tr key={`category-${categoryId}`}>
             <td className={rowHeadHolderCategoryClass}>
-              <div className={Styles.Holder}>
-                <div className={openerClass} data-indent-level={indent}>
+              <div className={Styles.Holder} data-root-row={rootRow}>
+                <div className={openerClass} data-indent-level={indent} data-root-row={rootRow}>
                   {openerElement}
                 </div>
-                <span className={holderEntryNormalCategoryNameClass}>{cat.name}</span>
+                <span className={holderEntryNormalCategoryNameClass} data-root-row={rootRow}>{cat.name}</span>
               </div>
             </td>
             {cols}
-            <td className={Styles.TableCellSpace}></td>
-            <td className={rowTailTotal}>
+            <td className={Styles.TableCellSpace} data-root-row={rootRow}></td>
+            <td className={rowTailTotal} data-root-row={rootRow}>
               {
                 totalArray[categoryId] === null ? null :
                   PriceUtils.numToLocaleString(Number(totalArray[categoryId]))
@@ -909,9 +910,7 @@ class Body extends React.Component<IProps, IState> {
             <table className={Styles.Table}>
               <tbody>
                 {categoryRootRowDict[DocTypes.RecordKind.Transfer]}
-                {categoryRootRowDict[DocTypes.RecordKind.Income]}
                 {categoryRowDict[DocTypes.RecordKind.Income]}
-                {categoryRootRowDict[DocTypes.RecordKind.Outgo]}
                 {categoryRowDict[DocTypes.RecordKind.Outgo]}
               </tbody>
             </table>

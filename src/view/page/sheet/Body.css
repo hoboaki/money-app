@@ -152,12 +152,16 @@
 .TableCellSpace {
   background: #f5f5f6;
 }
+.HolderEntry[data-root-row='true'],
+.HolderEntryOpenerSpace[data-root-row='true'],
 .HolderEntryRoot,
 .HolderEntryRootOpenerSpace,
 .TableRowHeadRoot,
 .TableRowTailRoot,
-.TableCell[data-cell-root='true'],
-.TableCellSpace[data-cell-root='true'] {
+.TableRowHead[data-root-row='true'],
+.TableRowTail[data-root-row='true'],
+.TableCell[data-root-row='true'],
+.TableCellSpace[data-root-row='true'] {
   background: rgba(25, 118, 210, 0.35);
 }
 .TableCell:hover {
