@@ -22,6 +22,9 @@
   font-size: 9.0pt;
   width: 100%;
 }
+.TableRow[data-is-collapsed='true'] {
+  visibility: collapse;
+}
 .HeadTableRecord {
   border-top: 1px solid #cccccc;
 }

@@ -4,10 +4,13 @@ import * as ReactRedux from 'react-redux';
 import Split from 'split.js';
 import { v4 as UUID } from 'uuid';
 
+import * as DocActions from 'src/state/doc/Actions';
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
+import Store from 'src/state/Store';
+import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
 import * as UiTypes from 'src/state/ui/Types';
 import BalanceCalculator from 'src/util/doc/BalanceCalculator';
@@ -756,15 +759,26 @@ class Body extends React.Component<IProps, IState> {
           return calcIndent(parent) + 1;
         }
       };
+      const calcIsCollapsed = (categoryId: number): boolean => {
+        const parent = categories[categoryId].parent;
+        if (parent === null) {
+          return false;
+        }
+        if (categories[parent].collapse) {
+          return true;
+        }
+        return calcIsCollapsed(parent);
+      };
       categoryIdArray.forEach((categoryId) => {
         const cat = categories[categoryId];
         const catName = cat.parent == null ? rootName : cat.name;
         const cols = new Array();
         const indent = calcIndent(categoryId);
         const openerClass = holderEntryNormalOpenerSpaceClass;
+        const openerText = cat.collapse ? '▶' : '▼';
         const openerElement = cat.childs.length === 0 ?
           null :
-          <button className={openerBtnClass}>▼</button>;
+          <button className={openerBtnClass} onClick={(e) => this.onOpenerClicked(e, categoryId, cat.collapse)}>{openerText}</button>;
         const rootRow = cat.parent == null;
         colInfos.forEach((colInfo, colIdx) => {
           const cellInfo: ISelectedCellInfo = {
@@ -791,7 +805,7 @@ class Body extends React.Component<IProps, IState> {
             >{amountText}</td>);
         });
         result.push(
-          <tr key={`category-${categoryId}`}>
+          <tr key={`category-${categoryId}`} className={Styles.TableRow} data-is-collapsed={calcIsCollapsed(categoryId)}>
             <td className={rowHeadHolderCategoryClass}>
               <div className={Styles.Holder} data-root-row={rootRow}>
                 <div className={openerClass} data-indent-level={indent} data-root-row={rootRow}>
@@ -895,6 +909,22 @@ class Body extends React.Component<IProps, IState> {
       current.accountId === cellInfo.accountId &&
       current.recordKind === cellInfo.recordKind &&
       current.categoryId === cellInfo.categoryId;
+  }
+
+  private onOpenerClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, categoryId: number, currentIsCollapsed: boolean) {
+    // イベント伝搬停止
+    e.stopPropagation();
+
+    // 選択中のセルを非選択に
+    this.setState({
+      selectedCell: null,
+    });
+
+    // 状態を反転
+    Store.dispatch(DocActions.updateCategoryCollapse(categoryId, !currentIsCollapsed));
+
+    // 自動保存リクエスト
+    Store.dispatch(UiActions.documentRequestAutoSave());
   }
 
   private onCellClicked(e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>, cellInfo: ISelectedCellInfo) {

@@ -46,6 +46,9 @@ export const fromData = (src: DataRoot) => {
         }
       }
       const key = incomeCategoryAdd(r, data.name, parentId);
+      if (data.collapse) {
+        categoryCollapsedStateUpdate(r, key, true);
+      }
       categoryIdDict[data.id] = key;
     }
     for (const data of src.income.records) {
@@ -82,6 +85,9 @@ export const fromData = (src: DataRoot) => {
         }
       }
       const key = outgoCategoryAdd(r, data.name, parentId);
+      if (data.collapse) {
+        categoryCollapsedStateUpdate(r, key, true);
+      }
       categoryIdDict[data.id] = key;
     }
     for (const data of src.outgo.records) {
@@ -175,6 +181,7 @@ export const toData = (state: States.IState) => {
       const data = new DataCategory();
       data.id = result.income.categories.length + 1;
       data.name = src.name;
+      data.collapse = src.collapse;
       if (src.parent != null) {
         data.parent = categoryIdDict[src.parent];
         if (data.parent === 0 || data.parent === undefined) {
@@ -226,6 +233,7 @@ export const toData = (state: States.IState) => {
       const data = new DataCategory();
       data.id = result.outgo.categories.length + 1;
       data.name = src.name;
+      data.collapse = src.collapse;
       if (src.parent != null) {
         data.parent = categoryIdDict[src.parent];
         if (data.parent === 0 || data.parent === undefined) {
@@ -332,6 +340,7 @@ export const incomeCategoryAdd = (
     name: parentId == null ? '' : name,
     parent: parentId,
     childs: [],
+    collapse: false,
   };
   const parent = parentId != null ? state.income.categories[parentId] : null;
 
@@ -437,6 +446,7 @@ export const outgoCategoryAdd = (
     name: parentId == null ? '' : name,
     parent: parentId,
     childs: [],
+    collapse: false,
   };
   const parent = parentId != null ? state.outgo.categories[parentId] : null;
 
@@ -611,6 +621,26 @@ export const deleteRecords = (
       delete state.transfer.records[id];
     }
   });
+};
+
+/** カテゴリの展開状態の更新。 */
+export const categoryCollapsedStateUpdate = (
+  state: States.IState,
+  categoryId: number,
+  isCollapsed: boolean,
+  ) => {
+  {
+    const cat = state.income.categories[categoryId];
+    if (cat != null) {
+      cat.collapse = isCollapsed;
+    }
+  }
+  {
+    const cat = state.outgo.categories[categoryId];
+    if (cat != null) {
+      cat.collapse = isCollapsed;
+    }
+  }
 };
 
 /**

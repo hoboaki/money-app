@@ -19,6 +19,7 @@ export interface IAccount {
 export interface ICategory {
   id: number; // CategoryId。
   name: string; // カテゴリ名。
+  collapse: boolean; // ワークシート表示で閉じて表示するか。
   parent: number | null; // 親 Category の CategoryId 。null ならルート。
   childs: number[]; // 子 Category の CategoryId 配列。
 }

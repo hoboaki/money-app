@@ -7,6 +7,7 @@ import * as Types from './doc/Types';
 
 interface ICategory {
   name: string;
+  collapse: boolean;
   items: {
     name: string;
   }[];
@@ -52,6 +53,7 @@ class SampleDoc {
       const sampleCategories: ICategory[] = [
         {
           name: '給料',
+          collapse: false,
           items: [
             {name: '固定給'},
             {name: '年俸給'},
@@ -63,6 +65,7 @@ class SampleDoc {
         },
         {
           name: '賞与',
+          collapse: true,
           items: [
             {name: '年俸給分'},
             {name: '調整給料分'},
@@ -70,20 +73,26 @@ class SampleDoc {
         },
         {
           name: '児童手当',
+          collapse: false,
           items: [],
         },
         {
           name: '太陽光発電',
+          collapse: false,
           items: [],
         },
         {
           name: 'お小遣い',
+          collapse: false,
           items: [],
         },
       ];
       const rootCategoryId = StateMethods.incomeCategoryAdd(state, '', null);
       sampleCategories.forEach((parent) => {
         const parentId = StateMethods.incomeCategoryAdd(state, parent.name, rootCategoryId);
+        if (parent.collapse) {
+          StateMethods.categoryCollapsedStateUpdate(state, parentId, true);
+        }
         parent.items.forEach((child) => {
           StateMethods.incomeCategoryAdd(state, child.name, parentId);
         });
@@ -152,6 +161,7 @@ class SampleDoc {
       const sampleCategories: ICategory[] = [
         {
           name: '家事費',
+          collapse: false,
           items: [
             {name: '食費'},
             {name: '日用品'},
@@ -160,6 +170,7 @@ class SampleDoc {
         },
         {
           name: '光熱・通信費',
+          collapse: true,
           items: [
             {name: '電気'},
             {name: 'プロバイダ・光電話'},
@@ -170,6 +181,7 @@ class SampleDoc {
         },
         {
           name: '通勤・通学費',
+          collapse: false,
           items: [
             {name: '洗車'},
             {name: 'ガソリン'},
@@ -179,6 +191,9 @@ class SampleDoc {
       const rootCategoryId = StateMethods.outgoCategoryAdd(state, '', null);
       sampleCategories.forEach((parent) => {
         const parentId = StateMethods.outgoCategoryAdd(state, parent.name, rootCategoryId);
+        if (parent.collapse) {
+          StateMethods.categoryCollapsedStateUpdate(state, parentId, true);
+        }
         parent.items.forEach((child) => {
           StateMethods.outgoCategoryAdd(state, child.name, parentId);
         });

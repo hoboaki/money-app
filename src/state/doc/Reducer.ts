@@ -136,6 +136,17 @@ a2RMapper.addWork<Actions.IDeleteRecords>(
   },
 );
 
+a2RMapper.addWork<Actions.IUpdateCategoryCollapse>(
+  Actions.UPDATE_CATEGORY_COLLAPSE,
+  (state, action) => {
+    StateMethods.categoryCollapsedStateUpdate(
+      state,
+      action.categoryId,
+      action.isCollapsed,
+    );
+  },
+);
+
 // Reducer 本体。
 const Reducer: Redux.Reducer<States.IState> = (state = States.defaultState, action) => {
     return a2RMapper.execute(state, action);
