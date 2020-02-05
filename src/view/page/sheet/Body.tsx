@@ -916,6 +916,11 @@ class Body extends React.Component<IProps, IState> {
 
     // 状態を反転
     Store.dispatch(DocActions.updateCategoryCollapse(categoryId, !currentIsCollapsed));
+
+    // 選択中のセルを非選択に
+    this.setState({
+      selectedCell: null,
+    });
   }
 
   private onCellClicked(e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>, cellInfo: ISelectedCellInfo) {
