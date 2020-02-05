@@ -856,7 +856,7 @@ class Main extends React.Component<ILocalProps, IState> {
   private categoryDisplayText(categories: {[key: number]: DocStates.ICategory}, categoryId: number): string {
     const funcParentPath = (catId: number): string => {
       const cat = categories[catId];
-      if (cat.parent == null) {
+      if (cat.parent == null || categories[cat.parent].parent == null) {
         return cat.name;
       }
       return `${funcParentPath(cat.parent)} > ${cat.name}`;
