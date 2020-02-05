@@ -901,6 +901,10 @@ class Body extends React.Component<IProps, IState> {
   }
 
   private onOpenerClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, categoryId: number, currentIsCollapsed: boolean) {
+    // イベント伝搬停止
+    e.stopPropagation();
+
+    // 状態を反転
     Store.dispatch(DocActions.updateCategoryCollapse(categoryId, !currentIsCollapsed));
   }
 
