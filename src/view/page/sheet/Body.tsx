@@ -401,7 +401,7 @@ class Body extends React.Component<IProps, IState> {
       });
       recordKindTotalArray[kind] = null;
     });
-    DocStateMethods.categoryIdArray(this.props.doc.income.categoryRootOrder, this.props.doc.income.categories)
+    DocStateMethods.categoryIdArray(this.props.doc.income.rootCategoryId, this.props.doc.income.categories)
       .forEach((id) => {
         incomeLeafCategoriesArray[id] = DocStateMethods.leafCategoryIdArray(id, this.props.doc.income.categories);
         incomeCellDataDictArray.forEach((entry, colIdx) => {
@@ -409,7 +409,7 @@ class Body extends React.Component<IProps, IState> {
         });
         incomeTotalArray[id] = null;
       });
-    DocStateMethods.categoryIdArray(this.props.doc.outgo.categoryRootOrder, this.props.doc.outgo.categories)
+    DocStateMethods.categoryIdArray(this.props.doc.outgo.rootCategoryId, this.props.doc.outgo.categories)
       .forEach((id) => {
         outgoLeafCategoriesArray[id] = DocStateMethods.leafCategoryIdArray(id, this.props.doc.outgo.categories);
         outgoCellDataDictArray.forEach((entry, colIdx) => {
@@ -762,20 +762,20 @@ class Body extends React.Component<IProps, IState> {
     // カテゴリテーブルの非ルート行生成
     const categoryRowDict: {[key: number]: JSX.Element[]} = {};
     recordKinds.forEach((recordKind) => {
-      let categoryRootOrder: number[] = [];
+      let rootCategoryId: number = DocTypes.INVALID_ID;
       let categories: {[key: number]: DocStates.ICategory} = {};
       let cellDataDictArray: {[key: number]: (number | null)}[] = [];
       let totalArray: {[key: number]: number | null} = [];
       switch (recordKind) {
         case DocTypes.RecordKind.Transfer: return;
         case DocTypes.RecordKind.Income:
-          categoryRootOrder = this.props.doc.income.categoryRootOrder;
+          rootCategoryId = this.props.doc.income.rootCategoryId;
           categories = this.props.doc.income.categories;
           cellDataDictArray = incomeCellDataDictArray;
           totalArray = incomeTotalArray;
           break;
         case DocTypes.RecordKind.Outgo:
-          categoryRootOrder = this.props.doc.outgo.categoryRootOrder;
+          rootCategoryId = this.props.doc.outgo.rootCategoryId;
           categories = this.props.doc.outgo.categories;
           cellDataDictArray = outgoCellDataDictArray;
           totalArray = outgoTotalArray;
@@ -783,7 +783,7 @@ class Body extends React.Component<IProps, IState> {
         default:
           return;
       }
-      const categoryIdArray = DocStateMethods.categoryIdArray(categoryRootOrder, categories);
+      const categoryIdArray = DocStateMethods.categoryIdArray(rootCategoryId, categories);
       const result = new Array<JSX.Element>();
       const calcIndent = (categoryId: number): number => {
         const parent = categories[categoryId].parent;
@@ -816,6 +816,7 @@ class Body extends React.Component<IProps, IState> {
             key={`category-${categoryId}-col-${colIdx}`}
             className={Styles.TableCell}
             data-cell-even={(result.length % 2) === 0}
+            data-cell-root={cat.parent == null}
             data-col-idx={colIdx}
             data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
             data-record-kind={recordKind}
@@ -957,12 +958,12 @@ class Body extends React.Component<IProps, IState> {
         switch (cellInfo.recordKind) {
           case DocTypes.RecordKind.Income:
             categoryId = DocStateMethods.firstLeafCategoryId(
-              categoryId !== null ? categoryId : this.props.doc.income.categoryRootOrder[0],
+              categoryId !== null ? categoryId : this.props.doc.income.rootCategoryId,
               this.props.doc.income.categories);
             break;
           case DocTypes.RecordKind.Outgo:
             categoryId = DocStateMethods.firstLeafCategoryId(
-              categoryId !== null ? categoryId : this.props.doc.outgo.categoryRootOrder[0],
+              categoryId !== null ? categoryId : this.props.doc.outgo.rootCategoryId,
               this.props.doc.outgo.categories);
             break;
           default:

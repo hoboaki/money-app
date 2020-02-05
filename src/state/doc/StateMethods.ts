@@ -169,21 +169,6 @@ export const toData = (state: States.IState) => {
         [],
       );
     };
-    const categoryOrder = collectChildCategoryId(state.income.categoryRootOrder);
-    categoryOrder.forEach((key) => {
-      const src = state.income.categories[key];
-      const data = new DataCategory();
-      data.id = result.income.categories.length + 1;
-      data.name = src.name;
-      if (src.parent != null) {
-        data.parent = categoryIdDict[src.parent];
-        if (data.parent === 0 || data.parent === undefined) {
-          throw new Error('Not found income category parent id.');
-        }
-      }
-      result.income.categories.push(data);
-      categoryIdDict[src.id] = data.id;
-    });
 
     // レコード
     for (const key in state.income.records) {
@@ -220,21 +205,6 @@ export const toData = (state: States.IState) => {
         [],
       );
     };
-    const categoryOrder = collectChildCategoryId(state.outgo.categoryRootOrder);
-    categoryOrder.forEach((key) => {
-      const src = state.outgo.categories[key];
-      const data = new DataCategory();
-      data.id = result.outgo.categories.length + 1;
-      data.name = src.name;
-      if (src.parent != null) {
-        data.parent = categoryIdDict[src.parent];
-        if (data.parent === 0 || data.parent === undefined) {
-          throw new Error('Not found outgo category parent id.');
-        }
-      }
-      result.outgo.categories.push(data);
-      categoryIdDict[src.id] = data.id;
-    });
 
     // レコード
     for (const key in state.outgo.records) {
@@ -335,6 +305,11 @@ export const incomeCategoryAdd = (
   };
   const parent = parentId != null ? state.income.categories[parentId] : null;
 
+  // ルート要素なら１つ目であることを保証
+  if (parent == null && Object.keys(state.income.categories).length !== 0) {
+    throw new Error(`Income root category is already exists.`);
+  }
+
   // 追加
   obj.id = state.nextId.category;
   state.nextId.category++;
@@ -345,9 +320,13 @@ export const incomeCategoryAdd = (
     } else {
       throw new Error(`Category parent (id: ${parentId}) is not exist.`);
     }
-  } else {
-    state.income.categoryRootOrder.push(obj.id);
   }
+
+  // ルートの場合は ID を記録
+  if (parent == null) {
+    state.income.rootCategoryId = obj.id;
+  }
+
   return obj.id;
 };
 
@@ -431,6 +410,11 @@ export const outgoCategoryAdd = (
   };
   const parent = parentId != null ? state.outgo.categories[parentId] : null;
 
+  // ルート要素なら１つ目であることを保証
+  if (parent == null && Object.keys(state.outgo.categories).length !== 0) {
+    throw new Error(`Outgo root category is already exists.`);
+  }
+
   // 追加
   obj.id = state.nextId.category;
   state.nextId.category++;
@@ -441,9 +425,13 @@ export const outgoCategoryAdd = (
     } else {
       throw new Error(`Category parent (id: ${parentId}) is not exist.`);
     }
-  } else {
-    state.outgo.categoryRootOrder.push(obj.id);
   }
+
+  // ルートの場合は ID を記録
+  if (parent == null) {
+    state.outgo.rootCategoryId = obj.id;
+  }
+
   return obj.id;
 };
 
@@ -634,8 +622,8 @@ export const firstLeafCategoryId = (startCategoryId: number, categories: {[key: 
   return id;
 };
 
-/** ルート要素も考慮したソート済カテゴリID配列を取得。 */
-export const categoryIdArray = (categoryRootOrder: number[], categories: {[key: number]: States.ICategory}) => {
+/** ソート済カテゴリID配列を取得。 */
+export const categoryIdArray = (startCategoryId: number, categories: {[key: number]: States.ICategory}) => {
   const result = new Array<number>();
   const proc = (categoryId: number) => {
     const cat = categories[categoryId];
@@ -644,9 +632,7 @@ export const categoryIdArray = (categoryRootOrder: number[], categories: {[key: 
       proc(childId);
     });
   };
-  categoryRootOrder.forEach((categoryId) => {
-    proc(categoryId);
-  });
+  proc(startCategoryId);
   return result;
 };
 
