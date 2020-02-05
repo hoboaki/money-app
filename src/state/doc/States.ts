@@ -68,22 +68,22 @@ export interface IState {
 
   /** 入金。 */
   income: {
-    /** 入金カテゴリのルート直下の並び順（CategoryId）定義。 */
-    categoryRootOrder: number[];
     /** 入金カテゴリの CategoryId がキーの入金カテゴリ郡。 */
     categories: {[key: number]: ICategory};
     /** 入金レコードの RecordId がキーの入金レコード。 */
     records: {[key: number]: IRecordIncome};
+    /** ルートカテゴリの CategoryId。 */
+    rootCategoryId: number;
   };
 
   /** 出金。 */
   outgo: {
-    /** 出金カテゴリのルート直下の並び順（CategoryId）定義。 */
-    categoryRootOrder: number[];
     /** 出金カテゴリの CategoryId がキーの出金カテゴリ郡。 */
     categories: {[key: number]: ICategory};
     /** 出金レコードの RecordId がキーの出金レコード郡。 */
     records: {[key: number]: IRecordOutgo};
+    /** ルートカテゴリの CategoryId。 */
+    rootCategoryId: number;
   };
 
   /** 資金移動。 */
@@ -100,21 +100,20 @@ export interface IState {
   };
 }
 
-const AccountGroupAssets = Types.AccountGroup.Assets;
 export const defaultState: IState = {
   account: {
     order: [],
     accounts: {},
   },
   income: {
-    categoryRootOrder: [],
     categories: {},
     records: {},
+    rootCategoryId: Types.INVALID_ID,
   },
   outgo: {
-    categoryRootOrder: [],
     categories: {},
     records: {},
+    rootCategoryId: Types.INVALID_ID,
   },
   transfer: {
     records: {},

@@ -149,16 +149,6 @@ class Body extends React.Component<IProps, IState> {
       Styles.TableRowHeadHolder,
       Styles.TableRowHeadHolderCategory,
     );
-    const rowHeadRootAccountCategoryClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableRowHeadAccountCategory,
-    );
-    const rowHeadRootAccountCarriedClass = ClassNames(
-      Styles.TableRowHead,
-      Styles.TableRowHeadRoot,
-      Styles.TableRowHeadCarried,
-    );
     const rowHeadAccountCategoryClass = ClassNames(
       Styles.TableRowHead,
       Styles.TableRowHeadAccount,
@@ -171,19 +161,9 @@ class Body extends React.Component<IProps, IState> {
     );
 
     // rowTail
-    const rowTailRootAccountBalance = ClassNames(
-      Styles.TableRowTail,
-      Styles.TableRowTailRoot,
-      Styles.TableRowTailBalance,
-    );
     const rowTailAccountBalance = ClassNames(
       Styles.TableRowTail,
       Styles.TableRowTailBalance,
-    );
-    const rowTailRootTotal = ClassNames(
-      Styles.TableRowTail,
-      Styles.TableRowTailRoot,
-      Styles.TableRowTailTotal,
     );
     const rowTailTotal = ClassNames(
       Styles.TableRowTail,
@@ -191,43 +171,23 @@ class Body extends React.Component<IProps, IState> {
     );
 
     // holderEntry
-    const holderEntryRootOpenerSpaceClass = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryRoot,
-      Styles.HolderEntryOpenerSpace,
-      Styles.HolderEntryRootOpenerSpace,
-    );
     const holderEntryNormalOpenerSpaceClass = ClassNames(
       Styles.HolderEntry,
       Styles.HolderEntryOpenerSpace,
       Styles.HolderEntryNormalOpenerSpace,
     );
-    const holderEntryRootAccountNameClass = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryRoot,
-      Styles.HolderEntryRootAccountName,
-    );
-    const holderEntryNormalAccountNameClass = ClassNames(
+    const holderEntryAccountNameClass = ClassNames(
       Styles.HolderEntry,
       Styles.HolderEntryAccountName,
       Styles.HolderEntryNormalAccountName,
     );
-    const holderEntryRootCategoryNameClass = ClassNames(
-      Styles.HolderEntry,
-      Styles.HolderEntryRoot,
-      Styles.HolderEntryRootCategoryName,
-    );
-    const holderEntryNormalCategoryNameClass = ClassNames(
+    const holderEntryCategoryNameClass = ClassNames(
       Styles.HolderEntry,
       Styles.HolderEntryCategoryName,
       Styles.HolderEntryNormalCategoryName,
     );
 
     // その他
-    const iconClass = ClassNames(
-      'material-icons',
-      'md-16',
-    );
     const openerBtnClass = ClassNames(
       BasicStyles.IconBtn,
       Styles.OpenerBtn,
@@ -401,7 +361,7 @@ class Body extends React.Component<IProps, IState> {
       });
       recordKindTotalArray[kind] = null;
     });
-    DocStateMethods.categoryIdArray(this.props.doc.income.categoryRootOrder, this.props.doc.income.categories)
+    DocStateMethods.categoryIdArray(this.props.doc.income.rootCategoryId, this.props.doc.income.categories)
       .forEach((id) => {
         incomeLeafCategoriesArray[id] = DocStateMethods.leafCategoryIdArray(id, this.props.doc.income.categories);
         incomeCellDataDictArray.forEach((entry, colIdx) => {
@@ -409,7 +369,7 @@ class Body extends React.Component<IProps, IState> {
         });
         incomeTotalArray[id] = null;
       });
-    DocStateMethods.categoryIdArray(this.props.doc.outgo.categoryRootOrder, this.props.doc.outgo.categories)
+    DocStateMethods.categoryIdArray(this.props.doc.outgo.rootCategoryId, this.props.doc.outgo.categories)
       .forEach((id) => {
         outgoLeafCategoriesArray[id] = DocStateMethods.leafCategoryIdArray(id, this.props.doc.outgo.categories);
         outgoCellDataDictArray.forEach((entry, colIdx) => {
@@ -603,9 +563,9 @@ class Body extends React.Component<IProps, IState> {
           key={`account-root-${accountGroup}-col-${colIdx}`}
           className={Styles.TableCell}
           data-account-group={accountGroup}
-          data-cell-root={true}
           data-col-idx={colIdx}
           data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+          data-root-row={true}
           data-selected={this.isSelectedCell(cellInfo)}
           onClick={(e) => this.onCellClicked(e, cellInfo)}
           >
@@ -615,20 +575,20 @@ class Body extends React.Component<IProps, IState> {
       accountRootRowDict[accountGroup] =
         <tr key={`account-root-${accountGroup}`}>
           <td className={rowHeadHolderAccountClass}>
-            <div className={Styles.Holder}>
-              <div className={holderEntryRootOpenerSpaceClass} data-indent-level={0}>
+            <div className={Styles.Holder} data-root-row={true}>
+              <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={0} data-root-row={true}>
                 <button className={openerBtnClass}>▼</button>
               </div>
-              <span className={holderEntryRootAccountNameClass}>{label}</span>
+              <span className={holderEntryAccountNameClass} data-root-row={true}>{label}</span>
             </div>
           </td>
-          <td className={rowHeadRootAccountCategoryClass}></td>
-          <td className={rowHeadRootAccountCarriedClass}>
+          <td className={rowHeadAccountCategoryClass} data-root-row={true}></td>
+          <td className={rowHeadAccountCarriedClass} data-root-row={true}>
             {carriedVisible ? PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup]) : ''}
           </td>
           {cols}
-          <td className={Styles.TableCellSpace} data-cell-root={true}/>
-          <td className={rowTailRootAccountBalance}>
+          <td className={Styles.TableCellSpace} data-root-row={true}/>
+          <td className={rowTailAccountBalance} data-root-row={true}>
             {PriceUtils.numToLocaleString(accountGroupBalanceData[accountGroup])}
           </td>
         </tr>;
@@ -674,7 +634,7 @@ class Body extends React.Component<IProps, IState> {
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
               <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={1}/>
-              <span className={holderEntryNormalAccountNameClass}>{account.name}</span>
+              <span className={holderEntryAccountNameClass}>{account.name}</span>
             </div>
           </td>
           <td className={rowHeadAccountCategoryClass}>
@@ -730,7 +690,7 @@ class Body extends React.Component<IProps, IState> {
           key={`category-root-${recordKind}-col-${colIdx}`}
           className={Styles.TableCell}
           data-category-id={categoryId}
-          data-cell-root={true}
+          data-root-row={true}
           data-col-idx={colIdx}
           data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
           data-record-kind={recordKind}
@@ -741,16 +701,16 @@ class Body extends React.Component<IProps, IState> {
       categoryRootRowDict[recordKind] =
         <tr key={`category-root-${recordKind}`}>
           <td className={rowHeadHolderCategoryClass}>
-            <div className={Styles.Holder}>
-              <div className={holderEntryRootOpenerSpaceClass} data-indent-level={0}>
+            <div className={Styles.Holder} data-root-row={true}>
+              <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={0} data-root-row={true}>
                 <button className={openerBtnClass}>▼</button>
               </div>
-              <span className={holderEntryRootCategoryNameClass}>{label}</span>
+              <span className={holderEntryCategoryNameClass} data-root-row={true}>{label}</span>
             </div>
           </td>
           {cols}
-          <td className={Styles.TableCellSpace} data-cell-root={true}/>
-          <td className={rowTailRootTotal}>
+          <td className={Styles.TableCellSpace} data-root-row={true}/>
+          <td className={rowTailTotal} data-root-row={true}>
             {
               recordKindTotalArray[recordKind] === null ? null :
                 PriceUtils.numToLocaleString(Number(recordKindTotalArray[recordKind]))
@@ -762,45 +722,50 @@ class Body extends React.Component<IProps, IState> {
     // カテゴリテーブルの非ルート行生成
     const categoryRowDict: {[key: number]: JSX.Element[]} = {};
     recordKinds.forEach((recordKind) => {
-      let categoryRootOrder: number[] = [];
+      let rootCategoryId: number = DocTypes.INVALID_ID;
       let categories: {[key: number]: DocStates.ICategory} = {};
       let cellDataDictArray: {[key: number]: (number | null)}[] = [];
       let totalArray: {[key: number]: number | null} = [];
+      let rootName = '';
       switch (recordKind) {
         case DocTypes.RecordKind.Transfer: return;
         case DocTypes.RecordKind.Income:
-          categoryRootOrder = this.props.doc.income.categoryRootOrder;
+          rootCategoryId = this.props.doc.income.rootCategoryId;
           categories = this.props.doc.income.categories;
           cellDataDictArray = incomeCellDataDictArray;
           totalArray = incomeTotalArray;
+          rootName = '収入';
           break;
         case DocTypes.RecordKind.Outgo:
-          categoryRootOrder = this.props.doc.outgo.categoryRootOrder;
+          rootCategoryId = this.props.doc.outgo.rootCategoryId;
           categories = this.props.doc.outgo.categories;
           cellDataDictArray = outgoCellDataDictArray;
           totalArray = outgoTotalArray;
+          rootName = '支出';
           break;
         default:
           return;
       }
-      const categoryIdArray = DocStateMethods.categoryIdArray(categoryRootOrder, categories);
+      const categoryIdArray = DocStateMethods.categoryIdArray(rootCategoryId, categories);
       const result = new Array<JSX.Element>();
       const calcIndent = (categoryId: number): number => {
         const parent = categories[categoryId].parent;
         if (parent === null) {
-          return 1;
+          return 0;
         } else {
           return calcIndent(parent) + 1;
         }
       };
       categoryIdArray.forEach((categoryId) => {
         const cat = categories[categoryId];
+        const catName = cat.parent == null ? rootName : cat.name;
         const cols = new Array();
         const indent = calcIndent(categoryId);
         const openerClass = holderEntryNormalOpenerSpaceClass;
         const openerElement = cat.childs.length === 0 ?
           null :
           <button className={openerBtnClass}>▼</button>;
+        const rootRow = cat.parent == null;
         colInfos.forEach((colInfo, colIdx) => {
           const cellInfo: ISelectedCellInfo = {
             colIdx,
@@ -819,6 +784,7 @@ class Body extends React.Component<IProps, IState> {
             data-col-idx={colIdx}
             data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
             data-record-kind={recordKind}
+            data-root-row={rootRow}
             data-category-id={categoryId}
             data-selected={this.isSelectedCell(cellInfo)}
             onClick={(e) => this.onCellClicked(e, cellInfo)}
@@ -827,16 +793,16 @@ class Body extends React.Component<IProps, IState> {
         result.push(
           <tr key={`category-${categoryId}`}>
             <td className={rowHeadHolderCategoryClass}>
-              <div className={Styles.Holder}>
-                <div className={openerClass} data-indent-level={indent}>
+              <div className={Styles.Holder} data-root-row={rootRow}>
+                <div className={openerClass} data-indent-level={indent} data-root-row={rootRow}>
                   {openerElement}
                 </div>
-                <span className={holderEntryNormalCategoryNameClass}>{cat.name}</span>
+                <span className={holderEntryCategoryNameClass} data-root-row={rootRow}>{catName}</span>
               </div>
             </td>
             {cols}
-            <td className={Styles.TableCellSpace}></td>
-            <td className={rowTailTotal}>
+            <td className={Styles.TableCellSpace} data-root-row={rootRow}></td>
+            <td className={rowTailTotal} data-root-row={rootRow}>
               {
                 totalArray[categoryId] === null ? null :
                   PriceUtils.numToLocaleString(Number(totalArray[categoryId]))
@@ -908,9 +874,7 @@ class Body extends React.Component<IProps, IState> {
             <table className={Styles.Table}>
               <tbody>
                 {categoryRootRowDict[DocTypes.RecordKind.Transfer]}
-                {categoryRootRowDict[DocTypes.RecordKind.Income]}
                 {categoryRowDict[DocTypes.RecordKind.Income]}
-                {categoryRootRowDict[DocTypes.RecordKind.Outgo]}
                 {categoryRowDict[DocTypes.RecordKind.Outgo]}
               </tbody>
             </table>
@@ -957,12 +921,12 @@ class Body extends React.Component<IProps, IState> {
         switch (cellInfo.recordKind) {
           case DocTypes.RecordKind.Income:
             categoryId = DocStateMethods.firstLeafCategoryId(
-              categoryId !== null ? categoryId : this.props.doc.income.categoryRootOrder[0],
+              categoryId !== null ? categoryId : this.props.doc.income.rootCategoryId,
               this.props.doc.income.categories);
             break;
           case DocTypes.RecordKind.Outgo:
             categoryId = DocStateMethods.firstLeafCategoryId(
-              categoryId !== null ? categoryId : this.props.doc.outgo.categoryRootOrder[0],
+              categoryId !== null ? categoryId : this.props.doc.outgo.rootCategoryId,
               this.props.doc.outgo.categories);
             break;
           default:

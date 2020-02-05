@@ -99,13 +99,13 @@ class Main extends React.Component<ILocalProps, IState> {
       (formDefaultValue.recordKind === DocTypes.RecordKind.Outgo && formDefaultValue.categoryId !== null) ?
         formDefaultValue.categoryId :
         DocStateMethods.firstLeafCategoryId(
-          this.props.doc.outgo.categoryRootOrder[0],
+          this.props.doc.outgo.rootCategoryId,
           this.props.doc.outgo.categories);
     const formCategoryIncome =
       (formDefaultValue.recordKind === DocTypes.RecordKind.Income && formDefaultValue.categoryId !== null) ?
         formDefaultValue.categoryId :
         DocStateMethods.firstLeafCategoryId(
-          this.props.doc.income.categoryRootOrder[0],
+          this.props.doc.income.rootCategoryId,
           this.props.doc.income.categories);
     const formAccount = formDefaultValue.accountId !== null ?
       formDefaultValue.accountId : this.props.doc.account.order[0];
@@ -203,7 +203,7 @@ class Main extends React.Component<ILocalProps, IState> {
         });
     };
     categorySetup(
-      this.props.doc.outgo.categoryRootOrder,
+      this.props.doc.outgo.categories[this.props.doc.outgo.rootCategoryId].childs,
       this.props.doc.outgo.categories,
       (categoryId) => {
         this.setState({
@@ -213,7 +213,7 @@ class Main extends React.Component<ILocalProps, IState> {
       `#${this.elementIdFormCategoryOutgo}`,
     );
     categorySetup(
-      this.props.doc.income.categoryRootOrder,
+      this.props.doc.income.categories[this.props.doc.income.rootCategoryId].childs,
       this.props.doc.income.categories,
       (categoryId) => {
         this.setState({
@@ -856,7 +856,7 @@ class Main extends React.Component<ILocalProps, IState> {
   private categoryDisplayText(categories: {[key: number]: DocStates.ICategory}, categoryId: number): string {
     const funcParentPath = (catId: number): string => {
       const cat = categories[catId];
-      if (cat.parent == null) {
+      if (cat.parent == null || categories[cat.parent].parent == null) {
         return cat.name;
       }
       return `${funcParentPath(cat.parent)} > ${cat.name}`;

@@ -174,7 +174,7 @@ export const importFile = (filePath: string): IImportResult => {
         value,
       );
     };
-    const parseNode = (node: Element, parentCategoryId: number | null) => {
+    const parseNode = (node: Element, parentCategoryId: number) => {
       const id = (node.attributes.getNamedItem('id') as Attr).value;
       const title = (Xpath.select('title', node) as Element[])[0].textContent as string;
       const groups = Xpath.select('node_group', node) as Element[];
@@ -203,7 +203,7 @@ export const importFile = (filePath: string): IImportResult => {
         parseActual(actual, categoryId);
       });
     };
-    const parseChilds = (node: Element, parentCategoryId: number | null) => {
+    const parseChilds = (node: Element, parentCategoryId: number) => {
       for (let idx = 0; idx < node.childNodes.length; ++idx) {
         const childNode = node.childNodes.item(idx);
         switch (childNode.nodeName) {
@@ -215,8 +215,11 @@ export const importFile = (filePath: string): IImportResult => {
       }
     };
 
+    // ルートを追加
+    const rootCategoryId = StateMethods.incomeCategoryAdd(doc, '', null);
+
     // 実行
-    parseChilds((Xpath.select(`//income`, xmlDoc) as Element[])[0], null);
+    parseChilds((Xpath.select(`//income`, xmlDoc) as Element[])[0], rootCategoryId);
   }
   if (result.errorMsgs.length !== 0) {
     return result;
@@ -243,7 +246,7 @@ export const importFile = (filePath: string): IImportResult => {
         value,
       );
     };
-    const parseNode = (node: Element, parentCategoryId: number | null) => {
+    const parseNode = (node: Element, parentCategoryId: number) => {
       const id = (node.attributes.getNamedItem('id') as Attr).value;
       const title = (Xpath.select('title', node) as Element[])[0].textContent as string;
       const groups = Xpath.select('node_group', node) as Element[];
@@ -272,7 +275,7 @@ export const importFile = (filePath: string): IImportResult => {
         parseActual(actual, categoryId);
       });
     };
-    const parseChilds = (node: Element, parentCategoryId: number | null) => {
+    const parseChilds = (node: Element, parentCategoryId: number) => {
       for (let idx = 0; idx < node.childNodes.length; ++idx) {
         const childNode = node.childNodes.item(idx);
         switch (childNode.nodeName) {
@@ -284,8 +287,11 @@ export const importFile = (filePath: string): IImportResult => {
       }
     };
 
+    // ルートを追加
+    const rootCategoryId = StateMethods.outgoCategoryAdd(doc, '', null);
+
     // 実行
-    parseChilds((Xpath.select(`//expense`, xmlDoc) as Element[])[0], null);
+    parseChilds((Xpath.select(`//expense`, xmlDoc) as Element[])[0], rootCategoryId);
   }
   if (result.errorMsgs.length !== 0) {
     return result;
