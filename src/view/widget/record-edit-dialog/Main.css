@@ -351,12 +351,22 @@
   visibility: hidden;
 }
 
-.FormDeleteBtnIcon {
-  font-size: 24px;
+.FormDeleteBtn {
+  min-width: 80px;
+}
+.FormDeleteBtn i {
+  font-size: 20px;
 }
 
-.FormInputSubmit {
-  width: 100px;
+.FormSubmitBtn {
+  min-width: 100px;
+}
+
+.FornDeleteBtn,
+.FormSubmitBtn {
+  height: 26px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .ContextMenuRoot {
