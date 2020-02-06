@@ -476,6 +476,10 @@ class Main extends React.Component<ILocalProps, IState> {
       'modal-footer',
       Styles.FormFooterRoot,
     );
+    const formDeleteBtnClass = ClassNames(
+      BasicStyles.StdBtnPrimary,
+      Styles.FormDeleteBtn,
+    );
     const formSubmitBtnClass = ClassNames(
       BasicStyles.StdBtnSecondary,
       Styles.FormInputSubmit,
@@ -679,12 +683,13 @@ class Main extends React.Component<ILocalProps, IState> {
     const formFooter =
       <div className={formFooterRootClass}>
         <div className={Styles.FormDeleteBtnHolder} data-update-mode={isUpdateMode}>
-          <button className={BasicStyles.IconBtn} onClick={(e) => {this.onFormDeleteBtnPushed(e); }}>
+          <button className={formDeleteBtnClass} onClick={(e) => {this.onFormDeleteBtnPushed(e); }}>
             <MaterialIcon
               name={'delete'}
-              classNames={[Styles.FormDeleteBtnIcon]}
+              classNames={[]}
               darkMode={false}
               />
+            削除
           </button>
         </div>
         <button type="button"
