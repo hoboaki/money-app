@@ -5,6 +5,7 @@
 
 // Modules to control application life and create native browser window
 const {app, globalShortcut, BrowserWindow} = require('electron')
+const windowStateKeeper = require('electron-window-state');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -12,16 +13,23 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
+  const state = windowStateKeeper({
+    defaultWidth: 1000,
+    defaultHeight: 600
+  });
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 600,
+    x: state.x,
+    y: state.y,
+    width: state.width,
+    height: state.height,
     titleBarStyle: 'hidden',
     backgroundColor: '#f5f5f6',
     webPreferences: {
       devTools: !app.isPackaged && process.env.NODE_ENV==='development',
       nodeIntegration: true
     }
-  })
+  });
+  state.manage(mainWindow);
   //mainWindow.setMenuBarVisibility(false);
 
   // and load the index.html of the app.
