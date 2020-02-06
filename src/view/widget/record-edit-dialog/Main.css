@@ -358,12 +358,12 @@
   font-size: 20px;
 }
 
-.FormInputSubmit {
+.FormSubmitBtn {
   min-width: 100px;
 }
 
 .FornDeleteBtn,
-.FormInputSubmit {
+.FormSubmitBtn {
   height: 26px;
   padding-left: 10px;
   padding-right: 10px;

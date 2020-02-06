@@ -482,7 +482,7 @@ class Main extends React.Component<ILocalProps, IState> {
     );
     const formSubmitBtnClass = ClassNames(
       BasicStyles.StdBtnSecondary,
-      Styles.FormInputSubmit,
+      Styles.FormSubmitBtn,
     );
 
     const accountFromErrorMsg = this.state.accountFromErrorMsg == null ? null :
