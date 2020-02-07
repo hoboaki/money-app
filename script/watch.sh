@@ -3,7 +3,7 @@
 set -eu
 
 # ts 自動ビルド
-webpack --watch --info-verbosity verbose
+webpack --watch --progress
 
 #------------------------------------------------------------------------------
 # EOF
