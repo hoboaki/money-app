@@ -1130,6 +1130,15 @@ class Body extends React.Component<IProps, IState> {
         }
         filters.push(RecordFilters.createAccountFilter({accounts}));
       }
+      if (cellInfo.aggregateAccountRoot != null) {
+        // 全集計口座による絞り込み
+        const accounts = this.props.doc.aggregateAccount.order.map((id) => this.props.doc.aggregateAccount.accounts[id].accounts).reduce((prev, cur) => prev.concat(cur));
+        filters.push(RecordFilters.createAccountFilter({accounts}));
+      }
+      if (cellInfo.aggregateAccountId != null) {
+        // 集計口座による絞り込み
+        filters.push(RecordFilters.createAccountFilter({accounts: this.props.doc.aggregateAccount.accounts[cellInfo.aggregateAccountId].accounts}));
+      }
       if (cellInfo.recordKind !== null) {
         const recordKind: DocTypes.RecordKind = cellInfo.recordKind;
         if (cellInfo.categoryId !== null) {
