@@ -1052,6 +1052,8 @@ class Body extends React.Component<IProps, IState> {
     return current.colIdx === cellInfo.colIdx &&
       current.accountGroup === cellInfo.accountGroup &&
       current.accountId === cellInfo.accountId &&
+      current.aggregateAccountRoot === cellInfo.aggregateAccountRoot &&
+      current.aggregateAccountId === cellInfo.aggregateAccountId &&
       current.recordKind === cellInfo.recordKind &&
       current.categoryId === cellInfo.categoryId;
   }
@@ -1127,6 +1129,15 @@ class Body extends React.Component<IProps, IState> {
             DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[id].kind) === cellInfo.accountGroup));
         }
         filters.push(RecordFilters.createAccountFilter({accounts}));
+      }
+      if (cellInfo.aggregateAccountRoot != null) {
+        // 全集計口座による絞り込み
+        const accounts = this.props.doc.aggregateAccount.order.map((id) => this.props.doc.aggregateAccount.accounts[id].accounts).reduce((prev, cur) => prev.concat(cur));
+        filters.push(RecordFilters.createAccountFilter({accounts}));
+      }
+      if (cellInfo.aggregateAccountId != null) {
+        // 集計口座による絞り込み
+        filters.push(RecordFilters.createAccountFilter({accounts: this.props.doc.aggregateAccount.accounts[cellInfo.aggregateAccountId].accounts}));
       }
       if (cellInfo.recordKind !== null) {
         const recordKind: DocTypes.RecordKind = cellInfo.recordKind;
