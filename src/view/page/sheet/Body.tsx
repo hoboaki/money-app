@@ -174,10 +174,10 @@ class Body extends React.Component<IProps, IState> {
     );
 
     // holderEntry
-    const holderEntryNormalOpenerSpaceClass = ClassNames(
+    const holderEntryNormalExpanderSpaceClass = ClassNames(
       Styles.HolderEntry,
-      Styles.HolderEntryOpenerSpace,
-      Styles.HolderEntryNormalOpenerSpace,
+      Styles.HolderEntryExpanderSpace,
+      Styles.HolderEntryNormalExpanderSpace,
     );
     const holderEntryAccountNameClass = ClassNames(
       Styles.HolderEntry,
@@ -191,9 +191,9 @@ class Body extends React.Component<IProps, IState> {
     );
 
     // その他
-    const openerBtnClass = ClassNames(
+    const expanderBtnClass = ClassNames(
       BasicStyles.IconBtn,
-      Styles.OpenerBtn,
+      Styles.ExpanderBtn,
     );
 
     // 列情報生成
@@ -579,8 +579,8 @@ class Body extends React.Component<IProps, IState> {
         <tr key={`account-root-${accountGroup}`}>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder} data-root-row={true}>
-              <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={0} data-root-row={true}>
-                <button className={openerBtnClass}>▼</button>
+              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={0} data-root-row={true}>
+                <button className={expanderBtnClass}>▼</button>
               </div>
               <span className={holderEntryAccountNameClass} data-root-row={true}>{label}</span>
             </div>
@@ -636,7 +636,7 @@ class Body extends React.Component<IProps, IState> {
         <tr key={`account-${accountId}`}>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
-              <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={1}/>
+              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={1}/>
               <span className={holderEntryAccountNameClass}>{account.name}</span>
             </div>
           </td>
@@ -705,8 +705,8 @@ class Body extends React.Component<IProps, IState> {
         <tr key={`category-root-${recordKind}`}>
           <td className={rowHeadHolderCategoryClass}>
             <div className={Styles.Holder} data-root-row={true}>
-              <div className={holderEntryNormalOpenerSpaceClass} data-indent-level={0} data-root-row={true}>
-                <button className={openerBtnClass}>▼</button>
+              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={0} data-root-row={true}>
+                <button className={expanderBtnClass}>▼</button>
               </div>
               <span className={holderEntryCategoryNameClass} data-root-row={true}>{label}</span>
             </div>
@@ -774,11 +774,11 @@ class Body extends React.Component<IProps, IState> {
         const catName = cat.parent == null ? rootName : cat.name;
         const cols = new Array();
         const indent = calcIndent(categoryId);
-        const openerClass = holderEntryNormalOpenerSpaceClass;
-        const openerText = cat.collapse ? '▶' : '▼';
-        const openerElement = cat.childs.length === 0 ?
+        const expanderClass = holderEntryNormalExpanderSpaceClass;
+        const expanderText = cat.collapse ? '▶' : '▼';
+        const expanderElement = cat.childs.length === 0 ?
           null :
-          <button className={openerBtnClass} onClick={(e) => this.onOpenerClicked(e, categoryId, cat.collapse)}>{openerText}</button>;
+          <button className={expanderBtnClass} onClick={(e) => this.onExpanderClicked(e, categoryId, cat.collapse)}>{expanderText}</button>;
         const rootRow = cat.parent == null;
         colInfos.forEach((colInfo, colIdx) => {
           const cellInfo: ISelectedCellInfo = {
@@ -808,8 +808,8 @@ class Body extends React.Component<IProps, IState> {
           <tr key={`category-${categoryId}`} className={Styles.TableRow} data-is-collapsed={calcIsCollapsed(categoryId)}>
             <td className={rowHeadHolderCategoryClass}>
               <div className={Styles.Holder} data-root-row={rootRow}>
-                <div className={openerClass} data-indent-level={indent} data-root-row={rootRow}>
-                  {openerElement}
+                <div className={expanderClass} data-indent-level={indent} data-root-row={rootRow}>
+                  {expanderElement}
                 </div>
                 <span className={holderEntryCategoryNameClass} data-root-row={rootRow}>{catName}</span>
               </div>
@@ -911,7 +911,7 @@ class Body extends React.Component<IProps, IState> {
       current.categoryId === cellInfo.categoryId;
   }
 
-  private onOpenerClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, categoryId: number, currentIsCollapsed: boolean) {
+  private onExpanderClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, categoryId: number, currentIsCollapsed: boolean) {
     // イベント伝搬停止
     e.stopPropagation();
 

@@ -150,7 +150,7 @@
   background: #f5f5f6;
 }
 .HolderEntry[data-root-row='true'],
-.HolderEntryOpenerSpace[data-root-row='true'],
+.HolderEntryExpanderSpace[data-root-row='true'],
 .TableRowHead[data-root-row='true'],
 .TableRowTail[data-root-row='true'],
 .TableCell[data-root-row='true'],
@@ -169,46 +169,46 @@
 .TableRowHead[data-root-row='true'] {
   color: rgba(0,0,0,0.61);
 }
-.HolderEntryNormalOpenerSpace,
+.HolderEntryNormalExpanderSpace,
 .HolderEntryNormalAccountName,
 .HolderEntryNormalCategoryName,
 .TableRowHeadAccount,
 .TableRowHeadCategory {
   background: #eeeeee;
 }
-.HolderEntryOpenerSpace {
+.HolderEntryExpanderSpace {
   display: flex;
   flex-direction: row-reverse;
   height: 21px;
 }
 
 /** 7以上のサイズ */
-.HolderEntryOpenerSpace {
+.HolderEntryExpanderSpace {
   width: calc(20px + 15px * 7);
 }
-.HolderEntryOpenerSpace[data-indent-level='0'] {
+.HolderEntryExpanderSpace[data-indent-level='0'] {
   width: 20px;
 }
-.HolderEntryOpenerSpace[data-indent-level='1'] {
+.HolderEntryExpanderSpace[data-indent-level='1'] {
   width: calc(20px + 15px * 1);
 }
-.HolderEntryOpenerSpace[data-indent-level='2'] {
+.HolderEntryExpanderSpace[data-indent-level='2'] {
   width: calc(20px + 15px * 2);
 }
-.HolderEntryOpenerSpace[data-indent-level='3'] {
+.HolderEntryExpanderSpace[data-indent-level='3'] {
   width: calc(20px + 15px * 3);
 }
-.HolderEntryOpenerSpace[data-indent-level='4'] {
+.HolderEntryExpanderSpace[data-indent-level='4'] {
   width: calc(20px + 15px * 4);
 }
-.HolderEntryOpenerSpace[data-indent-level='5'] {
+.HolderEntryExpanderSpace[data-indent-level='5'] {
   width: calc(20px + 15px * 5);
 }
-.HolderEntryOpenerSpace[data-indent-level='6'] {
+.HolderEntryExpanderSpace[data-indent-level='6'] {
   width: calc(20px + 15px * 6);
 }
 
-.OpenerBtn {
+.ExpanderBtn {
   color: rgba(0, 0, 0, 0.61);
   font-size: 8pt;
   height: 100%;
