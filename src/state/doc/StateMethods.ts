@@ -1,6 +1,7 @@
 import Clone from 'clone';
 
 import DataAccount from 'src/data-model/doc/Account';
+import DataAggregateAccount from 'src/data-model/doc/AggregateAccount';
 import DataCategory from 'src/data-model/doc/Category';
 import DataRecordIncome from 'src/data-model/doc/RecordIncome';
 import DataRecordOutgo from 'src/data-model/doc/RecordOutgo';
@@ -134,6 +135,11 @@ export const fromData = (src: DataRoot) => {
         data.amount,
       );
     }
+  }
+
+  // 集計口座
+  for (const data of src.aggregateAccounts) {
+    aggregateAccountAdd(r, data.name, data.accounts.map((accountId) => accountIdDict[accountId]));
   }
 
   return r;
@@ -281,6 +287,16 @@ export const toData = (state: States.IState) => {
       result.transfer.records.push(data);
     }
   }
+
+  // 集計口座
+  state.aggregateAccount.order.forEach((id) => {
+    const src = state.aggregateAccount.accounts[id];
+    const data = new DataAggregateAccount();
+    data.id = result.aggregateAccounts.length + 1;
+    data.name = src.name;
+    data.accounts = src.accounts.map((accountId) => accountIdDict[accountId]);
+    result.aggregateAccounts.push(data);
+  });
 
   // 結果を返す
   return result;
@@ -641,6 +657,35 @@ export const categoryCollapsedStateUpdate = (
       cat.collapse = isCollapsed;
     }
   }
+};
+
+/**
+ * 集計口座追加。
+ * @return {number} 追加した集計口座のId。
+ */
+export const aggregateAccountAdd = (
+  state: States.IState,
+  name: string,
+  accounts: number[],
+  ) => {
+  // オブジェクト作成
+  const obj = {
+    id: 0,
+    name,
+    accounts,
+  };
+
+  // 対象の口座があるかチェック
+  if (accounts.filter((id) => id in state.account.accounts).length !== accounts.length) {
+    throw new Error('Include not exists account id on aggregateAccountAdd().');
+  }
+
+  // 追加
+  obj.id = state.nextId.aggregateAccount;
+  state.nextId.aggregateAccount++;
+  state.aggregateAccount.accounts[obj.id] = obj;
+  state.aggregateAccount.order.push(obj.id);
+  return obj.id;
 };
 
 /**

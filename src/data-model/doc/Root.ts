@@ -1,4 +1,5 @@
 import Account from './Account';
+import AggregateAccount from './AggregateAccount';
 import Category from './Category';
 import RecordIncome from './RecordIncome';
 import RecordOutgo from './RecordOutgo';
@@ -22,6 +23,7 @@ class Root {
     records: RecordTransfer[]; /// 資金移動レコードの配列。
   } = {records: []};
 
+  public aggregateAccounts: AggregateAccount[] = []; /// 全集計口座。
 }
 
 export default Root;

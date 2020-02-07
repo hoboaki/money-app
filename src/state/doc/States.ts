@@ -15,6 +15,16 @@ export interface IAccount {
   startDate: IYearMonthDayDate;
 }
 
+/** 集計口座。 */
+export interface IAggregateAccount {
+  /** AggregateAccountId。 */
+  id: number;
+  /** 口座名 */
+  name: string;
+  /** 集計対象となる AccountId の配列。 */
+  accounts: number[];
+}
+
 /** レコードのカテゴリ。 */
 export interface ICategory {
   id: number; // CategoryId。
@@ -93,11 +103,20 @@ export interface IState {
     records: {[key: number]: IRecordTransfer};
   };
 
+  /** 集計口座。 */
+  aggregateAccount: {
+    /** 集計口座の並び順（AggregateAccountId の配列）定義。 */
+    order: number[];
+    /** AggregateAccountId がキーの口座群。 */
+    accounts: {[key: number]: IAggregateAccount};
+  };
+
   /** 次に使用するId。0(Types.INVALID_ID) は無効値。 */
   nextId: {
     account: number;
     category: number;
     record: number;
+    aggregateAccount: number;
   };
 }
 
@@ -119,9 +138,14 @@ export const defaultState: IState = {
   transfer: {
     records: {},
   },
+  aggregateAccount: {
+    order: [],
+    accounts: {},
+  },
   nextId: {
     account: 1,
     category: 1,
     record: 1,
+    aggregateAccount: 1,
   },
 };

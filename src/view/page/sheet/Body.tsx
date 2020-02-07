@@ -30,6 +30,8 @@ interface ISelectedCellInfo {
   date: IYearMonthDayDate;
   accountGroup: DocTypes.AccountGroup | null;
   accountId: number | null;
+  aggregateAccountRoot: number | null; // 数値は特に意味は無い値。
+  aggregateAccountId: number | null;
   recordKind: DocTypes.RecordKind | null;
   categoryId: number |null;
 }
@@ -337,6 +339,40 @@ class Body extends React.Component<IProps, IState> {
     });
     const accountRootsBuildTimeEnd = performance.now();
 
+    // 集計口座のデータ作成
+    const aggregateAccountCarriedData: {[key: number]: number} = {};
+    const aggregateAccountCellDataArray: {[key: number]: number[]} = {};
+    const aggregateAccountBalanceData: {[key: number]: number} = {};
+    this.props.doc.aggregateAccount.order.forEach((aggregateAccount) => {
+      // メモ
+      const accountIdArray = this.props.doc.aggregateAccount.accounts[aggregateAccount].accounts;
+
+      // 繰り越しデータ計算
+      aggregateAccountCarriedData[aggregateAccount] =
+        accountIdArray.map((accountId) => accountCarriedData[Number(accountId)])
+        .reduce((prev, current) => prev + current);
+
+      // 各列のデータ
+      const cellDataArray: number[] = [];
+      colInfos.forEach((colInfo, colIdx) => {
+        cellDataArray[colIdx] =
+          accountIdArray.map((accountId) => accountCellDataArray[Number(accountId)][colIdx])
+          .reduce((prev, current) => prev + current);
+      });
+      aggregateAccountCellDataArray[aggregateAccount] = cellDataArray;
+
+      // 残高データ計算
+      aggregateAccountBalanceData[aggregateAccount] =
+        accountIdArray.map((accountId) => accountBalanceData[Number(accountId)])
+        .reduce((prev, current) => prev + current);
+    });
+    const aggregateAccountSumCarried = Object.values(aggregateAccountCarriedData).reduce((prev, cur) => prev + cur, 0);
+    const aggregateAccountSumCellDataArray: number[] = [];
+    colInfos.forEach((colInfo, colIdx) => {
+      aggregateAccountSumCellDataArray[colIdx] = Object.keys(aggregateAccountCellDataArray).map((id) => aggregateAccountCellDataArray[Number(id)][colIdx]).reduce((prev, cur) => prev + cur, 0);
+    });
+    const aggregateAccountSumBalance = Object.values(aggregateAccountBalanceData).reduce((prev, cur) => prev + cur, 0);
+
     // カテゴリテーブルのデータ生成の準備
     const categoryPrepareTimeBegin = performance.now();
     const recordsForCellData = new RecordCollection(this.props.doc, null).filter([
@@ -559,6 +595,8 @@ class Body extends React.Component<IProps, IState> {
           date: colInfo.date,
           accountGroup,
           accountId: null,
+          aggregateAccountRoot: null,
+          aggregateAccountId: null,
           recordKind: null,
           categoryId: null,
         };
@@ -614,6 +652,8 @@ class Body extends React.Component<IProps, IState> {
           date: colInfo.date,
           accountGroup,
           accountId,
+          aggregateAccountRoot: null,
+          aggregateAccountId: null,
           recordKind: null,
           categoryId: null,
         };
@@ -653,6 +693,105 @@ class Body extends React.Component<IProps, IState> {
       );
     });
 
+    // 集計口座テーブルのルート行生成
+    let aggregateAccountRootRow: JSX.Element | null = null;
+    {
+      const cols = new Array();
+      colInfos.forEach((colInfo, colIdx) => {
+        const cellInfo: ISelectedCellInfo = {
+          colIdx,
+          date: colInfo.date,
+          accountGroup: null,
+          accountId: null,
+          aggregateAccountRoot: DocTypes.INVALID_ID, // 何の数値でもOKなので。
+          aggregateAccountId: null,
+          recordKind: null,
+          categoryId: null,
+        };
+        cols.push(<td
+          key={`aggregate-account-root-col-${colIdx}`}
+          className={Styles.TableCell}
+          data-aggregate-account-root={true}
+          data-col-idx={colIdx}
+          data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+          data-root-row={true}
+          data-selected={this.isSelectedCell(cellInfo)}
+          onClick={(e) => this.onCellClicked(e, cellInfo)}
+          >
+          {PriceUtils.numToLocaleString(aggregateAccountSumCellDataArray[colIdx])}
+          </td>);
+      });
+      aggregateAccountRootRow =
+        <tr key={`aggregate-account-root`}>
+          <td className={rowHeadHolderAccountClass}>
+            <div className={Styles.Holder} data-root-row={true}>
+              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={0} data-root-row={true}>
+                <button className={expanderBtnClass}>▼</button>
+              </div>
+              <span className={holderEntryAccountNameClass} data-root-row={true}>{'集計口座'}</span>
+            </div>
+          </td>
+          <td className={rowHeadAccountCategoryClass} data-root-row={true}></td>
+          <td className={rowHeadAccountCarriedClass} data-root-row={true}>
+            {carriedVisible ? PriceUtils.numToLocaleString(aggregateAccountSumCarried) : ''}
+          </td>
+          {cols}
+          <td className={Styles.TableCellSpace} data-root-row={true}/>
+          <td className={rowTailAccountBalance} data-root-row={true}>
+            {PriceUtils.numToLocaleString(aggregateAccountSumBalance)}
+          </td>
+        </tr>;
+    }
+
+    // 集計口座テーブルの非ルート行生成
+    const aggregateAccountRows: JSX.Element[] = [];
+    this.props.doc.aggregateAccount.order.forEach((aggregateAccountId) => {
+      const account = this.props.doc.aggregateAccount.accounts[aggregateAccountId];
+      const cols = new Array();
+      colInfos.forEach((colInfo, colIdx) => {
+        const cellInfo: ISelectedCellInfo = {
+          colIdx,
+          date: colInfo.date,
+          accountGroup: null,
+          accountId: null,
+          aggregateAccountRoot: null,
+          aggregateAccountId,
+          recordKind: null,
+          categoryId: null,
+        };
+        cols.push(
+          <td
+            key={`aggregate-account-${aggregateAccountId}-col-${colIdx}`}
+            className={Styles.TableCell}
+            data-aggregate-account-id={aggregateAccountId}
+            data-cell-even={(aggregateAccountRows.length) % 2 === 0}
+            data-col-idx={colIdx}
+            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+            data-selected={this.isSelectedCell(cellInfo)}
+            onClick={(e) => this.onCellClicked(e, cellInfo)}
+            >
+            {PriceUtils.numToLocaleString(aggregateAccountCellDataArray[aggregateAccountId][colIdx])}
+          </td>);
+      });
+      aggregateAccountRows.push(
+        <tr key={`aggregate-account-${aggregateAccountId}`}>
+          <td className={rowHeadHolderAccountClass}>
+            <div className={Styles.Holder}>
+              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={1}/>
+              <span className={holderEntryAccountNameClass}>{account.name}</span>
+            </div>
+          </td>
+          <td className={rowHeadAccountCategoryClass}></td>
+          <td className={rowHeadAccountCarriedClass}>
+            {carriedVisible ? PriceUtils.numToLocaleString(aggregateAccountCarriedData[aggregateAccountId]) : ''}
+          </td>
+          {cols}
+          <td className={Styles.TableCellSpace}></td>
+          <td className={rowTailAccountBalance}>{PriceUtils.numToLocaleString(aggregateAccountBalanceData[aggregateAccountId])}</td>
+        </tr>,
+      );
+    });
+
     // カテゴリテーブルの列ヘッダ生成
     const categoryColHeadCells = new Array();
     colInfos.forEach((colInfo, colIdx) => {
@@ -684,6 +823,8 @@ class Body extends React.Component<IProps, IState> {
           date: colInfo.date,
           accountGroup: null,
           accountId: null,
+          aggregateAccountRoot: null,
+          aggregateAccountId: null,
           recordKind,
           categoryId: null,
         };
@@ -786,6 +927,8 @@ class Body extends React.Component<IProps, IState> {
             date: colInfo.date,
             accountGroup: null,
             accountId: null,
+            aggregateAccountRoot: null,
+            aggregateAccountId: null,
             recordKind,
             categoryId,
           };
@@ -868,6 +1011,8 @@ class Body extends React.Component<IProps, IState> {
                 {accountRowDict[DocTypes.AccountGroup.Assets]}
                 {accountRootRowDict[DocTypes.AccountGroup.Liabilities]}
                 {accountRowDict[DocTypes.AccountGroup.Liabilities]}
+                {aggregateAccountRootRow}
+                {aggregateAccountRows}
               </tbody>
             </table>
           </section>
