@@ -1052,6 +1052,8 @@ class Body extends React.Component<IProps, IState> {
     return current.colIdx === cellInfo.colIdx &&
       current.accountGroup === cellInfo.accountGroup &&
       current.accountId === cellInfo.accountId &&
+      current.aggregateAccountRoot === cellInfo.aggregateAccountRoot &&
+      current.aggregateAccountId === cellInfo.aggregateAccountId &&
       current.recordKind === cellInfo.recordKind &&
       current.categoryId === cellInfo.categoryId;
   }
