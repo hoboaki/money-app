@@ -293,6 +293,13 @@ class SampleDoc {
       });
     }
 
+    // 集計口座
+    StateMethods.aggregateAccountAdd(state, '全銀行', [
+      StateMethods.accountByName(state, 'アデリー銀行').id,
+      StateMethods.accountByName(state, 'コウテイ銀行').id,
+    ]);
+    global.console.assert(state.aggregateAccount.order.length === 1);
+
     return state;
   }
 
