@@ -258,7 +258,7 @@ class Body extends React.Component<IProps, IState> {
       DocTypes.RecordKind.Outgo,
     ];
 
-    // アカウントテーブルのデータ作成
+    // 口座テーブルのデータ作成
     const accountTableBuildTimeBegin = performance.now();
     const accountCarriedData: {[key: number]: number} = {};
     const accountCellDataArray: {[key: number]: number[]} = {};
@@ -307,7 +307,7 @@ class Body extends React.Component<IProps, IState> {
     });
     const accountTableBuildTimeEnd = performance.now();
 
-    // アカウントルート行のデータ作成
+    // 口座ルート行のデータ作成
     const accountRootsBuildTimeBegin = performance.now();
     const accountGroupCarriedData: {[key: number]: number} = {};
     const accountGroupCellDataArray: {[key: number]: number[]} = {};
@@ -555,7 +555,7 @@ class Body extends React.Component<IProps, IState> {
       });
     }
 
-    // アカウントテーブルの列ヘッダ生成
+    // 口座テーブルの列ヘッダ生成
     const accountColHeadCells = new Array();
     colInfos.forEach((colInfo, colIdx) => {
       let dateText = '#';
@@ -576,7 +576,7 @@ class Body extends React.Component<IProps, IState> {
       );
     });
 
-    // アカウントテーブルのルート行生成
+    // 口座テーブルのルート行生成
     const accountRootRowDict: {[key: number]: JSX.Element} = {};
     accountGroups.forEach((accountGroup) => {
       let label = '#';
@@ -635,7 +635,7 @@ class Body extends React.Component<IProps, IState> {
         </tr>;
     });
 
-    // アカウントテーブルの非ルート行生成
+    // 口座テーブルの非ルート行生成
     const accountRowDict: {[key: number]: JSX.Element[]} = {};
     accountGroups.forEach((accountGroup) => {
       accountRowDict[accountGroup] = new Array<JSX.Element>();
