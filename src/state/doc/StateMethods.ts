@@ -682,7 +682,7 @@ export const aggregateAccountAdd = (
 
   // 追加
   obj.id = state.nextId.aggregateAccount;
-  state.nextId.account++;
+  state.nextId.aggregateAccount++;
   state.aggregateAccount.accounts[obj.id] = obj;
   state.aggregateAccount.order.push(obj.id);
   return obj.id;

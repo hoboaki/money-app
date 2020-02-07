@@ -297,6 +297,14 @@ export const importFile = (filePath: string): IImportResult => {
     return result;
   }
 
+  // 計算アカウント
+  (Xpath.select('//account_sum/node_account_sum', xmlDoc) as Element[]).forEach((node) => {
+    const title = (Xpath.select('title', node) as Element[])[0].textContent as string;
+    const references = (Xpath.select('reference', node) as Element[]);
+    const accounts = references.map((ref) => toAccountIdDict[Number(ref.getAttribute('refid') as string)]);
+    StateMethods.aggregateAccountAdd(doc, title, accounts);
+  });
+
   // インポート成功
   result.doc = doc;
   return result;
