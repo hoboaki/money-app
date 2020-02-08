@@ -36,13 +36,7 @@ module.exports = env => {
                 // 事前処理
                 enforce: 'pre',
                 // TypeScript をコードチェックする
-                loader: 'tslint-loader',
-                // 定義ファイル
-                options: {
-                    configFile: './tslint.json',
-                    // airbnb というJavaScriptスタイルガイドに従うには下記が必要
-                    typeCheck: true,
-                },
+                loader: 'eslint-loader'
             },
             {
               test: /\.worker\.js$/,
