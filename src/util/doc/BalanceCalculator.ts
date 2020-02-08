@@ -7,7 +7,7 @@ import * as RecordFilters from './RecordFilters';
 /** 残高を計算するクラス。 */
 class BalanceCalculator {
   /** 口座 ID がキーの各講座の残高。 */
-  public balances: {[key: number]: number} = {};
+  public balances: { [key: number]: number } = {};
   public endDate: IYearMonthDayDate;
   private state: States.IState;
   private allRecords: RecordCollection | null = null;
@@ -25,7 +25,7 @@ class BalanceCalculator {
     endDate: IYearMonthDayDate | null,
     accounts: number[] | null = null,
     cache: BalanceCalculator | null = null,
-    ) {
+  ) {
     // 変数初期化
     this.state = state;
     if (endDate === null) {
@@ -36,30 +36,32 @@ class BalanceCalculator {
       };
     }
     this.endDate = endDate;
-    this.allRecords = (cache != null && cache.allRecords != null) ? cache.allRecords : new RecordCollection(state);
+    this.allRecords = cache != null && cache.allRecords != null ? cache.allRecords : new RecordCollection(state);
     if (accounts == null) {
       accounts = state.account.order;
     }
 
     // 処理最適化のためまず日付で絞り込んでおく
-    const allAccountCacheEnabled = cache != null &&
+    const allAccountCacheEnabled =
+      cache != null &&
       accounts.filter((id) => id in cache.balances).length === accounts.length &&
       cache.endDate < this.endDate;
     const preCalculateStartDate: IYearMonthDayDate | null =
-      (cache != null && allAccountCacheEnabled) ? cache.endDate : null;
-    const srcRecords = (cache != null && cache.futureRecords != null && preCalculateStartDate != null) ?
-      cache.futureRecords : this.allRecords;
-    const preCalculateRecords =
-      srcRecords.filter([
-        RecordFilters.createDateRangeFilter({startDate: preCalculateStartDate, endDate}),
-      ]);
+      cache != null && allAccountCacheEnabled ? cache.endDate : null;
+    const srcRecords =
+      cache != null && cache.futureRecords != null && preCalculateStartDate != null
+        ? cache.futureRecords
+        : this.allRecords;
+    const preCalculateRecords = srcRecords.filter([
+      RecordFilters.createDateRangeFilter({ startDate: preCalculateStartDate, endDate }),
+    ]);
     this.futureRecords = srcRecords.filter([
-      RecordFilters.createDateRangeFilter({startDate: endDate, endDate: null}),
+      RecordFilters.createDateRangeFilter({ startDate: endDate, endDate: null }),
     ]);
 
     // レコードを各口座毎に振り分ける
     // RecordCollection.filter の機能を使うよりも更に高速化するためにカスタム実装する
-    const accountDataMap: {[key: number]: {incomes: number[], outgos: number[], transfers: number[]}} = {};
+    const accountDataMap: { [key: number]: { incomes: number[]; outgos: number[]; transfers: number[] } } = {};
     accounts.forEach((accountId) => {
       accountDataMap[accountId] = {
         incomes: [],
@@ -76,7 +78,8 @@ class BalanceCalculator {
     preCalculateRecords.transfers.forEach((id) => {
       const record = this.state.transfer.records[id];
       accountDataMap[record.accountFrom].transfers.push(id);
-      if (record.accountFrom !== record.accountTo) { // RecordFilter と挙動を合わせるために二重登録防止判定
+      if (record.accountFrom !== record.accountTo) {
+        // RecordFilter と挙動を合わせるために二重登録防止判定
         accountDataMap[record.accountTo].transfers.push(id);
       }
     });
@@ -89,13 +92,18 @@ class BalanceCalculator {
         outgos: accountData.outgos,
         transfers: accountData.transfers,
       });
-      const cacheBalance = (cache != null && allAccountCacheEnabled) ? cache.balances[accountId] : 0;
+      const cacheBalance = cache != null && allAccountCacheEnabled ? cache.balances[accountId] : 0;
       const account = state.account.accounts[accountId];
-      const addInitialAmount = IYearMonthDayDateUtils.less(account.startDate, this.endDate) &&
+      const addInitialAmount =
+        IYearMonthDayDateUtils.less(account.startDate, this.endDate) &&
         (preCalculateStartDate == null || IYearMonthDayDateUtils.lessEq(preCalculateStartDate, account.startDate));
       const initialAmount = addInitialAmount ? account.initialAmount : 0;
-      this.balances[accountId] = cacheBalance + initialAmount +
-        records.sumAmountIncome() - records.sumAmountOutgo() + records.totalDiffTransfer([accountId]);
+      this.balances[accountId] =
+        cacheBalance +
+        initialAmount +
+        records.sumAmountIncome() -
+        records.sumAmountOutgo() +
+        records.totalDiffTransfer([accountId]);
     });
   }
 

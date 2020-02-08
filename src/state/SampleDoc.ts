@@ -36,10 +36,9 @@ class SampleDoc {
     const state = Clone(States.defaultState);
 
     // 口座
-    const accountStartDate =
-      IYearMonthDayDateUtils.prevMonth(IYearMonthDayDateUtils.prevMonth(
-        IYearMonthDayDateUtils.today(),
-      ));
+    const accountStartDate = IYearMonthDayDateUtils.prevMonth(
+      IYearMonthDayDateUtils.prevMonth(IYearMonthDayDateUtils.today()),
+    );
     StateMethods.accountAdd(state, '財布', Types.AccountKind.AssetsCash, 2020, accountStartDate);
     StateMethods.accountAdd(state, 'アデリー銀行', Types.AccountKind.AssetsBank, 504000, accountStartDate);
     StateMethods.accountAdd(state, 'コウテイ銀行', Types.AccountKind.AssetsBank, 12036756, accountStartDate);
@@ -55,21 +54,18 @@ class SampleDoc {
           name: '給料',
           collapse: false,
           items: [
-            {name: '固定給'},
-            {name: '年俸給'},
-            {name: '残業代'},
-            {name: '通勤手当'},
-            {name: '住宅手当'},
-            {name: '家族手当'},
+            { name: '固定給' },
+            { name: '年俸給' },
+            { name: '残業代' },
+            { name: '通勤手当' },
+            { name: '住宅手当' },
+            { name: '家族手当' },
           ],
         },
         {
           name: '賞与',
           collapse: true,
-          items: [
-            {name: '年俸給分'},
-            {name: '調整給料分'},
-          ],
+          items: [{ name: '年俸給分' }, { name: '調整給料分' }],
         },
         {
           name: '児童手当',
@@ -142,11 +138,7 @@ class SampleDoc {
           state,
           currentDate,
           currentDate,
-          IYearMonthDayDateUtils.fromDate(new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            rec.day,
-            )),
+          IYearMonthDayDateUtils.fromDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), rec.day)),
           rec.memo,
           StateMethods.accountByName(state, rec.account).id,
           StateMethods.categoryByPath(state.income.categories, rec.category).id,
@@ -162,30 +154,23 @@ class SampleDoc {
         {
           name: '家事費',
           collapse: false,
-          items: [
-            {name: '食費'},
-            {name: '日用品'},
-            {name: '妻小遣い'},
-          ],
+          items: [{ name: '食費' }, { name: '日用品' }, { name: '妻小遣い' }],
         },
         {
           name: '光熱・通信費',
           collapse: true,
           items: [
-            {name: '電気'},
-            {name: 'プロバイダ・光電話'},
-            {name: '水道'},
-            {name: 'CATV'},
-            {name: 'NHK'},
+            { name: '電気' },
+            { name: 'プロバイダ・光電話' },
+            { name: '水道' },
+            { name: 'CATV' },
+            { name: 'NHK' },
           ],
         },
         {
           name: '通勤・通学費',
           collapse: false,
-          items: [
-            {name: '洗車'},
-            {name: 'ガソリン'},
-          ],
+          items: [{ name: '洗車' }, { name: 'ガソリン' }],
         },
       ];
       const rootCategoryId = StateMethods.outgoCategoryAdd(state, '', null);
@@ -243,11 +228,7 @@ class SampleDoc {
           state,
           currentDate,
           currentDate,
-          IYearMonthDayDateUtils.fromDate(new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            rec.day,
-            )),
+          IYearMonthDayDateUtils.fromDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), rec.day)),
           rec.memo,
           StateMethods.accountByName(state, rec.account).id,
           StateMethods.categoryByPath(state.outgo.categories, rec.category).id,
@@ -280,11 +261,7 @@ class SampleDoc {
           state,
           currentDate,
           currentDate,
-          IYearMonthDayDateUtils.fromDate(new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            rec.day,
-            )),
+          IYearMonthDayDateUtils.fromDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), rec.day)),
           rec.memo,
           StateMethods.accountByName(state, rec.accountFrom).id,
           StateMethods.accountByName(state, rec.accountTo).id,
@@ -312,9 +289,9 @@ class SampleDoc {
       const doc1 = StateMethods.fromData(data0);
       const data1 = StateMethods.toData(doc1);
       if (JSON.stringify(data0) !== JSON.stringify(data1)) {
-          global.console.log(JSON.stringify(data0));
-          global.console.log(JSON.stringify(data1));
-          throw new Error('Error: Doc to DocData test failed.');
+        global.console.log(JSON.stringify(data0));
+        global.console.log(JSON.stringify(data1));
+        throw new Error('Error: Doc to DocData test failed.');
       }
       global.console.log('[Test] Successed.');
     }

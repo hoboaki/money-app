@@ -17,13 +17,13 @@ interface IProps {
   page: UiStates.IPageCalendar;
 }
 
-class Balance extends React.Component<IProps, any> {
+class Balance extends React.Component<IProps> {
   public render() {
     const startDate = this.props.page.currentDate;
     const endDate = IYearMonthDayDateUtils.nextMonth(startDate);
 
     const currentRecords = new RecordCollection(this.props.doc).filter([
-      RecordFilters.createDateRangeFilter({startDate, endDate}),
+      RecordFilters.createDateRangeFilter({ startDate, endDate }),
     ]);
 
     const incomeTotal = currentRecords.sumAmountIncome();
@@ -31,47 +31,26 @@ class Balance extends React.Component<IProps, any> {
     const balanceTotal = incomeTotal - outgoTotal;
     const transferDiff = currentRecords.totalDiffTransfer();
     const closingPrice = new BalanceCalculator(this.props.doc, endDate).sumBalance();
-    const incomeTotalText = `${incomeTotal < 0 ? '▲ ' : ''}` +
-      `${PriceUtils.numToLocaleString(Math.abs(incomeTotal))}`;
-    const outgoTotalText = `${outgoTotal < 0 ? '△ ' : ''}` +
-      `${PriceUtils.numToLocaleString(Math.abs(outgoTotal))}`;
-    const balanceSignText = balanceTotal < 0 ? '-' : (0 < balanceTotal ? '+' : '');
-    const balanceTotalText = balanceSignText +
-      `${PriceUtils.numToLocaleString(Math.abs(balanceTotal))}`;
+    const incomeTotalText = `${incomeTotal < 0 ? '▲ ' : ''}` + `${PriceUtils.numToLocaleString(Math.abs(incomeTotal))}`;
+    const outgoTotalText = `${outgoTotal < 0 ? '△ ' : ''}` + `${PriceUtils.numToLocaleString(Math.abs(outgoTotal))}`;
+    const balanceSignText = balanceTotal < 0 ? '-' : 0 < balanceTotal ? '+' : '';
+    const balanceTotalText = balanceSignText + `${PriceUtils.numToLocaleString(Math.abs(balanceTotal))}`;
     const transferDiffText = `${PriceUtils.numToLocaleString(transferDiff)}`;
     const closingPriceText = `${PriceUtils.numToLocaleString(closingPrice)}`;
 
-    const rootClass = ClassNames(
-      Styles.Root,
-    );
-    const spacerClass = ClassNames(
-      Styles.Spacer,
-    );
-    const tableClass = ClassNames(
-      Styles.Table,
-    );
-    const tableHeaderLabelClass = ClassNames(
-      Styles.TableHeader,
-      Styles.TableHeaderLabel,
-    );
-    const tableHeaderSpacerClass = ClassNames(
-      Styles.TableHeader,
-      Styles.TableHeaderSpacer,
-    );
-    const tableDataValueClass = ClassNames(
-      Styles.TableData,
-      Styles.TableDataValue,
-    );
+    const rootClass = ClassNames(Styles.Root);
+    const spacerClass = ClassNames(Styles.Spacer);
+    const tableClass = ClassNames(Styles.Table);
+    const tableHeaderLabelClass = ClassNames(Styles.TableHeader, Styles.TableHeaderLabel);
+    const tableHeaderSpacerClass = ClassNames(Styles.TableHeader, Styles.TableHeaderSpacer);
+    const tableDataValueClass = ClassNames(Styles.TableData, Styles.TableDataValue);
     const tableDataBalanceValueClass = ClassNames(
       Styles.TableData,
       Styles.TableDataValue,
       balanceTotal < 0 ? Styles.TableDataValueDeficit : null,
       0 < balanceTotal ? Styles.TableDataValueSurplus : null,
     );
-    const tableDataSignClass = ClassNames(
-      Styles.TableData,
-      Styles.TableDataSign,
-    );
+    const tableDataSignClass = ClassNames(Styles.TableData, Styles.TableDataSign);
     return (
       <div className={rootClass}>
         <table className={tableClass}>
@@ -94,7 +73,7 @@ class Balance extends React.Component<IProps, any> {
             </tr>
           </tbody>
         </table>
-        <div className={spacerClass}/>
+        <div className={spacerClass} />
         <table className={tableClass}>
           <thead>
             <tr>
@@ -107,7 +86,7 @@ class Balance extends React.Component<IProps, any> {
             </tr>
           </tbody>
         </table>
-        <div className={spacerClass}/>
+        <div className={spacerClass} />
         <table className={tableClass}>
           <thead>
             <tr>
@@ -123,7 +102,6 @@ class Balance extends React.Component<IProps, any> {
       </div>
     );
   }
-
 }
 
 const mapStateToProps = (state: IStoreState) => {

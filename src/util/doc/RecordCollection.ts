@@ -52,9 +52,11 @@ class RecordCollection implements IRecordCollection {
    * @param accounts 対象となる口座の AccountId。 null の場合は全口座。
    */
   public totalDiffTransfer(accounts: number[] | null = null) {
-    let accountsDict: {[key: number]: any} = {};
+    let accountsDict: { [key: number]: States.IAccount } = {};
     if (accounts != null) {
-      accounts.forEach((id) => {accountsDict[id] = true; });
+      accounts.forEach((id) => {
+        accountsDict[id] = this.state.account.accounts[id];
+      });
     } else {
       accountsDict = this.state.account.accounts;
     }
@@ -82,9 +84,9 @@ class RecordCollection implements IRecordCollection {
   /** 標準的な並び順にソート済のレコードキー配列を返す。 */
   public standardSortedKeys() {
     return this.keys([
-      {kind: RecordOrderKind.Date, reverse: false},
-      {kind: RecordOrderKind.Category, reverse: false},
-      {kind: RecordOrderKind.RecordId, reverse: false},
+      { kind: RecordOrderKind.Date, reverse: false },
+      { kind: RecordOrderKind.Category, reverse: false },
+      { kind: RecordOrderKind.RecordId, reverse: false },
     ]);
   }
 
@@ -92,21 +94,30 @@ class RecordCollection implements IRecordCollection {
   public keys(orders: IRecordOrder[]): IRecordKey[] {
     // Key 化
     let result: IRecordKey[] = [];
-    result = result.concat(this.incomes.map<IRecordKey>((recordId) => {
-      return {
-        id: recordId, kind: RecordKind.Income,
-      };
-    }));
-    result = result.concat(this.outgos.map<IRecordKey>((recordId) => {
-      return {
-        id: recordId, kind: RecordKind.Outgo,
-      };
-    }));
-    result = result.concat(this.transfers.map<IRecordKey>((recordId) => {
-      return {
-        id: recordId, kind: RecordKind.Transfer,
-      };
-    }));
+    result = result.concat(
+      this.incomes.map<IRecordKey>((recordId) => {
+        return {
+          id: recordId,
+          kind: RecordKind.Income,
+        };
+      }),
+    );
+    result = result.concat(
+      this.outgos.map<IRecordKey>((recordId) => {
+        return {
+          id: recordId,
+          kind: RecordKind.Outgo,
+        };
+      }),
+    );
+    result = result.concat(
+      this.transfers.map<IRecordKey>((recordId) => {
+        return {
+          id: recordId,
+          kind: RecordKind.Transfer,
+        };
+      }),
+    );
 
     // ソート関数の用意
     const cmpFuncs: ((lhs: IRecordKey, rhs: IRecordKey) => number)[] = [];
@@ -127,7 +138,7 @@ class RecordCollection implements IRecordCollection {
         case RecordOrderKind.Date:
           cmpFuncs.push((lhs, rhs) => {
             const toNumFunc = (key: IRecordKey) => {
-              let date: IYearMonthDayDate = {year: 0, month: 0, day: 0};
+              let date: IYearMonthDayDate = { year: 0, month: 0, day: 0 };
               switch (key.kind) {
                 case RecordKind.Income:
                   date = this.state.income.records[key.id].date;
@@ -185,8 +196,8 @@ class RecordCollection implements IRecordCollection {
             return 0;
           });
           break;
+        }
       }
-    }
     });
 
     // ソートを実行

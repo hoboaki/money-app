@@ -6,7 +6,7 @@ import * as Styles from './MainBtn.css';
 
 interface IProps {
   isEnabled: boolean;
-  onClicked: (() => void);
+  onClicked: () => void;
   title: string;
 }
 
@@ -16,21 +16,18 @@ class MainBtn extends React.Component<IProps> {
   }
 
   public render() {
-    const rootClass = ClassNames(
-      Styles.Root,
-      BasicStyles.StdBtnPrimary,
-    );
+    const rootClass = ClassNames(Styles.Root, BasicStyles.StdBtnPrimary);
     return (
       <button
         className={rootClass}
         onClick={this.props.onClicked}
         disabled={!this.props.isEnabled}
-        title={this.props.title}>
+        title={this.props.title}
+      >
         <span>{this.props.title}</span>
       </button>
     );
   }
-
 }
 
 export default MainBtn;

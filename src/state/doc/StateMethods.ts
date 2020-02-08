@@ -18,7 +18,7 @@ export const fromData = (src: DataRoot) => {
   const enumPraseAccountKind = (targetKey: string): Types.AccountKind => {
     for (const key in Types.AccountKind) {
       if (key === targetKey) {
-        return (+Types.AccountKind[key]) as Types.AccountKind;
+        return +Types.AccountKind[key] as Types.AccountKind;
       }
     }
     throw new Error(`Error: Not found key named '${targetKey}'.`);
@@ -28,7 +28,7 @@ export const fromData = (src: DataRoot) => {
   const r = Clone(States.defaultState);
 
   // 口座
-  const accountIdDict: {[key: number]: number} = {}; // Data内Id → オブジェクトId 変換テーブル
+  const accountIdDict: { [key: number]: number } = {}; // Data内Id → オブジェクトId 変換テーブル
   for (const data of src.accounts) {
     const kind = enumPraseAccountKind(data.kind);
     const key = accountAdd(r, data.name, kind, data.initialAmount, IYearMonthDayDateUtils.fromText(data.startDate));
@@ -37,13 +37,13 @@ export const fromData = (src: DataRoot) => {
 
   // 入金
   {
-    const categoryIdDict: {[key: number]: number} = {}; // Data内Id -> オブジェクトId 変換テーブル
+    const categoryIdDict: { [key: number]: number } = {}; // Data内Id -> オブジェクトId 変換テーブル
     for (const data of src.income.categories) {
       let parentId = null;
       if (data.parent !== 0) {
         parentId = categoryIdDict[data.parent];
         if (parentId == null) {
-            throw new Error(`Error: Invalid parent value(${data.parent}) in income category (id: '${data.id}').`);
+          throw new Error(`Error: Invalid parent value(${data.parent}) in income category (id: '${data.id}').`);
         }
       }
       const key = incomeCategoryAdd(r, data.name, parentId);
@@ -55,11 +55,11 @@ export const fromData = (src: DataRoot) => {
     for (const data of src.income.records) {
       const categoryId = categoryIdDict[data.category];
       if (categoryId == null) {
-          throw new Error(`Error: Invalid category value(${data.category}) in income record.`);
+        throw new Error(`Error: Invalid category value(${data.category}) in income record.`);
       }
       const accountId = accountIdDict[data.account];
       if (accountId == null) {
-          throw new Error(`Error: Invalid account value(${data.account}) in income record.`);
+        throw new Error(`Error: Invalid account value(${data.account}) in income record.`);
       }
       incomeRecordAdd(
         r,
@@ -76,13 +76,13 @@ export const fromData = (src: DataRoot) => {
 
   // 出金
   {
-    const categoryIdDict: {[key: number]: number} = {}; // Data内Id -> オブジェクトId 変換テーブル
+    const categoryIdDict: { [key: number]: number } = {}; // Data内Id -> オブジェクトId 変換テーブル
     for (const data of src.outgo.categories) {
       let parentId = null;
       if (data.parent !== 0) {
         parentId = categoryIdDict[data.parent];
         if (parentId == null) {
-            throw new Error(`Error: Invalid parent value(${data.parent}) in outgo category (id: '${data.id}').`);
+          throw new Error(`Error: Invalid parent value(${data.parent}) in outgo category (id: '${data.id}').`);
         }
       }
       const key = outgoCategoryAdd(r, data.name, parentId);
@@ -94,11 +94,11 @@ export const fromData = (src: DataRoot) => {
     for (const data of src.outgo.records) {
       const categoryId = categoryIdDict[data.category];
       if (categoryId == null) {
-          throw new Error(`Error: Invalid category value(${data.category}) in outgo record.`);
+        throw new Error(`Error: Invalid category value(${data.category}) in outgo record.`);
       }
       const accountId = accountIdDict[data.account];
       if (accountId == null) {
-          throw new Error(`Error: Invalid account value(${data.account}) in outgo record.`);
+        throw new Error(`Error: Invalid account value(${data.account}) in outgo record.`);
       }
       outgoRecordAdd(
         r,
@@ -118,11 +118,11 @@ export const fromData = (src: DataRoot) => {
     for (const data of src.transfer.records) {
       const accountFromId = accountIdDict[data.accountFrom];
       if (accountFromId == null) {
-          throw new Error(`Error: Invalid account value(${data.accountFrom}) in transfer record.`);
+        throw new Error(`Error: Invalid account value(${data.accountFrom}) in transfer record.`);
       }
       const accountToId = accountIdDict[data.accountTo];
       if (accountToId == null) {
-          throw new Error(`Error: Invalid account value(${data.accountTo}) in transfer record.`);
+        throw new Error(`Error: Invalid account value(${data.accountTo}) in transfer record.`);
       }
       transferRecordAdd(
         r,
@@ -139,7 +139,11 @@ export const fromData = (src: DataRoot) => {
 
   // 集計口座
   for (const data of src.aggregateAccounts) {
-    aggregateAccountAdd(r, data.name, data.accounts.map((accountId) => accountIdDict[accountId]));
+    aggregateAccountAdd(
+      r,
+      data.name,
+      data.accounts.map((accountId) => accountIdDict[accountId]),
+    );
   }
 
   return r;
@@ -151,7 +155,7 @@ export const toData = (state: States.IState) => {
   const result = new DataRoot();
 
   // 口座
-  const accountIdDict: {[key: number]: number} = {}; // AccountId -> エクスポート先のId 辞書
+  const accountIdDict: { [key: number]: number } = {}; // AccountId -> エクスポート先のId 辞書
   state.account.order.forEach((key) => {
     const src = state.account.accounts[key];
     const data = new DataAccount();
@@ -167,19 +171,16 @@ export const toData = (state: States.IState) => {
   // 入金
   {
     // カテゴリ
-    const categoryIdDict: {[key: number]: number} = {}; // CategoryId -> エクスポート先のId 辞書
+    const categoryIdDict: { [key: number]: number } = {}; // CategoryId -> エクスポート先のId 辞書
     const collectChildCategoryId = (ids: number[]): number[] => {
-      return ids.reduce(
-        (resultIds: number[], id: number) => {
-          resultIds.push(id);
-          const childs = state.income.categories[id].childs;
-          if (childs.length !== 0) {
-            resultIds = resultIds.concat(collectChildCategoryId(childs));
-          }
-          return resultIds;
-        },
-        [],
-      );
+      return ids.reduce((resultIds: number[], id: number) => {
+        resultIds.push(id);
+        const childs = state.income.categories[id].childs;
+        if (childs.length !== 0) {
+          resultIds = resultIds.concat(collectChildCategoryId(childs));
+        }
+        return resultIds;
+      }, []);
     };
     const categoryOrder = collectChildCategoryId([state.income.rootCategoryId]);
     categoryOrder.forEach((key) => {
@@ -200,6 +201,7 @@ export const toData = (state: States.IState) => {
 
     // レコード
     for (const key in state.income.records) {
+      // eslint-disable-next-line no-prototype-builtins
       if (!state.income.records.hasOwnProperty(key)) {
         continue;
       }
@@ -219,19 +221,16 @@ export const toData = (state: States.IState) => {
   // 出金
   {
     // カテゴリ
-    const categoryIdDict: {[key: number]: number} = {}; // CategoryId -> エクスポート先のId 辞書
+    const categoryIdDict: { [key: number]: number } = {}; // CategoryId -> エクスポート先のId 辞書
     const collectChildCategoryId = (ids: number[]): number[] => {
-      return ids.reduce(
-        (resultIds: number[], id: number) => {
-          resultIds.push(id);
-          const childs = state.outgo.categories[id].childs;
-          if (childs.length !== 0) {
-            resultIds = resultIds.concat(collectChildCategoryId(childs));
-          }
-          return resultIds;
-        },
-        [],
-      );
+      return ids.reduce((resultIds: number[], id: number) => {
+        resultIds.push(id);
+        const childs = state.outgo.categories[id].childs;
+        if (childs.length !== 0) {
+          resultIds = resultIds.concat(collectChildCategoryId(childs));
+        }
+        return resultIds;
+      }, []);
     };
     const categoryOrder = collectChildCategoryId([state.outgo.rootCategoryId]);
     categoryOrder.forEach((key) => {
@@ -252,6 +251,7 @@ export const toData = (state: States.IState) => {
 
     // レコード
     for (const key in state.outgo.records) {
+      // eslint-disable-next-line no-prototype-builtins
       if (!state.outgo.records.hasOwnProperty(key)) {
         continue;
       }
@@ -272,6 +272,7 @@ export const toData = (state: States.IState) => {
   {
     // レコード
     for (const key in state.transfer.records) {
+      // eslint-disable-next-line no-prototype-builtins
       if (!state.transfer.records.hasOwnProperty(key)) {
         continue;
       }
@@ -312,7 +313,7 @@ export const accountAdd = (
   kind: Types.AccountKind,
   initialAmount: number,
   startDate: IYearMonthDayDate,
-  ) => {
+) => {
   // オブジェクト作成
   const obj = {
     id: 0,
@@ -331,10 +332,7 @@ export const accountAdd = (
 };
 
 /** 指定の名前の口座オブジェクトを取得。見つからなければエラー。 */
-export const accountByName = (
-  state: States.IState,
-  name: string,
-  ): States.IAccount => {
+export const accountByName = (state: States.IState, name: string): States.IAccount => {
   const account = Object.values(state.account.accounts).find((ac) => ac.name === name);
   if (account === undefined) {
     global.console.log(state.account.accounts);
@@ -345,11 +343,7 @@ export const accountByName = (
 
 /// 入金カテゴリ追加。
 /// @return {number} 追加したカテゴリの CategoryId。
-export const incomeCategoryAdd = (
-  state: States.IState,
-  name: string,
-  parentId: number | null,
-  ) => {
+export const incomeCategoryAdd = (state: States.IState, name: string, parentId: number | null) => {
   // オブジェクト作成
   const obj = {
     id: 0,
@@ -362,7 +356,7 @@ export const incomeCategoryAdd = (
 
   // ルート要素なら１つ目であることを保証
   if (parent == null && Object.keys(state.income.categories).length !== 0) {
-    throw new Error(`Income root category is already exists.`);
+    throw new Error('Income root category is already exists.');
   }
 
   // 追加
@@ -398,7 +392,7 @@ export const incomeRecordAdd = (
   accountId: number,
   categoryId: number,
   amount: number,
-  ) => {
+) => {
   // オブジェクト作成
   const obj = {
     id: 0,
@@ -431,7 +425,7 @@ export const incomeRecordUpdate = (
   accountId: number,
   categoryId: number,
   amount: number,
-  ) => {
+) => {
   // オブジェクト作成
   const obj = {
     id: recordId,
@@ -451,11 +445,7 @@ export const incomeRecordUpdate = (
 
 /// 出金カテゴリ追加。
 /// @return {number} 追加したカテゴリの CategoryId。
-export const outgoCategoryAdd = (
-  state: States.IState,
-  name: string,
-  parentId: number | null,
-  ) => {
+export const outgoCategoryAdd = (state: States.IState, name: string, parentId: number | null) => {
   // オブジェクト作成
   const obj = {
     id: 0,
@@ -468,7 +458,7 @@ export const outgoCategoryAdd = (
 
   // ルート要素なら１つ目であることを保証
   if (parent == null && Object.keys(state.outgo.categories).length !== 0) {
-    throw new Error(`Outgo root category is already exists.`);
+    throw new Error('Outgo root category is already exists.');
   }
 
   // 追加
@@ -504,7 +494,7 @@ export const outgoRecordAdd = (
   accountId: number,
   categoryId: number,
   amount: number,
-  ) => {
+) => {
   // オブジェクト作成
   const obj = {
     id: 0,
@@ -537,7 +527,7 @@ export const outgoRecordUpdate = (
   accountId: number,
   categoryId: number,
   amount: number,
-  ) => {
+) => {
   // オブジェクト作成
   const obj = {
     id: recordId,
@@ -568,7 +558,7 @@ export const transferRecordAdd = (
   accountFromId: number,
   accountToId: number,
   amount: number,
-  ) => {
+) => {
   // オブジェクト作成
   const obj = {
     id: 0,
@@ -601,7 +591,7 @@ export const transferRecordUpdate = (
   accountFromId: number,
   accountToId: number,
   amount: number,
-  ) => {
+) => {
   // オブジェクト作成
   const obj = {
     id: recordId,
@@ -622,10 +612,7 @@ export const transferRecordUpdate = (
 /**
  * レコードの削除。
  */
-export const deleteRecords = (
-  state: States.IState,
-  recordIdArray: number[],
-  ) => {
+export const deleteRecords = (state: States.IState, recordIdArray: number[]) => {
   recordIdArray.forEach((id) => {
     if (id in state.income.records) {
       delete state.income.records[id];
@@ -640,11 +627,7 @@ export const deleteRecords = (
 };
 
 /** カテゴリの展開状態の更新。 */
-export const categoryCollapsedStateUpdate = (
-  state: States.IState,
-  categoryId: number,
-  isCollapsed: boolean,
-  ) => {
+export const categoryCollapsedStateUpdate = (state: States.IState, categoryId: number, isCollapsed: boolean) => {
   {
     const cat = state.income.categories[categoryId];
     if (cat != null) {
@@ -663,11 +646,7 @@ export const categoryCollapsedStateUpdate = (
  * 集計口座追加。
  * @return {number} 追加した集計口座のId。
  */
-export const aggregateAccountAdd = (
-  state: States.IState,
-  name: string,
-  accounts: number[],
-  ) => {
+export const aggregateAccountAdd = (state: States.IState, name: string, accounts: number[]) => {
   // オブジェクト作成
   const obj = {
     id: 0,
@@ -693,19 +672,23 @@ export const aggregateAccountAdd = (
  * @param categories incomeCategories もしくは outgoCategories の参照。
  * @param path 階層をスラッシュで区切った文字列。（例：'家事費/食費'）
  */
-export const categoryByPath = (categories: {[key: number]: States.ICategory}, path: string) => {
+export const categoryByPath = (categories: { [key: number]: States.ICategory }, path: string) => {
   // 引数チェック
   if (path === '') {
-    throw new Error(`Argument named 'path' is empty.`);
+    // eslint-disable-next-line quotes
+    throw new Error("Argument named 'path' is empty.");
   }
 
   // スラッシュでパスを分解して検索
   const names = path.split('/');
-  let parentId: number = 0;
+  let parentId = 0;
   names.forEach((name) => {
-    const cats = parentId === 0 ?
-      Object.keys(categories).filter((cat) => categories[Number(cat)].parent == null).map((cat) => categories[Number(cat)])[0].childs :
-      categories[parentId].childs;
+    const cats =
+      parentId === 0
+        ? Object.keys(categories)
+            .filter((cat) => categories[Number(cat)].parent == null)
+            .map((cat) => categories[Number(cat)])[0].childs
+        : categories[parentId].childs;
     const nextId = cats.find((catId) => categories[catId].name === name);
     if (nextId === undefined) {
       global.console.log(`Finding '${name}' from parentId '${parentId}'.`);
@@ -719,7 +702,7 @@ export const categoryByPath = (categories: {[key: number]: States.ICategory}, pa
 };
 
 /** 指定のカテゴリID から検索を開始し最初に見つかる末端カテゴリの ID を返す。見つからない場合はエラー。 */
-export const firstLeafCategoryId = (startCategoryId: number, categories: {[key: number]: States.ICategory}) => {
+export const firstLeafCategoryId = (startCategoryId: number, categories: { [key: number]: States.ICategory }) => {
   let id = startCategoryId;
   while (categories[id].childs.length !== 0) {
     id = categories[id].childs[0];
@@ -728,7 +711,7 @@ export const firstLeafCategoryId = (startCategoryId: number, categories: {[key: 
 };
 
 /** ソート済カテゴリID配列を取得。 */
-export const categoryIdArray = (startCategoryId: number, categories: {[key: number]: States.ICategory}) => {
+export const categoryIdArray = (startCategoryId: number, categories: { [key: number]: States.ICategory }) => {
   const result = new Array<number>();
   const proc = (categoryId: number) => {
     const cat = categories[categoryId];
@@ -742,7 +725,7 @@ export const categoryIdArray = (startCategoryId: number, categories: {[key: numb
 };
 
 /** 指定のカテゴリ以下に所属する末端カテゴリID配列を取得。 */
-export const leafCategoryIdArray = (targetCategoryId: number, categories: {[key: number]: States.ICategory}) => {
+export const leafCategoryIdArray = (targetCategoryId: number, categories: { [key: number]: States.ICategory }) => {
   const result = new Array<number>();
   const proc = (categoryId: number) => {
     const cat = categories[categoryId];

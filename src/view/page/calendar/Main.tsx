@@ -6,14 +6,11 @@ import * as PageStyles from '../Page.css';
 import Body from './Body';
 import Header from './Header';
 
-class Main extends React.Component<any, any> {
-  public static PageId: string = 'Calendar';
+class Main extends React.Component {
+  public static PageId = 'Calendar';
 
   public render() {
-    const rootClass = ClassNames(
-      PageStyles.Base,
-      LayoutStyles.TopToBottom,
-    );
+    const rootClass = ClassNames(PageStyles.Base, LayoutStyles.TopToBottom);
     return (
       <div className={rootClass}>
         <Header />
@@ -21,7 +18,6 @@ class Main extends React.Component<any, any> {
       </div>
     );
   }
-
 }
 
 export default Main;

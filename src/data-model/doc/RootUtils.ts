@@ -5,11 +5,11 @@ const versionCurrent = 1;
 
 /** Json フォーマット。 */
 interface IJsonRoot {
- /** ファイルバージョン。 */
- version: number;
+  /** ファイルバージョン。 */
+  version: number;
 
- /** データのルート。 */
- data: any;
+  /** データのルート。 */
+  data: Root;
 }
 
 /** Json テキストを Root に変換する。 */
@@ -19,7 +19,7 @@ export const fromJson = (jsonText: string): Root => {
 
   // 現行バージョンのみ対応
   if (versionCurrent !== versionCurrent) {
-    throw new Error(`未サポートバージョンのデータです。`);
+    throw new Error('未サポートバージョンのデータです。');
   }
 
   // Root に変換して返す
@@ -27,7 +27,7 @@ export const fromJson = (jsonText: string): Root => {
   return result;
 };
 
-/** Root を Json　テキストに変換する */
+/** Root を Json テキストに変換する */
 export const toJson = (root: Root): string => {
   const jsonRoot: IJsonRoot = {
     version: versionCurrent,

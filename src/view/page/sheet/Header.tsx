@@ -7,8 +7,6 @@ import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
 import * as UiTypes from 'src/state/ui/Types';
-import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
-import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import MaterialIcon from 'src/view/widget/material-icon';
@@ -20,45 +18,20 @@ class Header extends React.Component<UiStates.IPageSheet> {
   }
 
   public render() {
-    const rootClass = ClassNames(
-      Styles.Root,
-    );
-    const movePrevBtnClass = ClassNames(
-      BasicStyles.StdBtnPrimary,
-      Styles.Btn,
-      Styles.MoveBtn,
-      Styles.MovePrevBtn,
-    );
-    const moveTodayBtnClass = ClassNames(
-      BasicStyles.StdBtnPrimary,
-      Styles.Btn,
-      Styles.MoveBtn,
-    );
-    const moveNextBtnClass = ClassNames(
-      BasicStyles.StdBtnPrimary,
-      Styles.Btn,
-      Styles.MoveBtn,
-      Styles.MoveNextBtn,
-    );
-    const viewUnitSelectClass = ClassNames(
-      BasicStyles.StdSelect,
-      Styles.ViewUnitSelect,
-    );
-    const rightAreaClass = ClassNames(
-      LayoutStyles.RightToLeft,
-      Styles.RightArea,
-    );
-    const iconClass = ClassNames(
-      'material-icons',
-      'md-16',
-    );
+    const rootClass = ClassNames(Styles.Root);
+    const movePrevBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MovePrevBtn);
+    const moveTodayBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn);
+    const moveNextBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MoveNextBtn);
+    const viewUnitSelectClass = ClassNames(BasicStyles.StdSelect, Styles.ViewUnitSelect);
+    const rightAreaClass = ClassNames(LayoutStyles.RightToLeft, Styles.RightArea);
 
-    const currentDate = `${this.props.currentDate.year}年${this.props.currentDate.month}月`;
     return (
       <div className={rootClass}>
-        <select className={viewUnitSelectClass}
+        <select
+          className={viewUnitSelectClass}
           defaultValue={this.props.viewUnit.toString()}
-          onChange={(event) => this.onViewUnitChanged(event)}>
+          onChange={(event) => this.onViewUnitChanged(event)}
+        >
           <option value={UiTypes.SheetViewUnit.Day}>日別</option>
           <option value={UiTypes.SheetViewUnit.Month}>月間</option>
           <option value={UiTypes.SheetViewUnit.Year}>年間</option>
@@ -66,13 +39,15 @@ class Header extends React.Component<UiStates.IPageSheet> {
         <button className={movePrevBtnClass} onClick={this.onMovePrevBtnPushed}>
           <MaterialIcon name="chevron_left" classNames={[]} darkMode={true} />
         </button>
-        <button className={moveTodayBtnClass} onClick={this.onMoveTodayBtnPushed}>今日</button>
+        <button className={moveTodayBtnClass} onClick={this.onMoveTodayBtnPushed}>
+          今日
+        </button>
         <button className={moveNextBtnClass} onClick={this.onMoveNextBtnPushed}>
           <MaterialIcon name="chevron_right" classNames={[]} darkMode={true} />
         </button>
 
         <div className={rightAreaClass}>
-          <div style={{width: '100%'}}/>
+          <div style={{ width: '100%' }} />
         </div>
       </div>
     );
