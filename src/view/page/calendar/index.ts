@@ -1,2 +1,2 @@
-import {default as PageCalendar} from './Main';
+import { default as PageCalendar } from './Main';
 export default PageCalendar;

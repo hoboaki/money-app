@@ -74,15 +74,15 @@ export interface IState {
     /** 口座の並び順（AccountId の配列）定義。 */
     order: number[];
     /** AccountId がキーの口座群。 */
-    accounts: {[key: number]: IAccount};
+    accounts: { [key: number]: IAccount };
   };
 
   /** 入金。 */
   income: {
     /** 入金カテゴリの CategoryId がキーの入金カテゴリ郡。 */
-    categories: {[key: number]: ICategory};
+    categories: { [key: number]: ICategory };
     /** 入金レコードの RecordId がキーの入金レコード。 */
-    records: {[key: number]: IRecordIncome};
+    records: { [key: number]: IRecordIncome };
     /** ルートカテゴリの CategoryId。 */
     rootCategoryId: number;
   };
@@ -90,9 +90,9 @@ export interface IState {
   /** 出金。 */
   outgo: {
     /** 出金カテゴリの CategoryId がキーの出金カテゴリ郡。 */
-    categories: {[key: number]: ICategory};
+    categories: { [key: number]: ICategory };
     /** 出金レコードの RecordId がキーの出金レコード郡。 */
-    records: {[key: number]: IRecordOutgo};
+    records: { [key: number]: IRecordOutgo };
     /** ルートカテゴリの CategoryId。 */
     rootCategoryId: number;
   };
@@ -100,7 +100,7 @@ export interface IState {
   /** 資金移動。 */
   transfer: {
     /** 資金移動レコードの RecordId がキーの資金移動レコード郡。 */
-    records: {[key: number]: IRecordTransfer};
+    records: { [key: number]: IRecordTransfer };
   };
 
   /** 集計口座。 */
@@ -108,7 +108,7 @@ export interface IState {
     /** 集計口座の並び順（AggregateAccountId の配列）定義。 */
     order: number[];
     /** AggregateAccountId がキーの口座群。 */
-    accounts: {[key: number]: IAggregateAccount};
+    accounts: { [key: number]: IAggregateAccount };
   };
 
   /** 次に使用するId。0(Types.INVALID_ID) は無効値。 */

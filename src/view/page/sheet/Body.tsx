@@ -33,7 +33,7 @@ interface ISelectedCellInfo {
   aggregateAccountRoot: number | null; // 数値は特に意味は無い値。
   aggregateAccountId: number | null;
   recordKind: DocTypes.RecordKind | null;
-  categoryId: number |null;
+  categoryId: number | null;
 }
 
 interface IProps {
@@ -79,15 +79,12 @@ class Body extends React.Component<IProps, IState> {
 
   public componentDidMount() {
     // スピリッター登録
-    Split(
-      [`#${idPageSheetBodyTop}`, `#${idPageSheetBodyBottom}`],
-      {
-        sizes: [25, 75],
-        gutterSize: 12,
-        cursor: 'row-resize',
-        direction: 'vertical',
-      },
-    );
+    Split([`#${idPageSheetBodyTop}`, `#${idPageSheetBodyBottom}`], {
+      sizes: [25, 75],
+      gutterSize: 12,
+      cursor: 'row-resize',
+      direction: 'vertical',
+    });
 
     // サイズ変更イベント登録＆初回更新
     window.addEventListener('resize', () => {
@@ -97,51 +94,19 @@ class Body extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const rootClass = ClassNames(
-      Styles.Root,
-    );
-    const headTableRecordClass = ClassNames(
-      Styles.Table,
-      Styles.HeadTableRecord,
-    );
+    const rootClass = ClassNames(Styles.Root);
+    const headTableRecordClass = ClassNames(Styles.Table, Styles.HeadTableRecord);
 
     // colHead
-    const colHeadAccountNameClass = ClassNames(
-      Styles.TableColHead,
-      Styles.TableColHeadAccountName,
-    );
-    const colHeadAccountCategoryClass = ClassNames(
-      Styles.TableColHead,
-      Styles.TableColHeadAccountCategory,
-    );
-    const colHeadCarriedClass = ClassNames(
-      Styles.TableColHead,
-      Styles.TableColHeadCarried,
-    );
-    const colHeadCellClass = ClassNames(
-      Styles.TableColHead,
-      Styles.TableColHeadCell,
-    );
-    const colHeadSpaceClass = ClassNames(
-      Styles.TableColHead,
-      Styles.TableColHeadSpace,
-    );
-    const colHeadBalanceClass = ClassNames(
-      Styles.TableColHead,
-      Styles.TableColHeadBalance,
-    );
-    const colHeadCategoryClass = ClassNames(
-      Styles.TableColHead,
-      Styles.TableColHeadCategory,
-    );
-    const colHeadTotalClass = ClassNames(
-      Styles.TableColHead,
-      Styles.TableColHeadTotal,
-    );
-    const colHeadScrollBarSpaceClass = ClassNames(
-      Styles.TableColHead,
-      Styles.TableColHeadScrollBarSpace,
-    );
+    const colHeadAccountNameClass = ClassNames(Styles.TableColHead, Styles.TableColHeadAccountName);
+    const colHeadAccountCategoryClass = ClassNames(Styles.TableColHead, Styles.TableColHeadAccountCategory);
+    const colHeadCarriedClass = ClassNames(Styles.TableColHead, Styles.TableColHeadCarried);
+    const colHeadCellClass = ClassNames(Styles.TableColHead, Styles.TableColHeadCell);
+    const colHeadSpaceClass = ClassNames(Styles.TableColHead, Styles.TableColHeadSpace);
+    const colHeadBalanceClass = ClassNames(Styles.TableColHead, Styles.TableColHeadBalance);
+    const colHeadCategoryClass = ClassNames(Styles.TableColHead, Styles.TableColHeadCategory);
+    const colHeadTotalClass = ClassNames(Styles.TableColHead, Styles.TableColHeadTotal);
+    const colHeadScrollBarSpaceClass = ClassNames(Styles.TableColHead, Styles.TableColHeadScrollBarSpace);
 
     // rowHead
     const rowHeadHolderAccountClass = ClassNames(
@@ -166,14 +131,8 @@ class Body extends React.Component<IProps, IState> {
     );
 
     // rowTail
-    const rowTailAccountBalance = ClassNames(
-      Styles.TableRowTail,
-      Styles.TableRowTailBalance,
-    );
-    const rowTailTotal = ClassNames(
-      Styles.TableRowTail,
-      Styles.TableRowTailTotal,
-    );
+    const rowTailAccountBalance = ClassNames(Styles.TableRowTail, Styles.TableRowTailBalance);
+    const rowTailTotal = ClassNames(Styles.TableRowTail, Styles.TableRowTailTotal);
 
     // holderEntry
     const holderEntryNormalExpanderSpaceClass = ClassNames(
@@ -193,13 +152,10 @@ class Body extends React.Component<IProps, IState> {
     );
 
     // その他
-    const expanderBtnClass = ClassNames(
-      BasicStyles.IconBtn,
-      Styles.ExpanderBtn,
-    );
+    const expanderBtnClass = ClassNames(BasicStyles.IconBtn, Styles.ExpanderBtn);
 
     // 列情報生成
-    const colInfos = new Array();
+    const colInfos: { date: IYearMonthDayDate }[] = [];
     const colCount = this.state.colCount;
     const colBeginDate = this.props.page.currentDate;
     let colEndDate = colBeginDate;
@@ -209,9 +165,7 @@ class Body extends React.Component<IProps, IState> {
         colInfos.push({
           date,
         });
-        date = IYearMonthDateUtils.nextDate(
-          date,
-          UiTypes.sheetViewUnitToDateUnit(this.props.page.viewUnit));
+        date = IYearMonthDateUtils.nextDate(date, UiTypes.sheetViewUnitToDateUnit(this.props.page.viewUnit));
       }
       colEndDate = date;
     }
@@ -248,26 +202,20 @@ class Body extends React.Component<IProps, IState> {
     }
 
     // 使い回す値の定義
-    const accountGroups = [
-      DocTypes.AccountGroup.Assets,
-      DocTypes.AccountGroup.Liabilities,
-    ];
-    const recordKinds = [
-      DocTypes.RecordKind.Transfer,
-      DocTypes.RecordKind.Income,
-      DocTypes.RecordKind.Outgo,
-    ];
+    const accountGroups = [DocTypes.AccountGroup.Assets, DocTypes.AccountGroup.Liabilities];
+    const recordKinds = [DocTypes.RecordKind.Transfer, DocTypes.RecordKind.Income, DocTypes.RecordKind.Outgo];
 
     // 口座テーブルのデータ作成
     const accountTableBuildTimeBegin = performance.now();
-    const accountCarriedData: {[key: number]: number} = {};
-    const accountCellDataArray: {[key: number]: number[]} = {};
-    const accountBalanceData: {[key: number]: number} = {};
+    const accountCarriedData: { [key: number]: number } = {};
+    const accountCellDataArray: { [key: number]: number[] } = {};
+    const accountBalanceData: { [key: number]: number } = {};
     const calculateCarriedResult = new BalanceCalculator(
       this.props.doc,
       colBeginDate,
       this.props.doc.account.order,
-      null);
+      null,
+    );
     const calculateColResults: BalanceCalculator[] = [];
     {
       let calculator = calculateCarriedResult;
@@ -277,7 +225,8 @@ class Body extends React.Component<IProps, IState> {
           this.props.doc,
           nextColIdx < colInfos.length ? colInfos[nextColIdx].date : colEndDate,
           this.props.doc.account.order,
-          calculator);
+          calculator,
+        );
         global.console.assert(calculateColResults.length === colIdx);
         calculateColResults.push(calculator);
       });
@@ -287,12 +236,11 @@ class Body extends React.Component<IProps, IState> {
       totalEndDate,
       this.props.doc.account.order,
       calculateCarriedResult,
-      );
+    );
     this.props.doc.account.order.forEach((accountId) => {
       // 繰り越しデータ代入
       const account = this.props.doc.account.accounts[accountId];
-      const sign = DocTypes.accountKindToAccountGroup(account.kind) !== DocTypes.AccountGroup.Liabilities ?
-        1 : -1;
+      const sign = DocTypes.accountKindToAccountGroup(account.kind) !== DocTypes.AccountGroup.Liabilities ? 1 : -1;
       accountCarriedData[accountId] = sign * calculateCarriedResult.balances[accountId];
 
       // 各列のデータ代入
@@ -309,86 +257,89 @@ class Body extends React.Component<IProps, IState> {
 
     // 口座ルート行のデータ作成
     const accountRootsBuildTimeBegin = performance.now();
-    const accountGroupCarriedData: {[key: number]: number} = {};
-    const accountGroupCellDataArray: {[key: number]: number[]} = {};
-    const accountGroupBalanceData: {[key: number]: number} = {};
+    const accountGroupCarriedData: { [key: number]: number } = {};
+    const accountGroupCellDataArray: { [key: number]: number[] } = {};
+    const accountGroupBalanceData: { [key: number]: number } = {};
     accountGroups.forEach((accountGroup) => {
       // メモ
-      const accountIdArray =
-        Object.keys(accountCarriedData).filter((data) =>
-          DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[Number(data)].kind) === accountGroup);
+      const accountIdArray = Object.keys(accountCarriedData).filter(
+        (data) =>
+          DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[Number(data)].kind) === accountGroup,
+      );
 
       // 繰り越しデータ計算
-      accountGroupCarriedData[accountGroup] =
-        accountIdArray.map((accountId) => accountCarriedData[Number(accountId)])
+      accountGroupCarriedData[accountGroup] = accountIdArray
+        .map((accountId) => accountCarriedData[Number(accountId)])
         .reduce((prev, current) => prev + current);
 
       // 各列のデータ
       const cellDataArray: number[] = [];
       colInfos.forEach((colInfo, colIdx) => {
-        cellDataArray[colIdx] =
-          accountIdArray.map((accountId) => accountCellDataArray[Number(accountId)][colIdx])
+        cellDataArray[colIdx] = accountIdArray
+          .map((accountId) => accountCellDataArray[Number(accountId)][colIdx])
           .reduce((prev, current) => prev + current);
       });
       accountGroupCellDataArray[accountGroup] = cellDataArray;
 
       // 残高データ計算
-      accountGroupBalanceData[accountGroup] =
-        accountIdArray.map((accountId) => accountBalanceData[Number(accountId)])
+      accountGroupBalanceData[accountGroup] = accountIdArray
+        .map((accountId) => accountBalanceData[Number(accountId)])
         .reduce((prev, current) => prev + current);
     });
     const accountRootsBuildTimeEnd = performance.now();
 
     // 集計口座のデータ作成
-    const aggregateAccountCarriedData: {[key: number]: number} = {};
-    const aggregateAccountCellDataArray: {[key: number]: number[]} = {};
-    const aggregateAccountBalanceData: {[key: number]: number} = {};
+    const aggregateAccountCarriedData: { [key: number]: number } = {};
+    const aggregateAccountCellDataArray: { [key: number]: number[] } = {};
+    const aggregateAccountBalanceData: { [key: number]: number } = {};
     this.props.doc.aggregateAccount.order.forEach((aggregateAccount) => {
       // メモ
       const accountIdArray = this.props.doc.aggregateAccount.accounts[aggregateAccount].accounts;
 
       // 繰り越しデータ計算
-      aggregateAccountCarriedData[aggregateAccount] =
-        accountIdArray.map((accountId) => accountCarriedData[Number(accountId)])
+      aggregateAccountCarriedData[aggregateAccount] = accountIdArray
+        .map((accountId) => accountCarriedData[Number(accountId)])
         .reduce((prev, current) => prev + current);
 
       // 各列のデータ
       const cellDataArray: number[] = [];
       colInfos.forEach((colInfo, colIdx) => {
-        cellDataArray[colIdx] =
-          accountIdArray.map((accountId) => accountCellDataArray[Number(accountId)][colIdx])
+        cellDataArray[colIdx] = accountIdArray
+          .map((accountId) => accountCellDataArray[Number(accountId)][colIdx])
           .reduce((prev, current) => prev + current);
       });
       aggregateAccountCellDataArray[aggregateAccount] = cellDataArray;
 
       // 残高データ計算
-      aggregateAccountBalanceData[aggregateAccount] =
-        accountIdArray.map((accountId) => accountBalanceData[Number(accountId)])
+      aggregateAccountBalanceData[aggregateAccount] = accountIdArray
+        .map((accountId) => accountBalanceData[Number(accountId)])
         .reduce((prev, current) => prev + current);
     });
     const aggregateAccountSumCarried = Object.values(aggregateAccountCarriedData).reduce((prev, cur) => prev + cur, 0);
     const aggregateAccountSumCellDataArray: number[] = [];
     colInfos.forEach((colInfo, colIdx) => {
-      aggregateAccountSumCellDataArray[colIdx] = Object.keys(aggregateAccountCellDataArray).map((id) => aggregateAccountCellDataArray[Number(id)][colIdx]).reduce((prev, cur) => prev + cur, 0);
+      aggregateAccountSumCellDataArray[colIdx] = Object.keys(aggregateAccountCellDataArray)
+        .map((id) => aggregateAccountCellDataArray[Number(id)][colIdx])
+        .reduce((prev, cur) => prev + cur, 0);
     });
     const aggregateAccountSumBalance = Object.values(aggregateAccountBalanceData).reduce((prev, cur) => prev + cur, 0);
 
     // カテゴリテーブルのデータ生成の準備
     const categoryPrepareTimeBegin = performance.now();
     const recordsForCellData = new RecordCollection(this.props.doc, null).filter([
-      RecordFilters.createDateRangeFilter({startDate: colBeginDate, endDate: colEndDate}),
+      RecordFilters.createDateRangeFilter({ startDate: colBeginDate, endDate: colEndDate }),
     ]);
     const recordsForTotal = new RecordCollection(this.props.doc, null).filter([
-      RecordFilters.createDateRangeFilter({startDate: totalBeginDate, endDate: totalEndDate}),
+      RecordFilters.createDateRangeFilter({ startDate: totalBeginDate, endDate: totalEndDate }),
     ]);
-    const recordKindCellDataDictArray = new Array<{[key: number]: (number | null)}>(colInfos.length);
-    const recordKindTotalArray: {[key: number]: number | null} = {};
-    const incomeLeafCategoriesArray: {[key: number]: number[]} = {};
-    const incomeCellDataDictArray = new Array<{[key: number]: (number | null)}>(colInfos.length);
-    const incomeTotalArray: {[key: number]: number | null} = {};
-    const outgoLeafCategoriesArray: {[key: number]: number[]} = {};
-    const outgoCellDataDictArray = new Array<{[key: number]: (number | null)}>(colInfos.length);
-    const outgoTotalArray: {[key: number]: number | null} = {};
+    const recordKindCellDataDictArray = new Array<{ [key: number]: number | null }>(colInfos.length);
+    const recordKindTotalArray: { [key: number]: number | null } = {};
+    const incomeLeafCategoriesArray: { [key: number]: number[] } = {};
+    const incomeCellDataDictArray = new Array<{ [key: number]: number | null }>(colInfos.length);
+    const incomeTotalArray: { [key: number]: number | null } = {};
+    const outgoLeafCategoriesArray: { [key: number]: number[] } = {};
+    const outgoCellDataDictArray = new Array<{ [key: number]: number | null }>(colInfos.length);
+    const outgoTotalArray: { [key: number]: number | null } = {};
     colInfos.forEach((entry, idx) => {
       recordKindCellDataDictArray[idx] = {};
       incomeCellDataDictArray[idx] = {};
@@ -400,46 +351,45 @@ class Body extends React.Component<IProps, IState> {
       });
       recordKindTotalArray[kind] = null;
     });
-    DocStateMethods.categoryIdArray(this.props.doc.income.rootCategoryId, this.props.doc.income.categories)
-      .forEach((id) => {
+    DocStateMethods.categoryIdArray(this.props.doc.income.rootCategoryId, this.props.doc.income.categories).forEach(
+      (id) => {
         incomeLeafCategoriesArray[id] = DocStateMethods.leafCategoryIdArray(id, this.props.doc.income.categories);
         incomeCellDataDictArray.forEach((entry, colIdx) => {
           incomeCellDataDictArray[colIdx][id] = null;
         });
         incomeTotalArray[id] = null;
-      });
-    DocStateMethods.categoryIdArray(this.props.doc.outgo.rootCategoryId, this.props.doc.outgo.categories)
-      .forEach((id) => {
+      },
+    );
+    DocStateMethods.categoryIdArray(this.props.doc.outgo.rootCategoryId, this.props.doc.outgo.categories).forEach(
+      (id) => {
         outgoLeafCategoriesArray[id] = DocStateMethods.leafCategoryIdArray(id, this.props.doc.outgo.categories);
         outgoCellDataDictArray.forEach((entry, colIdx) => {
           outgoCellDataDictArray[colIdx][id] = null;
         });
         outgoTotalArray[id] = null;
-      });
+      },
+    );
     const categoryPrepareTimeEnd = performance.now();
 
     // カテゴリテーブルの各列データ生成
     const categoryTableBuildTimeBegin = performance.now();
-    const toCellDataFuncs: {[key: number]: ((ids: number[]) => number | null)} = {};
+    const toCellDataFuncs: { [key: number]: (ids: number[]) => number | null } = {};
     toCellDataFuncs[DocTypes.RecordKind.Transfer] = (ids) => {
-      return ids.length === 0 ? null :
-        ids.map((id) => this.props.doc.transfer.records[id].amount)
-          .reduce((prev, cur) => prev + cur, 0);
+      return ids.length === 0
+        ? null
+        : ids.map((id) => this.props.doc.transfer.records[id].amount).reduce((prev, cur) => prev + cur, 0);
     };
     toCellDataFuncs[DocTypes.RecordKind.Income] = (ids) => {
-      return ids.length === 0 ? null :
-        ids.map((id) => this.props.doc.income.records[id].amount)
-          .reduce((prev, cur) => prev + cur, 0);
+      return ids.length === 0
+        ? null
+        : ids.map((id) => this.props.doc.income.records[id].amount).reduce((prev, cur) => prev + cur, 0);
     };
     toCellDataFuncs[DocTypes.RecordKind.Outgo] = (ids) => {
-      return ids.length === 0 ? null :
-        ids.map((id) => this.props.doc.outgo.records[id].amount)
-          .reduce((prev, cur) => prev + cur, 0);
+      return ids.length === 0
+        ? null
+        : ids.map((id) => this.props.doc.outgo.records[id].amount).reduce((prev, cur) => prev + cur, 0);
     };
-    const calcSumFunc = (
-      catIds: number[],
-      data: {[key: number]: (number | null)},
-      ): number | null => {
+    const calcSumFunc = (catIds: number[], data: { [key: number]: number | null }): number | null => {
       let sum: number | null = null;
       catIds.forEach((catId) => {
         const val = data[catId];
@@ -454,16 +404,19 @@ class Body extends React.Component<IProps, IState> {
       const nextColIdx = colIdx + 1;
       const nextDate = nextColIdx < colInfos.length ? colInfos[nextColIdx].date : colEndDate;
       const records = recordsForCellData.filter([
-        RecordFilters.createDateRangeFilter({startDate: colInfo.date, endDate: nextDate}),
+        RecordFilters.createDateRangeFilter({ startDate: colInfo.date, endDate: nextDate }),
       ]);
 
       // RecordKind 毎の全レコード集計
-      recordKindCellDataDictArray[colIdx][DocTypes.RecordKind.Transfer] =
-        toCellDataFuncs[DocTypes.RecordKind.Transfer](records.transfers);
-      recordKindCellDataDictArray[colIdx][DocTypes.RecordKind.Income] =
-        toCellDataFuncs[DocTypes.RecordKind.Income](records.incomes);
-      recordKindCellDataDictArray[colIdx][DocTypes.RecordKind.Outgo] =
-        toCellDataFuncs[DocTypes.RecordKind.Outgo](records.outgos);
+      recordKindCellDataDictArray[colIdx][DocTypes.RecordKind.Transfer] = toCellDataFuncs[DocTypes.RecordKind.Transfer](
+        records.transfers,
+      );
+      recordKindCellDataDictArray[colIdx][DocTypes.RecordKind.Income] = toCellDataFuncs[DocTypes.RecordKind.Income](
+        records.incomes,
+      );
+      recordKindCellDataDictArray[colIdx][DocTypes.RecordKind.Outgo] = toCellDataFuncs[DocTypes.RecordKind.Outgo](
+        records.outgos,
+      );
 
       // 末端カテゴリ毎の集計
       records.incomes.forEach((id) => {
@@ -484,13 +437,17 @@ class Body extends React.Component<IProps, IState> {
       // 親カテゴリの集計
       Object.keys(incomeCellDataDictArray[colIdx]).forEach((id) => {
         const catId = Number(id);
-        incomeCellDataDictArray[colIdx][catId] =
-          calcSumFunc(incomeLeafCategoriesArray[catId], incomeCellDataDictArray[colIdx]);
+        incomeCellDataDictArray[colIdx][catId] = calcSumFunc(
+          incomeLeafCategoriesArray[catId],
+          incomeCellDataDictArray[colIdx],
+        );
       });
       Object.keys(outgoCellDataDictArray[colIdx]).forEach((id) => {
         const catId = Number(id);
-        outgoCellDataDictArray[colIdx][catId] =
-          calcSumFunc(outgoLeafCategoriesArray[catId], outgoCellDataDictArray[colIdx]);
+        outgoCellDataDictArray[colIdx][catId] = calcSumFunc(
+          outgoLeafCategoriesArray[catId],
+          outgoCellDataDictArray[colIdx],
+        );
       });
     });
     const categoryTableBuildTimeEnd = performance.now();
@@ -501,16 +458,14 @@ class Body extends React.Component<IProps, IState> {
       const id = Number(key);
       switch (id) {
         case DocTypes.RecordKind.Transfer:
-          recordKindTotalArray[id] = recordsForTotal.transfers.length === 0 ? null :
-            recordsForTotal.sumAmountTransfer();
+          recordKindTotalArray[id] =
+            recordsForTotal.transfers.length === 0 ? null : recordsForTotal.sumAmountTransfer();
           break;
         case DocTypes.RecordKind.Income:
-          recordKindTotalArray[id] = recordsForTotal.incomes.length === 0 ? null :
-            recordsForTotal.sumAmountIncome();
+          recordKindTotalArray[id] = recordsForTotal.incomes.length === 0 ? null : recordsForTotal.sumAmountIncome();
           break;
         case DocTypes.RecordKind.Outgo:
-          recordKindTotalArray[id] = recordsForTotal.outgos.length === 0 ? null :
-            recordsForTotal.sumAmountOutgo();
+          recordKindTotalArray[id] = recordsForTotal.outgos.length === 0 ? null : recordsForTotal.sumAmountOutgo();
           break;
       }
     });
@@ -543,20 +498,20 @@ class Body extends React.Component<IProps, IState> {
     // 計測値ダンプ
     if (false) {
       const profileResults = [
-        {label: 'AccountTableBuild', time: accountTableBuildTimeEnd - accountTableBuildTimeBegin},
-        {label: 'AccountRootsBuild', time: accountRootsBuildTimeEnd - accountRootsBuildTimeBegin},
-        {label: 'CategoryPrepare', time: categoryPrepareTimeEnd - categoryPrepareTimeBegin},
-        {label: 'CategoryTableBuild', time: categoryTableBuildTimeEnd - categoryTableBuildTimeBegin},
-        {label: 'CategoryTotalBuild', time: categoryTotalBuildTimeEnd - categoryTotalBuildTimeBegin},
+        { label: 'AccountTableBuild', time: accountTableBuildTimeEnd - accountTableBuildTimeBegin },
+        { label: 'AccountRootsBuild', time: accountRootsBuildTimeEnd - accountRootsBuildTimeBegin },
+        { label: 'CategoryPrepare', time: categoryPrepareTimeEnd - categoryPrepareTimeBegin },
+        { label: 'CategoryTableBuild', time: categoryTableBuildTimeEnd - categoryTableBuildTimeBegin },
+        { label: 'CategoryTotalBuild', time: categoryTotalBuildTimeEnd - categoryTotalBuildTimeBegin },
       ];
-      global.console.log(`Profile:`);
+      global.console.log('Profile:');
       profileResults.forEach((result) => {
         global.console.log(`${result.label}: ${result.time.toFixed(3)}msec`);
       });
     }
 
     // 口座テーブルの列ヘッダ生成
-    const accountColHeadCells = new Array();
+    const accountColHeadCells: JSX.Element[] = [];
     colInfos.forEach((colInfo, colIdx) => {
       let dateText = '#';
       switch (this.props.page.viewUnit) {
@@ -572,12 +527,14 @@ class Body extends React.Component<IProps, IState> {
           break;
       }
       accountColHeadCells.push(
-        <td key={`account-table-head-col-${colIdx}`} className={colHeadCellClass}>{dateText}</td>,
+        <td key={`account-table-head-col-${colIdx}`} className={colHeadCellClass}>
+          {dateText}
+        </td>,
       );
     });
 
     // 口座テーブルのルート行生成
-    const accountRootRowDict: {[key: number]: JSX.Element} = {};
+    const accountRootRowDict: { [key: number]: JSX.Element } = {};
     accountGroups.forEach((accountGroup) => {
       let label = '#';
       switch (accountGroup) {
@@ -588,7 +545,7 @@ class Body extends React.Component<IProps, IState> {
           label = '負債';
           break;
       }
-      const cols = new Array();
+      const cols: JSX.Element[] = [];
       colInfos.forEach((colInfo, colIdx) => {
         const cellInfo: ISelectedCellInfo = {
           colIdx,
@@ -600,27 +557,31 @@ class Body extends React.Component<IProps, IState> {
           recordKind: null,
           categoryId: null,
         };
-        cols.push(<td
-          key={`account-root-${accountGroup}-col-${colIdx}`}
-          className={Styles.TableCell}
-          data-account-group={accountGroup}
-          data-col-idx={colIdx}
-          data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
-          data-root-row={true}
-          data-selected={this.isSelectedCell(cellInfo)}
-          onClick={(e) => this.onCellClicked(e, cellInfo)}
+        cols.push(
+          <td
+            key={`account-root-${accountGroup}-col-${colIdx}`}
+            className={Styles.TableCell}
+            data-account-group={accountGroup}
+            data-col-idx={colIdx}
+            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+            data-root-row={true}
+            data-selected={this.isSelectedCell(cellInfo)}
+            onClick={(e) => this.onCellClicked(e, cellInfo)}
           >
-          {PriceUtils.numToLocaleString(accountGroupCellDataArray[accountGroup][colIdx])}
-          </td>);
+            {PriceUtils.numToLocaleString(accountGroupCellDataArray[accountGroup][colIdx])}
+          </td>,
+        );
       });
-      accountRootRowDict[accountGroup] =
+      accountRootRowDict[accountGroup] = (
         <tr key={`account-root-${accountGroup}`}>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder} data-root-row={true}>
               <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={0} data-root-row={true}>
                 <button className={expanderBtnClass}>▼</button>
               </div>
-              <span className={holderEntryAccountNameClass} data-root-row={true}>{label}</span>
+              <span className={holderEntryAccountNameClass} data-root-row={true}>
+                {label}
+              </span>
             </div>
           </td>
           <td className={rowHeadAccountCategoryClass} data-root-row={true}></td>
@@ -628,24 +589,24 @@ class Body extends React.Component<IProps, IState> {
             {carriedVisible ? PriceUtils.numToLocaleString(accountGroupCarriedData[accountGroup]) : ''}
           </td>
           {cols}
-          <td className={Styles.TableCellSpace} data-root-row={true}/>
+          <td className={Styles.TableCellSpace} data-root-row={true} />
           <td className={rowTailAccountBalance} data-root-row={true}>
             {PriceUtils.numToLocaleString(accountGroupBalanceData[accountGroup])}
           </td>
-        </tr>;
+        </tr>
+      );
     });
 
     // 口座テーブルの非ルート行生成
-    const accountRowDict: {[key: number]: JSX.Element[]} = {};
+    const accountRowDict: { [key: number]: JSX.Element[] } = {};
     accountGroups.forEach((accountGroup) => {
       accountRowDict[accountGroup] = new Array<JSX.Element>();
     });
-    const accountRows = new Array();
     this.props.doc.account.order.forEach((accountId) => {
       const account = this.props.doc.account.accounts[accountId];
       const accountGroup = DocTypes.accountKindToAccountGroup(account.kind);
       const targetArray = accountRowDict[accountGroup];
-      const cols = new Array();
+      const cols: JSX.Element[] = [];
       colInfos.forEach((colInfo, colIdx) => {
         const cellInfo: ISelectedCellInfo = {
           colIdx,
@@ -663,20 +624,21 @@ class Body extends React.Component<IProps, IState> {
             className={Styles.TableCell}
             data-account-group={accountGroup}
             data-account-id={account.id}
-            data-cell-even={(targetArray.length) % 2 === 0}
+            data-cell-even={targetArray.length % 2 === 0}
             data-col-idx={colIdx}
             data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
             data-selected={this.isSelectedCell(cellInfo)}
             onClick={(e) => this.onCellClicked(e, cellInfo)}
-            >
+          >
             {PriceUtils.numToLocaleString(accountCellDataArray[accountId][colIdx])}
-          </td>);
+          </td>,
+        );
       });
       targetArray.push(
         <tr key={`account-${accountId}`}>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
-              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={1}/>
+              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={1} />
               <span className={holderEntryAccountNameClass}>{account.name}</span>
             </div>
           </td>
@@ -696,7 +658,7 @@ class Body extends React.Component<IProps, IState> {
     // 集計口座テーブルのルート行生成
     let aggregateAccountRootRow: JSX.Element | null = null;
     {
-      const cols = new Array();
+      const cols: JSX.Element[] = [];
       colInfos.forEach((colInfo, colIdx) => {
         const cellInfo: ISelectedCellInfo = {
           colIdx,
@@ -708,27 +670,31 @@ class Body extends React.Component<IProps, IState> {
           recordKind: null,
           categoryId: null,
         };
-        cols.push(<td
-          key={`aggregate-account-root-col-${colIdx}`}
-          className={Styles.TableCell}
-          data-aggregate-account-root={true}
-          data-col-idx={colIdx}
-          data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
-          data-root-row={true}
-          data-selected={this.isSelectedCell(cellInfo)}
-          onClick={(e) => this.onCellClicked(e, cellInfo)}
+        cols.push(
+          <td
+            key={`aggregate-account-root-col-${colIdx}`}
+            className={Styles.TableCell}
+            data-aggregate-account-root={true}
+            data-col-idx={colIdx}
+            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+            data-root-row={true}
+            data-selected={this.isSelectedCell(cellInfo)}
+            onClick={(e) => this.onCellClicked(e, cellInfo)}
           >
-          {PriceUtils.numToLocaleString(aggregateAccountSumCellDataArray[colIdx])}
-          </td>);
+            {PriceUtils.numToLocaleString(aggregateAccountSumCellDataArray[colIdx])}
+          </td>,
+        );
       });
-      aggregateAccountRootRow =
-        <tr key={`aggregate-account-root`}>
+      aggregateAccountRootRow = (
+        <tr key={'aggregate-account-root'}>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder} data-root-row={true}>
               <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={0} data-root-row={true}>
                 <button className={expanderBtnClass}>▼</button>
               </div>
-              <span className={holderEntryAccountNameClass} data-root-row={true}>{'集計口座'}</span>
+              <span className={holderEntryAccountNameClass} data-root-row={true}>
+                {'集計口座'}
+              </span>
             </div>
           </td>
           <td className={rowHeadAccountCategoryClass} data-root-row={true}></td>
@@ -736,18 +702,19 @@ class Body extends React.Component<IProps, IState> {
             {carriedVisible ? PriceUtils.numToLocaleString(aggregateAccountSumCarried) : ''}
           </td>
           {cols}
-          <td className={Styles.TableCellSpace} data-root-row={true}/>
+          <td className={Styles.TableCellSpace} data-root-row={true} />
           <td className={rowTailAccountBalance} data-root-row={true}>
             {PriceUtils.numToLocaleString(aggregateAccountSumBalance)}
           </td>
-        </tr>;
+        </tr>
+      );
     }
 
     // 集計口座テーブルの非ルート行生成
     const aggregateAccountRows: JSX.Element[] = [];
     this.props.doc.aggregateAccount.order.forEach((aggregateAccountId) => {
       const account = this.props.doc.aggregateAccount.accounts[aggregateAccountId];
-      const cols = new Array();
+      const cols: JSX.Element[] = [];
       colInfos.forEach((colInfo, colIdx) => {
         const cellInfo: ISelectedCellInfo = {
           colIdx,
@@ -764,20 +731,21 @@ class Body extends React.Component<IProps, IState> {
             key={`aggregate-account-${aggregateAccountId}-col-${colIdx}`}
             className={Styles.TableCell}
             data-aggregate-account-id={aggregateAccountId}
-            data-cell-even={(aggregateAccountRows.length) % 2 === 0}
+            data-cell-even={aggregateAccountRows.length % 2 === 0}
             data-col-idx={colIdx}
             data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
             data-selected={this.isSelectedCell(cellInfo)}
             onClick={(e) => this.onCellClicked(e, cellInfo)}
-            >
+          >
             {PriceUtils.numToLocaleString(aggregateAccountCellDataArray[aggregateAccountId][colIdx])}
-          </td>);
+          </td>,
+        );
       });
       aggregateAccountRows.push(
         <tr key={`aggregate-account-${aggregateAccountId}`}>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder}>
-              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={1}/>
+              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={1} />
               <span className={holderEntryAccountNameClass}>{account.name}</span>
             </div>
           </td>
@@ -787,21 +755,21 @@ class Body extends React.Component<IProps, IState> {
           </td>
           {cols}
           <td className={Styles.TableCellSpace}></td>
-          <td className={rowTailAccountBalance}>{PriceUtils.numToLocaleString(aggregateAccountBalanceData[aggregateAccountId])}</td>
+          <td className={rowTailAccountBalance}>
+            {PriceUtils.numToLocaleString(aggregateAccountBalanceData[aggregateAccountId])}
+          </td>
         </tr>,
       );
     });
 
     // カテゴリテーブルの列ヘッダ生成
-    const categoryColHeadCells = new Array();
+    const categoryColHeadCells: JSX.Element[] = [];
     colInfos.forEach((colInfo, colIdx) => {
-      categoryColHeadCells.push(
-        <td key={`category-table-header-${colIdx}`} className={colHeadCellClass}></td>,
-      );
+      categoryColHeadCells.push(<td key={`category-table-header-${colIdx}`} className={colHeadCellClass}></td>);
     });
 
     // カテゴリテーブルのルート行生成
-    const categoryRootRowDict: {[key: number]: JSX.Element} = {};
+    const categoryRootRowDict: { [key: number]: JSX.Element } = {};
     recordKinds.forEach((recordKind) => {
       let label = '#';
       switch (recordKind) {
@@ -815,7 +783,7 @@ class Body extends React.Component<IProps, IState> {
           label = '支出';
           break;
       }
-      const cols = new Array();
+      const cols: JSX.Element[] = [];
       colInfos.forEach((colInfo, colIdx) => {
         const categoryId = DocTypes.INVALID_ID;
         const cellInfo: ISelectedCellInfo = {
@@ -828,51 +796,60 @@ class Body extends React.Component<IProps, IState> {
           recordKind,
           categoryId: null,
         };
-        const amountText = recordKindCellDataDictArray[colIdx][recordKind] === null ? null :
-          PriceUtils.numToLocaleString(Number(recordKindCellDataDictArray[colIdx][recordKind]));
-        cols.push(<td
-          key={`category-root-${recordKind}-col-${colIdx}`}
-          className={Styles.TableCell}
-          data-category-id={categoryId}
-          data-root-row={true}
-          data-col-idx={colIdx}
-          data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
-          data-record-kind={recordKind}
-          data-selected={this.isSelectedCell(cellInfo)}
-          onClick={(e) => this.onCellClicked(e, cellInfo)}
-          >{amountText}</td>);
+        const amountText =
+          recordKindCellDataDictArray[colIdx][recordKind] === null
+            ? null
+            : PriceUtils.numToLocaleString(Number(recordKindCellDataDictArray[colIdx][recordKind]));
+        cols.push(
+          <td
+            key={`category-root-${recordKind}-col-${colIdx}`}
+            className={Styles.TableCell}
+            data-category-id={categoryId}
+            data-root-row={true}
+            data-col-idx={colIdx}
+            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+            data-record-kind={recordKind}
+            data-selected={this.isSelectedCell(cellInfo)}
+            onClick={(e) => this.onCellClicked(e, cellInfo)}
+          >
+            {amountText}
+          </td>,
+        );
       });
-      categoryRootRowDict[recordKind] =
+      categoryRootRowDict[recordKind] = (
         <tr key={`category-root-${recordKind}`}>
           <td className={rowHeadHolderCategoryClass}>
             <div className={Styles.Holder} data-root-row={true}>
               <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={0} data-root-row={true}>
                 <button className={expanderBtnClass}>▼</button>
               </div>
-              <span className={holderEntryCategoryNameClass} data-root-row={true}>{label}</span>
+              <span className={holderEntryCategoryNameClass} data-root-row={true}>
+                {label}
+              </span>
             </div>
           </td>
           {cols}
-          <td className={Styles.TableCellSpace} data-root-row={true}/>
+          <td className={Styles.TableCellSpace} data-root-row={true} />
           <td className={rowTailTotal} data-root-row={true}>
-            {
-              recordKindTotalArray[recordKind] === null ? null :
-                PriceUtils.numToLocaleString(Number(recordKindTotalArray[recordKind]))
-            }
+            {recordKindTotalArray[recordKind] === null
+              ? null
+              : PriceUtils.numToLocaleString(Number(recordKindTotalArray[recordKind]))}
           </td>
-        </tr>;
+        </tr>
+      );
     });
 
     // カテゴリテーブルの非ルート行生成
-    const categoryRowDict: {[key: number]: JSX.Element[]} = {};
+    const categoryRowDict: { [key: number]: JSX.Element[] } = {};
     recordKinds.forEach((recordKind) => {
       let rootCategoryId: number = DocTypes.INVALID_ID;
-      let categories: {[key: number]: DocStates.ICategory} = {};
-      let cellDataDictArray: {[key: number]: (number | null)}[] = [];
-      let totalArray: {[key: number]: number | null} = [];
+      let categories: { [key: number]: DocStates.ICategory } = {};
+      let cellDataDictArray: { [key: number]: number | null }[] = [];
+      let totalArray: { [key: number]: number | null } = [];
       let rootName = '';
       switch (recordKind) {
-        case DocTypes.RecordKind.Transfer: return;
+        case DocTypes.RecordKind.Transfer:
+          return;
         case DocTypes.RecordKind.Income:
           rootCategoryId = this.props.doc.income.rootCategoryId;
           categories = this.props.doc.income.categories;
@@ -913,13 +890,16 @@ class Body extends React.Component<IProps, IState> {
       categoryIdArray.forEach((categoryId) => {
         const cat = categories[categoryId];
         const catName = cat.parent == null ? rootName : cat.name;
-        const cols = new Array();
+        const cols: JSX.Element[] = [];
         const indent = calcIndent(categoryId);
         const expanderClass = holderEntryNormalExpanderSpaceClass;
         const expanderText = cat.collapse ? '▶' : '▼';
-        const expanderElement = cat.childs.length === 0 ?
-          null :
-          <button className={expanderBtnClass} onClick={(e) => this.onExpanderClicked(e, categoryId, cat.collapse)}>{expanderText}</button>;
+        const expanderElement =
+          cat.childs.length === 0 ? null : (
+            <button className={expanderBtnClass} onClick={(e) => this.onExpanderClicked(e, categoryId, cat.collapse)}>
+              {expanderText}
+            </button>
+          );
         const rootRow = cat.parent == null;
         colInfos.forEach((colInfo, colIdx) => {
           const cellInfo: ISelectedCellInfo = {
@@ -932,40 +912,50 @@ class Body extends React.Component<IProps, IState> {
             recordKind,
             categoryId,
           };
-          const amountText = cellDataDictArray[colIdx][categoryId] === null ? null :
-            PriceUtils.numToLocaleString(Number(cellDataDictArray[colIdx][categoryId]));
-          cols.push(<td
-            key={`category-${categoryId}-col-${colIdx}`}
-            className={Styles.TableCell}
-            data-cell-even={(result.length % 2) === 0}
-            data-col-idx={colIdx}
-            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
-            data-record-kind={recordKind}
-            data-root-row={rootRow}
-            data-category-id={categoryId}
-            data-selected={this.isSelectedCell(cellInfo)}
-            onClick={(e) => this.onCellClicked(e, cellInfo)}
-            >{amountText}</td>);
+          const amountText =
+            cellDataDictArray[colIdx][categoryId] === null
+              ? null
+              : PriceUtils.numToLocaleString(Number(cellDataDictArray[colIdx][categoryId]));
+          cols.push(
+            <td
+              key={`category-${categoryId}-col-${colIdx}`}
+              className={Styles.TableCell}
+              data-cell-even={result.length % 2 === 0}
+              data-col-idx={colIdx}
+              data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+              data-record-kind={recordKind}
+              data-root-row={rootRow}
+              data-category-id={categoryId}
+              data-selected={this.isSelectedCell(cellInfo)}
+              onClick={(e) => this.onCellClicked(e, cellInfo)}
+            >
+              {amountText}
+            </td>,
+          );
         });
         result.push(
-          <tr key={`category-${categoryId}`} className={Styles.TableRow} data-is-collapsed={calcIsCollapsed(categoryId)}>
+          <tr
+            key={`category-${categoryId}`}
+            className={Styles.TableRow}
+            data-is-collapsed={calcIsCollapsed(categoryId)}
+          >
             <td className={rowHeadHolderCategoryClass}>
               <div className={Styles.Holder} data-root-row={rootRow}>
                 <div className={expanderClass} data-indent-level={indent} data-root-row={rootRow}>
                   {expanderElement}
                 </div>
-                <span className={holderEntryCategoryNameClass} data-root-row={rootRow}>{catName}</span>
+                <span className={holderEntryCategoryNameClass} data-root-row={rootRow}>
+                  {catName}
+                </span>
               </div>
             </td>
             {cols}
             <td className={Styles.TableCellSpace} data-root-row={rootRow}></td>
             <td className={rowTailTotal} data-root-row={rootRow}>
-              {
-                totalArray[categoryId] === null ? null :
-                  PriceUtils.numToLocaleString(Number(totalArray[categoryId]))
-              }
+              {totalArray[categoryId] === null ? null : PriceUtils.numToLocaleString(Number(totalArray[categoryId]))}
             </td>
-          </tr>);
+          </tr>,
+        );
       });
       categoryRowDict[recordKind] = result;
     });
@@ -973,7 +963,8 @@ class Body extends React.Component<IProps, IState> {
     // ダイアログ
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalRecordEdit) {
-        modalDialog = <RecordEditDialog
+      modalDialog = (
+        <RecordEditDialog
           formDefaultValue={{
             recordKind: this.state.recordEditDefaultValue.recordKind,
             date: this.state.recordEditDefaultValue.date,
@@ -982,9 +973,10 @@ class Body extends React.Component<IProps, IState> {
           }}
           additionalRecords={this.state.recordEditAdditionalRecordKeys}
           onClosed={() => {
-            this.setState({modalRecordEdit: false});
+            this.setState({ modalRecordEdit: false });
           }}
-        />;
+        />
+      );
     }
 
     return (
@@ -1049,16 +1041,22 @@ class Body extends React.Component<IProps, IState> {
     }
 
     const current = this.state.selectedCell;
-    return current.colIdx === cellInfo.colIdx &&
+    return (
+      current.colIdx === cellInfo.colIdx &&
       current.accountGroup === cellInfo.accountGroup &&
       current.accountId === cellInfo.accountId &&
       current.aggregateAccountRoot === cellInfo.aggregateAccountRoot &&
       current.aggregateAccountId === cellInfo.aggregateAccountId &&
       current.recordKind === cellInfo.recordKind &&
-      current.categoryId === cellInfo.categoryId;
+      current.categoryId === cellInfo.categoryId
+    );
   }
 
-  private onExpanderClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, categoryId: number, currentIsCollapsed: boolean) {
+  private onExpanderClicked(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    categoryId: number,
+    currentIsCollapsed: boolean,
+  ) {
     // イベント伝搬停止
     e.stopPropagation();
 
@@ -1084,8 +1082,9 @@ class Body extends React.Component<IProps, IState> {
       let accountId = cellInfo.accountId;
       if (accountId === null && cellInfo.accountGroup !== null) {
         // ルートを選択中なら１つめの口座を選択
-        const targets = this.props.doc.account.order.map((id) => this.props.doc.account.accounts[id]).filter(
-          (account) => DocTypes.accountKindToAccountGroup(account.kind) === cellInfo.accountGroup);
+        const targets = this.props.doc.account.order
+          .map((id) => this.props.doc.account.accounts[id])
+          .filter((account) => DocTypes.accountKindToAccountGroup(account.kind) === cellInfo.accountGroup);
         if (0 < targets.length) {
           accountId = targets[0].id;
         }
@@ -1099,12 +1098,14 @@ class Body extends React.Component<IProps, IState> {
           case DocTypes.RecordKind.Income:
             categoryId = DocStateMethods.firstLeafCategoryId(
               categoryId !== null ? categoryId : this.props.doc.income.rootCategoryId,
-              this.props.doc.income.categories);
+              this.props.doc.income.categories,
+            );
             break;
           case DocTypes.RecordKind.Outgo:
             categoryId = DocStateMethods.firstLeafCategoryId(
               categoryId !== null ? categoryId : this.props.doc.outgo.rootCategoryId,
-              this.props.doc.outgo.categories);
+              this.props.doc.outgo.categories,
+            );
             break;
           default:
             break;
@@ -1113,10 +1114,15 @@ class Body extends React.Component<IProps, IState> {
 
       // 初期表示するレコード群の設定
       const filters: IRecordFilter[] = [];
-      filters.push(RecordFilters.createDateRangeFilter({
-        startDate: cellInfo.date,
-        endDate: IYearMonthDateUtils.nextDate(cellInfo.date, UiTypes.sheetViewUnitToDateUnit(this.props.page.viewUnit)),
-      }));
+      filters.push(
+        RecordFilters.createDateRangeFilter({
+          startDate: cellInfo.date,
+          endDate: IYearMonthDateUtils.nextDate(
+            cellInfo.date,
+            UiTypes.sheetViewUnitToDateUnit(this.props.page.viewUnit),
+          ),
+        }),
+      );
       if (cellInfo.accountGroup !== null) {
         // 口座による絞り込み
         let accounts: number[] = [];
@@ -1125,25 +1131,35 @@ class Body extends React.Component<IProps, IState> {
           accounts.push(cellInfo.accountId);
         } else {
           // 指定の種類の口座全部
-          accounts = accounts.concat(this.props.doc.account.order.filter((id) =>
-            DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[id].kind) === cellInfo.accountGroup));
+          accounts = accounts.concat(
+            this.props.doc.account.order.filter(
+              (id) =>
+                DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[id].kind) === cellInfo.accountGroup,
+            ),
+          );
         }
-        filters.push(RecordFilters.createAccountFilter({accounts}));
+        filters.push(RecordFilters.createAccountFilter({ accounts }));
       }
       if (cellInfo.aggregateAccountRoot != null) {
         // 全集計口座による絞り込み
-        const accounts = this.props.doc.aggregateAccount.order.map((id) => this.props.doc.aggregateAccount.accounts[id].accounts).reduce((prev, cur) => prev.concat(cur));
-        filters.push(RecordFilters.createAccountFilter({accounts}));
+        const accounts = this.props.doc.aggregateAccount.order
+          .map((id) => this.props.doc.aggregateAccount.accounts[id].accounts)
+          .reduce((prev, cur) => prev.concat(cur));
+        filters.push(RecordFilters.createAccountFilter({ accounts }));
       }
       if (cellInfo.aggregateAccountId != null) {
         // 集計口座による絞り込み
-        filters.push(RecordFilters.createAccountFilter({accounts: this.props.doc.aggregateAccount.accounts[cellInfo.aggregateAccountId].accounts}));
+        filters.push(
+          RecordFilters.createAccountFilter({
+            accounts: this.props.doc.aggregateAccount.accounts[cellInfo.aggregateAccountId].accounts,
+          }),
+        );
       }
       if (cellInfo.recordKind !== null) {
         const recordKind: DocTypes.RecordKind = cellInfo.recordKind;
         if (cellInfo.categoryId !== null) {
           // カテゴリによる絞り込み
-          let categories: {[key: number]: DocStates.ICategory} | null = null;
+          let categories: { [key: number]: DocStates.ICategory } | null = null;
           switch (cellInfo.recordKind) {
             case DocTypes.RecordKind.Income:
               categories = this.props.doc.income.categories;
@@ -1155,15 +1171,18 @@ class Body extends React.Component<IProps, IState> {
               break;
           }
           if (categories !== null) {
-            filters.push(RecordFilters.createCategoryFilter({
-              targets:
-                DocStateMethods.leafCategoryIdArray(cellInfo.categoryId, categories)
-                .map<{kind: DocTypes.RecordKind, categoryId: number}>((id) => ({kind: recordKind, categoryId: id})),
-            }));
+            filters.push(
+              RecordFilters.createCategoryFilter({
+                targets: DocStateMethods.leafCategoryIdArray(cellInfo.categoryId, categories).map<{
+                  kind: DocTypes.RecordKind;
+                  categoryId: number;
+                }>((id) => ({ kind: recordKind, categoryId: id })),
+              }),
+            );
           }
         } else {
           // レコードの種類による絞り込み
-          filters.push(RecordFilters.createRecordKindFilter({kinds: [recordKind]}));
+          filters.push(RecordFilters.createRecordKindFilter({ kinds: [recordKind] }));
         }
       }
       const recordKeys = new RecordCollection(this.props.doc).filter(filters).standardSortedKeys();

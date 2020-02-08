@@ -1,5 +1,5 @@
 import ClassNames from 'classnames';
-import {ipcRenderer as IpcRenderer, remote} from 'electron';
+import { ipcRenderer as IpcRenderer, remote } from 'electron';
 import * as Fs from 'fs';
 import * as React from 'react';
 import Split from 'split.js';
@@ -50,11 +50,11 @@ class MainWindow extends React.Component<any, IState> {
       IpcRenderer.on('app-message', (event: any, msg: string) => {
         switch (msg) {
           case 'focus':
-            this.setState({isActive: true});
+            this.setState({ isActive: true });
             break;
 
           case 'blur':
-            this.setState({isActive: false});
+            this.setState({ isActive: false });
             break;
         }
       });
@@ -65,14 +65,22 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   public render() {
-    let pageContent = <div className={PageStyles.Base}/>;
+    let pageContent = <div className={PageStyles.Base} />;
     switch (this.state.currentPageId) {
       case PageStart.PageId:
-        pageContent = <PageStart
-          onOpenFileSelected={(filePath) => {this.pageStartOnOpenFileSelected(filePath); }}
-          onNewFromMmxfSelected={(filePath) => {this.pageStartOnNewFromMmxfSelected(filePath); }}
-          onNewExampleSelected={() => {this.pageStartOnNewExampleSelected(); }}
-          />;
+        pageContent = (
+          <PageStart
+            onOpenFileSelected={(filePath) => {
+              this.pageStartOnOpenFileSelected(filePath);
+            }}
+            onNewFromMmxfSelected={(filePath) => {
+              this.pageStartOnNewFromMmxfSelected(filePath);
+            }}
+            onNewExampleSelected={() => {
+              this.pageStartOnNewExampleSelected();
+            }}
+          />
+        );
         break;
       case PageCalendar.PageId:
         pageContent = <PageCalendar />;
@@ -80,23 +88,22 @@ class MainWindow extends React.Component<any, IState> {
       case PageSheet.PageId:
         pageContent = <PageSheet />;
         break;
-        case PageSetting.PageId:
-          pageContent = <PageSetting />;
-          break;
+      case PageSetting.PageId:
+        pageContent = <PageSetting />;
+        break;
     }
 
-    const rootClass = ClassNames(
-      Styles.Root,
-      LayoutStyle.TopToBottom,
-    );
+    const rootClass = ClassNames(Styles.Root, LayoutStyle.TopToBottom);
     return (
       <div className={rootClass}>
-        <TitleBar isActive={this.state.isActive}/>
+        <TitleBar isActive={this.state.isActive} />
         <div className={LayoutStyle.LeftToRight}>
           <SideBar
-            onBtnClicked={(pageId) => {this.onPageBtnClicked(pageId); }}
+            onBtnClicked={(pageId) => {
+              this.onPageBtnClicked(pageId);
+            }}
             currentPageId={this.state.currentPageId}
-            />
+          />
           {pageContent}
         </div>
       </div>
@@ -107,11 +114,14 @@ class MainWindow extends React.Component<any, IState> {
     // ファイルリード
     let jsonText = '';
     try {
-      jsonText = Fs.readFileSync(filePath, {encoding: 'utf-8'});
+      jsonText = Fs.readFileSync(filePath, { encoding: 'utf-8' });
     } catch (err) {
-      global.console.log(`Can\'t read document '${filePath}'.`);
+      global.console.log(`Can't read document '${filePath}'.`);
       global.console.log(err.message);
-      this.showErrorDialog('ファイルの読み込みに失敗しました。', 'ファイルが存在していることと，ファイルを読み取る権限があることを確認してください。');
+      this.showErrorDialog(
+        'ファイルの読み込みに失敗しました。',
+        'ファイルが存在していることと，ファイルを読み取る権限があることを確認してください。',
+      );
       return;
     }
 
@@ -120,7 +130,7 @@ class MainWindow extends React.Component<any, IState> {
     try {
       data = DataModelDocRootUtils.fromJson(jsonText);
     } catch (err) {
-      global.console.log(`Can\'t parse json '${filePath}'.`);
+      global.console.log(`Can't parse json '${filePath}'.`);
       global.console.log(err.message);
       this.showErrorDialog('ファイルの解析に失敗しました。', 'ファイルが壊れている可能性があります。');
       return;
@@ -143,16 +153,22 @@ class MainWindow extends React.Component<any, IState> {
     try {
       Fs.accessSync(mmxfFilePath, Fs.constants.R_OK);
     } catch (err) {
-      global.console.log(`Can\'t access document '${mmxfFilePath}'.`);
+      global.console.log(`Can't access document '${mmxfFilePath}'.`);
       global.console.log(err.message);
-      this.showErrorDialog('指定のファイルにアクセスできませんでした。', 'ファイルが存在していることと，ファイルを読み取る権限があることを確認してください。');
+      this.showErrorDialog(
+        '指定のファイルにアクセスできませんでした。',
+        'ファイルが存在していることと，ファイルを読み取る権限があることを確認してください。',
+      );
       return;
     }
     {
       const result = MmxfImporter.importFile(mmxfFilePath);
       if (result.doc === null) {
         const appendErrMsg = `\n\nエラー詳細：\n・${result.errorMsgs.join('\n・')}`;
-        this.showErrorDialog('ファイルのインポート処理中にエラーが発生しました。', 'ファイルが壊れているか，未対応のデータフォーマットの可能性があります。' + appendErrMsg);
+        this.showErrorDialog(
+          'ファイルのインポート処理中にエラーが発生しました。',
+          'ファイルが壊れているか，未対応のデータフォーマットの可能性があります。' + appendErrMsg,
+        );
         global.console.log(result.errorMsgs);
         return;
       }
@@ -185,29 +201,24 @@ class MainWindow extends React.Component<any, IState> {
   private selectAutoSaveFilePath(): string | null {
     // 事前説明ダイアログ
     const dialog = remote.dialog;
-    dialog.showMessageBoxSync(
-      remote.getCurrentWindow(),
-      {
-        type: 'info',
-        buttons: ['OK'],
-        defaultId: 0,
-        title: '初期設定',
-        message: 'このあと表示されるダイアログを使用し，ファイルの保存先を設定してください。',
-        detail:  '本アプリケーションはファイルを自動保存します。そのため最初にファイルの保存先を設定する必要があります。',
-      });
+    dialog.showMessageBoxSync(remote.getCurrentWindow(), {
+      type: 'info',
+      buttons: ['OK'],
+      defaultId: 0,
+      title: '初期設定',
+      message: 'このあと表示されるダイアログを使用し，ファイルの保存先を設定してください。',
+      detail: '本アプリケーションはファイルを自動保存します。そのため最初にファイルの保存先を設定する必要があります。',
+    });
 
     // 保存先選択
-    const filePath = dialog.showSaveDialogSync(
-      remote.getCurrentWindow(),
-      {
-        filters: [
-          {
-            name: 'AdelMoney ドキュメント',
-            extensions: ['amdoc'],
-          },
-        ],
-      },
-    );
+    const filePath = dialog.showSaveDialogSync(remote.getCurrentWindow(), {
+      filters: [
+        {
+          name: 'AdelMoney ドキュメント',
+          extensions: ['amdoc'],
+        },
+      ],
+    });
     if (filePath === undefined) {
       return null;
     }
@@ -220,9 +231,12 @@ class MainWindow extends React.Component<any, IState> {
     if (isNeedToSave) {
       const jsonText = DataModelDocRootUtils.toJson(DocStateMethods.toData(doc));
       try {
-        Fs.writeFileSync(filePath, jsonText, {encoding: 'utf-8'});
+        Fs.writeFileSync(filePath, jsonText, { encoding: 'utf-8' });
       } catch (err) {
-        this.showErrorDialog(`ファイルの保存に失敗しました。`, `ストレージの容量が不足しているか，書き込み権限があるか確認してください。`);
+        this.showErrorDialog(
+          'ファイルの保存に失敗しました。',
+          'ストレージの容量が不足しているか，書き込み権限があるか確認してください。',
+        );
         throw err;
       }
     }
@@ -243,16 +257,14 @@ class MainWindow extends React.Component<any, IState> {
 
   private showErrorDialog(msg: string, detail: string) {
     const dialog = remote.dialog;
-    dialog.showMessageBox(
-      remote.getCurrentWindow(),
-      {
-        type: 'error',
-        buttons: ['OK'],
-        defaultId: 0,
-        title: 'スタートページ',
-        message: msg,
-        detail,
-      });
+    dialog.showMessageBox(remote.getCurrentWindow(), {
+      type: 'error',
+      buttons: ['OK'],
+      defaultId: 0,
+      title: 'スタートページ',
+      message: msg,
+      detail,
+    });
   }
 
   private onPageBtnClicked(pageId: string) {
@@ -266,7 +278,7 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   private activatePage(pageId: string) {
-    this.setState({currentPageId: pageId});
+    this.setState({ currentPageId: pageId });
   }
 }
 

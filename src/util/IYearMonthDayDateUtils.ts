@@ -70,14 +70,22 @@ export const dow = (date: IYearMonthDayDate): number => {
 /** 日本語化された曜日（'日','月',...） */
 export const localaizedDow = (date: IYearMonthDayDate): string => {
   switch (dow(date)) {
-    case 0: return '日';
-    case 1: return '月';
-    case 2: return '火';
-    case 3: return '水';
-    case 4: return '木';
-    case 5: return '金';
-    case 6: return '土';
-    default: return '#';
+    case 0:
+      return '日';
+    case 1:
+      return '月';
+    case 2:
+      return '火';
+    case 3:
+      return '水';
+    case 4:
+      return '木';
+    case 5:
+      return '金';
+    case 6:
+      return '土';
+    default:
+      return '#';
   }
 };
 
@@ -156,10 +164,10 @@ export const toText = (date: IYearMonthDayDate, separator: string): string => {
 
 /** 日付が lhs < rhs か。 */
 export const less = (lhs: IYearMonthDayDate, rhs: IYearMonthDayDate): boolean => {
-  return (lhs.year * 372 + lhs.month * 31 + lhs.day) < (rhs.year * 372 + rhs.month * 31 + rhs.day);
+  return lhs.year * 372 + lhs.month * 31 + lhs.day < rhs.year * 372 + rhs.month * 31 + rhs.day;
 };
 
 /** 日付が lhs <= rhs か。 */
 export const lessEq = (lhs: IYearMonthDayDate, rhs: IYearMonthDayDate): boolean => {
-  return (lhs.year * 372 + lhs.month * 31 + lhs.day) <= (rhs.year * 372 + rhs.month * 31 + rhs.day);
+  return lhs.year * 372 + lhs.month * 31 + lhs.day <= rhs.year * 372 + rhs.month * 31 + rhs.day;
 };

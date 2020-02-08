@@ -43,7 +43,7 @@ interface IProps {
   additionalRecords: IRecordKey[];
 
   /** 閉じる際のコールバック。 */
-  onClosed: (() => void);
+  onClosed: () => void;
 }
 
 interface ILocalProps extends IProps {
@@ -96,19 +96,15 @@ class Main extends React.Component<ILocalProps, IState> {
     super(props);
     const formDefaultValue = this.props.formDefaultValue;
     const formCategoryOutgo =
-      (formDefaultValue.recordKind === DocTypes.RecordKind.Outgo && formDefaultValue.categoryId !== null) ?
-        formDefaultValue.categoryId :
-        DocStateMethods.firstLeafCategoryId(
-          this.props.doc.outgo.rootCategoryId,
-          this.props.doc.outgo.categories);
+      formDefaultValue.recordKind === DocTypes.RecordKind.Outgo && formDefaultValue.categoryId !== null
+        ? formDefaultValue.categoryId
+        : DocStateMethods.firstLeafCategoryId(this.props.doc.outgo.rootCategoryId, this.props.doc.outgo.categories);
     const formCategoryIncome =
-      (formDefaultValue.recordKind === DocTypes.RecordKind.Income && formDefaultValue.categoryId !== null) ?
-        formDefaultValue.categoryId :
-        DocStateMethods.firstLeafCategoryId(
-          this.props.doc.income.rootCategoryId,
-          this.props.doc.income.categories);
-    const formAccount = formDefaultValue.accountId !== null ?
-      formDefaultValue.accountId : this.props.doc.account.order[0];
+      formDefaultValue.recordKind === DocTypes.RecordKind.Income && formDefaultValue.categoryId !== null
+        ? formDefaultValue.categoryId
+        : DocStateMethods.firstLeafCategoryId(this.props.doc.income.rootCategoryId, this.props.doc.income.categories);
+    const formAccount =
+      formDefaultValue.accountId !== null ? formDefaultValue.accountId : this.props.doc.account.order[0];
     this.state = {
       formKind: formDefaultValue.recordKind,
       formDate: IYearMonthDayDateUtils.toDisplayFormatText(formDefaultValue.date),
@@ -149,58 +145,60 @@ class Main extends React.Component<ILocalProps, IState> {
 
   public componentDidMount() {
     // DatePicker セットアップ
-    $(`#${this.elementIdFormDate}`).datepicker({
-      format: 'yyyy/mm/dd',
-      todayBtn: 'linked',
-      language: 'ja',
-      autoclose: true,
-      todayHighlight: true,
-      showOnFocus: false,
-    }).on('changeDate', (e) => {
-      this.onFormDateChanged(e.format('yyyy/mm/dd'));
-    });
+    $(`#${this.elementIdFormDate}`)
+      .datepicker({
+        format: 'yyyy/mm/dd',
+        todayBtn: 'linked',
+        language: 'ja',
+        autoclose: true,
+        todayHighlight: true,
+        showOnFocus: false,
+      })
+      .on('changeDate', (e) => {
+        this.onFormDateChanged(e.format('yyyy/mm/dd'));
+      });
 
     // ContextMenu セットアップ
     const categorySetup = (
       categoryRootOrder: number[],
-      categories: {[key: number]: DocStates.ICategory},
+      categories: { [key: number]: DocStates.ICategory },
       onCategorySelected: (categoryId: number) => void,
       selector: string,
-      ) => {
-        const categoryItems: {[key: string]: any} = {};
-        const categoryConvertFunc = (parent: {[key: string]: any}, cat: DocStates.ICategory) => {
-          const key = `category-${cat.id}`;
-          const name = cat.name;
-          const items: {[key: string]: any} = {};
-          cat.childs.forEach((child) => {
-            categoryConvertFunc(items, categories[child]);
-          });
-          parent[key] = {
-            name,
-            items: Object.keys(items).length === 0 ? null : items,
-          };
+    ) => {
+      const categoryItems: { [key: string]: any } = {};
+      const categoryConvertFunc = (parent: { [key: string]: any }, cat: DocStates.ICategory) => {
+        const key = `category-${cat.id}`;
+        const name = cat.name;
+        const items: { [key: string]: any } = {};
+        cat.childs.forEach((child) => {
+          categoryConvertFunc(items, categories[child]);
+        });
+        parent[key] = {
+          name,
+          items: Object.keys(items).length === 0 ? null : items,
         };
-        categoryRootOrder.forEach((id) => {
-          categoryConvertFunc(categoryItems, categories[id]);
-        });
-        $.contextMenu({
-          callback: (key, options) => {
-            const texts = key.split('-');
-            onCategorySelected(Number(texts[1]));
-          },
-          determinePosition: (menu) => {
-            const parent = $(selector);
-            const base = parent.offset();
-            const height = parent.height();
-            if (base !== undefined && height !== undefined) {
-              menu.offset({top: base.top + height, left: base.left - 20});
-            }
-          },
-          className: Styles.ContextMenuRoot,
-          items: categoryItems,
-          selector,
-          trigger: 'none',
-        });
+      };
+      categoryRootOrder.forEach((id) => {
+        categoryConvertFunc(categoryItems, categories[id]);
+      });
+      $.contextMenu({
+        callback: (key, options) => {
+          const texts = key.split('-');
+          onCategorySelected(Number(texts[1]));
+        },
+        determinePosition: (menu) => {
+          const parent = $(selector);
+          const base = parent.offset();
+          const height = parent.height();
+          if (base !== undefined && height !== undefined) {
+            menu.offset({ top: base.top + height, left: base.left - 20 });
+          }
+        },
+        className: Styles.ContextMenuRoot,
+        items: categoryItems,
+        selector,
+        trigger: 'none',
+      });
     };
     categorySetup(
       this.props.doc.outgo.categories[this.props.doc.outgo.rootCategoryId].childs,
@@ -242,36 +240,20 @@ class Main extends React.Component<ILocalProps, IState> {
     });
 
     // スピリッター登録
-    Split(
-      [`#${this.elementIdSectionLeftSide}`, `#${this.elementIdSectionRightSide}`],
-      {
-        sizes: [50, 50],
-        gutterSize: 12,
-        cursor: 'col-resize',
-        direction: 'horizontal',
-      },
-    );
+    Split([`#${this.elementIdSectionLeftSide}`, `#${this.elementIdSectionRightSide}`], {
+      sizes: [50, 50],
+      gutterSize: 12,
+      cursor: 'col-resize',
+      direction: 'horizontal',
+    });
   }
 
   public render() {
-
     // 全体およびヘッダ関連
-    const rootClass = ClassNames(
-      'modal',
-      'fade',
-    );
-    const dialogRootClass = ClassNames(
-      'modal-dialog',
-      Styles.DialogRoot,
-    );
-    const dialogContentClass = ClassNames(
-      'modal-content',
-      Styles.DialogContent,
-    );
-    const dialogHeaderClass = ClassNames(
-      'modal-header',
-      Styles.DialogHeader,
-    );
+    const rootClass = ClassNames('modal', 'fade');
+    const dialogRootClass = ClassNames('modal-dialog', Styles.DialogRoot);
+    const dialogContentClass = ClassNames('modal-content', Styles.DialogContent);
+    const dialogHeaderClass = ClassNames('modal-header', Styles.DialogHeader);
 
     // 左側関連
     const records = this.listRecords();
@@ -295,13 +277,15 @@ class Main extends React.Component<ILocalProps, IState> {
               key={`${record.id}-0`}
               name={'class'}
               classNames={[Styles.ListCardTopIcon]}
-              darkMode={true} />,
+              darkMode={true}
+            />,
             <span key={`${record.id}-1`}>{this.props.doc.income.categories[record.category].name}</span>,
             <MaterialIcon
               key={`${record.id}-2`}
               name={'payment'}
               classNames={[Styles.ListCardTopIcon]}
-              darkMode={true} />,
+              darkMode={true}
+            />,
             <span key={`${record.id}-3`}>{this.props.doc.account.accounts[record.account].name}</span>,
           ];
           break;
@@ -318,13 +302,15 @@ class Main extends React.Component<ILocalProps, IState> {
               key={`${record.id}-0`}
               name={'class'}
               classNames={[Styles.ListCardTopIcon]}
-              darkMode={true} />,
+              darkMode={true}
+            />,
             <span key={`${record.id}-1`}>{this.props.doc.outgo.categories[record.category].name}</span>,
             <MaterialIcon
               key={`${record.id}-2`}
               name={'payment'}
               classNames={[Styles.ListCardTopIcon]}
-              darkMode={true} />,
+              darkMode={true}
+            />,
             <span key={`${record.id}-3`}>{this.props.doc.account.accounts[record.account].name}</span>,
           ];
           break;
@@ -341,18 +327,21 @@ class Main extends React.Component<ILocalProps, IState> {
               key={`${record.id}-0`}
               name={'payment'}
               classNames={[Styles.ListCardTopIcon]}
-              darkMode={true} />,
+              darkMode={true}
+            />,
             <span key={`${record.id}-1`}>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
             <MaterialIcon
               key={`${record.id}-2`}
               name={'forward'}
               classNames={[Styles.ListCardForwardIcon]}
-              darkMode={true} />,
+              darkMode={true}
+            />,
             <MaterialIcon
               key={`${record.id}-3`}
               name={'payment'}
               classNames={[Styles.ListCardTopIcon]}
-              darkMode={true} />,
+              darkMode={true}
+            />,
             <span key={`${record.id}-4`}>{this.props.doc.account.accounts[record.accountTo].name}</span>,
           ];
           break;
@@ -364,15 +353,17 @@ class Main extends React.Component<ILocalProps, IState> {
           className={Styles.ListCard}
           onClick={(e) => this.onListCardClicked(e, recordKey.id, recordKey.kind)}
           data-selected={selected}
-          >
-          <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`}/>
+        >
+          <img className={Styles.ListCardSvgIcon} src={`./image/icon-ex/${svgIconName}-outline.svg`} />
           <div className={Styles.ListCardBody}>
             <div className={Styles.ListCardTop} data-selected={selected}>
               <span className={Styles.ListCardDate}>{IYearMonthDayDateUtils.toDisplayFormatText(date)}</span>
               {additionalElems}
             </div>
             <div className={Styles.ListCardBottom}>
-              <span className={Styles.ListCardMemo} data-selected={selected}>{memo}</span>
+              <span className={Styles.ListCardMemo} data-selected={selected}>
+                {memo}
+              </span>
             </div>
           </div>
           <div className={Styles.ListCardAmountHolder}>
@@ -380,43 +371,43 @@ class Main extends React.Component<ILocalProps, IState> {
               ¥{PriceUtils.numToLocaleString(amount)}
             </span>
           </div>
-        </div>);
+        </div>,
+      );
     });
     {
       // 新規レコード
       const selected = this.state.selectedRecordId === NEW_RECORD_ID;
       recordElems.push(
-        <div key={this.elementIdAddRecord}
+        <div
+          key={this.elementIdAddRecord}
           className={Styles.ListCard}
           onClick={(e) => this.onListCardClicked(e, NEW_RECORD_ID, DocTypes.RecordKind.Invalid)}
           data-record-id={NEW_RECORD_ID}
           data-selected={selected}
           data-is-new-record={true}
-          >
+        >
           <div className={Styles.ListCardAddRecord}>新規レコード</div>
-        </div>);
+        </div>,
+      );
     }
 
-    const sectionLeftSide =
+    const sectionLeftSide = (
       <section
         id={this.elementIdSectionLeftSide}
         className={Styles.SectionLeftSideRoot}
-        onClick={(e) => {this.onListBackgroundClicked(e); }}
-        >
+        onClick={(e) => {
+          this.onListBackgroundClicked(e);
+        }}
+      >
         {recordElems}
-      </section>;
+      </section>
+    );
 
     // 右側関連
     const isUpdateMode = this.state.selectedRecordId !== null && this.state.selectedRecordId !== NEW_RECORD_ID;
-    const formTabsRootClass = ClassNames(
-      Styles.FormTabsRoot,
-    );
-    const formTabsBaseClass = ClassNames(
-      Styles.FormTabsBase,
-    );
-    const formTabBorder = ClassNames(
-      Styles.FormTabBorder,
-    );
+    const formTabsRootClass = ClassNames(Styles.FormTabsRoot);
+    const formTabsBaseClass = ClassNames(Styles.FormTabsBase);
+    const formTabBorder = ClassNames(Styles.FormTabBorder);
     const formTabBorderHiddenTransfer = isUpdateMode && this.state.formKind !== DocTypes.RecordKind.Transfer;
     const formTabBorderHiddenTransferAndIncome = isUpdateMode && this.state.formKind === DocTypes.RecordKind.Outgo;
     const formTabBorderHiddenIncomeAndOutgo = isUpdateMode && this.state.formKind === DocTypes.RecordKind.Transfer;
@@ -436,13 +427,9 @@ class Main extends React.Component<ILocalProps, IState> {
       this.state.formKind === DocTypes.RecordKind.Transfer ? Styles.FormTabActive : null,
       isUpdateMode && this.state.formKind !== DocTypes.RecordKind.Transfer ? Styles.FormTabHidden : null,
     );
-    const formSvgIconClass = ClassNames(
-      Styles.FormSvgIcon,
-    );
+    const formSvgIconClass = ClassNames(Styles.FormSvgIcon);
 
-    const formInputRootClass = ClassNames(
-      Styles.FormInputRoot,
-    );
+    const formInputRootClass = ClassNames(Styles.FormInputRoot);
     const formInputRowCategoryOutgoClass = ClassNames(
       this.state.formKind === DocTypes.RecordKind.Outgo ? null : Styles.FormInputRowHide,
     );
@@ -457,82 +444,88 @@ class Main extends React.Component<ILocalProps, IState> {
     );
     const formInputRowAmountClass = ClassNames(
       this.state.formKind !== DocTypes.RecordKind.Transfer ? null : Styles.FormInputRowHide,
-      !this.state.formAmountIsNegative ? null :
-        this.state.formKind === DocTypes.RecordKind.Outgo ?
-          Styles.FormInputAmountCellNegativeOutgo :
-          Styles.FormInputAmountCellNegativeIncome,
+      !this.state.formAmountIsNegative
+        ? null
+        : this.state.formKind === DocTypes.RecordKind.Outgo
+        ? Styles.FormInputAmountCellNegativeOutgo
+        : Styles.FormInputAmountCellNegativeIncome,
     );
     const formInputRowAmountTransferClass = ClassNames(
       this.state.formKind === DocTypes.RecordKind.Transfer ? null : Styles.FormInputRowHide,
     );
-    const formInputCategoryClass = ClassNames(
-      Styles.FormInputCategory,
-    );
-    const formInputAccountSelectClass = ClassNames(
-      Styles.FormInputAccount,
-    );
+    const formInputCategoryClass = ClassNames(Styles.FormInputCategory);
+    const formInputAccountSelectClass = ClassNames(Styles.FormInputAccount);
 
-    const formFooterRootClass = ClassNames(
-      'modal-footer',
-      Styles.FormFooterRoot,
-    );
-    const formDeleteBtnClass = ClassNames(
-      BasicStyles.StdBtnPrimary,
-      Styles.FormDeleteBtn,
-    );
-    const formSubmitBtnClass = ClassNames(
-      BasicStyles.StdBtnSecondary,
-      Styles.FormSubmitBtn,
-    );
+    const formFooterRootClass = ClassNames('modal-footer', Styles.FormFooterRoot);
+    const formDeleteBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.FormDeleteBtn);
+    const formSubmitBtnClass = ClassNames(BasicStyles.StdBtnSecondary, Styles.FormSubmitBtn);
 
-    const accountFromErrorMsg = this.state.accountFromErrorMsg == null ? null :
-      <span className={Styles.FormErrorMsg}>{this.state.accountFromErrorMsg}</span>;
-    const accountToErrorMsg = this.state.accountToErrorMsg == null ? null :
-      <span className={Styles.FormErrorMsg}>{this.state.accountToErrorMsg}</span>;
-    const amountErrorMsg = this.state.amountErrorMsg == null ? null :
-      <span className={Styles.FormErrorMsg}>{this.state.amountErrorMsg}</span>;
-    const amountTransferErrorMsg = this.state.amountTransferErrorMsg == null ? null :
-      <span className={Styles.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>;
+    const accountFromErrorMsg =
+      this.state.accountFromErrorMsg == null ? null : (
+        <span className={Styles.FormErrorMsg}>{this.state.accountFromErrorMsg}</span>
+      );
+    const accountToErrorMsg =
+      this.state.accountToErrorMsg == null ? null : (
+        <span className={Styles.FormErrorMsg}>{this.state.accountToErrorMsg}</span>
+      );
+    const amountErrorMsg =
+      this.state.amountErrorMsg == null ? null : (
+        <span className={Styles.FormErrorMsg}>{this.state.amountErrorMsg}</span>
+      );
+    const amountTransferErrorMsg =
+      this.state.amountTransferErrorMsg == null ? null : (
+        <span className={Styles.FormErrorMsg}>{this.state.amountTransferErrorMsg}</span>
+      );
     const submitSuccessNotice = <span className={Styles.FormNoticeMsg}>{this.state.submitSuccessMsg}</span>;
 
-    const formTabs =
+    const formTabs = (
       <div className={formTabsRootClass}>
         <div className={formTabsBaseClass}>
-          <div className={formTabBorder} data-hidden={formTabBorderHiddenTransfer}/>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenTransfer} />
           <div className={formTabTransferClass} data-update-mode={isUpdateMode}>
-            <button className={Styles.FormTabButton}
+            <button
+              className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Transfer}
-              onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Transfer); }}
-              >
-              <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg"/>
+              onClick={() => {
+                this.onFormKindTabCicked(DocTypes.RecordKind.Transfer);
+              }}
+            >
+              <img className={formSvgIconClass} src="./image/icon-ex/transfer-outline.svg" />
               <span className={Styles.FormTabLabel}>振替</span>
             </button>
           </div>
-          <div className={formTabBorder} data-hidden={formTabBorderHiddenTransferAndIncome}/>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenTransferAndIncome} />
           <div className={formTabIncomeClass} data-update-mode={isUpdateMode}>
-            <button className={Styles.FormTabButton}
+            <button
+              className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Income}
-              onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Income); }}
-              >
-              <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg"/>
+              onClick={() => {
+                this.onFormKindTabCicked(DocTypes.RecordKind.Income);
+              }}
+            >
+              <img className={formSvgIconClass} src="./image/icon-ex/income-outline.svg" />
               <span className={Styles.FormTabLabel}>収入</span>
             </button>
           </div>
-          <div className={formTabBorder} data-hidden={formTabBorderHiddenIncomeAndOutgo}/>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenIncomeAndOutgo} />
           <div className={formTabOutgoClass} data-update-mode={isUpdateMode}>
-            <button className={Styles.FormTabButton}
+            <button
+              className={Styles.FormTabButton}
               disabled={this.state.formKind === DocTypes.RecordKind.Outgo}
-              onClick={() => {this.onFormKindTabCicked(DocTypes.RecordKind.Outgo); }}
-              >
-              <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg"/>
+              onClick={() => {
+                this.onFormKindTabCicked(DocTypes.RecordKind.Outgo);
+              }}
+            >
+              <img className={formSvgIconClass} src="./image/icon-ex/outgo-outline.svg" />
               <span className={Styles.FormTabLabel}>支出</span>
             </button>
           </div>
-          <div className={formTabBorder} data-hidden={formTabBorderHiddenOutgo}/>
+          <div className={formTabBorder} data-hidden={formTabBorderHiddenOutgo} />
         </div>
-      </div>;
+      </div>
+    );
 
-    const formInput =
+    const formInput = (
       <div className={formInputRootClass}>
         <table>
           <tbody>
@@ -544,9 +537,13 @@ class Main extends React.Component<ILocalProps, IState> {
                   id={this.elementIdFormDate}
                   value={this.state.formDate}
                   readOnly={true}
-                  onClick={() => {this.onFormDateClicked(); }}
-                  onKeyDown={(e) => {this.onFormDateKeyDown(e); }}
-                  />
+                  onClick={() => {
+                    this.onFormDateClicked();
+                  }}
+                  onKeyDown={(e) => {
+                    this.onFormDateKeyDown(e);
+                  }}
+                />
                 {submitSuccessNotice}
               </td>
             </tr>
@@ -559,9 +556,13 @@ class Main extends React.Component<ILocalProps, IState> {
                   className={formInputCategoryClass}
                   readOnly={true}
                   value={this.categoryOutgoDisplayText()}
-                  onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
-                  onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
-                  />
+                  onClick={(e) => {
+                    this.onFormCategoryClicked(e.currentTarget);
+                  }}
+                  onKeyDown={(e) => {
+                    this.onFormCategoryKeyDown(e);
+                  }}
+                />
               </td>
             </tr>
             <tr className={formInputRowCategoryIncomeClass}>
@@ -573,24 +574,35 @@ class Main extends React.Component<ILocalProps, IState> {
                   className={formInputCategoryClass}
                   readOnly={true}
                   value={this.categoryIncomeDisplayText()}
-                  onClick={(e) => {this.onFormCategoryClicked(e.currentTarget); }}
-                  onKeyDown={(e) => {this.onFormCategoryKeyDown(e); }}
-                  />
+                  onClick={(e) => {
+                    this.onFormCategoryClicked(e.currentTarget);
+                  }}
+                  onKeyDown={(e) => {
+                    this.onFormCategoryKeyDown(e);
+                  }}
+                />
               </td>
             </tr>
             <tr className={formInputRowAcountClass}>
               <th scope="row">口座</th>
               <td>
-                <select value={this.state.formAccount.toString()}
+                <select
+                  value={this.state.formAccount.toString()}
                   className={formInputAccountSelectClass}
                   id={this.elementIdFormAccount}
-                  onChange={(event) => {this.onFormAccountChanged(event.target); }}
-                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                  >
+                  onChange={(event) => {
+                    this.onFormAccountChanged(event.target);
+                  }}
+                  onKeyDown={(event) => {
+                    this.onKeyDownCommon(event);
+                  }}
+                >
                   {this.props.doc.account.order.map((accountId) => {
                     const account = this.props.doc.account.accounts[accountId];
                     return (
-                      <option key={account.id} value={account.id}>{account.name}</option>
+                      <option key={account.id} value={account.id}>
+                        {account.name}
+                      </option>
                     );
                   })}
                 </select>
@@ -599,17 +611,24 @@ class Main extends React.Component<ILocalProps, IState> {
             <tr className={formInputRowAcountFromToClass}>
               <th scope="row">送金元</th>
               <td>
-                <select value={this.state.formAccountFrom}
+                <select
+                  value={this.state.formAccountFrom}
                   className={formInputAccountSelectClass}
                   id={this.elementIdFormAccountFrom}
-                  onChange={(event) => {this.onFormAccountFromChanged(event.target); }}
-                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                  >
+                  onChange={(event) => {
+                    this.onFormAccountFromChanged(event.target);
+                  }}
+                  onKeyDown={(event) => {
+                    this.onKeyDownCommon(event);
+                  }}
+                >
                   <option value={DocTypes.INVALID_ID}>（未選択）</option>
                   {this.props.doc.account.order.map((accountId) => {
                     const account = this.props.doc.account.accounts[accountId];
                     return (
-                      <option key={account.id} value={account.id}>{account.name}</option>
+                      <option key={account.id} value={account.id}>
+                        {account.name}
+                      </option>
                     );
                   })}
                 </select>
@@ -619,17 +638,24 @@ class Main extends React.Component<ILocalProps, IState> {
             <tr className={formInputRowAcountFromToClass}>
               <th scope="row">送金先</th>
               <td>
-                <select value={this.state.formAccountTo}
+                <select
+                  value={this.state.formAccountTo}
                   className={formInputAccountSelectClass}
                   id={this.elementIdFormAccountTo}
-                  onChange={(event) => {this.onFormAccountToChanged(event.target); }}
-                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                  >
+                  onChange={(event) => {
+                    this.onFormAccountToChanged(event.target);
+                  }}
+                  onKeyDown={(event) => {
+                    this.onKeyDownCommon(event);
+                  }}
+                >
                   <option value={DocTypes.INVALID_ID}>（未選択）</option>
                   {this.props.doc.account.order.map((accountId) => {
                     const account = this.props.doc.account.accounts[accountId];
                     return (
-                      <option key={account.id} value={account.id}>{account.name}</option>
+                      <option key={account.id} value={account.id}>
+                        {account.name}
+                      </option>
                     );
                   })}
                 </select>
@@ -639,88 +665,142 @@ class Main extends React.Component<ILocalProps, IState> {
             <tr className={formInputRowAmountClass}>
               <th scope="row">金額</th>
               <td>
-                <input type="text"
+                <input
+                  type="text"
                   id={this.elementIdFormAmount}
                   value={this.state.formAmount.toString()}
-                  onChange={(event) => {this.onFormAmountChanged(event.target); }}
-                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                  onFocus={(event) => {event.target.select(); }}
-                  onClick={(event) => {event.currentTarget.select(); return false; }}
-                  />
+                  onChange={(event) => {
+                    this.onFormAmountChanged(event.target);
+                  }}
+                  onKeyDown={(event) => {
+                    this.onKeyDownCommon(event);
+                  }}
+                  onFocus={(event) => {
+                    event.target.select();
+                  }}
+                  onClick={(event) => {
+                    event.currentTarget.select();
+                    return false;
+                  }}
+                />
                 {amountErrorMsg}
               </td>
             </tr>
             <tr className={formInputRowAmountTransferClass}>
               <th scope="row">送金額</th>
               <td>
-                <input type="text"
+                <input
+                  type="text"
                   id={this.elementIdFormAmountTransfer}
                   value={this.state.formAmountTransfer.toString()}
-                  onChange={(event) => {this.onFormAmountTransferChanged(event.target); }}
-                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                  onFocus={(event) => {event.target.select(); }}
-                  onClick={(event) => {event.currentTarget.select(); return false; }}
-                  />
+                  onChange={(event) => {
+                    this.onFormAmountTransferChanged(event.target);
+                  }}
+                  onKeyDown={(event) => {
+                    this.onKeyDownCommon(event);
+                  }}
+                  onFocus={(event) => {
+                    event.target.select();
+                  }}
+                  onClick={(event) => {
+                    event.currentTarget.select();
+                    return false;
+                  }}
+                />
                 {amountTransferErrorMsg}
               </td>
             </tr>
             <tr>
               <th scope="row">メモ</th>
               <td>
-                <input className={Styles.FormInputMemo} type="text"
+                <input
+                  className={Styles.FormInputMemo}
+                  type="text"
                   id={this.elementIdFormMemo}
                   value={this.state.formMemo}
-                  onChange={(event) => {this.onFormMemoChanged(event.target); }}
-                  onKeyDown={(event) => {this.onKeyDownCommon(event); }}
-                  onFocus={(event) => {event.target.select(); }}
-                  onClick={(event) => {event.currentTarget.select(); return false; }}
-                  />
+                  onChange={(event) => {
+                    this.onFormMemoChanged(event.target);
+                  }}
+                  onKeyDown={(event) => {
+                    this.onKeyDownCommon(event);
+                  }}
+                  onFocus={(event) => {
+                    event.target.select();
+                  }}
+                  onClick={(event) => {
+                    event.currentTarget.select();
+                    return false;
+                  }}
+                />
               </td>
             </tr>
           </tbody>
         </table>
-      </div>;
-    const formFooter =
+      </div>
+    );
+    const formFooter = (
       <div className={formFooterRootClass}>
         <div className={Styles.FormDeleteBtnHolder} data-update-mode={isUpdateMode}>
-          <button className={formDeleteBtnClass} onClick={(e) => {this.onFormDeleteBtnPushed(e); }}>
-            <MaterialIcon
-              name={'delete'}
-              classNames={[]}
-              darkMode={false}
-              />
+          <button
+            className={formDeleteBtnClass}
+            onClick={(e) => {
+              this.onFormDeleteBtnPushed(e);
+            }}
+          >
+            <MaterialIcon name={'delete'} classNames={[]} darkMode={false} />
             削除
           </button>
         </div>
-        <button type="button"
+        <button
+          type="button"
           className={formSubmitBtnClass}
           id={this.elementIdFormSubmit}
           data-toggle="tooltip"
-          onClick={(e) => {this.onFormSubmitButtonClicked(e); }}
-          >{isUpdateMode ? '更新' : '追加'}</button>
-      </div>;
+          onClick={(e) => {
+            this.onFormSubmitButtonClicked(e);
+          }}
+        >
+          {isUpdateMode ? '更新' : '追加'}
+        </button>
+      </div>
+    );
 
-    const sectionRightSide =
+    const sectionRightSide = (
       <div id={this.elementIdSectionRightSide} className={Styles.SectionRightSideRoot}>
         <div className={Styles.FormRoot} data-is-any-record-selected={this.state.selectedRecordId !== null}>
           {formTabs}
           {formInput}
           {formFooter}
         </div>
-      </div>;
+      </div>
+    );
 
     return (
-      <div className={rootClass} id={this.elementIdRoot} tabIndex={-1}
-        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-keyboard="false"
-        onKeyDown={(e) => {this.onRootKeyDown(e); }}
-        >
+      <div
+        className={rootClass}
+        id={this.elementIdRoot}
+        tabIndex={-1}
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+        data-keyboard="false"
+        onKeyDown={(e) => {
+          this.onRootKeyDown(e);
+        }}
+      >
         <div className={dialogRootClass} role="document">
           <div className={dialogContentClass}>
             <div className={dialogHeaderClass}>
-              <h5 className="modal-title" id="exampleModalLabel">レコードの追加と編集</h5>
-              <button type="button" id={this.elementIdCloseBtn}
-                className="close" data-dismiss="modal" aria-label="Close"
-                >
+              <h5 className="modal-title" id="exampleModalLabel">
+                レコードの追加と編集
+              </h5>
+              <button
+                type="button"
+                id={this.elementIdCloseBtn}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -738,14 +818,17 @@ class Main extends React.Component<ILocalProps, IState> {
   private listRecords() {
     // 追加レコードに関しては削除されている可能性があるので存在チェックをする
     const records = this.additionalRecordKeys.filter((key) => {
-      return (key.id in this.props.doc.income.records) ||
-        (key.id in this.props.doc.outgo.records) ||
-        (key.id in this.props.doc.transfer.records);
+      return (
+        key.id in this.props.doc.income.records ||
+        key.id in this.props.doc.outgo.records ||
+        key.id in this.props.doc.transfer.records
+      );
     });
     return records.concat(
-      new RecordCollection(this.props.doc).filter([
-        RecordFilters.createRecordIdRangeFilter({startId: this.viewRecordIdMin, endId: null}),
-      ]).keys([{kind: RecordOrderKind.RecordId, reverse: false}]));
+      new RecordCollection(this.props.doc)
+        .filter([RecordFilters.createRecordIdRangeFilter({ startId: this.viewRecordIdMin, endId: null })])
+        .keys([{ kind: RecordOrderKind.RecordId, reverse: false }]),
+    );
   }
 
   /// ダイアログ全体のホットキー対応。
@@ -770,10 +853,7 @@ class Main extends React.Component<ILocalProps, IState> {
   }
 
   /// リスト項目がクリックされたときの処理。
-  private onListCardClicked(
-    e: React.MouseEvent<HTMLElement>,
-    recordId: number,
-    recordKind: DocTypes.RecordKind) {
+  private onListCardClicked(e: React.MouseEvent<HTMLElement>, recordId: number, recordKind: DocTypes.RecordKind) {
     // イベント受理
     e.stopPropagation();
 
@@ -847,18 +927,12 @@ class Main extends React.Component<ILocalProps, IState> {
 
   /// カテゴリインプットに表示するテキストを返す。
   private categoryOutgoDisplayText(): string {
-    return this.categoryDisplayText(
-      this.props.doc.outgo.categories,
-      this.state.formCategoryOutgo,
-    );
+    return this.categoryDisplayText(this.props.doc.outgo.categories, this.state.formCategoryOutgo);
   }
   private categoryIncomeDisplayText(): string {
-    return this.categoryDisplayText(
-      this.props.doc.income.categories,
-      this.state.formCategoryIncome,
-    );
+    return this.categoryDisplayText(this.props.doc.income.categories, this.state.formCategoryIncome);
   }
-  private categoryDisplayText(categories: {[key: number]: DocStates.ICategory}, categoryId: number): string {
+  private categoryDisplayText(categories: { [key: number]: DocStates.ICategory }, categoryId: number): string {
     const funcParentPath = (catId: number): string => {
       const cat = categories[catId];
       if (cat.parent == null || categories[cat.parent].parent == null) {
@@ -895,7 +969,7 @@ class Main extends React.Component<ILocalProps, IState> {
 
   /// 日付変更時の処理。
   private onFormDateChanged(dateText: string) {
-    this.setState({formDate: dateText});
+    this.setState({ formDate: dateText });
   }
   /// 日付がクリックされたときの処理。
   private onFormDateClicked() {
@@ -934,7 +1008,7 @@ class Main extends React.Component<ILocalProps, IState> {
 
   /// 口座値変更時の処理。
   private onFormAccountChanged(sender: HTMLSelectElement) {
-    this.setState({formAccount: Number(sender.value)});
+    this.setState({ formAccount: Number(sender.value) });
   }
 
   /// 送金元値変更時の処理。
@@ -971,9 +1045,8 @@ class Main extends React.Component<ILocalProps, IState> {
     if (!isNaN(newValue)) {
       // '-' の数分フラグを反転させる
       const negCount = sender.value.split('-').length - 1;
-      const isNegative = (negCount % 2) === 0 ?
-        this.state.formAmountIsNegative : !this.state.formAmountIsNegative;
-      this.setState({formAmount: newValue, formAmountIsNegative: isNegative});
+      const isNegative = negCount % 2 === 0 ? this.state.formAmountIsNegative : !this.state.formAmountIsNegative;
+      this.setState({ formAmount: newValue, formAmountIsNegative: isNegative });
     }
   }
 
@@ -981,13 +1054,13 @@ class Main extends React.Component<ILocalProps, IState> {
   private onFormAmountTransferChanged(sender: HTMLInputElement) {
     const newValue = Number(sender.value.replace(/[^\d]/, ''));
     if (!isNaN(newValue)) {
-      this.setState({formAmountTransfer: newValue});
+      this.setState({ formAmountTransfer: newValue });
     }
   }
 
   /// メモ変更時の処理。
   private onFormMemoChanged(sender: HTMLInputElement) {
-    this.setState({formMemo: sender.value});
+    this.setState({ formMemo: sender.value });
   }
 
   /// 削除ボタンクリック時処理。
@@ -1003,16 +1076,14 @@ class Main extends React.Component<ILocalProps, IState> {
 
     // ダイアログで確認
     const dialog = remote.dialog;
-    const msgBoxResult = dialog.showMessageBoxSync(
-      remote.getCurrentWindow(),
-      {
-        type: 'warning',
-        buttons: ['削除する', 'キャンセル'],
-        defaultId: 0,
-        cancelId: 1,
-        title: 'レコードの削除',
-        message: '選択中のレコードを削除しますか？',
-      });
+    const msgBoxResult = dialog.showMessageBoxSync(remote.getCurrentWindow(), {
+      type: 'warning',
+      buttons: ['削除する', 'キャンセル'],
+      defaultId: 0,
+      cancelId: 1,
+      title: 'レコードの削除',
+      message: '選択中のレコードを削除しますか？',
+    });
     if (msgBoxResult === 1) {
       return;
     }
@@ -1035,9 +1106,7 @@ class Main extends React.Component<ILocalProps, IState> {
     });
 
     // レコードを削除
-    Store.dispatch(DocActions.deleteRecords([
-      deleteRecordId,
-    ]));
+    Store.dispatch(DocActions.deleteRecords([deleteRecordId]));
 
     // 自動保存リクエスト
     Store.dispatch(UiActions.documentRequestAutoSave());
@@ -1076,11 +1145,12 @@ class Main extends React.Component<ILocalProps, IState> {
       accountFromErrorMsg,
       accountToErrorMsg,
     });
-    if (amountErrorMsg != null ||
+    if (
+      amountErrorMsg != null ||
       amountTransferErrorMsg != null ||
       accountFromErrorMsg != null ||
       accountToErrorMsg != null
-      ) {
+    ) {
       return;
     }
 
@@ -1092,24 +1162,28 @@ class Main extends React.Component<ILocalProps, IState> {
           if (this.state.selectedRecordId === null) {
             throw new Error();
           }
-          Store.dispatch(DocActions.updateRecordOutgo(
-            this.state.selectedRecordId,
-            new Date(),
-            IYearMonthDayDateUtils.fromText(this.state.formDate),
-            this.state.formMemo,
-            this.state.formAccount,
-            this.state.formCategoryOutgo,
-            (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
-            ));
+          Store.dispatch(
+            DocActions.updateRecordOutgo(
+              this.state.selectedRecordId,
+              new Date(),
+              IYearMonthDayDateUtils.fromText(this.state.formDate),
+              this.state.formMemo,
+              this.state.formAccount,
+              this.state.formCategoryOutgo,
+              (this.state.formAmountIsNegative ? -1 : 1) * this.state.formAmount,
+            ),
+          );
         } else {
-          Store.dispatch(DocActions.addRecordOutgo(
-            new Date(),
-            IYearMonthDayDateUtils.fromText(this.state.formDate),
-            this.state.formMemo,
-            this.state.formAccount,
-            this.state.formCategoryOutgo,
-            (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
-            ));
+          Store.dispatch(
+            DocActions.addRecordOutgo(
+              new Date(),
+              IYearMonthDayDateUtils.fromText(this.state.formDate),
+              this.state.formMemo,
+              this.state.formAccount,
+              this.state.formCategoryOutgo,
+              (this.state.formAmountIsNegative ? -1 : 1) * this.state.formAmount,
+            ),
+          );
         }
         break;
 
@@ -1118,24 +1192,28 @@ class Main extends React.Component<ILocalProps, IState> {
           if (this.state.selectedRecordId === null) {
             throw new Error();
           }
-          Store.dispatch(DocActions.updateRecordIncome(
-            this.state.selectedRecordId,
-            new Date(),
-            IYearMonthDayDateUtils.fromText(this.state.formDate),
-            this.state.formMemo,
-            this.state.formAccount,
-            this.state.formCategoryIncome,
-            (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
-            ));
+          Store.dispatch(
+            DocActions.updateRecordIncome(
+              this.state.selectedRecordId,
+              new Date(),
+              IYearMonthDayDateUtils.fromText(this.state.formDate),
+              this.state.formMemo,
+              this.state.formAccount,
+              this.state.formCategoryIncome,
+              (this.state.formAmountIsNegative ? -1 : 1) * this.state.formAmount,
+            ),
+          );
         } else {
-          Store.dispatch(DocActions.addRecordIncome(
-            new Date(),
-            IYearMonthDayDateUtils.fromText(this.state.formDate),
-            this.state.formMemo,
-            this.state.formAccount,
-            this.state.formCategoryIncome,
-            (this.state.formAmountIsNegative ? (-1) : (1)) * this.state.formAmount,
-            ));
+          Store.dispatch(
+            DocActions.addRecordIncome(
+              new Date(),
+              IYearMonthDayDateUtils.fromText(this.state.formDate),
+              this.state.formMemo,
+              this.state.formAccount,
+              this.state.formCategoryIncome,
+              (this.state.formAmountIsNegative ? -1 : 1) * this.state.formAmount,
+            ),
+          );
         }
         break;
 
@@ -1144,24 +1222,28 @@ class Main extends React.Component<ILocalProps, IState> {
           if (this.state.selectedRecordId === null) {
             throw new Error();
           }
-          Store.dispatch(DocActions.updateRecordTransfer(
-            this.state.selectedRecordId,
-            new Date(),
-            IYearMonthDayDateUtils.fromText(this.state.formDate),
-            this.state.formMemo,
-            this.state.formAccountFrom,
-            this.state.formAccountTo,
-            this.state.formAmountTransfer != null ? this.state.formAmountTransfer : 0,
-            ));
+          Store.dispatch(
+            DocActions.updateRecordTransfer(
+              this.state.selectedRecordId,
+              new Date(),
+              IYearMonthDayDateUtils.fromText(this.state.formDate),
+              this.state.formMemo,
+              this.state.formAccountFrom,
+              this.state.formAccountTo,
+              this.state.formAmountTransfer != null ? this.state.formAmountTransfer : 0,
+            ),
+          );
         } else {
-          Store.dispatch(DocActions.addRecordTransfer(
-            new Date(),
-            IYearMonthDayDateUtils.fromText(this.state.formDate),
-            this.state.formMemo,
-            this.state.formAccountFrom,
-            this.state.formAccountTo,
-            this.state.formAmountTransfer != null ? this.state.formAmountTransfer : 0,
-            ));
+          Store.dispatch(
+            DocActions.addRecordTransfer(
+              new Date(),
+              IYearMonthDayDateUtils.fromText(this.state.formDate),
+              this.state.formMemo,
+              this.state.formAccountFrom,
+              this.state.formAccountTo,
+              this.state.formAmountTransfer != null ? this.state.formAmountTransfer : 0,
+            ),
+          );
         }
         break;
     }
@@ -1180,9 +1262,9 @@ class Main extends React.Component<ILocalProps, IState> {
     }
     $(`#${this.elementIdFormDate}`).focus();
     $(`.${Styles.FormNoticeMsg}`)
-      .animate({opacity: 1.0}, 0)
+      .animate({ opacity: 1.0 }, 0)
       .delay(1000)
-      .animate({opacity: 0.0}, 750);
+      .animate({ opacity: 0.0 }, 750);
   }
 
   /// 共通キーダウンイベント処理。
@@ -1195,18 +1277,13 @@ class Main extends React.Component<ILocalProps, IState> {
       return;
     }
   }
-
 }
 
 const mapStateToProps = (state: IStoreState, props: IProps) => {
-  const result: ILocalProps = Object.assign(
-    {},
-    props,
-    {
-      doc: state.doc,
-      dialogRecordAdd: state.ui.dialogAddRecord,
-    },
-  );
+  const result: ILocalProps = Object.assign({}, props, {
+    doc: state.doc,
+    dialogRecordAdd: state.ui.dialogAddRecord,
+  });
   return result;
 };
 export default ReactRedux.connect(mapStateToProps)(Main);

@@ -12,7 +12,7 @@ import SideBarBtn from './SideBarBtn';
 
 interface IProps {
   currentPageId: string;
-  onBtnClicked: ((pageId: string) => void);
+  onBtnClicked: (pageId: string) => void;
 }
 
 class SideBar extends React.Component<IProps, any> {
@@ -21,34 +21,31 @@ class SideBar extends React.Component<IProps, any> {
   }
 
   public render() {
-    const rootClass = ClassNames(
-      Styles.Root,
-      LayoutStyles.TopToBottom,
-    );
+    const rootClass = ClassNames(Styles.Root, LayoutStyles.TopToBottom);
 
     const btnInfos = [];
-    btnInfos.push({pageId: PageCalendar.PageId, title: 'カレンダー', iconName: 'event_note'});
-    btnInfos.push({pageId: PageSheet.PageId, title: 'ワークシート', iconName: 'view_week'});
-    btnInfos.push({pageId: 'Find', title: 'レコードの検索（準備中）', iconName: 'search'});
-    btnInfos.push({pageId: PageSetting.PageId, title: '設定', iconName: 'settings'});
+    btnInfos.push({ pageId: PageCalendar.PageId, title: 'カレンダー', iconName: 'event_note' });
+    btnInfos.push({ pageId: PageSheet.PageId, title: 'ワークシート', iconName: 'view_week' });
+    btnInfos.push({ pageId: 'Find', title: 'レコードの検索（準備中）', iconName: 'search' });
+    btnInfos.push({ pageId: PageSetting.PageId, title: '設定', iconName: 'settings' });
 
     const btns = [];
     for (const btnInfo of btnInfos) {
-      btns.push(<SideBarBtn
-        key={btnInfo.pageId}
-        onClicked={() => {this.onClicked(btnInfo.pageId); }}
-        isActive={this.props.currentPageId === btnInfo.pageId}
-        isEnabled={this.props.currentPageId !== PageStart.PageId}
-        title={btnInfo.title}
-        iconName={btnInfo.iconName}
-        />);
+      btns.push(
+        <SideBarBtn
+          key={btnInfo.pageId}
+          onClicked={() => {
+            this.onClicked(btnInfo.pageId);
+          }}
+          isActive={this.props.currentPageId === btnInfo.pageId}
+          isEnabled={this.props.currentPageId !== PageStart.PageId}
+          title={btnInfo.title}
+          iconName={btnInfo.iconName}
+        />,
+      );
     }
 
-    return (
-      <div className={rootClass}>
-        {btns}
-      </div>
-    );
+    return <div className={rootClass}>{btns}</div>;
   }
 
   private onClicked(pageId: string) {

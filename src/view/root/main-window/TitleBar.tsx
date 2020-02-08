@@ -20,30 +20,26 @@ class TitleBar extends React.Component<ILocalProps, any> {
   }
 
   public render() {
-    const rootClass = ClassNames(
-      Styles.Base,
-      Styles.Bg,
-      {[Styles.BgActive]: this.props.isActive},
-    );
+    const rootClass = ClassNames(Styles.Base, Styles.Bg, { [Styles.BgActive]: this.props.isActive });
     const titleClass = ClassNames(Styles.Base, Styles.Title);
-    const titleText = this.props.filePath.length === 0 ?
-      'スタートページ' : this.props.filePath.slice(this.props.filePath.lastIndexOf('/') + 1);
+    const titleText =
+      this.props.filePath.length === 0
+        ? 'スタートページ'
+        : this.props.filePath.slice(this.props.filePath.lastIndexOf('/') + 1);
     return (
       <div id="titleBar" className={rootClass}>
-        <div className={titleClass}><div>{`\uD83D\uDC27 ${titleText}`}</div></div>
+        <div className={titleClass}>
+          <div>{`\uD83D\uDC27 ${titleText}`}</div>
+        </div>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state: IStoreState, props: IProps) => {
-  const result: ILocalProps = Object.assign(
-    {},
-    props,
-    {
-      filePath: state.ui.document.filePath,
-    },
-  );
+  const result: ILocalProps = Object.assign({}, props, {
+    filePath: state.ui.document.filePath,
+  });
   return result;
 };
 export default ReactRedux.connect(mapStateToProps)(TitleBar);

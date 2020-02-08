@@ -58,7 +58,7 @@ class AutoSaveManager extends React.Component<IProps, IState> {
 
         // 自動保存処理を開始
         if (worker === null) {
-          throw new Error(`AutoSaveWorker is null.`);
+          throw new Error('AutoSaveWorker is null.');
         }
         const data: IAutoSaveMsgData = {
           doc: this.props.doc,
@@ -72,7 +72,7 @@ class AutoSaveManager extends React.Component<IProps, IState> {
       const jsonText: string = event.data;
 
       // 保存
-      Fs.writeFile(this.props.ui.document.filePath, jsonText, {encoding: 'utf-8'}, (err) => {
+      Fs.writeFile(this.props.ui.document.filePath, jsonText, { encoding: 'utf-8' }, (err) => {
         if (err !== null) {
           throw err;
         }

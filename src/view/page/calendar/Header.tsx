@@ -34,59 +34,21 @@ class Header extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const rootClass = ClassNames(
-      Styles.Root,
-    );
-    const currentDateClass = ClassNames(
-      Styles.CurrentDate,
-    );
-    const movePrevBtnClass = ClassNames(
-      BasicStyles.StdBtnPrimary,
-      Styles.Btn,
-      Styles.MoveBtn,
-      Styles.MovePrevBtn,
-    );
-    const moveTodayBtnClass = ClassNames(
-      BasicStyles.StdBtnPrimary,
-      Styles.Btn,
-      Styles.MoveBtn,
-    );
-    const moveNextBtnClass = ClassNames(
-      BasicStyles.StdBtnPrimary,
-      Styles.Btn,
-      Styles.MoveBtn,
-      Styles.MoveNextBtn,
-    );
-    const viewUnitSelectClass = ClassNames(
-      BasicStyles.StdSelect,
-      Styles.ViewUnitSelect,
-    );
-    const jumpBtnClass = ClassNames(
-      BasicStyles.StdBtnPrimary,
-      Styles.Btn,
-      Styles.JumpBtn,
-    );
-    const filterBtnClass = ClassNames(
-      BasicStyles.IconBtn,
-      Styles.Btn,
-      Styles.FilterBtn,
-    );
-    const rightAreaClass = ClassNames(
-      LayoutStyles.RightToLeft,
-      Styles.RightArea,
-    );
-    const newRecordBtnClass = ClassNames(
-      BasicStyles.IconBtn,
-      Styles.Btn,
-      Styles.NewRecordBtn,
-    );
-    const iconClass = ClassNames(
-      'material-icons',
-      'md-16',
-    );
+    const rootClass = ClassNames(Styles.Root);
+    const currentDateClass = ClassNames(Styles.CurrentDate);
+    const movePrevBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MovePrevBtn);
+    const moveTodayBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn);
+    const moveNextBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MoveNextBtn);
+    const viewUnitSelectClass = ClassNames(BasicStyles.StdSelect, Styles.ViewUnitSelect);
+    const jumpBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.JumpBtn);
+    const filterBtnClass = ClassNames(BasicStyles.IconBtn, Styles.Btn, Styles.FilterBtn);
+    const rightAreaClass = ClassNames(LayoutStyles.RightToLeft, Styles.RightArea);
+    const newRecordBtnClass = ClassNames(BasicStyles.IconBtn, Styles.Btn, Styles.NewRecordBtn);
+    const iconClass = ClassNames('material-icons', 'md-16');
     let modalDialog: JSX.Element | null = null;
     if (this.state.modalRecordEdit) {
-        modalDialog = <RecordEditDialog
+      modalDialog = (
+        <RecordEditDialog
           formDefaultValue={{
             recordKind: DocTypes.RecordKind.Outgo,
             date: IYearMonthDayDateUtils.today(),
@@ -95,33 +57,68 @@ class Header extends React.Component<IProps, IState> {
           }}
           additionalRecords={[]}
           onClosed={() => {
-            this.setState({modalRecordEdit: false});
+            this.setState({ modalRecordEdit: false });
           }}
-        />;
+        />
+      );
     }
     const currentDate = `${this.props.page.currentDate.year}年${this.props.page.currentDate.month}月`;
     return (
       <div className={rootClass}>
         <span className={currentDateClass}>{currentDate}</span>
-        <button className={movePrevBtnClass} onClick={() => {this.onMovePrevBtnPushed(); }}>
+        <button
+          className={movePrevBtnClass}
+          onClick={() => {
+            this.onMovePrevBtnPushed();
+          }}
+        >
           <MaterialIcon name="chevron_left" classNames={[]} darkMode={true} />
         </button>
-        <button className={moveTodayBtnClass} onClick={() => {this.onMoveTodayBtnPushed(); }}>今月</button>
-        <button className={moveNextBtnClass} onClick={() => {this.onMoveNextBtnPushed(); }}>
+        <button
+          className={moveTodayBtnClass}
+          onClick={() => {
+            this.onMoveTodayBtnPushed();
+          }}
+        >
+          今月
+        </button>
+        <button
+          className={moveNextBtnClass}
+          onClick={() => {
+            this.onMoveNextBtnPushed();
+          }}
+        >
           <MaterialIcon name="chevron_right" classNames={[]} darkMode={true} />
         </button>
         {/* <button className={jumpBtnClass} onClick={this.onJumpBtnPushed}>移動</button> */}
-        <select className={viewUnitSelectClass} defaultValue="month" onChange={() => {this.onViewUnitChanged(); }}>
+        <select
+          className={viewUnitSelectClass}
+          defaultValue="month"
+          onChange={() => {
+            this.onViewUnitChanged();
+          }}
+        >
           <option value="month">月表示</option>
         </select>
-        <button className={filterBtnClass} onClick={() => {this.onFilterBtnPushed(); }} title={'フィルター（準備中）'}>
+        <button
+          className={filterBtnClass}
+          onClick={() => {
+            this.onFilterBtnPushed();
+          }}
+          title={'フィルター（準備中）'}
+        >
           <i className={iconClass}>filter_list</i>
         </button>
         <div className={rightAreaClass}>
-          <button className={newRecordBtnClass} onClick={() => {this.onNewRecordBtnPushed(); }}>
+          <button
+            className={newRecordBtnClass}
+            onClick={() => {
+              this.onNewRecordBtnPushed();
+            }}
+          >
             <i className={iconClass}>note_add</i>
           </button>
-          <div style={{width: '100%'}}/>
+          <div style={{ width: '100%' }} />
         </div>
         {modalDialog}
       </div>
@@ -153,7 +150,7 @@ class Header extends React.Component<IProps, IState> {
   }
 
   private onNewRecordBtnPushed() {
-    this.setState({modalRecordEdit: true});
+    this.setState({ modalRecordEdit: true });
   }
 }
 

@@ -22,8 +22,8 @@ requireAll((require as any).context('./', true, /\.css$/));
 const container = document.getElementById('contents');
 ReactDom.render(
   <Provider store={Store}>
-    <AutoSaveManager/>
-    <MainWindow/>
+    <AutoSaveManager />
+    <MainWindow />
   </Provider>,
   container,
 );

@@ -33,7 +33,7 @@ export const addRecordIncome = (
   accountId: number,
   categoryId: number,
   amount: number,
-  ): IAddRecordIncome => {
+): IAddRecordIncome => {
   return {
     type: ADD_RECORD_INCOME,
     createDate,
@@ -64,7 +64,7 @@ export const updateRecordIncome = (
   accountId: number,
   categoryId: number,
   amount: number,
-  ): IUpdateRecordIncome => {
+): IUpdateRecordIncome => {
   return {
     type: UPDATE_RECORD_INCOME,
     recordId,
@@ -94,7 +94,7 @@ export const addRecordOutgo = (
   accountId: number,
   categoryId: number,
   amount: number,
-  ): IAddRecordOutgo => {
+): IAddRecordOutgo => {
   return {
     type: ADD_RECORD_OUTGO,
     createDate,
@@ -125,7 +125,7 @@ export const updateRecordOutgo = (
   accountId: number,
   categoryId: number,
   amount: number,
-  ): IUpdateRecordOutgo => {
+): IUpdateRecordOutgo => {
   return {
     type: UPDATE_RECORD_OUTGO,
     recordId,
@@ -155,7 +155,7 @@ export const addRecordTransfer = (
   accountFromId: number,
   accountToId: number,
   amount: number,
-  ): IAddRecordTransfer => {
+): IAddRecordTransfer => {
   return {
     type: ADD_RECORD_TRANSFER,
     createDate,
@@ -186,7 +186,7 @@ export const updateRecordTransfer = (
   accountFromId: number,
   accountToId: number,
   amount: number,
-  ): IUpdateRecordTransfer => {
+): IUpdateRecordTransfer => {
   return {
     type: UPDATE_RECORD_TRANSFER,
     recordId,
@@ -207,7 +207,7 @@ export interface IDeleteRecords extends Action {
 export const deleteRecords = (
   /** 削除するレコードIDの配列。 */
   records: number[],
-  ): IDeleteRecords => {
+): IDeleteRecords => {
   return {
     type: DELETE_RECORDS,
     records,
@@ -220,10 +220,7 @@ export interface IUpdateCategoryCollapse extends Action {
   categoryId: number;
   isCollapsed: boolean;
 }
-export const updateCategoryCollapse = (
-  categoryId: number,
-  isCollapsed: boolean,
-  ): IUpdateCategoryCollapse => {
+export const updateCategoryCollapse = (categoryId: number, isCollapsed: boolean): IUpdateCategoryCollapse => {
   return {
     type: UPDATE_CATEGORY_COLLAPSE,
     categoryId,

@@ -9,9 +9,9 @@ import * as Styles from './Main.css';
 import MainBtn from './MainBtn';
 
 interface IProps {
-  onNewFromMmxfSelected: ((filePath: string) => void);
-  onNewExampleSelected: (() => void);
-  onOpenFileSelected: ((filePath: string) => void);
+  onNewFromMmxfSelected: (filePath: string) => void;
+  onNewExampleSelected: () => void;
+  onOpenFileSelected: (filePath: string) => void;
 }
 
 interface IState {
@@ -19,11 +19,11 @@ interface IState {
 }
 
 class Main extends React.Component<IProps, IState> {
-  public static PageId: string = 'Start';
-  private static BtnIdOpenLatest: string = 'OpenLatest';
-  private static BtnIdOpenFile: string = 'OpenFile';
-  private static BtnIdNewFromMmxf: string = 'NewFromMmxf';
-  private static BtnIdNewExample: string = 'NewExample';
+  public static PageId = 'Start';
+  private static BtnIdOpenLatest = 'OpenLatest';
+  private static BtnIdOpenFile = 'OpenFile';
+  private static BtnIdNewFromMmxf = 'NewFromMmxf';
+  private static BtnIdNewExample = 'NewExample';
 
   public constructor(props: IProps) {
     super(props);
@@ -47,10 +47,7 @@ class Main extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const rootClass = ClassNames(
-      PageStyles.Base,
-      Styles.Root,
-    );
+    const rootClass = ClassNames(PageStyles.Base, Styles.Root);
 
     const openBtnInfos = [];
     openBtnInfos.push({
@@ -88,22 +85,30 @@ class Main extends React.Component<IProps, IState> {
 
     const openBtns: JSX.Element[] = [];
     openBtnInfos.forEach((btnInfo) => {
-      openBtns.push(<MainBtn
-        key={btnInfo.btnId}
-        onClicked={() => {this.onClicked(btnInfo.btnId); }}
-        isEnabled={btnInfo.isEnabled}
-        title={btnInfo.title}
-        />);
+      openBtns.push(
+        <MainBtn
+          key={btnInfo.btnId}
+          onClicked={() => {
+            this.onClicked(btnInfo.btnId);
+          }}
+          isEnabled={btnInfo.isEnabled}
+          title={btnInfo.title}
+        />,
+      );
     });
 
     const newBtns: JSX.Element[] = [];
     newBtnInfos.forEach((btnInfo) => {
-      newBtns.push(<MainBtn
-        key={btnInfo.btnId}
-        onClicked={() => {this.onClicked(btnInfo.btnId); }}
-        isEnabled={btnInfo.isEnabled}
-        title={btnInfo.title}
-        />);
+      newBtns.push(
+        <MainBtn
+          key={btnInfo.btnId}
+          onClicked={() => {
+            this.onClicked(btnInfo.btnId);
+          }}
+          isEnabled={btnInfo.isEnabled}
+          title={btnInfo.title}
+        />,
+      );
     });
 
     return (
@@ -128,18 +133,15 @@ class Main extends React.Component<IProps, IState> {
 
       case Main.BtnIdOpenFile: {
         const dialog = remote.dialog;
-        const filePaths = dialog.showOpenDialogSync(
-          remote.getCurrentWindow(),
-          {
-            properties: ['openFile'],
-            filters: [
-              {
-                name: 'AdelMoney ドキュメント',
-                extensions: ['amdoc'],
-              },
-            ],
-          },
-        );
+        const filePaths = dialog.showOpenDialogSync(remote.getCurrentWindow(), {
+          properties: ['openFile'],
+          filters: [
+            {
+              name: 'AdelMoney ドキュメント',
+              extensions: ['amdoc'],
+            },
+          ],
+        });
         if (filePaths === undefined || filePaths.length === 0) {
           return;
         }
@@ -149,18 +151,15 @@ class Main extends React.Component<IProps, IState> {
 
       case Main.BtnIdNewFromMmxf: {
         const dialog = remote.dialog;
-        const filePaths = dialog.showOpenDialogSync(
-          remote.getCurrentWindow(),
-          {
-            properties: ['openFile'],
-            filters: [
-              {
-                name: 'MasterMoney ファイル',
-                extensions: ['mmxf'],
-              },
-            ],
-          },
-        );
+        const filePaths = dialog.showOpenDialogSync(remote.getCurrentWindow(), {
+          properties: ['openFile'],
+          filters: [
+            {
+              name: 'MasterMoney ファイル',
+              extensions: ['mmxf'],
+            },
+          ],
+        });
         if (filePaths === undefined || filePaths.length === 0) {
           return;
         }

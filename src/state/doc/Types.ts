@@ -29,7 +29,7 @@ export const accountKindToAccountGroup = (kind: AccountKind) => {
     case AccountKind.LiabilitiesLoan:
     case AccountKind.LiabilitiesCard:
     case AccountKind.LiabilitiesOther:
-        return AccountGroup.Liabilities;
+      return AccountGroup.Liabilities;
 
     default:
       return AccountGroup.Invalid;
@@ -39,28 +39,44 @@ export const accountKindToAccountGroup = (kind: AccountKind) => {
 /** AccountKind の種類を示す日本語を取得する。 */
 export const localizedAccountKind = (kind: AccountKind) => {
   switch (kind) {
-    case AccountKind.AssetsCash: return '現金';
-    case AccountKind.AssetsBank: return '銀行口座';
-    case AccountKind.AssetsInvesting: return '投資';
-    case AccountKind.AssetsOther: return 'その他';
-    case AccountKind.LiabilitiesLoan: return 'ローン';
-    case AccountKind.LiabilitiesCard: return 'クレジットカード';
-    case AccountKind.LiabilitiesOther: return 'その他';
-    default: return '#';
+    case AccountKind.AssetsCash:
+      return '現金';
+    case AccountKind.AssetsBank:
+      return '銀行口座';
+    case AccountKind.AssetsInvesting:
+      return '投資';
+    case AccountKind.AssetsOther:
+      return 'その他';
+    case AccountKind.LiabilitiesLoan:
+      return 'ローン';
+    case AccountKind.LiabilitiesCard:
+      return 'クレジットカード';
+    case AccountKind.LiabilitiesOther:
+      return 'その他';
+    default:
+      return '#';
   }
 };
 
 /** AccountKind の種類を示す省略形日本語を取得する。 */
 export const shortLocalizedAccountKind = (kind: AccountKind) => {
   switch (kind) {
-    case AccountKind.AssetsCash: return '現';
-    case AccountKind.AssetsBank: return '銀';
-    case AccountKind.AssetsInvesting: return '投';
-    case AccountKind.AssetsOther: return '他';
-    case AccountKind.LiabilitiesLoan: return 'ロ';
-    case AccountKind.LiabilitiesCard: return 'ク';
-    case AccountKind.LiabilitiesOther: return '他';
-    default: return '#';
+    case AccountKind.AssetsCash:
+      return '現';
+    case AccountKind.AssetsBank:
+      return '銀';
+    case AccountKind.AssetsInvesting:
+      return '投';
+    case AccountKind.AssetsOther:
+      return '他';
+    case AccountKind.LiabilitiesLoan:
+      return 'ロ';
+    case AccountKind.LiabilitiesCard:
+      return 'ク';
+    case AccountKind.LiabilitiesOther:
+      return '他';
+    default:
+      return '#';
   }
 };
 

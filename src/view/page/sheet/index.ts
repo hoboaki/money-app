@@ -1,2 +1,2 @@
-import {default as PageSheet} from './Main';
+import { default as PageSheet } from './Main';
 export default PageSheet;

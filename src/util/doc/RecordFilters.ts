@@ -34,8 +34,9 @@ export const createDateRangeFilter = (data: IDateRangeFilterData): IRecordFilter
         const startDate = data.startDate;
         const endDate = data.endDate;
         checkFunc = (record) => {
-          return IYearMonthDayDateUtils.lessEq(startDate, record.date) &&
-            IYearMonthDayDateUtils.less(record.date, endDate);
+          return (
+            IYearMonthDayDateUtils.lessEq(startDate, record.date) && IYearMonthDayDateUtils.less(record.date, endDate)
+          );
         };
       }
 
@@ -74,16 +75,18 @@ export const createRecordKindFilter = (data: IRecordKindFilterData): IRecordFilt
 /** カテゴリフィルタのデータ。 */
 export interface ICategoryFilterData {
   /** 対象たち。 categoryId に null を指定した場合は kind のレコード全てを対象とする。 */
-  targets: {kind: Types.RecordKind, categoryId: number | null}[];
+  targets: { kind: Types.RecordKind; categoryId: number | null }[];
 }
 
 /** レコード種類フィルタを作成。 */
 export const createCategoryFilter = (data: ICategoryFilterData): IRecordFilter => {
   return {
     filter: (collection: IRecordCollection, state: States.IState) => {
-      const incomeTargets = data.targets.filter((target) => target.kind === Types.RecordKind.Income)
+      const incomeTargets = data.targets
+        .filter((target) => target.kind === Types.RecordKind.Income)
         .map((target) => target.categoryId);
-      const outgoTargets = data.targets.filter((target) => target.kind === Types.RecordKind.Outgo)
+      const outgoTargets = data.targets
+        .filter((target) => target.kind === Types.RecordKind.Outgo)
         .map((target) => target.categoryId);
       const transfer = data.targets.some((target) => target.kind === Types.RecordKind.Transfer);
       return filteredCollectionEach(
@@ -116,13 +119,13 @@ export const createAccountFilter = (data: IAccountFilterData): IRecordFilter => 
           transfers: collection.transfers.filter((id) => {
             const rec = state.transfer.records[id];
             return rec.accountFrom === targetAccount || rec.accountTo === targetAccount;
-            }),
+          }),
         };
       }
 
       // 全口座の場合は結果は変わらないのでそのまま返す
       const accountCount = state.account.order.length;
-      const targetAccountDict: {[key: number]: any} = {};
+      const targetAccountDict: { [key: number]: any } = {};
       const targetAccountCount = data.accounts.reduce((current, id) => {
         if (id in targetAccountDict) {
           return current;
@@ -139,7 +142,7 @@ export const createAccountFilter = (data: IAccountFilterData): IRecordFilter => 
         state,
         (record) => record.account in targetAccountDict,
         (record) => record.account in targetAccountDict,
-        (record) => (record.accountFrom in targetAccountDict || record.accountTo in targetAccountDict),
+        (record) => record.accountFrom in targetAccountDict || record.accountTo in targetAccountDict,
       );
     },
   };
@@ -174,7 +177,7 @@ export const createRecordIdRangeFilter = (data: IRecordIdRangeFilterData): IReco
         const startId = data.startId;
         const endId = data.endId;
         checkFunc = (record) => {
-          return startId <=  record.id && record.id < endId;
+          return startId <= record.id && record.id < endId;
         };
       }
 
@@ -191,7 +194,7 @@ const filteredCollection = (
   collection: IRecordCollection,
   state: States.IState,
   checker: (record: States.IRecord) => boolean,
-  ): IRecordCollection => {
+): IRecordCollection => {
   return {
     incomes: filteredArray(collection.incomes, state.income.records, checker),
     outgos: filteredArray(collection.outgos, state.outgo.records, checker),
@@ -206,7 +209,7 @@ const filteredCollectionEach = (
   checkerIncome: (record: States.IRecordIncome) => boolean,
   checkerOutgo: (record: States.IRecordOutgo) => boolean,
   checkerTransfer: (record: States.IRecordTransfer) => boolean,
-  ): IRecordCollection => {
+): IRecordCollection => {
   return {
     incomes: filteredArray<States.IRecordIncome>(collection.incomes, state.income.records, checkerIncome),
     outgos: filteredArray(collection.outgos, state.outgo.records, checkerOutgo),
@@ -217,10 +220,10 @@ const filteredCollectionEach = (
 /** フィルタを適用したレコード ID 配列を取得。 */
 const filteredArray = <TRecord extends States.IRecord>(
   ids: number[],
-  src: {[key: number]: TRecord},
+  src: { [key: number]: TRecord },
   checker: (record: TRecord) => boolean,
-  ): number[] => {
+): number[] => {
   return ids.filter((id) => {
     return checker(src[id]);
-    });
+  });
 };

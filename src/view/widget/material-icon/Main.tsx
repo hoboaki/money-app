@@ -20,11 +20,7 @@ class Main extends React.Component<IProps, any> {
   }
 
   public render() {
-    const className = ClassNames(
-      'material-icons',
-      this.props.darkMode ? `md-dark` : null,
-      this.props.classNames,
-    );
+    const className = ClassNames('material-icons', this.props.darkMode ? 'md-dark' : null, this.props.classNames);
     return <i className={className}>{this.props.name}</i>;
   }
 }

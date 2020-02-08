@@ -7,9 +7,7 @@ import Calendar from './Calendar';
 
 class Body extends React.Component<any, any> {
   public render() {
-    const rootClass = ClassNames(
-      Styles.Root,
-    );
+    const rootClass = ClassNames(Styles.Root);
     return (
       <div className={rootClass}>
         <Calendar />
@@ -17,7 +15,6 @@ class Body extends React.Component<any, any> {
       </div>
     );
   }
-
 }
 
 export default Body;

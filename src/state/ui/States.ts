@@ -40,7 +40,7 @@ export const defaultState: IState = {
   dialogAddRecord: {
     dummy: false,
   },
-  pageCalendar : {
+  pageCalendar: {
     currentDate: IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today()),
   },
   pageSheet: {
