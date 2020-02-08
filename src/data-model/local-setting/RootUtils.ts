@@ -13,7 +13,7 @@ interface IJsonRoot {
   version: number;
 
   /** データのルート。 */
-  data: any;
+  data: Root;
 }
 
 /** Root オブジェクトをロード＆取得。 */
@@ -22,6 +22,7 @@ export const load = (callback: (root: Root) => void) => {
     if (err) {
       return;
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const jsonRootAny: any = jsonRootRaw;
     const jsonRoot: IJsonRoot = jsonRootAny;
     let root = new Root();

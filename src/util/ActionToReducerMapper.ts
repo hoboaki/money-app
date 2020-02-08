@@ -1,6 +1,7 @@
 import Clone from 'deep-clone';
 import { Action } from 'redux';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type WorkOfAction<S, A extends Action = any> = (state: S, action: A) => void;
 
 /**

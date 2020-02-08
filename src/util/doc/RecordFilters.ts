@@ -125,7 +125,7 @@ export const createAccountFilter = (data: IAccountFilterData): IRecordFilter => 
 
       // 全口座の場合は結果は変わらないのでそのまま返す
       const accountCount = state.account.order.length;
-      const targetAccountDict: { [key: number]: any } = {};
+      const targetAccountDict: { [key: number]: number } = {};
       const targetAccountCount = data.accounts.reduce((current, id) => {
         if (id in targetAccountDict) {
           return current;

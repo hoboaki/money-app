@@ -17,7 +17,7 @@ interface IProps {
   page: UiStates.IPageCalendar;
 }
 
-class Balance extends React.Component<IProps, any> {
+class Balance extends React.Component<IProps> {
   public render() {
     const startDate = this.props.page.currentDate;
     const endDate = IYearMonthDayDateUtils.nextMonth(startDate);

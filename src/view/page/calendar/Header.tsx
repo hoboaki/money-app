@@ -8,7 +8,6 @@ import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
-import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
@@ -40,7 +39,7 @@ class Header extends React.Component<IProps, IState> {
     const moveTodayBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn);
     const moveNextBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MoveNextBtn);
     const viewUnitSelectClass = ClassNames(BasicStyles.StdSelect, Styles.ViewUnitSelect);
-    const jumpBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.JumpBtn);
+    // const jumpBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.JumpBtn);
     const filterBtnClass = ClassNames(BasicStyles.IconBtn, Styles.Btn, Styles.FilterBtn);
     const rightAreaClass = ClassNames(LayoutStyles.RightToLeft, Styles.RightArea);
     const newRecordBtnClass = ClassNames(BasicStyles.IconBtn, Styles.Btn, Styles.NewRecordBtn);

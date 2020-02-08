@@ -9,7 +9,7 @@ interface IJsonRoot {
   version: number;
 
   /** データのルート。 */
-  data: any;
+  data: Root;
 }
 
 /** Json テキストを Root に変換する。 */

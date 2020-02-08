@@ -1,4 +1,3 @@
-import Clone from 'clone';
 import Redux from 'redux';
 import { Action } from 'redux';
 

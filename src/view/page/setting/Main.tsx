@@ -5,7 +5,7 @@ import * as PageStyles from '../Page.css';
 import * as Styles from './Main.css';
 import SettingBtn from './SettingBtn';
 
-class Main extends React.Component<any, any> {
+class Main extends React.Component {
   public static PageId = 'Setting';
 
   public render() {

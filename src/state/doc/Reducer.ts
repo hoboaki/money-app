@@ -1,4 +1,3 @@
-import Clone from 'clone';
 import Redux from 'redux';
 
 import createA2RMapper from 'src/util/ActionToReducerMapper';

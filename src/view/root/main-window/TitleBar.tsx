@@ -3,7 +3,6 @@ import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 
 import IStoreState from 'src/state/IStoreState';
-import * as UiStates from 'src/state/ui/States';
 import * as Styles from './TitleBar.css';
 
 interface IProps {
@@ -14,7 +13,7 @@ interface ILocalProps extends IProps {
   filePath: string;
 }
 
-class TitleBar extends React.Component<ILocalProps, any> {
+class TitleBar extends React.Component<ILocalProps> {
   public constructor(props: ILocalProps) {
     super(props);
   }

@@ -5,7 +5,7 @@ import Balance from './Balance';
 import * as Styles from './Body.css';
 import Calendar from './Calendar';
 
-class Body extends React.Component<any, any> {
+class Body extends React.Component {
   public render() {
     const rootClass = ClassNames(Styles.Root);
     return (

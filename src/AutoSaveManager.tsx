@@ -1,15 +1,10 @@
 /**
  * @fileoverview 自動保存に関するメインスレッド側の処理を記述する。
  */
-import ClassNames from 'classnames';
-import { remote } from 'electron';
-import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
 import * as Fs from 'fs';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import Split from 'split.js';
-import { v4 as UUID } from 'uuid';
 
 import IAutoSaveMsgData from 'src/IAutoSaveMsgData';
 import * as DocStates from 'src/state/doc/States';

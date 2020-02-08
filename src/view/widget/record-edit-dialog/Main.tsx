@@ -1,6 +1,5 @@
 import ClassNames from 'classnames';
 import { remote } from 'electron';
-import flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
@@ -165,10 +164,13 @@ class Main extends React.Component<ILocalProps, IState> {
       onCategorySelected: (categoryId: number) => void,
       selector: string,
     ) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const categoryItems: { [key: string]: any } = {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const categoryConvertFunc = (parent: { [key: string]: any }, cat: DocStates.ICategory) => {
         const key = `category-${cat.id}`;
         const name = cat.name;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const items: { [key: string]: any } = {};
         cat.childs.forEach((child) => {
           categoryConvertFunc(items, categories[child]);

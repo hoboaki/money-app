@@ -13,9 +13,11 @@ import MainWindow from './view/root/main-window';
 import 'flatpickr/dist/themes/dark.css';
 
 // 全 css ファイルを require して watch 対応。
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function requireAll(r: any) {
   r.keys().forEach(r);
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 requireAll((require as any).context('./', true, /\.css$/));
 
 // 描画

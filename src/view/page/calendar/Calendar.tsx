@@ -45,7 +45,6 @@ class Calendar extends React.Component<IProps, IState> {
     const cellNewRecordBtnClass = ClassNames(Styles.CellNewRecordBtn);
     const cellNewRecordBtnIconClass = ClassNames('material-icons', 'md-16', Styles.CellNewRecordBtnIcon);
     const cellTopRightClass = ClassNames(LayoutStyles.RightToLeft);
-    const cellTransferClass = ClassNames(Styles.CellTransfer);
     const cellTransferIconClass = ClassNames(Styles.CellTransferIcon);
     const cellMiddleClass = ClassNames(Styles.Cell);
     const cellHiddenClass = ClassNames(Styles.CellHidden);
@@ -124,7 +123,6 @@ class Calendar extends React.Component<IProps, IState> {
             <tr key={rowIndex}>
               {row.map((cell, colIndex) => {
                 const classNames = cell.dark ? tableDataDarkClass : tableDataClass;
-                const transferClassNames = cell.transfer ? cellTransferClass : cellHiddenClass;
                 const transferIconClassNames = cell.transfer ? cellTransferIconClass : cellHiddenClass;
                 const incomePriceClassNames =
                   cell.income === 0 ? cellHiddenClass : cell.income < 0 ? cellNegativePriceClass : cellIncomePriceClass;

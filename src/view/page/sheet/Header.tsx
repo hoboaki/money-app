@@ -7,8 +7,6 @@ import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
 import * as UiTypes from 'src/state/ui/Types';
-import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
-import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import MaterialIcon from 'src/view/widget/material-icon';
@@ -26,9 +24,7 @@ class Header extends React.Component<UiStates.IPageSheet> {
     const moveNextBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MoveNextBtn);
     const viewUnitSelectClass = ClassNames(BasicStyles.StdSelect, Styles.ViewUnitSelect);
     const rightAreaClass = ClassNames(LayoutStyles.RightToLeft, Styles.RightArea);
-    const iconClass = ClassNames('material-icons', 'md-16');
 
-    const currentDate = `${this.props.currentDate.year}年${this.props.currentDate.month}月`;
     return (
       <div className={rootClass}>
         <select

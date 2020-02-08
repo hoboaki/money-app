@@ -2,7 +2,6 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 
 import PageCalendar from 'src/view/page/calendar';
-import PageStyles from 'src/view/page/Page.css';
 import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
 import PageStart from 'src/view/page/start';
@@ -15,7 +14,7 @@ interface IProps {
   onBtnClicked: (pageId: string) => void;
 }
 
-class SideBar extends React.Component<IProps, any> {
+class SideBar extends React.Component<IProps> {
   public constructor(props: IProps) {
     super(props);
   }

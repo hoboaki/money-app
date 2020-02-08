@@ -2,7 +2,6 @@ import ClassNames from 'classnames';
 import { ipcRenderer as IpcRenderer, remote } from 'electron';
 import * as Fs from 'fs';
 import * as React from 'react';
-import Split from 'split.js';
 
 import DataModelDocRoot from 'src/data-model/doc/Root';
 import * as DataModelDocRootUtils from 'src/data-model/doc/RootUtils';
@@ -29,10 +28,9 @@ interface IState {
   isActive: boolean;
 }
 
-enum Color {
-  Red = 0,
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 class MainWindow extends React.Component<any, IState> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(props: any) {
     super(props);
     this.state = {
@@ -47,6 +45,7 @@ class MainWindow extends React.Component<any, IState> {
 
     // Focus/Unfocus 切替
     window.onload = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       IpcRenderer.on('app-message', (event: any, msg: string) => {
         switch (msg) {
           case 'focus':

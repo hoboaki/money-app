@@ -6,7 +6,7 @@ import * as PageStyles from '../Page.css';
 import Body from './Body';
 import Header from './Header';
 
-class Main extends React.Component<any, any> {
+class Main extends React.Component {
   public static PageId = 'Calendar';
 
   public render() {
