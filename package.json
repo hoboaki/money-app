@@ -94,6 +94,7 @@
   "scripts": {
     "build": "bash ./script/build.sh",
     "clean-public": "bash ./script/clean-public.sh",
+    "format": "prettier --write 'src/**/*.{ts,tsx}'",
     "release-build": "bash ./script/release-build.sh",
     "start": "bash ./script/start.sh",
     "watch-css": "bash ./script/watch-css.sh",

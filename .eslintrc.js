@@ -29,8 +29,7 @@ module.exports = {
   },
   rules: {
     quotes: [ERROR, "single"],
-    "@typescript-eslint/interface-name-prefix": [
-        "OFF"
-    ],
+    "@typescript-eslint/explicit-function-return-type": [OFF],
+    "@typescript-eslint/interface-name-prefix": [OFF],
   }
 };
