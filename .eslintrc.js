@@ -31,5 +31,13 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': [OFF],
     '@typescript-eslint/interface-name-prefix': [OFF],
     '@typescript-eslint/no-use-before-define': [OFF],
+    '@typescript-eslint/no-unused-vars': [
+      ERROR,
+      {
+        vars: 'all',
+        args: 'none',
+        ignoreRestSiblings: false,
+      },
+    ],
   },
 };
