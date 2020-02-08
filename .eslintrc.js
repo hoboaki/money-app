@@ -1,5 +1,6 @@
 'use strict';
 
+const OFF = 0;
 const ERROR = 2;
 
 module.exports = {
@@ -28,5 +29,8 @@ module.exports = {
   },
   rules: {
     quotes: [ERROR, "single"],
+    "@typescript-eslint/interface-name-prefix": [
+        "OFF"
+    ],
   }
 };
