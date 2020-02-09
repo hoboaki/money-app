@@ -249,6 +249,12 @@ class Main extends React.Component<ILocalProps, IState> {
       cursor: 'col-resize',
       direction: 'horizontal',
     });
+
+    // 左側最下部スクロール
+    const sectionLeftSideElem = document.getElementById(this.elementIdSectionLeftSide);
+    if (sectionLeftSideElem != null) {
+      sectionLeftSideElem.scrollTop = sectionLeftSideElem.scrollHeight;
+    }
   }
 
   public render() {
