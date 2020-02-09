@@ -96,7 +96,7 @@
     "build": "bash ./script/build.sh",
     "clean-public": "bash ./script/clean-public.sh",
     "format": "eslint --fix 'src/**/*.{ts,tsx}'",
-    "format2": "prettier --write 'src/**/*.{ts,tsx}'",
+    "format2": "prettier --write 'src/**/*.{ts,tsx,css}'",
     "release-build": "bash ./script/release-build.sh",
     "start": "bash ./script/start.sh",
     "watch-css": "bash ./script/watch-css.sh",
