@@ -230,7 +230,7 @@ class Main extends React.Component<ILocalProps, IState> {
     })`)();
 
     // ダイアログ表示
-    $(`#${this.elementIdRoot}`).modal('show');
+    $(`#${this.elementIdRoot}`).modal({ show: true, backdrop: false });
 
     // ダイアログ表示したら日付にフォーカス
     $(`#${this.elementIdRoot}`).on('shown.bs.modal', () => {
@@ -249,12 +249,18 @@ class Main extends React.Component<ILocalProps, IState> {
       cursor: 'col-resize',
       direction: 'horizontal',
     });
+
+    // 左側最下部スクロール
+    const sectionLeftSideElem = document.getElementById(this.elementIdSectionLeftSide);
+    if (sectionLeftSideElem != null) {
+      sectionLeftSideElem.scrollTop = sectionLeftSideElem.scrollHeight;
+    }
   }
 
   public render() {
     // 全体およびヘッダ関連
-    const rootClass = ClassNames('modal', 'fade');
-    const dialogRootClass = ClassNames('modal-dialog', Styles.DialogRoot);
+    const rootClass = ClassNames('modal', 'fade', BasicStyles.DialogBackdrop);
+    const dialogRootClass = ClassNames('modal-dialog', 'modal-dialog-centered', Styles.DialogRoot);
     const dialogContentClass = ClassNames('modal-content', Styles.DialogContent);
     const dialogHeaderClass = ClassNames('modal-header', Styles.DialogHeader);
 

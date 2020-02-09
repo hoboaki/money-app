@@ -11,7 +11,7 @@
   width: 100%;
 }
 .Root:disabled {
-  color: rgba(0,0,0,0.61);
+  color: rgba(0, 0, 0, 0.61);
 }
 .Root:hover {
   color: #ffffff;

@@ -5,19 +5,20 @@
 }
 
 .DialogContent {
-  height: calc(100vh - 56px);
+  height: calc(100vh - 60px);
 }
 
 .DialogHeader {
   background: #f5f5f6;
   border-bottom: 1px solid #cccccc;
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
+  height: 52px;
 }
 
 .SectionRoot {
   display: flex;
   flex-direction: row;
-  height: 100%
+  height: calc(100% - 52px);
 }
 
 .SectionLeftSideRoot {
@@ -45,7 +46,7 @@
 
 .ListCard[data-selected='false'] {
   background: #ffffff;
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .ListCard[data-selected='true'] {
@@ -78,7 +79,7 @@
 }
 
 .ListCardTop[data-selected='false'] {
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .ListCardTop[data-selected='true'] {
@@ -169,7 +170,7 @@
   background: #eeeeee;
   border-bottom: 1px solid #cccccc;
   border-collapse: collapse;
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
   height: 40px;
   padding-top: 8px;
   width: 100%;
@@ -222,7 +223,7 @@
   width: 100%;
 }
 .FormTabButton:disabled {
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .FormTabLabel {
@@ -285,9 +286,9 @@
 .FormInputRoot input,
 .FormInputRoot select {
   background: transparent;
-  border: 1px solid rgba(0,0,0,0.12);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 5px;
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
   display: block;
   height: 24px;
   outline: none;
@@ -310,7 +311,7 @@
 }
 
 .FormInputCategory {
-  width: 100%
+  width: 100%;
 }
 
 .FormInputAccount {
@@ -318,7 +319,7 @@
 }
 
 .FormInputMemo {
-  width: 100%
+  width: 100%;
 }
 
 .FormErrorMsg {
@@ -330,7 +331,7 @@
 .FormNoticeMsg {
   color: #3273ff;
   display: block;
-  opacity: 0.0;
+  opacity: 0;
   margin: 4px;
 }
 
@@ -370,6 +371,7 @@
 }
 
 .ContextMenuRoot {
-  font-family: 'Hiragino Kaku Gothic ProN', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  font-size: .8rem;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial,
+    sans-serif;
+  font-size: 0.8rem;
 }
