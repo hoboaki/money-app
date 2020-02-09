@@ -230,7 +230,7 @@ class Main extends React.Component<ILocalProps, IState> {
     })`)();
 
     // ダイアログ表示
-    $(`#${this.elementIdRoot}`).modal('show');
+    $(`#${this.elementIdRoot}`).modal({ show: true, backdrop: false });
 
     // ダイアログ表示したら日付にフォーカス
     $(`#${this.elementIdRoot}`).on('shown.bs.modal', () => {
@@ -253,7 +253,7 @@ class Main extends React.Component<ILocalProps, IState> {
 
   public render() {
     // 全体およびヘッダ関連
-    const rootClass = ClassNames('modal', 'fade');
+    const rootClass = ClassNames('modal', 'fade', BasicStyles.DialogBackdrop);
     const dialogRootClass = ClassNames('modal-dialog', Styles.DialogRoot);
     const dialogContentClass = ClassNames('modal-content', Styles.DialogContent);
     const dialogHeaderClass = ClassNames('modal-header', Styles.DialogHeader);

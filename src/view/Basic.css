@@ -61,3 +61,7 @@
   margin: 4px;
   outline: none;
 }
+
+.DialogBackdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
