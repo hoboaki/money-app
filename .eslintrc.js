@@ -27,7 +27,7 @@ module.exports = {
   },
   rules: {
     'no-constant-condition': [OFF],
-    quotes: [ERROR, 'single'],
+    quotes: [ERROR, 'single', { avoidEscape: true, allowTemplateLiterals: true }],
     '@typescript-eslint/explicit-function-return-type': [OFF],
     '@typescript-eslint/interface-name-prefix': [OFF],
     '@typescript-eslint/no-use-before-define': [OFF],

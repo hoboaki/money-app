@@ -675,7 +675,6 @@ export const aggregateAccountAdd = (state: States.IState, name: string, accounts
 export const categoryByPath = (categories: { [key: number]: States.ICategory }, path: string) => {
   // 引数チェック
   if (path === '') {
-    // eslint-disable-next-line quotes
     throw new Error("Argument named 'path' is empty.");
   }
 

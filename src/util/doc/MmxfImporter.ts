@@ -40,7 +40,6 @@ export const importFile = (filePath: string): IImportResult => {
   const xmlDoc = new Xmldom.DOMParser().parseFromString(fileText, 'application/xml');
 
   // JPY の currency id を取得
-  // eslint-disable-next-line quotes
   const jpyCurrencyNodes = Xpath.select("//currency_list/currency[@abbr='JPY']", xmlDoc) as Element[];
   if (jpyCurrencyNodes == null) {
     result.errorMsgs.push('日本円(JPY) currency 要素が見つかりませんでした。');
