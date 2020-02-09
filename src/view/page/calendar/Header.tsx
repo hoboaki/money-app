@@ -1,7 +1,6 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
@@ -13,6 +12,7 @@ import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import MaterialIcon from 'src/view/widget/material-icon';
 import RecordEditDialog from 'src/view/widget/record-edit-dialog';
+
 import * as Styles from './Header.css';
 
 interface IProps {

@@ -1,12 +1,11 @@
+import 'flatpickr/dist/l10n/ja.js';
+import 'src/@types/mdb/modal';
+
 import ClassNames from 'classnames';
 import { remote } from 'electron';
-import 'flatpickr/dist/l10n/ja.js';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Split from 'split.js';
-import { v4 as UUID } from 'uuid';
-
-import 'src/@types/mdb/modal';
 import * as DocActions from 'src/state/doc/Actions';
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
@@ -24,6 +23,8 @@ import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import MaterialIcon from 'src/view/widget/material-icon';
+import { v4 as UUID } from 'uuid';
+
 import * as Styles from './Main.css';
 
 /** 新規レコードを示す ID。 */

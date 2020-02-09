@@ -1,6 +1,9 @@
 /**
  * @fileoverview index.js に変換されるエントリーポイント。
  */
+// node_modules の css ロード
+import 'flatpickr/dist/themes/dark.css';
+
 import React from 'react';
 import ReactDom from 'react-dom';
 import { Provider } from 'react-redux';
@@ -8,9 +11,6 @@ import { Provider } from 'react-redux';
 import AutoSaveManager from './AutoSaveManager';
 import Store from './state/Store';
 import MainWindow from './view/root/main-window';
-
-// node_modules の css ロード
-import 'flatpickr/dist/themes/dark.css';
 
 // 全 css ファイルを require して watch 対応。
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

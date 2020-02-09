@@ -1,7 +1,7 @@
 import { Action } from 'redux';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import { v4 as UUID } from 'uuid';
 
-import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as States from './States';
 
 /// ドキュメントをリセット。

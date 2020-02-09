@@ -1,10 +1,10 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
-
 import PageCalendar from 'src/view/page/calendar';
 import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
 import PageStart from 'src/view/page/start';
+
 import * as LayoutStyles from '../../Layout.css';
 import * as Styles from './SideBar.css';
 import SideBarBtn from './SideBarBtn';

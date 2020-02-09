@@ -2,8 +2,6 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Split from 'split.js';
-import { v4 as UUID } from 'uuid';
-
 import * as DocActions from 'src/state/doc/Actions';
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
@@ -23,6 +21,8 @@ import * as IYearMonthDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import RecordEditDialog from 'src/view/widget/record-edit-dialog';
+import { v4 as UUID } from 'uuid';
+
 import * as Styles from './Body.css';
 
 interface ISelectedCellInfo {

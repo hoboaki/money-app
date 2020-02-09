@@ -1,7 +1,6 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
@@ -12,6 +11,7 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
 import RecordEditDialog from 'src/view/widget/record-edit-dialog';
+
 import * as LayoutStyles from '../../Layout.css';
 import * as Styles from './Calendar.css';
 

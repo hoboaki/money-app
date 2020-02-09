@@ -12,7 +12,7 @@ module.exports = {
     'plugin:prettier/recommended',
     'prettier/@typescript-eslint',
   ],
-  plugins: ['@typescript-eslint'],
+  plugins: ['simple-import-sort', '@typescript-eslint'],
   env: { node: true, es6: true },
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -28,6 +28,7 @@ module.exports = {
   rules: {
     'no-constant-condition': [OFF],
     quotes: [ERROR, 'single', { avoidEscape: true, allowTemplateLiterals: true }],
+    'simple-import-sort/sort': [ERROR],
     '@typescript-eslint/explicit-function-return-type': [OFF],
     '@typescript-eslint/interface-name-prefix': [OFF],
     '@typescript-eslint/no-use-before-define': [OFF],

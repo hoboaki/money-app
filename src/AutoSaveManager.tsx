@@ -2,18 +2,18 @@
  * @fileoverview 自動保存に関するメインスレッド側の処理を記述する。
  */
 import 'flatpickr/dist/l10n/ja.js';
+
 import * as Fs from 'fs';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-
 import IAutoSaveMsgData from 'src/IAutoSaveMsgData';
 import * as DocStates from 'src/state/doc/States';
 import IStoreState from 'src/state/IStoreState';
 import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
-
 // Worker 定義
 import AutoSaveWorker from 'worker-loader!./AutoSaveWorker';
+
 import store from './state/Store';
 let worker: AutoSaveWorker | null = null;
 

@@ -1,7 +1,6 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-
 import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
@@ -10,6 +9,7 @@ import * as UiTypes from 'src/state/ui/Types';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import MaterialIcon from 'src/view/widget/material-icon';
+
 import * as Styles from './Header.css';
 
 class Header extends React.Component<UiStates.IPageSheet> {
