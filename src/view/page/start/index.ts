@@ -1,2 +1,2 @@
-import { default as PageStart } from './Main';
-export default PageStart;
+import { default as Main } from './Main';
+export default Main;

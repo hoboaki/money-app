@@ -14,6 +14,7 @@ import * as UiActions from 'src/state/ui/Actions';
 import * as MmxfImporter from 'src/util/doc/MmxfImporter';
 import LayoutStyle from 'src/view/Layout.css';
 import PageCalendar from 'src/view/page/calendar';
+import PageImport from 'src/view/page/import';
 import PageStyles from 'src/view/page/Page.css';
 import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
@@ -86,6 +87,9 @@ class MainWindow extends React.Component<any, IState> {
         break;
       case PageSheet.PageId:
         pageContent = <PageSheet />;
+        break;
+      case PageImport.PageId:
+        pageContent = <PageImport />;
         break;
       case PageSetting.PageId:
         pageContent = <PageSetting />;

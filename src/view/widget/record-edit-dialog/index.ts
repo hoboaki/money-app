@@ -1,3 +1,3 @@
-import RecordAddDialog from './Main';
+import Main from './Main';
 
-export default RecordAddDialog;
+export default Main;
