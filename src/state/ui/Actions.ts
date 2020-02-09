@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import { v4 as UUID } from 'uuid';
+
 import * as Types from './Types';
 
 /// ファイルパス設定。

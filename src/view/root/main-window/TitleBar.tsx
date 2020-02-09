@@ -1,8 +1,8 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-
 import IStoreState from 'src/state/IStoreState';
+
 import * as Styles from './TitleBar.css';
 
 interface IProps {

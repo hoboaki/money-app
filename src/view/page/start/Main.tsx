@@ -2,8 +2,8 @@ import ClassNames from 'classnames';
 import { remote } from 'electron';
 import * as Fs from 'fs';
 import * as React from 'react';
-
 import * as LocalSettingRootUtils from 'src/data-model/local-setting/RootUtils';
+
 import * as PageStyles from '../Page.css';
 import * as Styles from './Main.css';
 import MainBtn from './MainBtn';

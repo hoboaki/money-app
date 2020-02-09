@@ -1,9 +1,9 @@
 import Redux from 'redux';
 import { Action } from 'redux';
-
 import createA2RMapper from 'src/util/ActionToReducerMapper';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
+
 import * as Actions from './Actions';
 import * as States from './States';
 import * as Types from './Types';

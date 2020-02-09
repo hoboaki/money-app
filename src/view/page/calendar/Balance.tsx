@@ -1,7 +1,6 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-
 import * as DocStates from 'src/state/doc/States';
 import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
@@ -10,6 +9,7 @@ import RecordCollection from 'src/util/doc/RecordCollection';
 import * as RecordFilters from 'src/util/doc/RecordFilters';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
+
 import * as Styles from './Balance.css';
 
 interface IProps {

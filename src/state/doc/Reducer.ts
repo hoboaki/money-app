@@ -1,6 +1,6 @@
 import Redux from 'redux';
-
 import createA2RMapper from 'src/util/ActionToReducerMapper';
+
 import * as Actions from './Actions';
 import * as StateMethods from './StateMethods';
 import * as States from './States';

@@ -2,7 +2,6 @@ import ClassNames from 'classnames';
 import { ipcRenderer as IpcRenderer, remote } from 'electron';
 import * as Fs from 'fs';
 import * as React from 'react';
-
 import DataModelDocRoot from 'src/data-model/doc/Root';
 import * as DataModelDocRootUtils from 'src/data-model/doc/RootUtils';
 import * as DataModelLocalSettingRootUtils from 'src/data-model/local-setting/RootUtils';
@@ -19,6 +18,7 @@ import PageStyles from 'src/view/page/Page.css';
 import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
 import PageStart from 'src/view/page/start';
+
 import * as Styles from './Main.css';
 import SideBar from './SideBar';
 import TitleBar from './TitleBar';

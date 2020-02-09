@@ -1,4 +1,5 @@
 import { combineReducers, createStore } from 'redux';
+
 import DocReducer from './doc/Reducer';
 import IStoreState from './IStoreState';
 import UiReducer from './ui/Reducer';

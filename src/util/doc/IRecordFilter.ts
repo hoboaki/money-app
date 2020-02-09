@@ -1,4 +1,5 @@
 import * as States from 'src/state/doc/States';
+
 import IRecordCollection from './IRecordCollection';
 
 /** フィルタインターフェース。 */
