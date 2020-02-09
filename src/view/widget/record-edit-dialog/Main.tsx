@@ -254,7 +254,7 @@ class Main extends React.Component<ILocalProps, IState> {
   public render() {
     // 全体およびヘッダ関連
     const rootClass = ClassNames('modal', 'fade', BasicStyles.DialogBackdrop);
-    const dialogRootClass = ClassNames('modal-dialog', Styles.DialogRoot);
+    const dialogRootClass = ClassNames('modal-dialog', 'modal-dialog-centered', Styles.DialogRoot);
     const dialogContentClass = ClassNames('modal-content', Styles.DialogContent);
     const dialogHeaderClass = ClassNames('modal-header', Styles.DialogHeader);
 
