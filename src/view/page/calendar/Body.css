@@ -15,12 +15,12 @@
 }
 
 .AbstractTable {
-  border: 1px solid rgba(0,0,0,0.12);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   display: table-cell;
 }
 
 .AbstractTableHeader {
-  border-bottom: 1px solid rgba(0,0,0,0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   color: #707070;
   font-weight: normal;
   text-align: center;
@@ -37,7 +37,7 @@
 }
 
 .AbstractTableData {
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
   text-align: center;
 }
 
