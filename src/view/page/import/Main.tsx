@@ -2,8 +2,8 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 
 import * as PageStyles from '../Page.css';
+import Btn from './Btn';
 import * as Styles from './Main.css';
-import SettingBtn from './SettingBtn';
 
 class Main extends React.Component {
   public static PageId = 'Import';
@@ -12,19 +12,17 @@ class Main extends React.Component {
     const rootClass = ClassNames(PageStyles.Base, Styles.Root);
 
     const btnInfos = [];
-    btnInfos.push({ settingId: 'Account', title: '口座管理（準備中）', iconName: 'payment' });
-    btnInfos.push({ settingId: 'Category', title: 'カテゴリ管理（準備中）', iconName: 'class' });
+    btnInfos.push({ settingId: 'ImportPalmCsv', title: 'Palm 書式の CSV ファイルを取込...' });
 
     const btns: JSX.Element[] = [];
     btnInfos.forEach((btnInfo) => {
       btns.push(
-        <SettingBtn
+        <Btn
           key={btnInfo.settingId}
           onClicked={() => {
             this.onClicked(btnInfo.settingId);
           }}
           title={btnInfo.title}
-          iconName={btnInfo.iconName}
         />,
       );
     });
