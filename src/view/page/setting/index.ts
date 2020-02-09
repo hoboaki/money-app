@@ -1,2 +1,2 @@
-import { default as PageSetting } from './Main';
-export default PageSetting;
+import { default as Main } from './Main';
+export default Main;
