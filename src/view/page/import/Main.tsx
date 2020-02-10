@@ -16,7 +16,7 @@ class Main extends React.Component {
       settingId: 'ImportPalmCsvFile',
       title: 'Palm 書式 CSV ファイルから取込...',
       comment:
-        '左列から日付，メモ，入金額，送金額，カテゴリの順に記述された CSV ファイル（UTF8エンコーディング）のレコードを取り込みます。別アプリケーション，ネットバンクからのインポート等で使うことを想定しています。',
+        '左列から日付，メモ，入金額，出金額，カテゴリの順に記述された CSV ファイル（UTF8エンコーディング）のレコードを取り込みます。別アプリケーション，ネットバンクからのインポート等で使うことを想定しています。',
     });
     btnInfos.push({
       settingId: 'ImportAmMarkdown',
