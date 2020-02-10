@@ -12,22 +12,38 @@ class Main extends React.Component {
     const rootClass = ClassNames(PageStyles.Base, Styles.Root);
 
     const btnInfos = [];
-    btnInfos.push({ settingId: 'ImportPalmCsv', title: 'Palm 書式の CSV ファイルを取込...' });
+    btnInfos.push({
+      settingId: 'ImportPalmCsvFile',
+      title: 'Palm 書式 CSV ファイルから取込...',
+      comment:
+        '左列から日付，メモ，入金額，送金額，カテゴリの順に記述された CSV ファイル（UTF8エンコーディング）のレコードを取り込みます。別アプリケーション，ネットバンクからのインポート等で使うことを想定しています。',
+    });
+    btnInfos.push({
+      settingId: 'ImportAmMarkdown',
+      title: 'AdelMoney Markdown テキストから取込...（準備中）',
+      comment:
+        'AdelMoney オリジナル書式で書かれたテキストを使ってレコードを取り込みます。スマートデバイスのメモアプリ等に記入した入出金記録を取り込む際に使うことを想定しています。',
+    });
 
-    const btns: JSX.Element[] = [];
+    const btnHolders: JSX.Element[] = [];
     btnInfos.forEach((btnInfo) => {
-      btns.push(
-        <Btn
-          key={btnInfo.settingId}
-          onClicked={() => {
-            this.onClicked(btnInfo.settingId);
-          }}
-          title={btnInfo.title}
-        />,
+      btnHolders.push(
+        <div className={Styles.BtnHolder}>
+          <Btn
+            key={btnInfo.settingId}
+            onClicked={() => {
+              this.onClicked(btnInfo.settingId);
+            }}
+            title={btnInfo.title}
+          />
+          <div className={Styles.BtnComment}>
+            <span>{btnInfo.comment}</span>
+          </div>
+        </div>,
       );
     });
 
-    return <div className={rootClass}>{btns}</div>;
+    return <div className={rootClass}>{btnHolders}</div>;
   }
 
   private onClicked(settingId: string) {
