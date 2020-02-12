@@ -19,6 +19,7 @@ import PageStyles from 'src/view/page/Page.css';
 import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
 import PageStart from 'src/view/page/start';
+import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 
 import * as Styles from './Main.css';
 import SideBar from './SideBar';
@@ -259,15 +260,7 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   private showErrorDialog(msg: string, detail: string) {
-    const dialog = remote.dialog;
-    dialog.showMessageBox(remote.getCurrentWindow(), {
-      type: 'error',
-      buttons: ['OK'],
-      defaultId: 0,
-      title: 'スタートページ',
-      message: msg,
-      detail,
-    });
+    NativeDialogUtils.showErrorDialog('スタートページ', msg, detail);
   }
 
   private onPageBtnClicked(pageId: string) {

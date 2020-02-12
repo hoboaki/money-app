@@ -7,6 +7,7 @@ import * as Styles from './Btn.css';
 interface IProps {
   onClicked: () => void;
   title: string;
+  isEnabled: boolean;
 }
 
 class Btn extends React.Component<IProps> {
@@ -17,10 +18,20 @@ class Btn extends React.Component<IProps> {
   public render() {
     const rootClass = ClassNames(Styles.Root, BasicStyles.StdBtnPrimary);
     return (
-      <button className={rootClass} onClick={this.props.onClicked} disabled={true} title={this.props.title}>
+      <button
+        className={rootClass}
+        onClick={(e) => this.onClicked(e)}
+        disabled={!this.props.isEnabled}
+        title={this.props.title}
+      >
         <span>{this.props.title}</span>
       </button>
     );
+  }
+
+  private onClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    e.stopPropagation();
+    this.props.onClicked();
   }
 }
 
