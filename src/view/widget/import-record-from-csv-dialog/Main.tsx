@@ -23,19 +23,45 @@ interface ILocalProps extends IProps {
   doc: DocStates.IState;
 }
 
-class Main extends React.Component<ILocalProps> {
+interface CsvRow {
+  date: string;
+  memo: string;
+  income: number | null;
+  outgo: number | null;
+  category: string;
+}
+
+interface IState {
+  csvRows: CsvRow[];
+}
+
+class Main extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdCloseBtn: string;
   private elementIdFormSubmitBtn: string;
 
   constructor(props: ILocalProps) {
     super(props);
+    this.state = {
+      csvRows: [],
+    };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
     this.elementIdFormSubmitBtn = `elem-${UUID()}`;
   }
 
   public componentDidMount() {
+    // csv 解析
+    const csvRows: CsvRow[] = [];
+    this.props.csvText.split('\n').forEach((line) => {
+      if (line.match(/\d{4}\/\d{1,2}\/\d{1,2}/)) {
+        global.console.log(line);
+      }
+    });
+    this.setState({
+      csvRows,
+    });
+
     // ダイアログ表示
     $(`#${this.elementIdRoot}`).modal({ show: true, backdrop: false });
 
