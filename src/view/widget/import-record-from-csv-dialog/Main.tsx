@@ -19,7 +19,7 @@ interface IProps {
   onClosed: () => void;
 }
 
-interface ILocalProps {
+interface ILocalProps extends IProps {
   doc: DocStates.IState;
 }
 
@@ -36,7 +36,13 @@ class Main extends React.Component<ILocalProps> {
   }
 
   public componentDidMount() {
-    // ...
+    // ダイアログ表示
+    $(`#${this.elementIdRoot}`).modal({ show: true, backdrop: false });
+
+    // ダイアログ閉じたらコールバック
+    $(`#${this.elementIdRoot}`).on('hidden.bs.modal', () => {
+      this.props.onClosed();
+    });
   }
 
   public render() {
@@ -48,6 +54,7 @@ class Main extends React.Component<ILocalProps> {
 
     return (
       <div
+        id={this.elementIdRoot}
         className={rootClass}
         tabIndex={-1}
         role="dialog"
