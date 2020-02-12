@@ -2,6 +2,7 @@ import 'flatpickr/dist/l10n/ja.js';
 import 'src/@types/mdb/modal';
 
 import ClassNames from 'classnames';
+import CsvParse from 'csv-parse/lib/sync';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import * as DocStates from 'src/state/doc/States';
@@ -54,13 +55,29 @@ class Main extends React.Component<ILocalProps, IState> {
     // csv 解析
     const csvRows: CsvRow[] = [];
     this.props.csvText.split('\n').forEach((line) => {
-      if (line.match(/\d{4}\/\d{1,2}\/\d{1,2}/)) {
-        global.console.log(line);
+      // 0000/00/00 フォーマットから始まる行を対象データとして扱う
+      if (!line.match(/\d{4}\/\d{1,2}\/\d{1,2}/)) {
+        return;
       }
+
+      // 行解析
+      const cols = CsvParse(line, { columns: false })[0] as string[];
+      const incomeText = cols[2].replace(',', '');
+      const income = parseInt(incomeText);
+      const outgoText = cols[3].replace(',', '');
+      const outgo = parseInt(outgoText);
+      csvRows.push({
+        date: cols[0],
+        memo: cols[1],
+        income: isNaN(income) ? null : income,
+        outgo: isNaN(outgo) ? null : outgo,
+        category: cols[4],
+      });
     });
     this.setState({
       csvRows,
     });
+    global.console.log(csvRows);
 
     // ダイアログ表示
     $(`#${this.elementIdRoot}`).modal({ show: true, backdrop: false });
