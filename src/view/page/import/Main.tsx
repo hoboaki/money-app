@@ -3,6 +3,7 @@ import { remote } from 'electron';
 import * as Fs from 'fs';
 import * as React from 'react';
 import * as PageStyles from 'src/view/page/Page.css';
+import ImportRecordFromCsvDialog from 'src/view/widget/import-record-from-csv-dialog';
 import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 
 import Btn from './Btn';
@@ -10,7 +11,7 @@ import * as Styles from './Main.css';
 
 interface IState {
   csvText: string;
-  modalRecordImportFromCsv: boolean;
+  modalImportRecordFromCsv: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,7 +24,7 @@ class Main extends React.Component<any, IState> {
     super(props);
     this.state = {
       csvText: '',
-      modalRecordImportFromCsv: false,
+      modalImportRecordFromCsv: false,
     };
   }
 
@@ -32,14 +33,14 @@ class Main extends React.Component<any, IState> {
 
     const btnInfos = [];
     btnInfos.push({
-      settingId: Main.BtnIdFromPalmCsvFile,
+      btnId: Main.BtnIdFromPalmCsvFile,
       title: 'Palm 書式 CSV ファイルから取込...',
       comment:
         '左列から日付，メモ，入金額，出金額，カテゴリの順に記述された CSV ファイル（UTF8エンコーディング）のレコードを取り込みます。別アプリケーション，ネットバンクからのインポート等で使うことを想定しています。',
       isEnabled: true,
     });
     btnInfos.push({
-      settingId: 'ImportAmMarkdown',
+      btnId: 'ImportAmMarkdown',
       title: 'AdelMoney Markdown テキストから取込...（準備中）',
       comment:
         'AdelMoney オリジナル書式で書かれたテキストを使ってレコードを取り込みます。スマートデバイスのメモアプリ等に記入した入出金記録を取り込む際に使うことを想定しています。',
@@ -49,11 +50,11 @@ class Main extends React.Component<any, IState> {
     const btnHolders: JSX.Element[] = [];
     btnInfos.forEach((btnInfo) => {
       btnHolders.push(
-        <div className={Styles.BtnHolder}>
+        <div key={btnInfo.btnId} className={Styles.BtnHolder}>
           <Btn
-            key={btnInfo.settingId}
+            key={btnInfo.btnId}
             onClicked={() => {
-              this.onClicked(btnInfo.settingId);
+              this.onClicked(btnInfo.btnId);
             }}
             title={btnInfo.title}
             isEnabled={btnInfo.isEnabled}
@@ -65,7 +66,24 @@ class Main extends React.Component<any, IState> {
       );
     });
 
-    return <div className={rootClass}>{btnHolders}</div>;
+    let modalDialog: JSX.Element | null = null;
+    if (this.state.modalImportRecordFromCsv) {
+      modalDialog = (
+        <ImportRecordFromCsvDialog
+          csvText={this.state.csvText}
+          onClosed={() => {
+            this.setState({ modalImportRecordFromCsv: false });
+          }}
+        />
+      );
+    }
+
+    return (
+      <div className={rootClass}>
+        {btnHolders}
+        {modalDialog}
+      </div>
+    );
   }
 
   private onClicked(btnId: string) {
@@ -104,7 +122,7 @@ class Main extends React.Component<any, IState> {
         // ダイアログオープン
         this.setState({
           csvText,
-          modalRecordImportFromCsv: true,
+          modalImportRecordFromCsv: true,
         });
 
         break;
