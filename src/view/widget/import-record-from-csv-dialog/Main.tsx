@@ -138,9 +138,6 @@ class Main extends React.Component<ILocalProps, IState> {
             <td data-header={true} data-col-category={'date'}>
               日付
             </td>
-            <td data-header={true} data-col-category={'palm-category'}>
-              Palmカテゴリ
-            </td>
             <td data-header={true} data-col-category={'memo'}>
               メモ
             </td>
@@ -149,6 +146,9 @@ class Main extends React.Component<ILocalProps, IState> {
             </td>
             <td data-header={true} data-col-category={'outgo'}>
               出金
+            </td>
+            <td data-header={true} data-col-category={'palm-category'}>
+              Palmカテゴリ
             </td>
             <td data-header={true} data-col-category={'group'}>
               分類
@@ -162,10 +162,10 @@ class Main extends React.Component<ILocalProps, IState> {
       return (
         <tr key={idx}>
           <td data-col-category={'date'}>{row.date}</td>
-          <td data-col-category={'palm-category'}>{row.category}</td>
           <td data-col-category={'memo'}>{row.memo}</td>
           <td data-col-category={'income'}>{row.income != null ? PriceUtils.numToLocaleString(row.income) : ''}</td>
           <td data-col-category={'outgo'}>{row.outgo != null ? PriceUtils.numToLocaleString(row.outgo) : ''}</td>
+          <td data-col-category={'palm-category'}>{row.category}</td>
           <td data-col-category={'group'}></td>
         </tr>
       );
