@@ -185,9 +185,10 @@ class Main extends React.Component<ILocalProps, IState> {
     );
 
     // フッタ
+    const importBtnClass = ClassNames(BasicStyles.StdBtnSecondary);
     const footer = (
-      <div>
-        <button>取込</button>
+      <div className={Styles.FooterRoot}>
+        <button className={importBtnClass}>取込</button>
       </div>
     );
 
@@ -211,9 +212,11 @@ class Main extends React.Component<ILocalProps, IState> {
         <div className={dialogRootClass} role="document">
           <div className={dialogContentClass}>
             {header}
-            {targetAccount}
-            {tableRoot}
-            {footer}
+            <div className={Styles.BodyAndFooter}>
+              {targetAccount}
+              {tableRoot}
+              {footer}
+            </div>
           </div>
         </div>
       </div>

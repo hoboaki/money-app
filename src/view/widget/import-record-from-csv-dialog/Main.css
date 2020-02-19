@@ -15,17 +15,32 @@
   height: 52px;
 }
 
+.BodyAndFooter {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 52px);
+}
+
 .TargetAccountRoot {
   align-items: center;
   display: flex;
   flex-direction: row;
+}
+
+.TargetAccountRoot,
+.FooterRoot {
   padding: 4px 14px;
 }
 
 .TargetAccountRoot select {
+  flex-grow: 1;
   height: 26px;
   margin-left: 8px;
   margin-right: 8px;
+}
+
+.TableRoot {
+  flex-grow: 1;
 }
 
 .TableRoot td[data-col-category='date'] {
@@ -64,6 +79,7 @@
   border-top: 1px solid #cccccc;
   color: rgba(0, 0, 0, 0.61);
   font-size: 8pt;
+  height: 22px;
   text-align: center;
   width: 100%;
 }
@@ -78,6 +94,7 @@
 
 .TableBody {
   border-bottom: 1px solid #cccccc;
+  height: calc(100% - 22px);
   overflow-y: scroll;
   width: 100%;
 }
@@ -93,4 +110,15 @@
 .TableBody td[data-col-category='income'],
 .TableBody td[data-col-category='outgo'] {
   text-align: right;
+}
+
+.FooterRoot {
+  align-items: center;
+  display: flex;
+  flex-direction: row-reverse;
+  height: 40px;
+}
+
+.FooterRoot button {
+  min-width: 100px;
 }
