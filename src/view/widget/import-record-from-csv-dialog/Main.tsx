@@ -91,12 +91,20 @@ class Main extends React.Component<ILocalProps, IState> {
   }
 
   public render() {
-    // 全体およびヘッダ関連
-    const rootClass = ClassNames('modal', 'fade', BasicStyles.DialogBackdrop);
-    const dialogRootClass = ClassNames('modal-dialog', 'modal-dialog-centered', Styles.DialogRoot);
-    const dialogContentClass = ClassNames('modal-content', Styles.DialogContent);
+    // ヘッダ
     const dialogHeaderClass = ClassNames('modal-header', Styles.DialogHeader);
+    const header = (
+      <div className={dialogHeaderClass}>
+        <h5 className="modal-title" id="exampleModalLabel">
+          レコードの取込
+        </h5>
+        <button type="button" id={this.elementIdCloseBtn} className="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    );
 
+    // 取込先口座
     const targetAccountSelectClass = ClassNames(BasicStyles.StdSelect);
     const targetAccountOptions = this.props.doc.account.order.map((id) => {
       const account = this.props.doc.account.accounts[id];
@@ -121,6 +129,53 @@ class Main extends React.Component<ILocalProps, IState> {
       </div>
     );
 
+    // テーブル
+    const tableHeader = (
+      <table className={Styles.TableHeader}>
+        <tbody>
+          <tr>
+            <td data-header={true} data-col-category={'date'}>
+              日付
+            </td>
+            <td data-header={true} data-col-category={'palm-category'}>
+              Palmカテゴリ
+            </td>
+            <td data-header={true} data-col-category={'memo'}>
+              メモ
+            </td>
+            <td data-header={true} data-col-category={'income'}>
+              入金
+            </td>
+            <td data-header={true} data-col-category={'outgo'}>
+              出金
+            </td>
+            <td data-header={true} data-col-category={'group'}>
+              分類
+            </td>
+            <td data-header={true} data-col-category={'tail-space'}></td>
+          </tr>
+        </tbody>
+      </table>
+    );
+    const tableBody = <div className={Styles.TableBody}></div>;
+    const tableRoot = (
+      <div className={Styles.TableRoot}>
+        {tableHeader}
+        {tableBody}
+      </div>
+    );
+
+    // フッタ
+    const footer = (
+      <div>
+        <button>取込</button>
+      </div>
+    );
+
+    // 全体
+    const rootClass = ClassNames('modal', 'fade', BasicStyles.DialogBackdrop);
+    const dialogRootClass = ClassNames('modal-dialog', 'modal-dialog-centered', Styles.DialogRoot);
+    const dialogContentClass = ClassNames('modal-content', Styles.DialogContent);
     return (
       <div
         id={this.elementIdRoot}
@@ -136,21 +191,10 @@ class Main extends React.Component<ILocalProps, IState> {
       >
         <div className={dialogRootClass} role="document">
           <div className={dialogContentClass}>
-            <div className={dialogHeaderClass}>
-              <h5 className="modal-title" id="exampleModalLabel">
-                レコードの取込
-              </h5>
-              <button
-                type="button"
-                id={this.elementIdCloseBtn}
-                className="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
+            {header}
             {targetAccount}
+            {tableRoot}
+            {footer}
           </div>
         </div>
       </div>

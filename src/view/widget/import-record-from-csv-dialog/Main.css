@@ -27,3 +27,25 @@
   margin-left: 8px;
   margin-right: 8px;
 }
+
+.TableRoot {
+  /* */
+}
+
+.TableHeader {
+  background: #f5f5f6;
+  border-bottom: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+  color: rgba(0, 0, 0, 0.61);
+  font-size: 8pt;
+  text-align: center;
+  width: 100%;
+}
+
+.TableHeader td[data-col-category='tail-space'] {
+  width: 15px;
+}
+
+.TableBody {
+  overflow-y: scroll;
+}
