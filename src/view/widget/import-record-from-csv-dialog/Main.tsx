@@ -7,6 +7,7 @@ import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import * as DocStates from 'src/state/doc/States';
 import IStoreState from 'src/state/IStoreState';
+import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import { v4 as UUID } from 'uuid';
 
@@ -157,7 +158,25 @@ class Main extends React.Component<ILocalProps, IState> {
         </tbody>
       </table>
     );
-    const tableBody = <div className={Styles.TableBody}></div>;
+    const tableBodyRows = this.state.csvRows.map((row, idx) => {
+      return (
+        <tr key={idx}>
+          <td data-col-category={'date'}>{row.date}</td>
+          <td data-col-category={'palm-category'}>{row.category}</td>
+          <td data-col-category={'memo'}>{row.memo}</td>
+          <td data-col-category={'income'}>{row.income != null ? PriceUtils.numToLocaleString(row.income) : ''}</td>
+          <td data-col-category={'outgo'}>{row.outgo != null ? PriceUtils.numToLocaleString(row.outgo) : ''}</td>
+          <td data-col-category={'group'}></td>
+        </tr>
+      );
+    });
+    const tableBody = (
+      <div className={Styles.TableBody}>
+        <table>
+          <tbody>{tableBodyRows}</tbody>
+        </table>
+      </div>
+    );
     const tableRoot = (
       <div className={Styles.TableRoot}>
         {tableHeader}

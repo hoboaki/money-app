@@ -28,8 +28,34 @@
   margin-right: 8px;
 }
 
-.TableRoot {
-  /* */
+.TableRoot td[data-col-category='date'] {
+  width: 88px;
+}
+
+.TableRoot td[data-col-category='palm-category'] {
+  max-width: 140px;
+  width: 140px;
+}
+
+.TableRoot td[data-col-category='memo'] {
+  max-width: 140px;
+  width: 140px;
+}
+
+.TableRoot td[data-col-category='income'] {
+  width: 100px;
+}
+
+.TableRoot td[data-col-category='outgo'] {
+  width: 100px;
+}
+
+.TableRoot td[data-col-category='group'] {
+  width: auto;
+}
+
+.TableRoot td[data-col-category='tail-space'] {
+  width: 15px;
 }
 
 .TableHeader {
@@ -42,10 +68,29 @@
   width: 100%;
 }
 
+.TableHeader td {
+  border-right: 1px solid #cccccc;
+}
+
 .TableHeader td[data-col-category='tail-space'] {
-  width: 15px;
+  border-right: 0px;
 }
 
 .TableBody {
+  border-bottom: 1px solid #cccccc;
   overflow-y: scroll;
+  width: 100%;
+}
+
+.TableBody td {
+  font-size: 9pt;
+  overflow: hidden;
+  padding: 2px 4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.TableBody td[data-col-category='income'],
+.TableBody td[data-col-category='outgo'] {
+  text-align: right;
 }
