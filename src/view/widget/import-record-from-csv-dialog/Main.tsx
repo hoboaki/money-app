@@ -34,6 +34,7 @@ interface CsvRow {
 
 interface IState {
   csvRows: CsvRow[];
+  targetAccountId: number;
 }
 
 class Main extends React.Component<ILocalProps, IState> {
@@ -45,6 +46,7 @@ class Main extends React.Component<ILocalProps, IState> {
     super(props);
     this.state = {
       csvRows: [],
+      targetAccountId: props.doc.account.order[0],
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
@@ -95,6 +97,30 @@ class Main extends React.Component<ILocalProps, IState> {
     const dialogContentClass = ClassNames('modal-content', Styles.DialogContent);
     const dialogHeaderClass = ClassNames('modal-header', Styles.DialogHeader);
 
+    const targetAccountSelectClass = ClassNames(BasicStyles.StdSelect);
+    const targetAccountOptions = this.props.doc.account.order.map((id) => {
+      const account = this.props.doc.account.accounts[id];
+      return (
+        <option key={account.id} value={account.id}>
+          {account.name}
+        </option>
+      );
+    });
+    const targetAccount = (
+      <div className={Styles.TargetAccountRoot}>
+        <span>取込先口座:</span>
+        <select
+          className={targetAccountSelectClass}
+          defaultValue=""
+          onChange={(e) => {
+            this.onTargetAccountChanged(e);
+          }}
+        >
+          {targetAccountOptions}
+        </select>
+      </div>
+    );
+
     return (
       <div
         id={this.elementIdRoot}
@@ -124,6 +150,7 @@ class Main extends React.Component<ILocalProps, IState> {
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
+            {targetAccount}
           </div>
         </div>
       </div>
@@ -149,6 +176,14 @@ class Main extends React.Component<ILocalProps, IState> {
       event.preventDefault();
       return;
     }
+  }
+
+  /// 取込先口座変更イベント。
+  private onTargetAccountChanged(e: React.ChangeEvent<HTMLSelectElement>) {
+    e.stopPropagation();
+    this.setState({
+      targetAccountId: Number(e.target.value),
+    });
   }
 }
 
