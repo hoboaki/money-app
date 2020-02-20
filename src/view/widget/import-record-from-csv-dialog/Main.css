@@ -99,6 +99,10 @@
   width: 100%;
 }
 
+.TableBody table {
+  width: 100%;
+}
+
 .TableBody td {
   font-size: 9pt;
   overflow: hidden;
@@ -110,6 +114,25 @@
 .TableBody td[data-col-category='income'],
 .TableBody td[data-col-category='outgo'] {
   text-align: right;
+}
+
+.TableBody td[data-col-category='group'] {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+}
+
+.TableBody td[data-col-category='group'][data-selected='true'] {
+  background: #1976d2;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.TableGroupLabel {
+  flex-grow: 1;
+}
+
+.TableGroupSelectIcon {
+  color: rgba(0, 0, 0, 0.61);
 }
 
 .ContextMenuRoot {

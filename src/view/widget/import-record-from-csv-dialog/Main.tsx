@@ -37,6 +37,7 @@ interface CsvRow {
 interface IState {
   csvRows: CsvRow[];
   targetAccountId: number;
+  isGroupCellSelected: boolean;
 }
 
 class Main extends React.Component<ILocalProps, IState> {
@@ -47,11 +48,15 @@ class Main extends React.Component<ILocalProps, IState> {
   private classNameIncomeGroupSelect: string;
   private classNameOutgoGroupSelect: string;
 
+  /** 選択中の GroupCell の html element id。 */
+  private selectedGroupCellId: string;
+
   constructor(props: ILocalProps) {
     super(props);
     this.state = {
       csvRows: [],
       targetAccountId: props.doc.account.order[0],
+      isGroupCellSelected: false,
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
@@ -59,6 +64,7 @@ class Main extends React.Component<ILocalProps, IState> {
     this.elementIdGroupPrefix = `elem-${UUID()}`;
     this.classNameIncomeGroupSelect = `class-${UUID()}`;
     this.classNameOutgoGroupSelect = `class-${UUID()}`;
+    this.selectedGroupCellId = '';
   }
 
   public componentDidMount() {
@@ -149,12 +155,20 @@ class Main extends React.Component<ILocalProps, IState> {
           }
         },
         determinePosition: (menu) => {
-          const parent = $(selector);
+          const parent = $(`#${this.selectedGroupCellId}`);
           const base = parent.offset();
           const height = parent.height();
           if (base !== undefined && height !== undefined) {
-            menu.offset({ top: base.top + height, left: base.left - 20 });
+            menu.offset({ top: base.top + height + 2, left: base.left - 20 });
           }
+        },
+        events: {
+          hide: (opts) => {
+            this.setState({
+              isGroupCellSelected: false,
+            });
+            return true;
+          },
         },
         className: Styles.ContextMenuRoot,
         items: groupItems,
@@ -270,6 +284,8 @@ class Main extends React.Component<ILocalProps, IState> {
         isIncome ? this.classNameIncomeGroupSelect : '',
         isOutgo ? this.classNameOutgoGroupSelect : '',
       );
+      const groupCellId = `${this.elementIdGroupPrefix}${idx}`;
+      const isGroupSelected = this.state.isGroupCellSelected && this.selectedGroupCellId === groupCellId;
       return (
         <tr key={idx}>
           <td data-col-category={'date'}>{row.date}</td>
@@ -278,15 +294,17 @@ class Main extends React.Component<ILocalProps, IState> {
           <td data-col-category={'outgo'}>{row.outgo != null ? PriceUtils.numToLocaleString(row.outgo) : ''}</td>
           <td data-col-category={'palm-category'}>{row.category}</td>
           <td
-            id={`${this.elementIdGroupPrefix}${idx}`}
+            id={groupCellId}
             data-col-category={'group'}
             data-row-idx={idx}
+            data-selected={isGroupSelected}
             className={groupClass}
             onClick={(e) => {
               this.onGroupCellClicked(e.currentTarget);
             }}
           >
-            （未選択）
+            <span className={Styles.TableGroupLabel}>（未選択）</span>
+            <span className={Styles.TableGroupSelectIcon}>▼</span>
           </td>
         </tr>
       );
@@ -375,7 +393,10 @@ class Main extends React.Component<ILocalProps, IState> {
 
   /// 分類がクリックされたときの処理。
   private onGroupCellClicked(sender: EventTarget & HTMLTableDataCellElement) {
-    global.console.log(`Clicked`);
+    this.selectedGroupCellId = sender.id; // contextMenu() がすぐにアクセスするためこちらは State ではなくメンバ変数
+    this.setState({
+      isGroupCellSelected: true, // こちらは render() に関わる変数なので State 変数
+    });
     $(`#${sender.id}`).contextMenu();
   }
 }
