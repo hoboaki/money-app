@@ -6,6 +6,7 @@ import CsvParse from 'csv-parse/lib/sync';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import * as DocStates from 'src/state/doc/States';
+import { INVALID_ID } from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
@@ -42,6 +43,9 @@ class Main extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdCloseBtn: string;
   private elementIdFormSubmitBtn: string;
+  private elementIdGroupPrefix: string;
+  private classNameIncomeGroupSelect: string;
+  private classNameOutgoGroupSelect: string;
 
   constructor(props: ILocalProps) {
     super(props);
@@ -52,6 +56,9 @@ class Main extends React.Component<ILocalProps, IState> {
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
     this.elementIdFormSubmitBtn = `elem-${UUID()}`;
+    this.elementIdGroupPrefix = `elem-${UUID()}`;
+    this.classNameIncomeGroupSelect = `class-${UUID()}`;
+    this.classNameOutgoGroupSelect = `class-${UUID()}`;
   }
 
   public componentDidMount() {
@@ -81,6 +88,104 @@ class Main extends React.Component<ILocalProps, IState> {
       csvRows,
     });
     global.console.log(csvRows);
+
+    // ContextMenu セットアップ
+    const groupSetup = (
+      accountLabel: string,
+      rootCategory: number,
+      categories: { [key: number]: DocStates.ICategory },
+      onAccountSelected: (rowIdx: number, accountId: number) => void,
+      onCategorySelected: (rowIdx: number, categoryId: number) => void,
+      selector: string,
+    ) => {
+      const prefixAccount = 'account';
+      const prefixCategory = 'category';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const groupItems: { [key: string]: any } = {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const accountItems: { [key: string]: any } = {};
+      this.props.doc.account.order.forEach((accountId) => {
+        const key = `account-${accountId}`;
+        const name = this.props.doc.account.accounts[accountId].name;
+        accountItems[key] = {
+          name,
+          items: null,
+        };
+      });
+      groupItems[INVALID_ID] = {
+        name: accountLabel,
+        items: accountItems,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const categoryConvertFunc = (parent: { [key: string]: any }, cat: DocStates.ICategory) => {
+        const key = `category-${cat.id}`;
+        const name = cat.name;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const items: { [key: string]: any } = {};
+        cat.childs.forEach((child) => {
+          categoryConvertFunc(items, categories[child]);
+        });
+        parent[key] = {
+          name,
+          items: Object.keys(items).length === 0 ? null : items,
+        };
+      };
+      categories[rootCategory].childs.forEach((id) => {
+        categoryConvertFunc(groupItems, categories[id]);
+      });
+
+      $.contextMenu({
+        callback: (key, options) => {
+          const rowIdx = Number(options.$trigger.attr('data-row-idx'));
+          const texts = key.split('-');
+          const selectedId = Number(texts[1]);
+          switch (texts[0]) {
+            case prefixAccount:
+              onAccountSelected(rowIdx, selectedId);
+              break;
+            case prefixCategory:
+              onCategorySelected(rowIdx, selectedId);
+              break;
+          }
+        },
+        determinePosition: (menu) => {
+          const parent = $(selector);
+          const base = parent.offset();
+          const height = parent.height();
+          if (base !== undefined && height !== undefined) {
+            menu.offset({ top: base.top + height, left: base.left - 20 });
+          }
+        },
+        className: Styles.ContextMenuRoot,
+        items: groupItems,
+        selector,
+        trigger: 'none',
+      });
+    };
+    groupSetup(
+      '送金元口座',
+      this.props.doc.income.rootCategoryId,
+      this.props.doc.income.categories,
+      (rowIdx, accountId) => {
+        /* */
+      },
+      (rowIdx, categoryId) => {
+        /* */
+      },
+      `.${this.classNameIncomeGroupSelect}`,
+    );
+    groupSetup(
+      '送金先口座',
+      this.props.doc.outgo.rootCategoryId,
+      this.props.doc.outgo.categories,
+      (rowIdx, accountId) => {
+        /* */
+      },
+      (rowIdx, categoryId) => {
+        /* */
+      },
+      `.${this.classNameOutgoGroupSelect}`,
+    );
 
     // ダイアログ表示
     $(`#${this.elementIdRoot}`).modal({ show: true, backdrop: false });
@@ -159,6 +264,12 @@ class Main extends React.Component<ILocalProps, IState> {
       </table>
     );
     const tableBodyRows = this.state.csvRows.map((row, idx) => {
+      const isIncome = row.income != null && row.outgo == null;
+      const isOutgo = row.outgo != null && row.income == null;
+      const groupClass = ClassNames(
+        isIncome ? this.classNameIncomeGroupSelect : '',
+        isOutgo ? this.classNameOutgoGroupSelect : '',
+      );
       return (
         <tr key={idx}>
           <td data-col-category={'date'}>{row.date}</td>
@@ -166,7 +277,17 @@ class Main extends React.Component<ILocalProps, IState> {
           <td data-col-category={'income'}>{row.income != null ? PriceUtils.numToLocaleString(row.income) : ''}</td>
           <td data-col-category={'outgo'}>{row.outgo != null ? PriceUtils.numToLocaleString(row.outgo) : ''}</td>
           <td data-col-category={'palm-category'}>{row.category}</td>
-          <td data-col-category={'group'}></td>
+          <td
+            id={`${this.elementIdGroupPrefix}${idx}`}
+            data-col-category={'group'}
+            data-row-idx={idx}
+            className={groupClass}
+            onClick={(e) => {
+              this.onGroupCellClicked(e.currentTarget);
+            }}
+          >
+            （未選択）
+          </td>
         </tr>
       );
     });
@@ -250,6 +371,12 @@ class Main extends React.Component<ILocalProps, IState> {
     this.setState({
       targetAccountId: Number(e.target.value),
     });
+  }
+
+  /// 分類がクリックされたときの処理。
+  private onGroupCellClicked(sender: EventTarget & HTMLTableDataCellElement) {
+    global.console.log(`Clicked`);
+    $(`#${sender.id}`).contextMenu();
   }
 }
 
