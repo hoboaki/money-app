@@ -12,6 +12,7 @@ import { INVALID_ID } from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
+import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 import { v4 as UUID } from 'uuid';
 
 import * as Styles from './Main.css';
@@ -204,26 +205,50 @@ class Main extends React.Component<ILocalProps, IState> {
         trigger: 'none',
       });
     };
+    const targetRowIdxs = (rowIdx: number): number[] => {
+      const rows = this.state.csvRows
+        .map((row, idx) => idx)
+        .filter((idx) => this.state.csvRows[idx].category === this.state.csvRows[rowIdx].category);
+      if (
+        1 < rows.length &&
+        NativeDialogUtils.showYesNoCancelDialog(
+          'レコードの取込',
+          '同じPalmカテゴリの他レコードも変更しますか？',
+          `「すべて変更」を選んだ場合，Palmカテゴリ"${this.state.csvRows[rowIdx].category}"のレコード${rows.length}件の分類をすべて変更します。`,
+          'すべて変更',
+          '選択したレコードのみ変更',
+        ) === NativeDialogUtils.YesNoCacnelDialogResult.Yes
+      ) {
+        return rows;
+      }
+      return [rowIdx];
+    };
     const onAccountSelected = (rowIdx: number, accountId: number): void => {
       // 取込先と同じ口座は選択不可
       if (accountId === this.state.targetAccountId) {
         return;
       }
       const newArray = this.state.csvRows.concat([]);
-      newArray[rowIdx].group = {
-        accountId,
-        categoryId: null,
-      };
+      const rowIdxs = targetRowIdxs(rowIdx);
+      rowIdxs.forEach((idx) => {
+        newArray[idx].group = {
+          accountId,
+          categoryId: null,
+        };
+      });
       this.setState({
         csvRows: newArray,
       });
     };
     const onCategorySelected = (rowIdx: number, categoryId: number): void => {
       const newArray = this.state.csvRows.concat([]);
-      newArray[rowIdx].group = {
-        accountId: null,
-        categoryId,
-      };
+      const rowIdxs = targetRowIdxs(rowIdx);
+      rowIdxs.forEach((idx) => {
+        newArray[idx].group = {
+          accountId: null,
+          categoryId,
+        };
+      });
       this.setState({
         csvRows: newArray,
       });
