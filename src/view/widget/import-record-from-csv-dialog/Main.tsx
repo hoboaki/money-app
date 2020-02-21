@@ -58,7 +58,7 @@ interface IState {
 class Main extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdCloseBtn: string;
-  private elementIdFormSubmitBtn: string;
+  private elementIdImportBtn: string;
   private elementIdGroupPrefix: string;
   private classNameIncomeGroupSelect: string;
   private classNameOutgoGroupSelect: string;
@@ -75,7 +75,7 @@ class Main extends React.Component<ILocalProps, IState> {
     };
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
-    this.elementIdFormSubmitBtn = `elem-${UUID()}`;
+    this.elementIdImportBtn = `elem-${UUID()}`;
     this.elementIdGroupPrefix = `elem-${UUID()}`;
     this.classNameIncomeGroupSelect = `class-${UUID()}`;
     this.classNameOutgoGroupSelect = `class-${UUID()}`;
@@ -431,7 +431,9 @@ class Main extends React.Component<ILocalProps, IState> {
     const importBtnClass = ClassNames(BasicStyles.StdBtnSecondary);
     const footer = (
       <div className={Styles.FooterRoot}>
-        <button className={importBtnClass}>取込</button>
+        <button id={this.elementIdImportBtn} className={importBtnClass} onClick={(e) => this.onImportBtnClicked(e)}>
+          取込
+        </button>
       </div>
     );
 
@@ -474,15 +476,10 @@ class Main extends React.Component<ILocalProps, IState> {
       $(`#${this.elementIdCloseBtn}`).trigger('click');
       return;
     }
-  }
-
-  /// 共通キーダウンイベント処理。
-  private onKeyDownCommon(event: React.KeyboardEvent<HTMLElement>) {
     // Command + Enter で追加ボタンを押下
-    if (event.keyCode === 13 && event.metaKey) {
-      $(`#${this.elementIdFormSubmitBtn}`).click();
-      event.stopPropagation();
-      event.preventDefault();
+    if (e.keyCode === 13 && e.metaKey) {
+      e.stopPropagation();
+      this.onImportBtnClickedDetail();
       return;
     }
   }
@@ -512,6 +509,15 @@ class Main extends React.Component<ILocalProps, IState> {
       isGroupCellSelected: true, // こちらは render() に関わる変数なので State 変数
     });
     $(`#${sender.id}`).contextMenu();
+  }
+
+  /// 取込ボタンが押されたときの処理。
+  private onImportBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    e.stopPropagation();
+    this.onImportBtnClickedDetail();
+  }
+  private onImportBtnClickedDetail(): void {
+    $(`#${this.elementIdCloseBtn}`).trigger('click');
   }
 }
 
