@@ -116,8 +116,15 @@
   text-align: right;
 }
 
-.TableBody td[data-col-category='group'] {
+.TableBody td[data-clickable='true'] {
   cursor: pointer;
+}
+
+.TableBody td[data-clickable='false'] {
+  color: #e44;
+}
+
+.TableBody td[data-col-category='group'] {
   display: flex;
   flex-direction: row;
 }
@@ -125,6 +132,15 @@
 .TableBody td[data-col-category='group'][data-selected='true'] {
   background: #1976d2;
   color: rgba(255, 255, 255, 0.87);
+}
+
+.TableGroupIcon {
+  background: white;
+  border: 1px solid white;
+  border-radius: 9px;
+  height: 18px;
+  margin-right: 2px;
+  width: 18px;
 }
 
 .TableGroupLabel {

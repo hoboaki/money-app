@@ -394,7 +394,7 @@ class Main extends React.Component<ILocalProps, IState> {
           iconPath = './image/icon-ex/transfer-outline.svg';
           break;
       }
-      const elemIconImg = iconPath === null ? null : <img src={iconPath}></img>;
+      const elemIconImg = iconPath === null ? null : <img className={Styles.TableGroupIcon} src={iconPath}></img>;
       const elemLabel = <span className={Styles.TableGroupLabel}>{labelAndRecordKind.label}</span>;
       const elemExpander = isClickable ? <span className={Styles.TableGroupSelectIcon}>▼</span> : null;
 
@@ -410,10 +410,12 @@ class Main extends React.Component<ILocalProps, IState> {
             data-col-category={'group'}
             data-row-idx={idx}
             data-selected={isGroupSelected}
-            data-enabled={isClickable}
+            data-clickable={isClickable}
             className={groupClass}
             onClick={(e) => {
-              this.onGroupCellClicked(e.currentTarget);
+              if (isClickable) {
+                this.onGroupCellClicked(e.currentTarget);
+              }
             }}
           >
             {elemIconImg}
