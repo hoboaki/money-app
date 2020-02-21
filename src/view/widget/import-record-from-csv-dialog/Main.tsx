@@ -121,7 +121,6 @@ class Main extends React.Component<ILocalProps, IState> {
     this.setState({
       csvRows,
     });
-    global.console.log(csvRows);
 
     // ContextMenu セットアップ
     const groupSetup = (
