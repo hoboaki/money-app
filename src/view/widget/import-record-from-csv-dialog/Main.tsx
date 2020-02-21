@@ -541,6 +541,26 @@ class Main extends React.Component<ILocalProps, IState> {
     this.onImportBtnClickedDetail();
   }
   private onImportBtnClickedDetail(): void {
+    // 未入力チェック
+    const notSelectedCount = this.state.csvRows.filter((row) => row.kind !== RowKind.Invalid && row.group === null)
+      .length;
+    if (0 < notSelectedCount) {
+      if (
+        !NativeDialogUtils.showOkCancelDialog(
+          'レコードの取込',
+          '分類が未選択のレコードを無視して取り込みますか？',
+          `分類が未選択のレコードは${notSelectedCount}件あります。`,
+          '取り込む',
+        )
+      ) {
+        return;
+      }
+    }
+
+    // 取込
+    // ...
+
+    // ダイアログ閉じる
     $(`#${this.elementIdCloseBtn}`).trigger('click');
   }
 }

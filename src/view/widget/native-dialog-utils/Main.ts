@@ -12,6 +12,25 @@ export const showInfoDialog = (title: string, msg: string, detail: string | unde
   });
 };
 
+export const showOkCancelDialog = (
+  title: string,
+  msg: string,
+  detail: string | undefined,
+  labelOk: string,
+): boolean => {
+  const dialog = remote.dialog;
+  const result = dialog.showMessageBoxSync(remote.getCurrentWindow(), {
+    type: 'question',
+    buttons: [labelOk, 'キャンセル'],
+    defaultId: 0,
+    title: title,
+    message: msg,
+    detail,
+    cancelId: 1,
+  });
+  return result === 0;
+};
+
 export enum YesNoCacnelDialogResult {
   Yes,
   No,
