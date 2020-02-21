@@ -5,6 +5,7 @@ import ClassNames from 'classnames';
 import CsvParse from 'csv-parse/lib/sync';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import { INVALID_ID } from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
@@ -26,12 +27,25 @@ interface ILocalProps extends IProps {
   doc: DocStates.IState;
 }
 
+enum RowKind {
+  Invalid,
+  Income,
+  Outgo,
+}
+
+interface IGroupInfo {
+  accountId: number | null;
+  categoryId: number | null;
+}
+
 interface CsvRow {
+  kind: RowKind;
   date: string;
   memo: string;
   income: number | null;
   outgo: number | null;
   category: string;
+  group: IGroupInfo | null;
 }
 
 interface IState {
@@ -79,15 +93,28 @@ class Main extends React.Component<ILocalProps, IState> {
       // 行解析
       const cols = CsvParse(line, { columns: false })[0] as string[];
       const incomeText = cols[2].replace(',', '');
-      const income = parseInt(incomeText);
+      const incomeNumber = parseInt(incomeText);
+      const income = isNaN(incomeNumber) ? null : incomeNumber;
       const outgoText = cols[3].replace(',', '');
-      const outgo = parseInt(outgoText);
+      const outgoNumber = parseInt(outgoText);
+      const outgo = isNaN(outgoNumber) ? null : outgoNumber;
+      const kindSelector = () => {
+        if (income !== null && outgo === null) {
+          return RowKind.Income;
+        }
+        if (income === null && outgo !== null) {
+          return RowKind.Outgo;
+        }
+        return RowKind.Invalid;
+      };
       csvRows.push({
+        kind: kindSelector(),
         date: cols[0],
         memo: cols[1],
-        income: isNaN(income) ? null : income,
-        outgo: isNaN(outgo) ? null : outgo,
+        income,
+        outgo,
         category: cols[4],
+        group: null,
       });
     });
     this.setState({
@@ -181,10 +208,24 @@ class Main extends React.Component<ILocalProps, IState> {
       this.props.doc.income.rootCategoryId,
       this.props.doc.income.categories,
       (rowIdx, accountId) => {
-        /* */
+        const newArray = this.state.csvRows.concat([]);
+        newArray[rowIdx].group = {
+          accountId,
+          categoryId: null,
+        };
+        this.setState({
+          csvRows: newArray,
+        });
       },
       (rowIdx, categoryId) => {
-        /* */
+        const newArray = this.state.csvRows.concat([]);
+        newArray[rowIdx].group = {
+          accountId: null,
+          categoryId,
+        };
+        this.setState({
+          csvRows: newArray,
+        });
       },
       `.${this.classNameIncomeGroupSelect}`,
     );
@@ -193,10 +234,24 @@ class Main extends React.Component<ILocalProps, IState> {
       this.props.doc.outgo.rootCategoryId,
       this.props.doc.outgo.categories,
       (rowIdx, accountId) => {
-        /* */
+        const newArray = this.state.csvRows.concat([]);
+        newArray[rowIdx].group = {
+          accountId,
+          categoryId: null,
+        };
+        this.setState({
+          csvRows: newArray,
+        });
       },
       (rowIdx, categoryId) => {
-        /* */
+        const newArray = this.state.csvRows.concat([]);
+        newArray[rowIdx].group = {
+          accountId: null,
+          categoryId,
+        };
+        this.setState({
+          csvRows: newArray,
+        });
       },
       `.${this.classNameOutgoGroupSelect}`,
     );
@@ -278,14 +333,34 @@ class Main extends React.Component<ILocalProps, IState> {
       </table>
     );
     const tableBodyRows = this.state.csvRows.map((row, idx) => {
-      const isIncome = row.income != null && row.outgo == null;
-      const isOutgo = row.outgo != null && row.income == null;
+      const isIncome = row.kind === RowKind.Income;
+      const isOutgo = row.kind === RowKind.Outgo;
       const groupClass = ClassNames(
         isIncome ? this.classNameIncomeGroupSelect : '',
         isOutgo ? this.classNameOutgoGroupSelect : '',
       );
       const groupCellId = `${this.elementIdGroupPrefix}${idx}`;
       const isGroupSelected = this.state.isGroupCellSelected && this.selectedGroupCellId === groupCellId;
+      const labelSelector = (): string => {
+        if (row.kind === RowKind.Invalid) {
+          return 'エラー：入金か送金のいずれかに数値が必要です';
+        }
+        if (row.group === null) {
+          return '（未選択）';
+        }
+        if (row.group.accountId !== null) {
+          return this.props.doc.account.accounts[row.group.accountId].name;
+        }
+        if (row.group.categoryId !== null) {
+          if (isIncome) {
+            return DocStateMethods.categoryIncomeFullPathDisplayText(this.props.doc, row.group.categoryId);
+          } else {
+            return DocStateMethods.categoryOutgoFullPathDisplayText(this.props.doc, row.group.categoryId);
+          }
+        }
+        return '';
+      };
+
       return (
         <tr key={idx}>
           <td data-col-category={'date'}>{row.date}</td>
@@ -303,7 +378,7 @@ class Main extends React.Component<ILocalProps, IState> {
               this.onGroupCellClicked(e.currentTarget);
             }}
           >
-            <span className={Styles.TableGroupLabel}>（未選択）</span>
+            <span className={Styles.TableGroupLabel}>{labelSelector()}</span>
             <span className={Styles.TableGroupSelectIcon}>▼</span>
           </td>
         </tr>
