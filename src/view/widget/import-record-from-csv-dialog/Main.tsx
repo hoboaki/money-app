@@ -149,6 +149,7 @@ class Main extends React.Component<ILocalProps, IState> {
         name: accountLabel,
         items: accountItems,
       };
+      groupItems['separator'] = '------------';
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const categoryConvertFunc = (parent: { [key: string]: any }, cat: DocStates.ICategory) => {
         const key = `category-${cat.id}`;
