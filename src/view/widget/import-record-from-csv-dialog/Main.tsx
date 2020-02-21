@@ -205,56 +205,44 @@ class Main extends React.Component<ILocalProps, IState> {
         trigger: 'none',
       });
     };
+    const onAccountSelected = (rowIdx: number, accountId: number): void => {
+      // 取込先と同じ口座は選択不可
+      if (accountId === this.state.targetAccountId) {
+        return;
+      }
+      const newArray = this.state.csvRows.concat([]);
+      newArray[rowIdx].group = {
+        accountId,
+        categoryId: null,
+      };
+      this.setState({
+        csvRows: newArray,
+      });
+    };
+    const onCategorySelected = (rowIdx: number, categoryId: number): void => {
+      const newArray = this.state.csvRows.concat([]);
+      newArray[rowIdx].group = {
+        accountId: null,
+        categoryId,
+      };
+      this.setState({
+        csvRows: newArray,
+      });
+    };
     groupSetup(
       '送金元口座',
       this.props.doc.income.rootCategoryId,
       this.props.doc.income.categories,
-      (rowIdx, accountId) => {
-        const newArray = this.state.csvRows.concat([]);
-        newArray[rowIdx].group = {
-          accountId,
-          categoryId: null,
-        };
-        this.setState({
-          csvRows: newArray,
-        });
-      },
-      (rowIdx, categoryId) => {
-        const newArray = this.state.csvRows.concat([]);
-        newArray[rowIdx].group = {
-          accountId: null,
-          categoryId,
-        };
-        this.setState({
-          csvRows: newArray,
-        });
-      },
+      onAccountSelected,
+      onCategorySelected,
       `.${this.classNameIncomeGroupSelect}`,
     );
     groupSetup(
       '送金先口座',
       this.props.doc.outgo.rootCategoryId,
       this.props.doc.outgo.categories,
-      (rowIdx, accountId) => {
-        const newArray = this.state.csvRows.concat([]);
-        newArray[rowIdx].group = {
-          accountId,
-          categoryId: null,
-        };
-        this.setState({
-          csvRows: newArray,
-        });
-      },
-      (rowIdx, categoryId) => {
-        const newArray = this.state.csvRows.concat([]);
-        newArray[rowIdx].group = {
-          accountId: null,
-          categoryId,
-        };
-        this.setState({
-          csvRows: newArray,
-        });
-      },
+      onAccountSelected,
+      onCategorySelected,
       `.${this.classNameOutgoGroupSelect}`,
     );
 
@@ -502,8 +490,18 @@ class Main extends React.Component<ILocalProps, IState> {
   /// 取込先口座変更イベント。
   private onTargetAccountChanged(e: React.ChangeEvent<HTMLSelectElement>) {
     e.stopPropagation();
+
+    // 新しい口座とかぶる分類設定は解除しつつ反映
+    const targetAccountId = Number(e.target.value);
+    const csvRows = this.state.csvRows.concat([]);
+    csvRows.forEach((row) => {
+      if (row.group !== null && row.group.accountId === targetAccountId) {
+        row.group = null;
+      }
+    });
     this.setState({
-      targetAccountId: Number(e.target.value),
+      targetAccountId,
+      csvRows,
     });
   }
 
