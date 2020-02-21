@@ -7,6 +7,7 @@ import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
+import * as DocTypes from 'src/state/doc/Types';
 import { INVALID_ID } from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import * as PriceUtils from 'src/util/PriceUtils';
@@ -341,26 +342,61 @@ class Main extends React.Component<ILocalProps, IState> {
         isOutgo ? this.classNameOutgoGroupSelect : '',
       );
       const groupCellId = `${this.elementIdGroupPrefix}${idx}`;
+      const isClickable = row.kind !== RowKind.Invalid;
       const isGroupSelected = this.state.isGroupCellSelected && this.selectedGroupCellId === groupCellId;
-      const labelSelector = (): string => {
+      const labelAndRecordKindSelector = (): { label: string; recordKind: DocTypes.RecordKind } => {
         if (row.kind === RowKind.Invalid) {
-          return 'エラー：入金か送金のいずれかに数値が必要です';
+          return {
+            label: 'エラー：入金か送金のいずれかに数値が必要です',
+            recordKind: DocTypes.RecordKind.Invalid,
+          };
         }
         if (row.group === null) {
-          return '（未選択）';
+          return {
+            label: '（未選択）',
+            recordKind: DocTypes.RecordKind.Invalid,
+          };
         }
         if (row.group.accountId !== null) {
-          return this.props.doc.account.accounts[row.group.accountId].name;
+          return {
+            label: this.props.doc.account.accounts[row.group.accountId].name,
+            recordKind: DocTypes.RecordKind.Transfer,
+          };
         }
         if (row.group.categoryId !== null) {
           if (isIncome) {
-            return DocStateMethods.categoryIncomeFullPathDisplayText(this.props.doc, row.group.categoryId);
+            return {
+              label: DocStateMethods.categoryIncomeFullPathDisplayText(this.props.doc, row.group.categoryId),
+              recordKind: DocTypes.RecordKind.Income,
+            };
           } else {
-            return DocStateMethods.categoryOutgoFullPathDisplayText(this.props.doc, row.group.categoryId);
+            return {
+              label: DocStateMethods.categoryOutgoFullPathDisplayText(this.props.doc, row.group.categoryId),
+              recordKind: DocTypes.RecordKind.Outgo,
+            };
           }
         }
-        return '';
+        return {
+          label: '',
+          recordKind: DocTypes.RecordKind.Invalid,
+        };
       };
+      const labelAndRecordKind = labelAndRecordKindSelector();
+      let iconPath: string | null = null;
+      switch (labelAndRecordKind.recordKind) {
+        case DocTypes.RecordKind.Income:
+          iconPath = './image/icon-ex/income-outline.svg';
+          break;
+        case DocTypes.RecordKind.Outgo:
+          iconPath = './image/icon-ex/outgo-outline.svg';
+          break;
+        case DocTypes.RecordKind.Transfer:
+          iconPath = './image/icon-ex/transfer-outline.svg';
+          break;
+      }
+      const elemIconImg = iconPath === null ? null : <img src={iconPath}></img>;
+      const elemLabel = <span className={Styles.TableGroupLabel}>{labelAndRecordKind.label}</span>;
+      const elemExpander = isClickable ? <span className={Styles.TableGroupSelectIcon}>▼</span> : null;
 
       return (
         <tr key={idx}>
@@ -374,13 +410,15 @@ class Main extends React.Component<ILocalProps, IState> {
             data-col-category={'group'}
             data-row-idx={idx}
             data-selected={isGroupSelected}
+            data-enabled={isClickable}
             className={groupClass}
             onClick={(e) => {
               this.onGroupCellClicked(e.currentTarget);
             }}
           >
-            <span className={Styles.TableGroupLabel}>{labelSelector()}</span>
-            <span className={Styles.TableGroupSelectIcon}>▼</span>
+            {elemIconImg}
+            {elemLabel}
+            {elemExpander}
           </td>
         </tr>
       );
