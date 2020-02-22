@@ -936,20 +936,10 @@ class Main extends React.Component<ILocalProps, IState> {
 
   /// カテゴリインプットに表示するテキストを返す。
   private categoryOutgoDisplayText(): string {
-    return this.categoryDisplayText(this.props.doc.outgo.categories, this.state.formCategoryOutgo);
+    return DocStateMethods.categoryOutgoFullPathDisplayText(this.props.doc, this.state.formCategoryOutgo);
   }
   private categoryIncomeDisplayText(): string {
-    return this.categoryDisplayText(this.props.doc.income.categories, this.state.formCategoryIncome);
-  }
-  private categoryDisplayText(categories: { [key: number]: DocStates.ICategory }, categoryId: number): string {
-    const funcParentPath = (catId: number): string => {
-      const cat = categories[catId];
-      if (cat.parent == null || categories[cat.parent].parent == null) {
-        return cat.name;
-      }
-      return `${funcParentPath(cat.parent)} > ${cat.name}`;
-    };
-    return funcParentPath(categoryId);
+    return DocStateMethods.categoryIncomeFullPathDisplayText(this.props.doc, this.state.formCategoryIncome);
   }
 
   /// 新規入力用に各項目をリセットする。

@@ -27,7 +27,7 @@ class SideBar extends React.Component<IProps> {
     btnInfos.push({ pageId: PageCalendar.PageId, title: 'カレンダー', iconName: 'event_note' });
     btnInfos.push({ pageId: PageSheet.PageId, title: 'ワークシート', iconName: 'view_week' });
     btnInfos.push({ pageId: 'Find', title: 'レコードの検索（準備中）', iconName: 'search' });
-    btnInfos.push({ pageId: PageImport.PageId, title: 'インポート', iconName: 'input' });
+    btnInfos.push({ pageId: PageImport.PageId, title: 'レコードのインポート', iconName: 'input' });
     btnInfos.push({ pageId: PageSetting.PageId, title: '設定', iconName: 'settings' });
 
     const btns = [];

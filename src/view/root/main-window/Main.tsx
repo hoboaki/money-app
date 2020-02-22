@@ -19,6 +19,7 @@ import PageStyles from 'src/view/page/Page.css';
 import PageSetting from 'src/view/page/setting';
 import PageSheet from 'src/view/page/sheet';
 import PageStart from 'src/view/page/start';
+import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 
 import * as Styles from './Main.css';
 import SideBar from './SideBar';
@@ -203,17 +204,14 @@ class MainWindow extends React.Component<any, IState> {
   // 自動保存先をユーザーに尋ねる。キャンセルされたら null が返る。
   private selectAutoSaveFilePath(): string | null {
     // 事前説明ダイアログ
-    const dialog = remote.dialog;
-    dialog.showMessageBoxSync(remote.getCurrentWindow(), {
-      type: 'info',
-      buttons: ['OK'],
-      defaultId: 0,
-      title: '初期設定',
-      message: 'このあと表示されるダイアログを使用し，ファイルの保存先を設定してください。',
-      detail: '本アプリケーションはファイルを自動保存します。そのため最初にファイルの保存先を設定する必要があります。',
-    });
+    NativeDialogUtils.showInfoDialog(
+      '初期設定',
+      'このあと表示されるダイアログを使用し，ファイルの保存先を設定してください。',
+      '本アプリケーションはファイルを自動保存します。そのため最初にファイルの保存先を設定する必要があります。',
+    );
 
     // 保存先選択
+    const dialog = remote.dialog;
     const filePath = dialog.showSaveDialogSync(remote.getCurrentWindow(), {
       filters: [
         {
@@ -259,15 +257,7 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   private showErrorDialog(msg: string, detail: string) {
-    const dialog = remote.dialog;
-    dialog.showMessageBox(remote.getCurrentWindow(), {
-      type: 'error',
-      buttons: ['OK'],
-      defaultId: 0,
-      title: 'スタートページ',
-      message: msg,
-      detail,
-    });
+    NativeDialogUtils.showErrorDialog('スタートページ', msg, detail);
   }
 
   private onPageBtnClicked(pageId: string) {

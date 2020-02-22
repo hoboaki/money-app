@@ -739,3 +739,28 @@ export const leafCategoryIdArray = (targetCategoryId: number, categories: { [key
   proc(targetCategoryId);
   return result;
 };
+
+/** 入金カテゴリの表示用フルパステキストを取得。 */
+export const categoryIncomeFullPathDisplayText = (state: States.IState, categoryId: number): string => {
+  return categoryFullPathDisplayText(state.income.categories, categoryId);
+};
+
+/** 出金カテゴリの表示用フルパステキストを取得。 */
+export const categoryOutgoFullPathDisplayText = (state: States.IState, categoryId: number): string => {
+  return categoryFullPathDisplayText(state.outgo.categories, categoryId);
+};
+
+/** 指定カテゴリの表示用フルパステキストを取得。 */
+export const categoryFullPathDisplayText = (
+  categories: { [key: number]: States.ICategory },
+  categoryId: number,
+): string => {
+  const funcParentPath = (catId: number): string => {
+    const cat = categories[catId];
+    if (cat.parent == null || categories[cat.parent].parent == null) {
+      return cat.name;
+    }
+    return `${funcParentPath(cat.parent)} > ${cat.name}`;
+  };
+  return funcParentPath(categoryId);
+};

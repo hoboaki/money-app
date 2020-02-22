@@ -94,6 +94,13 @@
   dependencies:
     postcss "7.x.x"
 
+"@types/csv-parse@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@types/csv-parse/-/csv-parse-1.2.2.tgz#713486235759d615dc8e6a6a979170ada76701d5"
+  integrity sha512-k33tLtRKTQxf7hQfMlkWoS2TQYsnpk1ibZN+rzbuCkeBs8m23nHTeDTF1wb/e7/MSLdtgCzqu3oM1I101kd6yw==
+  dependencies:
+    csv-parse "*"
+
 "@types/debug@^4.1.5":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.5.tgz#b14efa8852b7768d898906613c23f688713e02cd"
@@ -1441,6 +1448,11 @@ csstype@^2.2.0:
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.8.tgz#0fb6fc2417ffd2816a418c9336da74d7f07db431"
   integrity sha512-msVS9qTuMT5zwAGCVm4mxfrZ18BNc6Csd0oJAtiFMZ1FAx1CCvy2+5MDmYoix63LM/6NDbNtodCiGYGmFgO0dA==
+
+csv-parse@*, csv-parse@^4.8.5:
+  version "4.8.5"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.8.5.tgz#32e92a0e0acedab141bd5c5a3ad6fc3316f2c72d"
+  integrity sha512-rpsLmlLWJZifmLzZEVGbZ9phWnJyi+cCbCGYr4vX2NaHFtgbmQPFk+WmMkmMkQXgsIUn6CgnK9cTuUAfFjoXbA==
 
 cuint@^0.2.2:
   version "0.2.2"
