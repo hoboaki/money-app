@@ -25,6 +25,7 @@
   align-items: center;
   display: flex;
   flex-direction: row;
+  height: 42px;
 }
 
 .TargetAccountRoot,
@@ -40,7 +41,7 @@
 }
 
 .TableRoot {
-  flex-grow: 1;
+  height: calc(100% - 82px);
 }
 
 .TableRoot td[data-col-category='date'] {
