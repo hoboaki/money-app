@@ -1,11 +1,14 @@
 {
-  "name": "adel-money-preview",
+  "name": "adel-money",
   "version": "0.5.0",
   "main": "main.js",
   "license": "MIT",
+  "author": {
+    "name": "hoboaki"
+  },
   "build": {
-    "productName": "AdelMoney-Preview",
-    "appId": "myid",
+    "productName": "AdelMoney",
+    "appId": "net.10106.adel-money",
     "directories": {
       "output": "build"
     },
@@ -39,6 +42,7 @@
   },
   "dependencies": {
     "electron-json-storage": "^4.1.8",
+    "electron-window-state": "^5.0.3",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-redux": "^7.1.3",
@@ -70,7 +74,6 @@
     "deep-clone": "^3.0.3",
     "electron": "^7.1.11",
     "electron-builder": "^22.3.2",
-    "electron-window-state": "^5.0.3",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-loader": "^3.0.3",
