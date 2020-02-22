@@ -361,7 +361,7 @@ class Main extends React.Component<ILocalProps, IState> {
       const labelAndRecordKindSelector = (): { label: string; recordKind: DocTypes.RecordKind } => {
         if (row.kind === RowKind.Invalid) {
           return {
-            label: 'エラー：入金か送金のいずれかに数値が必要です',
+            label: '取込をスキップ（入金と送金のいずれか１つに金額を入力してください）',
             recordKind: DocTypes.RecordKind.Invalid,
           };
         }
