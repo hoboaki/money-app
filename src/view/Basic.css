@@ -38,8 +38,8 @@
 }
 
 .StdBtnSecondary:disabled {
-  background: #004ba0;
-  color: #909090;
+  background: #eeeeee;
+  color: #707070;
 }
 .IconBtn {
   background: transparent;
