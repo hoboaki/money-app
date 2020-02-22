@@ -71,7 +71,7 @@
 
 .TableRoot td[data-col-category='group'] {
   /* メモ：100vw から ダイアログの左右余白 6% を引いたのがダイアログ本体の 100% の幅。 */
-  width: calc((100vw * (1 - 0.06 * 2) - 88px - 140px - 140px - 100px - 100px - 15px));
+  width: calc((100vw * (1 - 0.06 * 2) - 88px - 140px - 140px - 100px - 100px - 15px - 1px));
 }
 
 .TableRoot td[data-col-category='tail-space'] {
