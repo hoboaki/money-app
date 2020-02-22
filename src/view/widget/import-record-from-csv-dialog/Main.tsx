@@ -560,7 +560,65 @@ class Main extends React.Component<ILocalProps, IState> {
     }
 
     // 取込
-    // ...
+    const createDate = new Date();
+    this.state.csvRows.forEach((row, rowIdx) => {
+      if (row.group === null) {
+        return;
+      }
+      if (row.group.accountId !== null) {
+        // 振替
+        const amount = row.kind === RowKind.Income ? row.income : row.outgo;
+        if (amount === null) {
+          throw new Error(`Amount is null. (Row idx: ${rowIdx})`);
+        }
+        DocStateMethods.transferRecordAdd(
+          this.props.doc,
+          createDate,
+          createDate, // updateDate
+          row.date,
+          row.memo,
+          row.kind === RowKind.Income ? row.group.accountId : this.state.targetAccountId, // from
+          row.kind === RowKind.Income ? this.state.targetAccountId : row.group.accountId, // to
+          amount,
+        );
+        return;
+      }
+      if (row.group.categoryId !== null) {
+        if (row.kind === RowKind.Income) {
+          // 入金
+          const amount = row.income;
+          if (amount === null) {
+            throw new Error(`Amount is null. (Row idx: ${rowIdx})`);
+          }
+          DocStateMethods.incomeRecordAdd(
+            this.props.doc,
+            createDate,
+            createDate, // updateDate
+            row.date,
+            row.memo,
+            this.state.targetAccountId,
+            row.group.categoryId,
+            amount,
+          );
+        } else {
+          // 出金
+          const amount = row.outgo;
+          if (amount === null) {
+            throw new Error(`Amount is null. (Row idx: ${rowIdx})`);
+          }
+          DocStateMethods.outgoRecordAdd(
+            this.props.doc,
+            createDate,
+            createDate, // updateDate
+            row.date,
+            row.memo,
+            this.state.targetAccountId,
+            row.group.categoryId,
+            amount,
+          );
+        }
+      }
+    });
 
     // ダイアログ閉じる
     $(`#${this.elementIdCloseBtn}`).trigger('click');
