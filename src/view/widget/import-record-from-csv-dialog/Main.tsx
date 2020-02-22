@@ -210,7 +210,11 @@ class Main extends React.Component<ILocalProps, IState> {
     const targetRowIdxs = (rowIdx: number): number[] => {
       const rows = this.state.csvRows
         .map((row, idx) => idx)
-        .filter((idx) => this.state.csvRows[idx].category === this.state.csvRows[rowIdx].category);
+        .filter(
+          (idx) =>
+            this.state.csvRows[idx].kind !== RowKind.Invalid &&
+            this.state.csvRows[idx].category === this.state.csvRows[rowIdx].category,
+        );
       if (
         1 < rows.length &&
         NativeDialogUtils.showYesNoCancelDialog(
