@@ -114,14 +114,41 @@ class Main extends React.Component<ILocalProps, IState> {
         }
         return RowKind.Invalid;
       };
+      const kind = kindSelector();
+      const category = cols[4];
+      let group: IGroupInfo | null = null;
+      switch (kind) {
+        case RowKind.Income: {
+          const dict = this.props.doc.importTool.palmCategories.income;
+          if (category in dict) {
+            const info = dict[category];
+            group = {
+              accountId: info.account !== INVALID_ID ? info.account : null,
+              categoryId: info.category !== INVALID_ID ? info.category : null,
+            };
+          }
+          break;
+        }
+        case RowKind.Outgo: {
+          const dict = this.props.doc.importTool.palmCategories.outgo;
+          if (category in dict) {
+            const info = dict[category];
+            group = {
+              accountId: info.account !== INVALID_ID ? info.account : null,
+              categoryId: info.category !== INVALID_ID ? info.category : null,
+            };
+          }
+          break;
+        }
+      }
       csvRows.push({
-        kind: kindSelector(),
+        kind,
         date: IYearMonthDayDateUtils.fromText(cols[0].replace('/', '-')),
         memo: cols[1],
         income,
         outgo,
-        category: cols[4],
-        group: null,
+        category,
+        group,
       });
     });
     this.setState({
@@ -643,6 +670,11 @@ class Main extends React.Component<ILocalProps, IState> {
         this.state.csvRows.findIndex((elem) => elem.kind === row.kind && elem.category === row.category) === idx,
     );
     uniqRows.forEach((row) => {
+      // カテゴリ名が未指定のものは保存しない
+      if (row.category.length === 0) {
+        return;
+      }
+
       // 同じタイプの行を抽出
       const sameRows = this.state.csvRows.filter((elem) => row.kind === elem.kind && row.category === elem.category);
 
