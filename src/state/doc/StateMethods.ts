@@ -37,8 +37,9 @@ export const fromData = (src: DataRoot) => {
   }
 
   // 入金
+  const incomeCategoryIdDict: { [key: number]: number } = {}; // Data内Id -> オブジェクトId 変換テーブル
   {
-    const categoryIdDict: { [key: number]: number } = {}; // Data内Id -> オブジェクトId 変換テーブル
+    const categoryIdDict = incomeCategoryIdDict;
     for (const data of src.income.categories) {
       let parentId = null;
       if (data.parent !== 0) {
@@ -76,8 +77,9 @@ export const fromData = (src: DataRoot) => {
   }
 
   // 出金
+  const outgoCategoryIdDict: { [key: number]: number } = {}; // Data内Id -> オブジェクトId 変換テーブル
   {
-    const categoryIdDict: { [key: number]: number } = {}; // Data内Id -> オブジェクトId 変換テーブル
+    const categoryIdDict = outgoCategoryIdDict;
     for (const data of src.outgo.categories) {
       let parentId = null;
       if (data.parent !== 0) {
@@ -146,6 +148,24 @@ export const fromData = (src: DataRoot) => {
       data.accounts.map((accountId) => accountIdDict[accountId]),
     );
   }
+
+  // Palmカテゴリデータ
+  src.importTool.palmCategories.income.forEach((data) => {
+    palmCategoryInfoIncomeAdd(
+      r,
+      data.name,
+      data.account === 0 ? Types.INVALID_ID : accountIdDict[data.account],
+      data.category === 0 ? Types.INVALID_ID : incomeCategoryIdDict[data.category],
+    );
+  });
+  src.importTool.palmCategories.outgo.forEach((data) => {
+    palmCategoryInfoOutgoAdd(
+      r,
+      data.name,
+      data.account === 0 ? Types.INVALID_ID : accountIdDict[data.account],
+      data.category === 0 ? Types.INVALID_ID : outgoCategoryIdDict[data.category],
+    );
+  });
 
   return r;
 };
@@ -800,4 +820,42 @@ export const categoryFullPathDisplayText = (
     return `${funcParentPath(cat.parent)} > ${cat.name}`;
   };
   return funcParentPath(categoryId);
+};
+
+/** 入金Palmカテゴリ情報を追加。 */
+export const palmCategoryInfoIncomeAdd = (
+  state: States.IState,
+  name: string,
+  accountId: number,
+  categoryId: number,
+): void => {
+  // 既にあったらまず削除
+  const target = state.importTool.palmCategories.income;
+  if (name in target) {
+    delete target[name];
+  }
+  // 追加
+  target[name] = {
+    account: accountId,
+    category: categoryId,
+  };
+};
+
+/** 入金Palmカテゴリ情報を追加。 */
+export const palmCategoryInfoOutgoAdd = (
+  state: States.IState,
+  name: string,
+  accountId: number,
+  categoryId: number,
+): void => {
+  // 既にあったらまず削除
+  const target = state.importTool.palmCategories.outgo;
+  if (name in target) {
+    delete target[name];
+  }
+  // 追加
+  target[name] = {
+    account: accountId,
+    category: categoryId,
+  };
 };

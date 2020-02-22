@@ -277,6 +277,14 @@ class SampleDoc {
     ]);
     global.console.assert(state.aggregateAccount.order.length === 1);
 
+    // Palmカテゴリ情報
+    StateMethods.palmCategoryInfoOutgoAdd(
+      state,
+      '食費',
+      Types.INVALID_ID,
+      StateMethods.categoryByPath(state.outgo.categories, '家事費/食費').id,
+    );
+
     return state;
   }
 
