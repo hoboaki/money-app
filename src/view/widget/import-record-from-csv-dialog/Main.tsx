@@ -465,7 +465,12 @@ class Main extends React.Component<ILocalProps, IState> {
     const importBtnClass = ClassNames(BasicStyles.StdBtnSecondary);
     const footer = (
       <div className={Styles.FooterRoot}>
-        <button id={this.elementIdImportBtn} className={importBtnClass} onClick={(e) => this.onImportBtnClicked(e)}>
+        <button
+          id={this.elementIdImportBtn}
+          className={importBtnClass}
+          disabled={this.state.csvRows.filter((row) => row.group !== null).length === 0}
+          onClick={(e) => this.onImportBtnClicked(e)}
+        >
           取込
         </button>
       </div>
