@@ -76,7 +76,7 @@ class Main extends React.Component<ILocalProps, IState> {
     super(props);
     this.state = {
       csvRows: [],
-      targetAccountId: props.doc.account.order[0],
+      targetAccountId: INVALID_ID,
       isGroupCellSelected: false,
     };
     this.elementIdRoot = `elem-${UUID()}`;
@@ -331,11 +331,11 @@ class Main extends React.Component<ILocalProps, IState> {
 
     // 取込先口座
     const targetAccountSelectClass = ClassNames(BasicStyles.StdSelect);
-    const targetAccountOptions = this.props.doc.account.order.map((id) => {
-      const account = this.props.doc.account.accounts[id];
+    const targetAccountOptions = [INVALID_ID].concat(this.props.doc.account.order).map((id) => {
+      const name = id === INVALID_ID ? '（未選択）' : this.props.doc.account.accounts[id].name;
       return (
-        <option key={account.id} value={account.id}>
-          {account.name}
+        <option key={id} value={id}>
+          {name}
         </option>
       );
     });
@@ -344,7 +344,7 @@ class Main extends React.Component<ILocalProps, IState> {
         <span>取込先口座:</span>
         <select
           className={targetAccountSelectClass}
-          defaultValue=""
+          defaultValue={INVALID_ID}
           onChange={(e) => {
             this.onTargetAccountChanged(e);
           }}
@@ -498,7 +498,10 @@ class Main extends React.Component<ILocalProps, IState> {
         <button
           id={this.elementIdImportBtn}
           className={importBtnClass}
-          disabled={this.state.csvRows.filter((row) => row.group !== null).length === 0}
+          disabled={
+            this.state.targetAccountId === INVALID_ID ||
+            this.state.csvRows.filter((row) => row.group !== null).length === 0
+          }
           onClick={(e) => this.onImportBtnClicked(e)}
         >
           取込
