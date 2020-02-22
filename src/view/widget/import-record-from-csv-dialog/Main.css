@@ -44,32 +44,37 @@
 }
 
 .TableRoot td[data-col-category='date'] {
+  min-width: 88px;
   width: 88px;
 }
 
 .TableRoot td[data-col-category='palm-category'] {
-  max-width: 140px;
+  min-width: 140px;
   width: 140px;
 }
 
 .TableRoot td[data-col-category='memo'] {
-  max-width: 140px;
+  min-width: 140px;
   width: 140px;
 }
 
 .TableRoot td[data-col-category='income'] {
+  min-width: 100px;
   width: 100px;
 }
 
 .TableRoot td[data-col-category='outgo'] {
+  min-width: 100px;
   width: 100px;
 }
 
 .TableRoot td[data-col-category='group'] {
-  width: auto;
+  /* メモ：100vw から ダイアログの左右余白 6% を引いたのがダイアログ本体の 100% の幅。 */
+  width: calc((100vw * (1 - 0.06 * 2) - 88px - 140px - 140px - 100px - 100px - 15px));
 }
 
 .TableRoot td[data-col-category='tail-space'] {
+  min-width: 15px;
   width: 15px;
 }
 
