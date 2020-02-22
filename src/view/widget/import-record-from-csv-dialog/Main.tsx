@@ -545,13 +545,13 @@ class Main extends React.Component<ILocalProps, IState> {
     // ESC でダイアログを閉じる。
     if (e.keyCode === 27) {
       e.stopPropagation();
-      $(`#${this.elementIdCloseBtn}`).trigger('click');
+      $(`#${this.elementIdRoot}`).modal('hide');
       return;
     }
     // Command + Enter で追加ボタンを押下
     if (e.keyCode === 13 && e.metaKey) {
       e.stopPropagation();
-      this.onImportBtnClickedDetail();
+      $(`#${this.elementIdImportBtn}`).click();
       return;
     }
   }
@@ -586,9 +586,7 @@ class Main extends React.Component<ILocalProps, IState> {
   /// 取込ボタンが押されたときの処理。
   private onImportBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     e.stopPropagation();
-    this.onImportBtnClickedDetail();
-  }
-  private onImportBtnClickedDetail(): void {
+
     // 未入力チェック
     const notSelectedCount = this.state.csvRows.filter((row) => row.kind !== RowKind.Invalid && row.group === null)
       .length;
@@ -715,7 +713,7 @@ class Main extends React.Component<ILocalProps, IState> {
     }
 
     // ダイアログ閉じる
-    $(`#${this.elementIdCloseBtn}`).trigger('click');
+    $(`#${this.elementIdRoot}`).modal('hide');
   }
 }
 
