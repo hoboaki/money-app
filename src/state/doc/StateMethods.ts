@@ -841,7 +841,7 @@ export const palmCategoryInfoIncomeAdd = (
   };
 };
 
-/** 入金Palmカテゴリ情報を追加。 */
+/** 出金Palmカテゴリ情報を追加。 */
 export const palmCategoryInfoOutgoAdd = (
   state: States.IState,
   name: string,
