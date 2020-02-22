@@ -227,3 +227,43 @@ export const updateCategoryCollapse = (categoryId: number, isCollapsed: boolean)
     isCollapsed,
   };
 };
+
+/** 入金Palmカテゴリ情報を追加。 */
+export const ADD_PALM_CATEGORY_INFO_INCOME = UUID();
+export interface IAddPalmCategoryInfoIncome extends Action {
+  name: string;
+  accountId: number;
+  categoryId: number;
+}
+export const addPalmCategoryInfoIncome = (
+  name: string,
+  accountId: number,
+  categoryId: number,
+): IAddPalmCategoryInfoIncome => {
+  return {
+    type: ADD_PALM_CATEGORY_INFO_INCOME,
+    name,
+    accountId,
+    categoryId,
+  };
+};
+
+/** 入金Palmカテゴリ情報を追加。 */
+export const ADD_PALM_CATEGORY_INFO_OUTGO = UUID();
+export interface IAddPalmCategoryInfoOutgo extends Action {
+  name: string;
+  accountId: number;
+  categoryId: number;
+}
+export const addPalmCategoryInfoOutgo = (
+  name: string,
+  accountId: number,
+  categoryId: number,
+): IAddPalmCategoryInfoOutgo => {
+  return {
+    type: ADD_PALM_CATEGORY_INFO_OUTGO,
+    name,
+    accountId,
+    categoryId,
+  };
+};

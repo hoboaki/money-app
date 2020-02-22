@@ -112,6 +112,14 @@ a2RMapper.addWork<Actions.IUpdateCategoryCollapse>(Actions.UPDATE_CATEGORY_COLLA
   StateMethods.categoryCollapsedStateUpdate(state, action.categoryId, action.isCollapsed);
 });
 
+a2RMapper.addWork<Actions.IAddPalmCategoryInfoIncome>(Actions.ADD_PALM_CATEGORY_INFO_INCOME, (state, action) => {
+  StateMethods.palmCategoryInfoIncomeAdd(state, action.name, action.accountId, action.categoryId);
+});
+
+a2RMapper.addWork<Actions.IAddPalmCategoryInfoOutgo>(Actions.ADD_PALM_CATEGORY_INFO_OUTGO, (state, action) => {
+  StateMethods.palmCategoryInfoOutgoAdd(state, action.name, action.accountId, action.categoryId);
+});
+
 // Reducer 本体。
 const Reducer: Redux.Reducer<States.IState> = (state = States.defaultState, action) => {
   return a2RMapper.execute(state, action);
