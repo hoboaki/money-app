@@ -68,3 +68,4 @@ public/index.js.map
 public/*.worker.js
 public/*.worker.js.map
 *.css.d.ts
+/report.*.json

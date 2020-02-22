@@ -1,6 +1,7 @@
 import Account from './Account';
 import AggregateAccount from './AggregateAccount';
 import Category from './Category';
+import PalmCategoryInfo from './PalmCategoryInfo';
 import RecordIncome from './RecordIncome';
 import RecordOutgo from './RecordOutgo';
 import RecordTransfer from './RecordTransfer';
@@ -24,6 +25,13 @@ class Root {
   } = { records: [] };
 
   public aggregateAccounts: AggregateAccount[] = []; /// 全集計口座。
+
+  public importTool: {
+    palmCategories: {
+      income: PalmCategoryInfo[];
+      outgo: PalmCategoryInfo[];
+    };
+  } = { palmCategories: { income: [], outgo: [] } };
 }
 
 export default Root;

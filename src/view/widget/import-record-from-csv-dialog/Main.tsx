@@ -5,6 +5,7 @@ import ClassNames from 'classnames';
 import CsvParse from 'csv-parse/lib/sync';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import * as DocActions from 'src/state/doc/Actions';
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
@@ -75,7 +76,7 @@ class Main extends React.Component<ILocalProps, IState> {
     super(props);
     this.state = {
       csvRows: [],
-      targetAccountId: props.doc.account.order[0],
+      targetAccountId: INVALID_ID,
       isGroupCellSelected: false,
     };
     this.elementIdRoot = `elem-${UUID()}`;
@@ -113,14 +114,41 @@ class Main extends React.Component<ILocalProps, IState> {
         }
         return RowKind.Invalid;
       };
+      const kind = kindSelector();
+      const category = cols[4];
+      let group: IGroupInfo | null = null;
+      switch (kind) {
+        case RowKind.Income: {
+          const dict = this.props.doc.importTool.palmCategories.income;
+          if (category in dict) {
+            const info = dict[category];
+            group = {
+              accountId: info.account !== INVALID_ID ? info.account : null,
+              categoryId: info.category !== INVALID_ID ? info.category : null,
+            };
+          }
+          break;
+        }
+        case RowKind.Outgo: {
+          const dict = this.props.doc.importTool.palmCategories.outgo;
+          if (category in dict) {
+            const info = dict[category];
+            group = {
+              accountId: info.account !== INVALID_ID ? info.account : null,
+              categoryId: info.category !== INVALID_ID ? info.category : null,
+            };
+          }
+          break;
+        }
+      }
       csvRows.push({
-        kind: kindSelector(),
+        kind,
         date: IYearMonthDayDateUtils.fromText(cols[0].replace('/', '-')),
         memo: cols[1],
         income,
         outgo,
-        category: cols[4],
-        group: null,
+        category,
+        group,
       });
     });
     this.setState({
@@ -303,11 +331,11 @@ class Main extends React.Component<ILocalProps, IState> {
 
     // 取込先口座
     const targetAccountSelectClass = ClassNames(BasicStyles.StdSelect);
-    const targetAccountOptions = this.props.doc.account.order.map((id) => {
-      const account = this.props.doc.account.accounts[id];
+    const targetAccountOptions = [INVALID_ID].concat(this.props.doc.account.order).map((id) => {
+      const name = id === INVALID_ID ? '（未選択）' : this.props.doc.account.accounts[id].name;
       return (
-        <option key={account.id} value={account.id}>
-          {account.name}
+        <option key={id} value={id}>
+          {name}
         </option>
       );
     });
@@ -316,7 +344,7 @@ class Main extends React.Component<ILocalProps, IState> {
         <span>取込先口座:</span>
         <select
           className={targetAccountSelectClass}
-          defaultValue=""
+          defaultValue={INVALID_ID}
           onChange={(e) => {
             this.onTargetAccountChanged(e);
           }}
@@ -470,7 +498,10 @@ class Main extends React.Component<ILocalProps, IState> {
         <button
           id={this.elementIdImportBtn}
           className={importBtnClass}
-          disabled={this.state.csvRows.filter((row) => row.group !== null).length === 0}
+          disabled={
+            this.state.targetAccountId === INVALID_ID ||
+            this.state.csvRows.filter((row) => row.group !== null).length === 0
+          }
           onClick={(e) => this.onImportBtnClicked(e)}
         >
           取込
@@ -514,13 +545,13 @@ class Main extends React.Component<ILocalProps, IState> {
     // ESC でダイアログを閉じる。
     if (e.keyCode === 27) {
       e.stopPropagation();
-      $(`#${this.elementIdCloseBtn}`).trigger('click');
+      $(`#${this.elementIdRoot}`).modal('hide');
       return;
     }
     // Command + Enter で追加ボタンを押下
     if (e.keyCode === 13 && e.metaKey) {
       e.stopPropagation();
-      this.onImportBtnClickedDetail();
+      $(`#${this.elementIdImportBtn}`).click();
       return;
     }
   }
@@ -555,9 +586,7 @@ class Main extends React.Component<ILocalProps, IState> {
   /// 取込ボタンが押されたときの処理。
   private onImportBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     e.stopPropagation();
-    this.onImportBtnClickedDetail();
-  }
-  private onImportBtnClickedDetail(): void {
+
     // 未入力チェック
     const notSelectedCount = this.state.csvRows.filter((row) => row.kind !== RowKind.Invalid && row.group === null)
       .length;
@@ -586,15 +615,15 @@ class Main extends React.Component<ILocalProps, IState> {
         if (amount === null) {
           throw new Error(`Amount is null. (Row idx: ${rowIdx})`);
         }
-        DocStateMethods.transferRecordAdd(
-          this.props.doc,
-          createDate,
-          createDate, // updateDate
-          row.date,
-          row.memo,
-          row.kind === RowKind.Income ? row.group.accountId : this.state.targetAccountId, // from
-          row.kind === RowKind.Income ? this.state.targetAccountId : row.group.accountId, // to
-          amount,
+        Store.dispatch(
+          DocActions.addRecordTransfer(
+            createDate,
+            row.date,
+            row.memo,
+            row.kind === RowKind.Income ? row.group.accountId : this.state.targetAccountId, // from
+            row.kind === RowKind.Income ? this.state.targetAccountId : row.group.accountId, // to
+            amount,
+          ),
         );
         return;
       }
@@ -605,15 +634,15 @@ class Main extends React.Component<ILocalProps, IState> {
           if (amount === null) {
             throw new Error(`Amount is null. (Row idx: ${rowIdx})`);
           }
-          DocStateMethods.incomeRecordAdd(
-            this.props.doc,
-            createDate,
-            createDate, // updateDate
-            row.date,
-            row.memo,
-            this.state.targetAccountId,
-            row.group.categoryId,
-            amount,
+          Store.dispatch(
+            DocActions.addRecordIncome(
+              createDate,
+              row.date,
+              row.memo,
+              this.state.targetAccountId,
+              row.group.categoryId,
+              amount,
+            ),
           );
         } else {
           // 出金
@@ -621,17 +650,60 @@ class Main extends React.Component<ILocalProps, IState> {
           if (amount === null) {
             throw new Error(`Amount is null. (Row idx: ${rowIdx})`);
           }
-          DocStateMethods.outgoRecordAdd(
-            this.props.doc,
-            createDate,
-            createDate, // updateDate
-            row.date,
-            row.memo,
-            this.state.targetAccountId,
-            row.group.categoryId,
-            amount,
+          Store.dispatch(
+            DocActions.addRecordOutgo(
+              createDate,
+              row.date,
+              row.memo,
+              this.state.targetAccountId,
+              row.group.categoryId,
+              amount,
+            ),
           );
         }
+      }
+    });
+
+    // Palm カテゴリ情報の保存
+    const uniqRows = this.state.csvRows.filter(
+      // 重複要素の中でも最初の１つ目だけ抽出することでユニークな配列を生成
+      (row, idx) =>
+        this.state.csvRows.findIndex((elem) => elem.kind === row.kind && elem.category === row.category) === idx,
+    );
+    uniqRows.forEach((row) => {
+      // カテゴリ名が未指定のものは保存しない
+      if (row.category.length === 0) {
+        return;
+      }
+
+      // 同じタイプの行を抽出
+      const sameRows = this.state.csvRows.filter((elem) => row.kind === elem.kind && row.category === elem.category);
+
+      // グループ設定が１つでも未選択のものがあればグループ設定不統一として扱うため保存しない
+      if (0 < sameRows.length && sameRows.filter((elem) => elem.group !== null).length !== sameRows.length) {
+        return;
+      }
+
+      // グループ設定が１つでも異なるものがあれば保存しない
+      if (
+        sameRows.filter(
+          (elem) => elem.group?.accountId === row.group?.accountId && elem.group?.categoryId === row.group?.categoryId,
+        ).length !== sameRows.length
+      ) {
+        return;
+      }
+
+      // 保存
+      if (row.group === null) {
+        throw new Error();
+      }
+      const name = row.category;
+      const accountId = row.group.accountId !== null ? row.group.accountId : INVALID_ID;
+      const categoryId = row.group.categoryId !== null ? row.group.categoryId : INVALID_ID;
+      if (row.kind === RowKind.Income) {
+        Store.dispatch(DocActions.addPalmCategoryInfoIncome(name, accountId, categoryId));
+      } else {
+        Store.dispatch(DocActions.addPalmCategoryInfoOutgo(name, accountId, categoryId));
       }
     });
 
@@ -641,7 +713,7 @@ class Main extends React.Component<ILocalProps, IState> {
     }
 
     // ダイアログ閉じる
-    $(`#${this.elementIdCloseBtn}`).trigger('click');
+    $(`#${this.elementIdRoot}`).modal('hide');
   }
 }
 

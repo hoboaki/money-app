@@ -1,7 +1,7 @@
 import Root from './Root';
 
 /** 現在のファイルバージョン。 */
-const versionCurrent = 1;
+const versionCurrent = 2;
 
 /** Json フォーマット。 */
 interface IJsonRoot {
@@ -17,8 +17,20 @@ export const fromJson = (jsonText: string): Root => {
   // Json パース
   const jsonRoot: IJsonRoot = JSON.parse(jsonText);
 
+  // 未対応バージョンならエラー
+  if (jsonRoot.version <= 0 || versionCurrent < jsonRoot.version) {
+    throw new Error('未サポートバージョンのデータです。');
+  }
+
+  // 1 → 2 互換対応
+  // importTool の追加
+  if (jsonRoot.version === 1) {
+    jsonRoot.data.importTool = { palmCategories: { income: [], outgo: [] } };
+    jsonRoot.version = 2;
+  }
+
   // 現行バージョンのみ対応
-  if (versionCurrent !== versionCurrent) {
+  if (jsonRoot.version !== versionCurrent) {
     throw new Error('未サポートバージョンのデータです。');
   }
 
