@@ -278,11 +278,23 @@ class SampleDoc {
     global.console.assert(state.aggregateAccount.order.length === 1);
 
     // Palmカテゴリ情報
+    StateMethods.palmCategoryInfoIncomeAdd(
+      state,
+      'お小遣い',
+      Types.INVALID_ID,
+      StateMethods.categoryByPath(state.income.categories, 'お小遣い').id,
+    );
     StateMethods.palmCategoryInfoOutgoAdd(
       state,
       '食費',
       Types.INVALID_ID,
       StateMethods.categoryByPath(state.outgo.categories, '家事費/食費').id,
+    );
+    StateMethods.palmCategoryInfoOutgoAdd(
+      state,
+      '引き落とし',
+      StateMethods.accountByName(state, '財布').id,
+      Types.INVALID_ID,
     );
 
     return state;
