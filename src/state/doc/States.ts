@@ -68,6 +68,15 @@ export interface IRecordTransfer extends IRecord {
   amount: number;
 }
 
+/** Palmカテゴリ情報。 */
+export interface IPalmCategoryInfo {
+  /** 対応する口座ID。INVALID_ID なら口座に変換されないことを示す。 */
+  account: number;
+
+  /** 対応するカテゴリID。INVALID_ID ならカテゴリに変換されないことを示す。 */
+  category: number;
+}
+
 /** ドキュメントルート。 */
 export interface IState {
   /** 口座。 */
@@ -112,6 +121,15 @@ export interface IState {
     accounts: { [key: number]: IAggregateAccount };
   };
 
+  /** インポートツール用データ。 */
+  importTool: {
+    /** Palmカテゴリ情報。 */
+    palmCategories: {
+      income: { [key: string]: IPalmCategoryInfo };
+      outgo: { [key: string]: IPalmCategoryInfo };
+    };
+  };
+
   /** 次に使用するId。0(Types.INVALID_ID) は無効値。 */
   nextId: {
     account: number;
@@ -142,6 +160,12 @@ export const defaultState: IState = {
   aggregateAccount: {
     order: [],
     accounts: {},
+  },
+  importTool: {
+    palmCategories: {
+      income: {},
+      outgo: {},
+    },
   },
   nextId: {
     account: 1,

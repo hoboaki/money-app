@@ -2,6 +2,7 @@ import Clone from 'clone';
 import DataAccount from 'src/data-model/doc/Account';
 import DataAggregateAccount from 'src/data-model/doc/AggregateAccount';
 import DataCategory from 'src/data-model/doc/Category';
+import DataPalmCategoryInfo from 'src/data-model/doc/PalmCategoryInfo';
 import DataRecordIncome from 'src/data-model/doc/RecordIncome';
 import DataRecordOutgo from 'src/data-model/doc/RecordOutgo';
 import DataRecordTransfer from 'src/data-model/doc/RecordTransfer';
@@ -169,9 +170,10 @@ export const toData = (state: States.IState) => {
   });
 
   // 入金
+  const incomeCategoryIdDict: { [key: number]: number } = {}; // CategoryId -> エクスポート先のId 辞書
   {
     // カテゴリ
-    const categoryIdDict: { [key: number]: number } = {}; // CategoryId -> エクスポート先のId 辞書
+    const categoryIdDict = incomeCategoryIdDict;
     const collectChildCategoryId = (ids: number[]): number[] => {
       return ids.reduce((resultIds: number[], id: number) => {
         resultIds.push(id);
@@ -219,9 +221,10 @@ export const toData = (state: States.IState) => {
   }
 
   // 出金
+  const outgoCategoryIdDict: { [key: number]: number } = {}; // CategoryId -> エクスポート先のId 辞書
   {
     // カテゴリ
-    const categoryIdDict: { [key: number]: number } = {}; // CategoryId -> エクスポート先のId 辞書
+    const categoryIdDict = outgoCategoryIdDict;
     const collectChildCategoryId = (ids: number[]): number[] => {
       return ids.reduce((resultIds: number[], id: number) => {
         resultIds.push(id);
@@ -298,6 +301,40 @@ export const toData = (state: States.IState) => {
     data.accounts = src.accounts.map((accountId) => accountIdDict[accountId]);
     result.aggregateAccounts.push(data);
   });
+
+  // Palmカテゴリ情報
+  for (const key in state.importTool.palmCategories.income) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!state.importTool.palmCategories.income.hasOwnProperty(key)) {
+      continue;
+    }
+    const src = state.importTool.palmCategories.income[key];
+    const data = new DataPalmCategoryInfo();
+    data.name = key;
+    if (src.account !== Types.INVALID_ID) {
+      data.account = accountIdDict[src.account];
+    }
+    if (src.category !== Types.INVALID_ID) {
+      data.category = incomeCategoryIdDict[src.category];
+    }
+    result.importTool.palmCategories.income.push(data);
+  }
+  for (const key in state.importTool.palmCategories.outgo) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!state.importTool.palmCategories.outgo.hasOwnProperty(key)) {
+      continue;
+    }
+    const src = state.importTool.palmCategories.outgo[key];
+    const data = new DataPalmCategoryInfo();
+    data.name = key;
+    if (src.account !== Types.INVALID_ID) {
+      data.account = accountIdDict[src.account];
+    }
+    if (src.category !== Types.INVALID_ID) {
+      data.category = outgoCategoryIdDict[src.category];
+    }
+    result.importTool.palmCategories.outgo.push(data);
+  }
 
   // 結果を返す
   return result;
