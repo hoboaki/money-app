@@ -10,6 +10,8 @@ import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import { INVALID_ID } from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
+import Store from 'src/state/Store';
+import * as UiActions from 'src/state/ui/Actions';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
@@ -632,6 +634,11 @@ class Main extends React.Component<ILocalProps, IState> {
         }
       }
     });
+
+    // 変更があったら自動保存リクエスト
+    if (0 < this.state.csvRows.filter((row) => row.group !== null).length) {
+      Store.dispatch(UiActions.documentRequestAutoSave());
+    }
 
     // ダイアログ閉じる
     $(`#${this.elementIdCloseBtn}`).trigger('click');
