@@ -5,6 +5,7 @@ import ClassNames from 'classnames';
 import CsvParse from 'csv-parse/lib/sync';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import * as DocActions from 'src/state/doc/Actions';
 import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
@@ -586,15 +587,15 @@ class Main extends React.Component<ILocalProps, IState> {
         if (amount === null) {
           throw new Error(`Amount is null. (Row idx: ${rowIdx})`);
         }
-        DocStateMethods.transferRecordAdd(
-          this.props.doc,
-          createDate,
-          createDate, // updateDate
-          row.date,
-          row.memo,
-          row.kind === RowKind.Income ? row.group.accountId : this.state.targetAccountId, // from
-          row.kind === RowKind.Income ? this.state.targetAccountId : row.group.accountId, // to
-          amount,
+        Store.dispatch(
+          DocActions.addRecordTransfer(
+            createDate,
+            row.date,
+            row.memo,
+            row.kind === RowKind.Income ? row.group.accountId : this.state.targetAccountId, // from
+            row.kind === RowKind.Income ? this.state.targetAccountId : row.group.accountId, // to
+            amount,
+          ),
         );
         return;
       }
@@ -605,15 +606,15 @@ class Main extends React.Component<ILocalProps, IState> {
           if (amount === null) {
             throw new Error(`Amount is null. (Row idx: ${rowIdx})`);
           }
-          DocStateMethods.incomeRecordAdd(
-            this.props.doc,
-            createDate,
-            createDate, // updateDate
-            row.date,
-            row.memo,
-            this.state.targetAccountId,
-            row.group.categoryId,
-            amount,
+          Store.dispatch(
+            DocActions.addRecordIncome(
+              createDate,
+              row.date,
+              row.memo,
+              this.state.targetAccountId,
+              row.group.categoryId,
+              amount,
+            ),
           );
         } else {
           // 出金
@@ -621,15 +622,15 @@ class Main extends React.Component<ILocalProps, IState> {
           if (amount === null) {
             throw new Error(`Amount is null. (Row idx: ${rowIdx})`);
           }
-          DocStateMethods.outgoRecordAdd(
-            this.props.doc,
-            createDate,
-            createDate, // updateDate
-            row.date,
-            row.memo,
-            this.state.targetAccountId,
-            row.group.categoryId,
-            amount,
+          Store.dispatch(
+            DocActions.addRecordOutgo(
+              createDate,
+              row.date,
+              row.memo,
+              this.state.targetAccountId,
+              row.group.categoryId,
+              amount,
+            ),
           );
         }
       }
