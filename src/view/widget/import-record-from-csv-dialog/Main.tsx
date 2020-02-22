@@ -636,6 +636,44 @@ class Main extends React.Component<ILocalProps, IState> {
       }
     });
 
+    // Palm カテゴリ情報の保存
+    const uniqRows = this.state.csvRows.filter(
+      // 重複要素の中でも最初の１つ目だけ抽出することでユニークな配列を生成
+      (row, idx) =>
+        this.state.csvRows.findIndex((elem) => elem.kind === row.kind && elem.category === row.category) === idx,
+    );
+    uniqRows.forEach((row) => {
+      // 同じタイプの行を抽出
+      const sameRows = this.state.csvRows.filter((elem) => row.kind === elem.kind && row.category === elem.category);
+
+      // グループ設定が１つでも未選択のものがあればグループ設定不統一として扱うため保存しない
+      if (0 < sameRows.length && sameRows.filter((elem) => elem.group !== null).length !== sameRows.length) {
+        return;
+      }
+
+      // グループ設定が１つでも異なるものがあれば保存しない
+      if (
+        sameRows.filter(
+          (elem) => elem.group?.accountId === row.group?.accountId && elem.group?.categoryId === row.group?.categoryId,
+        ).length !== sameRows.length
+      ) {
+        return;
+      }
+
+      // 保存
+      if (row.group === null) {
+        throw new Error();
+      }
+      const name = row.category;
+      const accountId = row.group.accountId !== null ? row.group.accountId : INVALID_ID;
+      const categoryId = row.group.categoryId !== null ? row.group.categoryId : INVALID_ID;
+      if (row.kind === RowKind.Income) {
+        Store.dispatch(DocActions.addPalmCategoryInfoIncome(name, accountId, categoryId));
+      } else {
+        Store.dispatch(DocActions.addPalmCategoryInfoOutgo(name, accountId, categoryId));
+      }
+    });
+
     // 変更があったら自動保存リクエスト
     if (0 < this.state.csvRows.filter((row) => row.group !== null).length) {
       Store.dispatch(UiActions.documentRequestAutoSave());
