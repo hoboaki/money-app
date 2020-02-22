@@ -10,6 +10,8 @@ import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import { INVALID_ID } from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
@@ -42,7 +44,7 @@ interface IGroupInfo {
 
 interface CsvRow {
   kind: RowKind;
-  date: string;
+  date: IYearMonthDayDate;
   memo: string;
   income: number | null;
   outgo: number | null;
@@ -111,7 +113,7 @@ class Main extends React.Component<ILocalProps, IState> {
       };
       csvRows.push({
         kind: kindSelector(),
-        date: cols[0],
+        date: IYearMonthDayDateUtils.fromText(cols[0].replace('/', '-')),
         memo: cols[1],
         income,
         outgo,
@@ -412,7 +414,7 @@ class Main extends React.Component<ILocalProps, IState> {
 
       return (
         <tr key={idx}>
-          <td data-col-category={'date'}>{row.date}</td>
+          <td data-col-category={'date'}>{IYearMonthDayDateUtils.toDisplayFormatText(row.date)}</td>
           <td data-col-category={'memo'}>{row.memo}</td>
           <td data-col-category={'income'}>{row.income != null ? PriceUtils.numToLocaleString(row.income) : ''}</td>
           <td data-col-category={'outgo'}>{row.outgo != null ? PriceUtils.numToLocaleString(row.outgo) : ''}</td>
