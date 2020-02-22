@@ -360,8 +360,12 @@ class Main extends React.Component<ILocalProps, IState> {
       const isGroupSelected = this.state.isGroupCellSelected && this.selectedGroupCellId === groupCellId;
       const labelAndRecordKindSelector = (): { label: string; recordKind: DocTypes.RecordKind } => {
         if (row.kind === RowKind.Invalid) {
+          const label =
+            row.income === null
+              ? '取込をスキップ（入金・出金が空欄です）'
+              : '取込をスキップ（入金・出金それぞれに数値があります）';
           return {
-            label: '取込をスキップ（入金と送金のいずれか１つに金額を入力してください）',
+            label,
             recordKind: DocTypes.RecordKind.Invalid,
           };
         }
