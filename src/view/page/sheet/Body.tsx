@@ -492,34 +492,81 @@ class Body extends React.Component<IProps, IState> {
           break;
       }
     });
-    recordsForCellData.incomes.forEach((id) => {
-      const state = this.props.doc.income;
-      const record = state.records[id];
-      const categoryId = record.category;
-      const prevValue = incomeTotalArray[categoryId];
-      incomeTotalArray[categoryId] = (prevValue === null ? 0 : prevValue) + record.amount;
-    });
-    recordsForCellData.outgos.forEach((id) => {
-      const state = this.props.doc.outgo;
-      const record = state.records[id];
-      const categoryId = record.category;
-      const prevValue = outgoTotalArray[categoryId];
-      outgoTotalArray[categoryId] = (prevValue === null ? 0 : prevValue) + record.amount;
-    });
+    // まず末端カテゴリの合計データを作成
     {
-      Object.keys(incomeTotalArray).forEach((id) => {
-        const catId = Number(id);
-        incomeTotalArray[catId] = calcSumFunc(incomeLeafCategoriesArray[catId], incomeTotalArray);
+      const catIdToRecordsDict: { [key: number]: number[] } = {};
+      recordsForTotal.incomes.forEach((id) => {
+        const catId = this.props.doc.income.records[id].category;
+        if (!(catId in catIdToRecordsDict)) {
+          catIdToRecordsDict[catId] = [];
+        }
+        catIdToRecordsDict[catId].push(id);
       });
-      Object.keys(outgoTotalArray).forEach((id) => {
-        const catId = Number(id);
-        outgoTotalArray[catId] = calcSumFunc(outgoLeafCategoriesArray[catId], outgoTotalArray);
+      DocStateMethods.leafCategoryIdArray(
+        this.props.doc.income.rootCategoryId,
+        this.props.doc.income.categories,
+      ).forEach((catId) => {
+        if (!(catId in catIdToRecordsDict)) {
+          return;
+        }
+        const records = catIdToRecordsDict[catId];
+        incomeTotalArray[catId] = records.reduce((prev, id) => prev + this.props.doc.income.records[id].amount, 0);
       });
     }
+    {
+      const catIdToRecordsDict: { [key: number]: number[] } = {};
+      recordsForTotal.outgos.forEach((id) => {
+        const catId = this.props.doc.outgo.records[id].category;
+        if (!(catId in catIdToRecordsDict)) {
+          catIdToRecordsDict[catId] = [];
+        }
+        catIdToRecordsDict[catId].push(id);
+      });
+      DocStateMethods.leafCategoryIdArray(this.props.doc.outgo.rootCategoryId, this.props.doc.outgo.categories).forEach(
+        (catId) => {
+          if (!(catId in catIdToRecordsDict)) {
+            return;
+          }
+          const records = catIdToRecordsDict[catId];
+          outgoTotalArray[catId] = records.reduce((prev, id) => prev + this.props.doc.outgo.records[id].amount, 0);
+        },
+      );
+    }
+    // 末端カテゴリの合計データを利用して非末端カテゴリの合計データを作成
+    Object.keys(this.props.doc.income.categories).forEach((catIdText) => {
+      const catId = Number(catIdText);
+      const leafCatIds = DocStateMethods.leafCategoryIdArray(catId, this.props.doc.income.categories);
+      const validCatIds = leafCatIds.filter((leafCatId) => incomeTotalArray[leafCatId] !== null);
+      if (validCatIds.length === 0) {
+        return;
+      }
+      incomeTotalArray[catId] = validCatIds.reduce((prev, id) => {
+        const current = incomeTotalArray[id];
+        if (current === null) {
+          throw new Error();
+        }
+        return prev + current;
+      }, 0);
+    });
+    Object.keys(this.props.doc.outgo.categories).forEach((catIdText) => {
+      const catId = Number(catIdText);
+      const leafCatIds = DocStateMethods.leafCategoryIdArray(catId, this.props.doc.outgo.categories);
+      const validCatIds = leafCatIds.filter((leafCatId) => outgoTotalArray[leafCatId] !== null);
+      if (validCatIds.length === 0) {
+        return;
+      }
+      outgoTotalArray[catId] = validCatIds.reduce((prev, id) => {
+        const current = outgoTotalArray[id];
+        if (current === null) {
+          throw new Error();
+        }
+        return prev + current;
+      }, 0);
+    });
     const categoryTotalBuildTimeEnd = performance.now();
 
     // 計測値ダンプ
-    if (false) {
+    if (true) {
       const profileResults = [
         { label: 'AccountTableBuild', time: accountTableBuildTimeEnd - accountTableBuildTimeBegin },
         { label: 'AccountRootsBuild', time: accountRootsBuildTimeEnd - accountRootsBuildTimeBegin },
