@@ -1,7 +1,6 @@
 import Redux from 'redux';
 import { Action } from 'redux';
 import createA2RMapper from 'src/util/ActionToReducerMapper';
-import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 
 import * as Actions from './Actions';
@@ -48,27 +47,16 @@ a2RMapper.addWork<Action>(Actions.SHEET_MOVE_NEXT, (state, action) => {
   );
 });
 
-const pageSheetSetDate = (state: States.IState, date: IYearMonthDayDate) => {
-  switch (state.pageSheet.viewUnit) {
-    case Types.SheetViewUnit.Day:
-      state.pageSheet.currentDate = date;
-      break;
-    case Types.SheetViewUnit.Month:
-      state.pageSheet.currentDate = IYearMonthDayDateUtils.firstDayOfMonth(date);
-      break;
-    case Types.SheetViewUnit.Year:
-      state.pageSheet.currentDate = IYearMonthDayDateUtils.firstDayOfYear(date);
-      break;
-  }
-};
-
 a2RMapper.addWork<Action>(Actions.SHEET_MOVE_TODAY, (state, action) => {
-  pageSheetSetDate(state, IYearMonthDayDateUtils.today());
+  state.pageSheet.currentDate = IYearMonthDayDateUtils.today();
+});
+
+a2RMapper.addWork<Actions.ISheetMoveSpecified>(Actions.SHEET_MOVE_SPECIFIED, (state, action) => {
+  state.pageSheet.currentDate = action.date;
 });
 
 a2RMapper.addWork<Actions.ISheetChangeViewUnit>(Actions.SHEET_CHANGE_VIEW_UNIT, (state, action) => {
   state.pageSheet.viewUnit = action.viewUnit;
-  pageSheetSetDate(state, state.pageSheet.currentDate);
 });
 
 // Reducer 本体。

@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import { v4 as UUID } from 'uuid';
 
 import * as Types from './Types';
@@ -76,6 +77,18 @@ export const SHEET_MOVE_TODAY = UUID();
 export const sheetMoveToday = (): Action => {
   return {
     type: SHEET_MOVE_TODAY,
+  };
+};
+
+/// シート移動。
+export const SHEET_MOVE_SPECIFIED = UUID();
+export interface ISheetMoveSpecified extends Action {
+  date: IYearMonthDayDate;
+}
+export const sheetMoveSpecified = (date: IYearMonthDayDate): ISheetMoveSpecified => {
+  return {
+    type: SHEET_MOVE_SPECIFIED,
+    date,
   };
 };
 
