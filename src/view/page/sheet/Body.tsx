@@ -157,7 +157,15 @@ class Body extends React.Component<IProps, IState> {
     // 列情報生成
     const colInfos: { date: IYearMonthDayDate }[] = [];
     const colCount = this.state.colCount;
-    const colBeginDate = this.props.page.currentDate;
+    let colBeginDate = this.props.page.currentDate;
+    switch (this.props.page.viewUnit) {
+      case UiTypes.SheetViewUnit.Month:
+        colBeginDate = IYearMonthDateUtils.firstDayOfMonth(colBeginDate);
+        break;
+      case UiTypes.SheetViewUnit.Year:
+        colBeginDate = IYearMonthDateUtils.firstDayOfYear(colBeginDate);
+        break;
+    }
     let colEndDate = colBeginDate;
     {
       let date = this.props.page.currentDate;
@@ -295,9 +303,6 @@ class Body extends React.Component<IProps, IState> {
     this.props.doc.aggregateAccount.order.forEach((aggregateAccount) => {
       // メモ
       const accountIdArray = this.props.doc.aggregateAccount.accounts[aggregateAccount].accounts;
-      if (this.props.doc.aggregateAccount.accounts[aggregateAccount].name === '個人小計') {
-        global.console.log(accountIdArray);
-      }
 
       // 繰り越しデータ計算
       aggregateAccountCarriedData[aggregateAccount] = accountIdArray.reduce((prev, accountId) => {
