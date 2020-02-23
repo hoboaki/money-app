@@ -67,7 +67,12 @@ class Header extends React.Component<UiStates.IPageSheet> {
         <button className={moveNextBtnClass} onClick={(e) => this.onMoveNextBtnPushed(e)}>
           <MaterialIcon name="chevron_right" classNames={[]} darkMode={true} />
         </button>
-        <button id={this.elemIdJumpBtn} className={jumpBtnClass} onClick={(e) => this.onJumpBtnClicked(e)}>
+        <button
+          id={this.elemIdJumpBtn}
+          className={jumpBtnClass}
+          data-date={`${this.props.currentDate.year}/${this.props.currentDate.month}/${this.props.currentDate.day}`}
+          onClick={(e) => this.onJumpBtnClicked(e)}
+        >
           移動
         </button>
 
