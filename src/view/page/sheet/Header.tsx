@@ -22,6 +22,7 @@ class Header extends React.Component<UiStates.IPageSheet> {
     const movePrevBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MovePrevBtn);
     const moveTodayBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn);
     const moveNextBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MoveNextBtn);
+    const jumpBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.JumpBtn);
     const viewUnitSelectClass = ClassNames(BasicStyles.StdSelect, Styles.ViewUnitSelect);
     const rightAreaClass = ClassNames(LayoutStyles.RightToLeft, Styles.RightArea);
 
@@ -36,14 +37,17 @@ class Header extends React.Component<UiStates.IPageSheet> {
           <option value={UiTypes.SheetViewUnit.Month}>月間</option>
           <option value={UiTypes.SheetViewUnit.Year}>年間</option>
         </select>
-        <button className={movePrevBtnClass} onClick={this.onMovePrevBtnPushed}>
+        <button className={movePrevBtnClass} onClick={(e) => this.onMovePrevBtnPushed(e)}>
           <MaterialIcon name="chevron_left" classNames={[]} darkMode={true} />
         </button>
-        <button className={moveTodayBtnClass} onClick={this.onMoveTodayBtnPushed}>
+        <button className={moveTodayBtnClass} onClick={(e) => this.onMoveTodayBtnPushed(e)}>
           今日
         </button>
-        <button className={moveNextBtnClass} onClick={this.onMoveNextBtnPushed}>
+        <button className={moveNextBtnClass} onClick={(e) => this.onMoveNextBtnPushed(e)}>
           <MaterialIcon name="chevron_right" classNames={[]} darkMode={true} />
+        </button>
+        <button className={jumpBtnClass} onClick={(e) => this.onJumpBtnClicked(e)}>
+          移動
         </button>
 
         <div className={rightAreaClass}>
@@ -54,19 +58,27 @@ class Header extends React.Component<UiStates.IPageSheet> {
   }
 
   private onViewUnitChanged(e: React.ChangeEvent<HTMLSelectElement>) {
+    e.stopPropagation();
     Store.dispatch(UiActions.sheetChangeViewUnit(Number(e.target.value)));
   }
 
-  private onMovePrevBtnPushed() {
+  private onMovePrevBtnPushed(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    e.stopPropagation();
     Store.dispatch(UiActions.sheetMovePrev());
   }
 
-  private onMoveTodayBtnPushed() {
+  private onMoveTodayBtnPushed(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    e.stopPropagation();
     Store.dispatch(UiActions.sheetMoveToday());
   }
 
-  private onMoveNextBtnPushed() {
+  private onMoveNextBtnPushed(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    e.stopPropagation();
     Store.dispatch(UiActions.sheetMoveNext());
+  }
+
+  private onJumpBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    e.stopPropagation();
   }
 }
 
