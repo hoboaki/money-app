@@ -48,6 +48,14 @@ a2RMapper.addWork<Action>(Actions.SHEET_MOVE_NEXT, (state, action) => {
   );
 });
 
+a2RMapper.addWork<Action>(Actions.SHEET_MOVE_TODAY, (state, action) => {
+  pageSheetSetDate(state, IYearMonthDayDateUtils.today());
+});
+
+a2RMapper.addWork<Actions.ISheetMoveSpecified>(Actions.SHEET_MOVE_SPECIFIED, (state, action) => {
+  pageSheetSetDate(state, action.date);
+});
+
 const pageSheetSetDate = (state: States.IState, date: IYearMonthDayDate) => {
   switch (state.pageSheet.viewUnit) {
     case Types.SheetViewUnit.Day:
@@ -61,10 +69,6 @@ const pageSheetSetDate = (state: States.IState, date: IYearMonthDayDate) => {
       break;
   }
 };
-
-a2RMapper.addWork<Action>(Actions.SHEET_MOVE_TODAY, (state, action) => {
-  pageSheetSetDate(state, IYearMonthDayDateUtils.today());
-});
 
 a2RMapper.addWork<Actions.ISheetChangeViewUnit>(Actions.SHEET_CHANGE_VIEW_UNIT, (state, action) => {
   state.pageSheet.viewUnit = action.viewUnit;

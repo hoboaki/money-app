@@ -6,15 +6,36 @@ import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
 import * as UiStates from 'src/state/ui/States';
 import * as UiTypes from 'src/state/ui/Types';
+import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import MaterialIcon from 'src/view/widget/material-icon';
+import { v4 as UUID } from 'uuid';
 
 import * as Styles from './Header.css';
 
 class Header extends React.Component<UiStates.IPageSheet> {
+  private elemIdJumpBtn: string;
+
   constructor(props: UiStates.IPageSheet) {
     super(props);
+    this.elemIdJumpBtn = `elem-${UUID()}`;
+  }
+
+  public componentDidMount() {
+    // DatePicker セットアップ
+    $(`#${this.elemIdJumpBtn}`)
+      .datepicker({
+        format: 'yyyy/mm/dd',
+        todayBtn: 'linked',
+        language: 'ja',
+        autoclose: true,
+        todayHighlight: true,
+        showOnFocus: false,
+      })
+      .on('changeDate', (e) => {
+        Store.dispatch(UiActions.sheetMoveSpecified(IYearMonthDayDateUtils.fromText(e.format('yyyy-mm-dd'))));
+      });
   }
 
   public render() {
@@ -46,7 +67,7 @@ class Header extends React.Component<UiStates.IPageSheet> {
         <button className={moveNextBtnClass} onClick={(e) => this.onMoveNextBtnPushed(e)}>
           <MaterialIcon name="chevron_right" classNames={[]} darkMode={true} />
         </button>
-        <button className={jumpBtnClass} onClick={(e) => this.onJumpBtnClicked(e)}>
+        <button id={this.elemIdJumpBtn} className={jumpBtnClass} onClick={(e) => this.onJumpBtnClicked(e)}>
           移動
         </button>
 
@@ -79,6 +100,7 @@ class Header extends React.Component<UiStates.IPageSheet> {
 
   private onJumpBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     e.stopPropagation();
+    $(`#${this.elemIdJumpBtn}`).datepicker('show');
   }
 }
 
