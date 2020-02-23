@@ -493,24 +493,45 @@ class Body extends React.Component<IProps, IState> {
       }
     });
     // まず末端カテゴリの合計データを作成
-    DocStateMethods.leafCategoryIdArray(this.props.doc.income.rootCategoryId, this.props.doc.income.categories).forEach(
-      (catId) => {
-        const records = recordsForTotal.incomes.filter((id) => this.props.doc.income.records[id].category === catId);
-        if (records.length === 0) {
+    {
+      const catIdToRecordsDict: { [key: number]: number[] } = {};
+      recordsForTotal.incomes.forEach((id) => {
+        const catId = this.props.doc.income.records[id].category;
+        if (!(catId in catIdToRecordsDict)) {
+          catIdToRecordsDict[catId] = [];
+        }
+        catIdToRecordsDict[catId].push(id);
+      });
+      DocStateMethods.leafCategoryIdArray(
+        this.props.doc.income.rootCategoryId,
+        this.props.doc.income.categories,
+      ).forEach((catId) => {
+        if (!(catId in catIdToRecordsDict)) {
           return;
         }
+        const records = catIdToRecordsDict[catId];
         incomeTotalArray[catId] = records.reduce((prev, id) => prev + this.props.doc.income.records[id].amount, 0);
-      },
-    );
-    DocStateMethods.leafCategoryIdArray(this.props.doc.outgo.rootCategoryId, this.props.doc.outgo.categories).forEach(
-      (catId) => {
-        const records = recordsForTotal.outgos.filter((id) => this.props.doc.outgo.records[id].category === catId);
-        if (records.length === 0) {
-          return;
+      });
+    }
+    {
+      const catIdToRecordsDict: { [key: number]: number[] } = {};
+      recordsForTotal.outgos.forEach((id) => {
+        const catId = this.props.doc.outgo.records[id].category;
+        if (!(catId in catIdToRecordsDict)) {
+          catIdToRecordsDict[catId] = [];
         }
-        outgoTotalArray[catId] = records.reduce((prev, id) => prev + this.props.doc.outgo.records[id].amount, 0);
-      },
-    );
+        catIdToRecordsDict[catId].push(id);
+      });
+      DocStateMethods.leafCategoryIdArray(this.props.doc.outgo.rootCategoryId, this.props.doc.outgo.categories).forEach(
+        (catId) => {
+          if (!(catId in catIdToRecordsDict)) {
+            return;
+          }
+          const records = catIdToRecordsDict[catId];
+          outgoTotalArray[catId] = records.reduce((prev, id) => prev + this.props.doc.outgo.records[id].amount, 0);
+        },
+      );
+    }
     // 末端カテゴリの合計データを利用して非末端カテゴリの合計データを作成
     Object.keys(this.props.doc.income.categories).forEach((catIdText) => {
       const catId = Number(catIdText);
@@ -545,7 +566,7 @@ class Body extends React.Component<IProps, IState> {
     const categoryTotalBuildTimeEnd = performance.now();
 
     // 計測値ダンプ
-    if (false) {
+    if (true) {
       const profileResults = [
         { label: 'AccountTableBuild', time: accountTableBuildTimeEnd - accountTableBuildTimeBegin },
         { label: 'AccountRootsBuild', time: accountRootsBuildTimeEnd - accountRootsBuildTimeBegin },
