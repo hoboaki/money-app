@@ -22,22 +22,6 @@ class Header extends React.Component<UiStates.IPageSheet> {
     this.elemIdJumpBtn = `elem-${UUID()}`;
   }
 
-  public componentDidMount() {
-    // DatePicker セットアップ
-    $(`#${this.elemIdJumpBtn}`)
-      .datepicker({
-        format: 'yyyy/mm/dd',
-        todayBtn: 'linked',
-        language: 'ja',
-        autoclose: true,
-        todayHighlight: true,
-        showOnFocus: false,
-      })
-      .on('changeDate', (e) => {
-        Store.dispatch(UiActions.sheetMoveSpecified(IYearMonthDayDateUtils.fromText(e.format('yyyy-mm-dd'))));
-      });
-  }
-
   public render() {
     const rootClass = ClassNames(Styles.Root);
     const movePrevBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MovePrevBtn);
@@ -105,7 +89,23 @@ class Header extends React.Component<UiStates.IPageSheet> {
 
   private onJumpBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     e.stopPropagation();
-    $(`#${this.elemIdJumpBtn}`).datepicker('show');
+
+    // DatePicker セットアップ
+    const owner = $(`#${this.elemIdJumpBtn}`);
+    owner.datepicker('destroy');
+    owner
+      .datepicker({
+        format: 'yyyy/mm/dd',
+        todayBtn: 'linked',
+        language: 'ja',
+        autoclose: true,
+        todayHighlight: true,
+        showOnFocus: false,
+      })
+      .on('changeDate', (e) => {
+        Store.dispatch(UiActions.sheetMoveSpecified(IYearMonthDayDateUtils.fromText(e.format('yyyy-mm-dd'))));
+      });
+    owner.datepicker('show');
   }
 }
 
