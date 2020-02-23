@@ -295,25 +295,43 @@ class Body extends React.Component<IProps, IState> {
     this.props.doc.aggregateAccount.order.forEach((aggregateAccount) => {
       // メモ
       const accountIdArray = this.props.doc.aggregateAccount.accounts[aggregateAccount].accounts;
+      if (this.props.doc.aggregateAccount.accounts[aggregateAccount].name === '個人小計') {
+        global.console.log(accountIdArray);
+      }
 
       // 繰り越しデータ計算
-      aggregateAccountCarriedData[aggregateAccount] = accountIdArray
-        .map((accountId) => accountCarriedData[Number(accountId)])
-        .reduce((prev, current) => prev + current);
+      aggregateAccountCarriedData[aggregateAccount] = accountIdArray.reduce((prev, accountId) => {
+        const sign =
+          DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[accountId].kind) !==
+          DocTypes.AccountGroup.Liabilities
+            ? 1
+            : -1;
+        return prev + sign * accountCarriedData[Number(accountId)];
+      }, 0);
 
       // 各列のデータ
       const cellDataArray: number[] = [];
       colInfos.forEach((colInfo, colIdx) => {
-        cellDataArray[colIdx] = accountIdArray
-          .map((accountId) => accountCellDataArray[Number(accountId)][colIdx])
-          .reduce((prev, current) => prev + current);
+        cellDataArray[colIdx] = accountIdArray.reduce((prev, accountId) => {
+          const sign =
+            DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[accountId].kind) !==
+            DocTypes.AccountGroup.Liabilities
+              ? 1
+              : -1;
+          return prev + sign * accountCellDataArray[Number(accountId)][colIdx];
+        }, 0);
       });
       aggregateAccountCellDataArray[aggregateAccount] = cellDataArray;
 
       // 残高データ計算
-      aggregateAccountBalanceData[aggregateAccount] = accountIdArray
-        .map((accountId) => accountBalanceData[Number(accountId)])
-        .reduce((prev, current) => prev + current);
+      aggregateAccountBalanceData[aggregateAccount] = accountIdArray.reduce((prev, accountId) => {
+        const sign =
+          DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[accountId].kind) !==
+          DocTypes.AccountGroup.Liabilities
+            ? 1
+            : -1;
+        return prev + sign * accountBalanceData[Number(accountId)];
+      }, 0);
     });
     const aggregateAccountSumCarried = Object.values(aggregateAccountCarriedData).reduce((prev, cur) => prev + cur, 0);
     const aggregateAccountSumCellDataArray: number[] = [];
