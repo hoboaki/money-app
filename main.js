@@ -36,7 +36,7 @@ const template = [
   },
   // { role: 'editMenu' }
   {
-    label: 'Edit',
+    label: '編集',
     submenu: [
       { role: 'undo' },
       { role: 'redo' },
@@ -60,12 +60,12 @@ const template = [
   },
   // { role: 'viewMenu' }
   {
-    label: 'View',
+    label: '表示',
     submenu: [{ role: 'zoomin' }, { role: 'zoomout' }, { type: 'separator' }, { role: 'togglefullscreen' }],
   },
   // { role: 'windowMenu' }
   {
-    label: 'Window',
+    label: 'ウィンドウ',
     submenu: [
       { role: 'minimize' },
       { role: 'zoom' },
