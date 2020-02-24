@@ -8,6 +8,7 @@ const { app, globalShortcut, BrowserWindow, Menu } = require('electron');
 const windowStateKeeper = require('electron-window-state');
 
 // Menu設定
+const isDev = !app.isPackaged && process.env.NODE_ENV === 'development';
 const isMac = process.platform === 'darwin';
 const template = [
   // { role: 'appMenu' }
@@ -61,7 +62,16 @@ const template = [
   // { role: 'viewMenu' }
   {
     label: '表示',
-    submenu: [{ role: 'zoomin' }, { role: 'zoomout' }, { type: 'separator' }, { role: 'togglefullscreen' }],
+    submenu: [
+      ...(isDev
+        ? [{ role: 'reload' }, { role: 'forcereload' }, { role: 'toggledevtools' }, { type: 'separator' }]
+        : []),
+      { role: 'resetzoom' },
+      { role: 'zoomin' },
+      { role: 'zoomout' },
+      { type: 'separator' },
+      { role: 'togglefullscreen' },
+    ],
   },
   // { role: 'windowMenu' }
   {
@@ -110,7 +120,7 @@ function createWindow() {
     titleBarStyle: 'hidden',
     backgroundColor: '#f5f5f6',
     webPreferences: {
-      devTools: !app.isPackaged && process.env.NODE_ENV === 'development',
+      devTools: isDev,
       nodeIntegration: true,
     },
   });
