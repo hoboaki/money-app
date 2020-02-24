@@ -8,6 +8,7 @@ const { app, globalShortcut, BrowserWindow, Menu } = require('electron');
 const windowStateKeeper = require('electron-window-state');
 
 // Menu設定
+const appDisplayName = 'AdelMoney';
 const isDev = !app.isPackaged && process.env.NODE_ENV === 'development';
 const isMac = process.platform === 'darwin';
 const template = [
@@ -15,17 +16,17 @@ const template = [
   ...(isMac
     ? [
         {
-          label: app.name,
+          label: '', // 強制的に上書きされるので空文字列にしておく
           submenu: [
-            { role: 'about' },
+            { role: 'about', label: `${appDisplayName}について` },
             { type: 'separator' },
-            { role: 'services' },
+            { role: 'services', label: 'サービス' },
             { type: 'separator' },
-            { role: 'hide' },
-            { role: 'hideothers' },
-            { role: 'unhide' },
+            { role: 'hide', label: `${appDisplayName}を隠す` },
+            { role: 'hideothers', label: 'ほかを隠す' },
+            { role: 'unhide', label: 'すべてを表示' },
             { type: 'separator' },
-            { role: 'quit' },
+            { role: 'quit', label: `${appDisplayName}を終了` },
           ],
         },
       ]
@@ -33,30 +34,30 @@ const template = [
   // { role: 'fileMenu' }
   {
     label: 'ファイル',
-    submenu: [isMac ? { role: 'close' } : { role: 'quit' }],
+    submenu: [isMac ? { role: 'close', label: '閉じる' } : { role: 'quit', label: '終了' }],
   },
   // { role: 'editMenu' }
   {
     label: '編集',
     submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
+      { role: 'undo', label: '取り消す' },
+      { role: 'redo', label: 'やり直す' },
       { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
+      { role: 'cut', label: 'カット' },
+      { role: 'copy', label: 'コピー' },
+      { role: 'paste', label: 'ペースト' },
       ...(isMac
         ? [
-            { role: 'pasteAndMatchStyle' },
-            { role: 'delete' },
-            { role: 'selectAll' },
+            { role: 'pasteAndMatchStyle', label: 'ペーストしてスタイルを合わせる' },
+            { role: 'delete', label: '削除' },
+            { role: 'selectAll', label: 'すべてを選択' },
             { type: 'separator' },
             {
-              label: 'Speech',
+              label: 'スピーチ',
               submenu: [{ role: 'startspeaking' }, { role: 'stopspeaking' }],
             },
           ]
-        : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }]),
+        : [{ role: 'delete', label: '削除' }, { type: 'separator' }, { role: 'selectAll', label: 'すべてを選択' }]),
     ],
   },
   // { role: 'viewMenu' }
@@ -66,22 +67,27 @@ const template = [
       ...(isDev
         ? [{ role: 'reload' }, { role: 'forcereload' }, { role: 'toggledevtools' }, { type: 'separator' }]
         : []),
-      { role: 'resetzoom' },
-      { role: 'zoomin' },
-      { role: 'zoomout' },
+      { role: 'resetzoom', label: '実際のサイズ' },
+      { role: 'zoomout', label: '拡大' },
+      { role: 'zoomin', label: '縮小' },
       { type: 'separator' },
-      { role: 'togglefullscreen' },
+      { role: 'togglefullscreen', label: 'フルスクリーンにする', sublabel: 'フルスクリーンを解除' },
     ],
   },
   // { role: 'windowMenu' }
   {
     label: 'ウィンドウ',
     submenu: [
-      { role: 'minimize' },
-      { role: 'zoom' },
+      { role: 'minimize', label: 'しまう' },
+      { role: 'zoom', label: '拡大／縮小' },
       ...(isMac
-        ? [{ type: 'separator' }, { role: 'front' }, { type: 'separator' }, { role: 'window' }]
-        : [{ role: 'close' }]),
+        ? [
+            { type: 'separator' },
+            { role: 'front', label: 'すべてを手前に移動' },
+            { type: 'separator' },
+            { role: 'window' },
+          ]
+        : [{ role: 'close', label: '閉じる' }]),
     ],
   },
   {
@@ -152,7 +158,11 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', function() {
+  Menu.setApplicationMenu(menu);
+  createWindow();
+  console.log(menu.items);
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
