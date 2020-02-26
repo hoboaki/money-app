@@ -85,16 +85,12 @@ const template = [
   // { role: 'windowMenu' }
   {
     label: 'ウィンドウ',
+    role: 'window',
     submenu: [
       { role: 'minimize', label: 'しまう' },
       { role: 'zoom', label: '拡大／縮小' },
       ...(isMac
-        ? [
-            { type: 'separator' },
-            { role: 'front', label: 'すべてを手前に移動' },
-            { type: 'separator' },
-            { role: 'window' },
-          ]
+        ? [{ type: 'separator' }, { role: 'front', label: 'すべてを手前に移動' }, { type: 'separator' }]
         : [{ role: 'close', label: '閉じる' }]),
     ],
   },
