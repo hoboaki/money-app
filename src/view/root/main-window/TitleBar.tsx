@@ -2,6 +2,8 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import IStoreState from 'src/state/IStoreState';
+import * as UiStateMethods from 'src/state/ui/StateMethods';
+import * as UiStates from 'src/state/ui/States';
 
 import * as Styles from './TitleBar.css';
 
@@ -10,7 +12,7 @@ interface IProps {
 }
 
 interface ILocalProps extends IProps {
-  filePath: string;
+  state: UiStates.IState;
 }
 
 class TitleBar extends React.Component<ILocalProps> {
@@ -18,13 +20,18 @@ class TitleBar extends React.Component<ILocalProps> {
     super(props);
   }
 
+  public componentDidMount() {
+    document.title = UiStateMethods.windowTitleText(this.props.state.document);
+  }
+
+  public componentDidUpdate() {
+    document.title = UiStateMethods.windowTitleText(this.props.state.document);
+  }
+
   public render() {
     const rootClass = ClassNames(Styles.Base, Styles.Bg, { [Styles.BgActive]: this.props.isActive });
     const titleClass = ClassNames(Styles.Base, Styles.Title);
-    const titleText =
-      this.props.filePath.length === 0
-        ? 'スタートページ'
-        : this.props.filePath.slice(this.props.filePath.lastIndexOf('/') + 1);
+    const titleText = UiStateMethods.windowTitleText(this.props.state.document);
     return (
       <div id="titleBar" className={rootClass}>
         <div className={titleClass}>
@@ -37,7 +44,7 @@ class TitleBar extends React.Component<ILocalProps> {
 
 const mapStateToProps = (state: IStoreState, props: IProps) => {
   const result: ILocalProps = Object.assign({}, props, {
-    filePath: state.ui.document.filePath,
+    state: state.ui,
   });
   return result;
 };
