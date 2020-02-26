@@ -59,6 +59,22 @@ a2RMapper.addWork<Actions.ISheetChangeViewUnit>(Actions.SHEET_CHANGE_VIEW_UNIT, 
   state.pageSheet.viewUnit = action.viewUnit;
 });
 
+a2RMapper.addWork<Actions.IRecordEditDialogUpdateLatestValue>(
+  Actions.RECORD_EDIT_DIALOG_UPDATE_LATEST_VALUE,
+  (state, action) => {
+    const target = state.dialogAddRecord;
+    if (action.latestFormAccount !== null) {
+      target.latestFormAccount = action.latestFormAccount;
+    }
+    if (action.latestFormCategoryIncome !== null) {
+      target.latestFormCategoryIncome = action.latestFormCategoryIncome;
+    }
+    if (action.latestFormCategoryOutgo !== null) {
+      target.latestFormCategoryOutgo = action.latestFormCategoryOutgo;
+    }
+  },
+);
+
 // Reducer 本体。
 const Reducer: Redux.Reducer<States.IState> = (state = States.defaultState, action) => {
   return a2RMapper.execute(state, action);

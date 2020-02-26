@@ -31,7 +31,7 @@ import * as Styles from './Main.css';
 const NEW_RECORD_ID = DocTypes.INVALID_ID;
 
 interface IProps {
-  /** 入力フォームの新規レコード初期値。 */
+  /** 入力フォームの新規レコード初期値。null の場合は前回入力値を使用。 */
   formDefaultValue: {
     recordKind: DocTypes.RecordKind;
     date: IYearMonthDayDate;
@@ -98,13 +98,21 @@ class Main extends React.Component<ILocalProps, IState> {
     const formCategoryOutgo =
       formDefaultValue.recordKind === DocTypes.RecordKind.Outgo && formDefaultValue.categoryId !== null
         ? formDefaultValue.categoryId
+        : this.props.dialogRecordAdd.latestFormCategoryOutgo !== DocTypes.INVALID_ID
+        ? this.props.dialogRecordAdd.latestFormCategoryOutgo
         : DocStateMethods.firstLeafCategoryId(this.props.doc.outgo.rootCategoryId, this.props.doc.outgo.categories);
     const formCategoryIncome =
       formDefaultValue.recordKind === DocTypes.RecordKind.Income && formDefaultValue.categoryId !== null
         ? formDefaultValue.categoryId
+        : this.props.dialogRecordAdd.latestFormCategoryIncome !== DocTypes.INVALID_ID
+        ? this.props.dialogRecordAdd.latestFormCategoryIncome
         : DocStateMethods.firstLeafCategoryId(this.props.doc.income.rootCategoryId, this.props.doc.income.categories);
     const formAccount =
-      formDefaultValue.accountId !== null ? formDefaultValue.accountId : this.props.doc.account.order[0];
+      formDefaultValue.accountId !== null
+        ? formDefaultValue.accountId
+        : this.props.dialogRecordAdd.latestFormAccount !== DocTypes.INVALID_ID
+        ? this.props.dialogRecordAdd.latestFormAccount
+        : this.props.doc.account.order[0];
     this.state = {
       formKind: formDefaultValue.recordKind,
       formDate: IYearMonthDayDateUtils.toDisplayFormatText(formDefaultValue.date),
@@ -1184,6 +1192,10 @@ class Main extends React.Component<ILocalProps, IState> {
             ),
           );
         }
+        // 最終入力値記憶
+        Store.dispatch(
+          UiActions.recordEditDialogUpdateLatestValue(this.state.formAccount, null, this.state.formCategoryOutgo),
+        );
         break;
 
       case DocTypes.RecordKind.Income:
@@ -1214,6 +1226,10 @@ class Main extends React.Component<ILocalProps, IState> {
             ),
           );
         }
+        // 最終入力値記憶
+        Store.dispatch(
+          UiActions.recordEditDialogUpdateLatestValue(this.state.formAccount, this.state.formCategoryIncome, null),
+        );
         break;
 
       case DocTypes.RecordKind.Transfer:

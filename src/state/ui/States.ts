@@ -1,5 +1,7 @@
-import IYearMonthDayDate from '../../util/IYearMonthDayDate';
-import * as IYearMonthDayDateUtils from '../../util/IYearMonthDayDateUtils';
+import * as DocTypes from 'src/state/doc/Types';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
+import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
+
 import * as Types from './Types';
 
 /** ドキュメント操作用 state。 */
@@ -10,7 +12,9 @@ export interface IDocument {
 
 /** レコード追加ダイアログ用 state。 */
 export interface IDialogAddRecord {
-  dummy: boolean;
+  latestFormAccount: number;
+  latestFormCategoryIncome: number;
+  latestFormCategoryOutgo: number;
 }
 
 /** PageCalendar 用 state。 */
@@ -38,7 +42,9 @@ export const defaultState: IState = {
     requestAutoSave: false,
   },
   dialogAddRecord: {
-    dummy: false,
+    latestFormAccount: DocTypes.INVALID_ID,
+    latestFormCategoryIncome: DocTypes.INVALID_ID,
+    latestFormCategoryOutgo: DocTypes.INVALID_ID,
   },
   pageCalendar: {
     currentDate: IYearMonthDayDateUtils.firstDayOfMonth(IYearMonthDayDateUtils.today()),
