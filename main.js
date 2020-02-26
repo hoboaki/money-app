@@ -105,6 +105,7 @@ const template = [
 ];
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
+zz;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -161,7 +162,6 @@ function createWindow() {
 app.on('ready', function() {
   Menu.setApplicationMenu(menu);
   createWindow();
-  console.log(menu.items);
 });
 
 // Quit when all windows are closed.
