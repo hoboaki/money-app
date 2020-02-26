@@ -103,3 +103,28 @@ export const sheetChangeViewUnit = (viewUnit: Types.SheetViewUnit): ISheetChange
     viewUnit,
   };
 };
+
+/// レコード編集ダイアログの最後に入力した値の記憶。
+export const RECORD_EDIT_DIALOG_UPDATE_LATEST_VALUE = UUID();
+export interface IRecordEditDialogUpdateLatestValue extends Action {
+  /** 口座Id。null の場合はデフォルト値を変更しない。 */
+  latestFormAccount: number | null;
+
+  /** 入金カテゴリId。null の場合はデフォルト値を変更しない。 */
+  latestFormCategoryIncome: number | null;
+
+  /** 出金カテゴリId。null の場合はデフォルト値を変更しない。  */
+  latestFormCategoryOutgo: number | null;
+}
+export const recordEditDialogUpdateLatestValue = (
+  latestFormAccount: number | null,
+  latestFormCategoryIncome: number | null,
+  latestFormCategoryOutgo: number | null,
+): IRecordEditDialogUpdateLatestValue => {
+  return {
+    type: RECORD_EDIT_DIALOG_UPDATE_LATEST_VALUE,
+    latestFormAccount,
+    latestFormCategoryIncome,
+    latestFormCategoryOutgo,
+  };
+};

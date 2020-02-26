@@ -31,7 +31,7 @@ import * as Styles from './Main.css';
 const NEW_RECORD_ID = DocTypes.INVALID_ID;
 
 interface IProps {
-  /** 入力フォームの新規レコード初期値。 */
+  /** 入力フォームの新規レコード初期値。null の場合は前回入力値を使用。 */
   formDefaultValue: {
     recordKind: DocTypes.RecordKind;
     date: IYearMonthDayDate;
