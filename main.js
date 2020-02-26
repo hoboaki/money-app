@@ -6,7 +6,7 @@ const { app, globalShortcut, BrowserWindow, Menu } = require('electron');
 const windowStateKeeper = require('electron-window-state');
 
 //------------------------------------------------------------------------------
-// Menu設定
+// メニューバー設定
 const appDisplayName = 'AdelMoney';
 const isDev = !app.isPackaged && process.env.NODE_ENV === 'development';
 const isMac = process.platform === 'darwin';
@@ -111,6 +111,17 @@ const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
 
 //------------------------------------------------------------------------------
+// Dock メニュー設定
+const dockMenu = Menu.buildFromTemplate([
+  {
+    label: '新規ウィンドウ',
+    click() {
+      createWindow();
+    },
+  },
+]);
+
+//------------------------------------------------------------------------------
 // ウィンドウ管理
 let windows = [];
 
@@ -164,6 +175,7 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', function() {
   Menu.setApplicationMenu(menu);
+  app.dock.setMenu(dockMenu);
   createWindow();
 });
 
