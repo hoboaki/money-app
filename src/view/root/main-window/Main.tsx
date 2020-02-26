@@ -28,6 +28,7 @@ import TitleBar from './TitleBar';
 interface IState {
   currentPageId: string;
   isActive: boolean;
+  isFullScreen: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,6 +39,7 @@ class MainWindow extends React.Component<any, IState> {
     this.state = {
       currentPageId: '',
       isActive: true,
+      isFullScreen: false,
     };
   }
 
@@ -56,6 +58,14 @@ class MainWindow extends React.Component<any, IState> {
 
           case 'blur':
             this.setState({ isActive: false });
+            break;
+
+          case 'enter-full-screen':
+            this.setState({ isFullScreen: true });
+            break;
+
+          case 'leave-full-screen':
+            this.setState({ isFullScreen: false });
             break;
         }
       });
@@ -98,9 +108,10 @@ class MainWindow extends React.Component<any, IState> {
     }
 
     const rootClass = ClassNames(Styles.Root, LayoutStyle.TopToBottom);
+    const titleBar = this.state.isFullScreen ? null : <TitleBar isActive={this.state.isActive} />;
     return (
       <div className={rootClass}>
-        <TitleBar isActive={this.state.isActive} />
+        {titleBar}
         <div className={LayoutStyle.LeftToRight}>
           <SideBar
             onBtnClicked={(pageId) => {

@@ -153,14 +153,20 @@ function createWindow() {
   windows.push(newWindow);
 
   // 各種イベント対応
-  newWindow.on('closed', function() {
+  newWindow.on('closed', () => {
     windows = windows.filter((win) => win !== newWindow);
   });
-  newWindow.on('focus', function() {
+  newWindow.on('focus', () => {
     newWindow.webContents.send('app-message', 'focus');
   });
-  newWindow.on('blur', function() {
+  newWindow.on('blur', () => {
     newWindow.webContents.send('app-message', 'blur');
+  });
+  newWindow.on('enter-full-screen', () => {
+    newWindow.webContents.send('app-message', 'enter-full-screen');
+  });
+  newWindow.on('leave-full-screen', () => {
+    newWindow.webContents.send('app-message', 'leave-full-screen');
   });
 
   // 内容初期化
