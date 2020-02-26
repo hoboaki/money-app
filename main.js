@@ -2,11 +2,10 @@
  * @fileOverview
  * エントリーポイント。
  */
-
-// Modules to control application life and create native browser window
 const { app, globalShortcut, BrowserWindow, Menu } = require('electron');
 const windowStateKeeper = require('electron-window-state');
 
+//------------------------------------------------------------------------------
 // Menu設定
 const appDisplayName = 'AdelMoney';
 const isDev = !app.isPackaged && process.env.NODE_ENV === 'development';
@@ -34,7 +33,16 @@ const template = [
   // { role: 'fileMenu' }
   {
     label: 'ファイル',
-    submenu: [isMac ? { role: 'close', label: '閉じる' } : { role: 'quit', label: '終了' }],
+    submenu: [
+      {
+        label: '新規ウィンドウ',
+        accelerator: 'CmdOrCtrl+Shift+N',
+        click: async () => {
+          createWindow();
+        },
+      },
+      ...[isMac ? { role: 'close', label: '閉じる' } : { role: 'quit', label: '終了' }],
+    ],
   },
   // { role: 'editMenu' }
   {
@@ -106,17 +114,18 @@ const template = [
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+//------------------------------------------------------------------------------
+// ウィンドウ管理
+let windows = [];
 
+// 新規ウィンドウ作成関数
 function createWindow() {
-  // Create the browser window.
+  // ウィンドウ作成
   const state = windowStateKeeper({
     defaultWidth: 1000,
     defaultHeight: 600,
   });
-  mainWindow = new BrowserWindow({
+  const newWindow = new BrowserWindow({
     x: state.x,
     y: state.y,
     width: state.width,
@@ -130,30 +139,29 @@ function createWindow() {
       nodeIntegration: true,
     },
   });
-  state.manage(mainWindow);
-  //mainWindow.setMenuBarVisibility(false);
+  state.manage(newWindow);
+  //newWindow.setMenuBarVisibility(false);
 
-  // and load the index.html of the app.
-  mainWindow.loadFile('public/index.html');
+  // ウィンドウ管理追加処理
+  windows.push(newWindow);
 
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
+  // 各種イベント対応
+  newWindow.on('closed', function() {
+    windows = windows.filter((win) => win !== newWindow);
+  });
+  newWindow.on('focus', function() {
+    newWindow.webContents.send('app-message', 'focus');
+  });
+  newWindow.on('blur', function() {
+    newWindow.webContents.send('app-message', 'blur');
   });
 
-  mainWindow.on('focus', function() {
-    mainWindow.webContents.send('app-message', 'focus');
-  });
-  mainWindow.on('blur', function() {
-    mainWindow.webContents.send('app-message', 'blur');
-  });
+  // 内容初期化
+  newWindow.loadFile('public/index.html');
 }
+
+//------------------------------------------------------------------------------
+// アプリケーションイベント
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -175,10 +183,9 @@ app.on('window-all-closed', function() {
 app.on('activate', function() {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
+  if (windows.length === 0) {
     createWindow();
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+// EOF
