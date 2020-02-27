@@ -104,6 +104,18 @@ export const sheetChangeViewUnit = (viewUnit: Types.SheetViewUnit): ISheetChange
   };
 };
 
+/// 設定サブページ変更。
+export const SETTING_UPDATE_SUB_PAGE = UUID();
+export interface ISettingUpdateSubPage extends Action {
+  subPageId: string | null;
+}
+export const settingUpdateSubPage = (subPageId: string | null): ISettingUpdateSubPage => {
+  return {
+    type: SETTING_UPDATE_SUB_PAGE,
+    subPageId,
+  };
+};
+
 /// レコード編集ダイアログの最後に入力した値の記憶。
 export const RECORD_EDIT_DIALOG_UPDATE_LATEST_VALUE = UUID();
 export interface IRecordEditDialogUpdateLatestValue extends Action {

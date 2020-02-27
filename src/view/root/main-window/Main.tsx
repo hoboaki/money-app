@@ -282,6 +282,12 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   private activatePage(pageId: string) {
+    // もし設定ページならトップ画面に戻す
+    if (pageId === PageSetting.PageId) {
+      Store.dispatch(UiActions.settingUpdateSubPage(null));
+    }
+
+    // ページ変更
     this.setState({ currentPageId: pageId });
   }
 }

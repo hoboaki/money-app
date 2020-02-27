@@ -59,6 +59,10 @@ a2RMapper.addWork<Actions.ISheetChangeViewUnit>(Actions.SHEET_CHANGE_VIEW_UNIT, 
   state.pageSheet.viewUnit = action.viewUnit;
 });
 
+a2RMapper.addWork<Actions.ISettingUpdateSubPage>(Actions.SETTING_UPDATE_SUB_PAGE, (state, action) => {
+  state.pageSetting.subPageId = action.subPageId;
+});
+
 a2RMapper.addWork<Actions.IRecordEditDialogUpdateLatestValue>(
   Actions.RECORD_EDIT_DIALOG_UPDATE_LATEST_VALUE,
   (state, action) => {

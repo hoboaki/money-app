@@ -28,12 +28,19 @@ export interface IPageSheet {
   viewUnit: Types.SheetViewUnit;
 }
 
+/** PageSetting 用 state。 */
+export interface IPageSetting {
+  /** サブページを示すId文字列。未設定のときはトップ画面を表す。 */
+  subPageId: string | null;
+}
+
 /** State ルート。 */
 export interface IState {
   document: IDocument;
   dialogAddRecord: IDialogAddRecord;
   pageCalendar: IPageCalendar;
   pageSheet: IPageSheet;
+  pageSetting: IPageSetting;
 }
 
 export const defaultState: IState = {
@@ -52,5 +59,8 @@ export const defaultState: IState = {
   pageSheet: {
     currentDate: IYearMonthDayDateUtils.today(),
     viewUnit: Types.SheetViewUnit.Day,
+  },
+  pageSetting: {
+    subPageId: null,
   },
 };
