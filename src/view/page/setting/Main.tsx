@@ -29,7 +29,11 @@ class Main extends React.Component {
       );
     });
 
-    return <div className={rootClass}>{btns}</div>;
+    return (
+      <div className={rootClass}>
+        <div className={Styles.GridHolder}>{btns}</div>
+      </div>
+    );
   }
 
   private onClicked(settingId: string) {

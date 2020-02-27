@@ -1,4 +1,9 @@
 .Root {
-  margin: 4px;
-  width: 400px;
+  display: flex;
+  flex-direction: column;
+  height: inherit;
+}
+
+.Root i {
+  font-size: 64px;
 }
