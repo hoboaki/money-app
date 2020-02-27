@@ -272,6 +272,11 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   private onPageBtnClicked(pageId: string) {
+    // もし設定ページならトップ画面に戻す
+    if (pageId === PageSetting.PageId) {
+      Store.dispatch(UiActions.settingUpdateSubPage(null));
+    }
+
     // 変更がなければ何もしない
     if (this.state.currentPageId === pageId) {
       return;
@@ -282,11 +287,6 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   private activatePage(pageId: string) {
-    // もし設定ページならトップ画面に戻す
-    if (pageId === PageSetting.PageId) {
-      Store.dispatch(UiActions.settingUpdateSubPage(null));
-    }
-
     // ページ変更
     this.setState({ currentPageId: pageId });
   }

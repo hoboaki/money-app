@@ -1,18 +1,39 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+import * as ReactRedux from 'react-redux';
+import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
+import * as UiStates from 'src/state/ui/States';
 import * as PageStyles from 'src/view/page/Page.css';
 
+import Account from './Account';
 import * as Styles from './Main.css';
 import SettingBtn from './SettingBtn';
 
-class Main extends React.Component {
+interface IProps {
+  states: UiStates.IPageSetting;
+}
+
+class Main extends React.Component<IProps> {
   public static PageId = 'Setting';
   private static SubPageIdAccount = 'Account';
   private static SubPageIdCategory = 'Category';
 
+  public constructor(props: IProps) {
+    super(props);
+  }
+
   public render() {
+    switch (this.props.states.subPageId) {
+      case Main.SubPageIdAccount:
+        return <Account />;
+      default:
+        return this.renderTopPage();
+    }
+  }
+
+  private renderTopPage() {
     const rootClass = ClassNames(PageStyles.Base, Styles.Root);
 
     const btnInfos = [];
@@ -51,4 +72,9 @@ class Main extends React.Component {
   }
 }
 
-export default Main;
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    states: state.ui.pageSetting,
+  };
+};
+export default ReactRedux.connect(mapStateToProps)(Main);
