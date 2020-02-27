@@ -221,7 +221,7 @@ class Body extends React.Component<IProps, IState> {
     const calculateCarriedResult = new BalanceCalculator(
       this.props.doc,
       colBeginDate,
-      this.props.doc.account.order,
+      DocStateMethods.accountOrderMixed(this.props.doc),
       null,
     );
     const calculateColResults: BalanceCalculator[] = [];
@@ -232,7 +232,7 @@ class Body extends React.Component<IProps, IState> {
         calculator = new BalanceCalculator(
           this.props.doc,
           nextColIdx < colInfos.length ? colInfos[nextColIdx].date : colEndDate,
-          this.props.doc.account.order,
+          DocStateMethods.accountOrderMixed(this.props.doc),
           calculator,
         );
         global.console.assert(calculateColResults.length === colIdx);
@@ -242,10 +242,10 @@ class Body extends React.Component<IProps, IState> {
     const calculateBalanceResult = new BalanceCalculator(
       this.props.doc,
       totalEndDate,
-      this.props.doc.account.order,
+      DocStateMethods.accountOrderMixed(this.props.doc),
       calculateCarriedResult,
     );
-    this.props.doc.account.order.forEach((accountId) => {
+    DocStateMethods.accountOrderMixed(this.props.doc).forEach((accountId) => {
       // 繰り越しデータ代入
       const account = this.props.doc.account.accounts[accountId];
       const sign = DocTypes.accountKindToAccountGroup(account.kind) !== DocTypes.AccountGroup.Liabilities ? 1 : -1;
@@ -672,7 +672,7 @@ class Body extends React.Component<IProps, IState> {
     accountGroups.forEach((accountGroup) => {
       accountRowDict[accountGroup] = new Array<JSX.Element>();
     });
-    this.props.doc.account.order.forEach((accountId) => {
+    DocStateMethods.accountOrderMixed(this.props.doc).forEach((accountId) => {
       const account = this.props.doc.account.accounts[accountId];
       const accountGroup = DocTypes.accountKindToAccountGroup(account.kind);
       const targetArray = accountRowDict[accountGroup];
@@ -1152,7 +1152,7 @@ class Body extends React.Component<IProps, IState> {
       let accountId = cellInfo.accountId;
       if (accountId === null && cellInfo.accountGroup !== null) {
         // ルートを選択中なら１つめの口座を選択
-        const targets = this.props.doc.account.order
+        const targets = DocStateMethods.accountOrderMixed(this.props.doc)
           .map((id) => this.props.doc.account.accounts[id])
           .filter((account) => DocTypes.accountKindToAccountGroup(account.kind) === cellInfo.accountGroup);
         if (0 < targets.length) {
@@ -1202,7 +1202,7 @@ class Body extends React.Component<IProps, IState> {
         } else {
           // 指定の種類の口座全部
           accounts = accounts.concat(
-            this.props.doc.account.order.filter(
+            DocStateMethods.accountOrderMixed(this.props.doc).filter(
               (id) =>
                 DocTypes.accountKindToAccountGroup(this.props.doc.account.accounts[id].kind) === cellInfo.accountGroup,
             ),

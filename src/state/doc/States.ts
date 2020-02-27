@@ -81,8 +81,12 @@ export interface IPalmCategoryInfo {
 export interface IState {
   /** 口座。 */
   account: {
-    /** 口座の並び順（AccountId の配列）定義。 */
-    order: number[];
+    /** 資産口座の並び順（AccountId の配列）定義。 */
+    orderAssets: number[];
+
+    /** 負債口座の並び順（AccountId の配列）定義。 */
+    orderLiabilities: number[];
+
     /** AccountId がキーの口座群。 */
     accounts: { [key: number]: IAccount };
   };
@@ -141,7 +145,8 @@ export interface IState {
 
 export const defaultState: IState = {
   account: {
-    order: [],
+    orderAssets: [],
+    orderLiabilities: [],
     accounts: {},
   },
   income: {

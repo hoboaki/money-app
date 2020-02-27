@@ -1,3 +1,4 @@
+import * as StateMethods from 'src/state/doc/StateMethods';
 import * as States from 'src/state/doc/States';
 
 import IYearMonthDayDate from '../IYearMonthDayDate';
@@ -39,7 +40,7 @@ class BalanceCalculator {
     this.endDate = endDate;
     this.allRecords = cache != null && cache.allRecords != null ? cache.allRecords : new RecordCollection(state);
     if (accounts == null) {
-      accounts = state.account.order;
+      accounts = StateMethods.accountOrderMixed(state);
     }
 
     // 処理最適化のためまず日付で絞り込んでおく

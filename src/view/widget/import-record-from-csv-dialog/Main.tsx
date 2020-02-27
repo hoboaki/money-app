@@ -170,7 +170,7 @@ class Main extends React.Component<ILocalProps, IState> {
       const groupItems: { [key: string]: any } = {};
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const accountItems: { [key: string]: any } = {};
-      this.props.doc.account.order.forEach((accountId) => {
+      DocStateMethods.accountOrderMixed(this.props.doc).forEach((accountId) => {
         const key = `account-${accountId}`;
         const name = this.props.doc.account.accounts[accountId].name;
         accountItems[key] = {
@@ -331,7 +331,7 @@ class Main extends React.Component<ILocalProps, IState> {
 
     // 取込先口座
     const targetAccountSelectClass = ClassNames(BasicStyles.StdSelect);
-    const targetAccountOptions = [INVALID_ID].concat(this.props.doc.account.order).map((id) => {
+    const targetAccountOptions = [INVALID_ID].concat(DocStateMethods.accountOrderMixed(this.props.doc)).map((id) => {
       const name = id === INVALID_ID ? '（未選択）' : this.props.doc.account.accounts[id].name;
       return (
         <option key={id} value={id}>

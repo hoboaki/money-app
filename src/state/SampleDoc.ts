@@ -44,7 +44,7 @@ class SampleDoc {
     StateMethods.accountAdd(state, 'コウテイ銀行', Types.AccountKind.AssetsBank, 12036756, accountStartDate);
     StateMethods.accountAdd(state, 'PPPカード', Types.AccountKind.LiabilitiesCard, 0, accountStartDate);
     StateMethods.accountAdd(state, 'キングカード', Types.AccountKind.LiabilitiesCard, 0, accountStartDate);
-    global.console.assert(state.account.order.length === 5);
+    global.console.assert(StateMethods.accountOrderMixed(state).length === 5);
 
     // 入金
     {

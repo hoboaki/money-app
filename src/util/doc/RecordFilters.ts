@@ -1,3 +1,4 @@
+import * as StateMethods from 'src/state/doc/StateMethods';
 import * as States from 'src/state/doc/States';
 import * as Types from 'src/state/doc/Types';
 
@@ -125,7 +126,7 @@ export const createAccountFilter = (data: IAccountFilterData): IRecordFilter => 
       }
 
       // 全口座の場合は結果は変わらないのでそのまま返す
-      const accountCount = state.account.order.length;
+      const accountCount = StateMethods.accountOrderMixed(state).length;
       const targetAccountDict: { [key: number]: number } = {};
       const targetAccountCount = data.accounts.reduce((current, id) => {
         if (id in targetAccountDict) {

@@ -177,7 +177,7 @@ export const toData = (state: States.IState) => {
 
   // 口座
   const accountIdDict: { [key: number]: number } = {}; // AccountId -> エクスポート先のId 辞書
-  state.account.order.forEach((key) => {
+  accountOrderMixed(state).forEach((key) => {
     const src = state.account.accounts[key];
     const data = new DataAccount();
     data.id = result.accounts.length + 1;
@@ -381,10 +381,22 @@ export const accountAdd = (
   };
 
   // 追加
+  const accountGroup = Types.accountKindToAccountGroup(kind);
   obj.id = state.nextId.account;
   state.nextId.account++;
   state.account.accounts[obj.id] = obj;
-  state.account.order.push(obj.id);
+  switch (accountGroup) {
+    case Types.AccountGroup.Assets:
+      state.account.orderAssets.push(obj.id);
+      break;
+    case Types.AccountGroup.Liabilities:
+      state.account.orderLiabilities.push(obj.id);
+      break;
+    default:
+      throw new Error();
+      break;
+  }
+
   return obj.id;
 };
 
@@ -396,6 +408,11 @@ export const accountByName = (state: States.IState, name: string): States.IAccou
     throw new Error(`Not found account named '${name}'.`);
   }
   return account;
+};
+
+/** 資産口座と負債口座のそれぞれの並び順を結合した AccountId 配列を取得。 */
+export const accountOrderMixed = (state: States.IState): number[] => {
+  return state.account.orderAssets.concat(state.account.orderLiabilities);
 };
 
 /// 入金カテゴリ追加。
@@ -716,7 +733,7 @@ export const aggregateAccountAdd = (state: States.IState, name: string, accounts
     throw new Error('Include not exists account id on aggregateAccountAdd().');
   }
 
-  // 追加
+  // 追加)
   obj.id = state.nextId.aggregateAccount;
   state.nextId.aggregateAccount++;
   state.aggregateAccount.accounts[obj.id] = obj;

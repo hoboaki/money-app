@@ -112,7 +112,7 @@ class Main extends React.Component<ILocalProps, IState> {
         ? formDefaultValue.accountId
         : this.props.dialogRecordAdd.latestFormAccount !== DocTypes.INVALID_ID
         ? this.props.dialogRecordAdd.latestFormAccount
-        : this.props.doc.account.order[0];
+        : DocStateMethods.accountOrderMixed(this.props.doc)[0];
     this.state = {
       formKind: formDefaultValue.recordKind,
       formDate: IYearMonthDayDateUtils.toDisplayFormatText(formDefaultValue.date),
@@ -614,7 +614,7 @@ class Main extends React.Component<ILocalProps, IState> {
                     this.onKeyDownCommon(event);
                   }}
                 >
-                  {this.props.doc.account.order.map((accountId) => {
+                  {DocStateMethods.accountOrderMixed(this.props.doc).map((accountId) => {
                     const account = this.props.doc.account.accounts[accountId];
                     return (
                       <option key={account.id} value={account.id}>
@@ -640,7 +640,7 @@ class Main extends React.Component<ILocalProps, IState> {
                   }}
                 >
                   <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                  {this.props.doc.account.order.map((accountId) => {
+                  {DocStateMethods.accountOrderMixed(this.props.doc).map((accountId) => {
                     const account = this.props.doc.account.accounts[accountId];
                     return (
                       <option key={account.id} value={account.id}>
@@ -667,7 +667,7 @@ class Main extends React.Component<ILocalProps, IState> {
                   }}
                 >
                   <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                  {this.props.doc.account.order.map((accountId) => {
+                  {DocStateMethods.accountOrderMixed(this.props.doc).map((accountId) => {
                     const account = this.props.doc.account.accounts[accountId];
                     return (
                       <option key={account.id} value={account.id}>
