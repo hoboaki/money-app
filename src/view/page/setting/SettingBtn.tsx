@@ -9,6 +9,7 @@ interface IProps {
   onClicked: () => void;
   title: string;
   iconName: string;
+  disabled: boolean;
 }
 
 class SideBarBtn extends React.Component<IProps> {
@@ -19,7 +20,12 @@ class SideBarBtn extends React.Component<IProps> {
   public render() {
     const rootClass = ClassNames(Styles.Root, BasicStyles.StdBtnPrimary);
     return (
-      <button className={rootClass} onClick={this.props.onClicked} disabled={true} title={this.props.title}>
+      <button
+        className={rootClass}
+        onClick={this.props.onClicked}
+        disabled={this.props.disabled}
+        title={this.props.title}
+      >
         <Materialicon name={this.props.iconName} darkMode={false} classNames={[]} />
         <span>{this.props.title}</span>
       </button>

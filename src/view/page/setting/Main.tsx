@@ -12,8 +12,8 @@ class Main extends React.Component {
     const rootClass = ClassNames(PageStyles.Base, Styles.Root);
 
     const btnInfos = [];
-    btnInfos.push({ settingId: 'Account', title: '口座管理（準備中）', iconName: 'payment' });
-    btnInfos.push({ settingId: 'Category', title: 'カテゴリ管理（準備中）', iconName: 'class' });
+    btnInfos.push({ settingId: 'Account', title: '口座管理', iconName: 'payment', disabled: false });
+    btnInfos.push({ settingId: 'Category', title: 'カテゴリ管理（準備中）', iconName: 'class', disabled: true });
 
     const btns: JSX.Element[] = [];
     btnInfos.forEach((btnInfo) => {
@@ -25,6 +25,7 @@ class Main extends React.Component {
           }}
           title={btnInfo.title}
           iconName={btnInfo.iconName}
+          disabled={btnInfo.disabled}
         />,
       );
     });
