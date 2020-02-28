@@ -1,4 +1,5 @@
 import ClassNames from 'classnames';
+import { Menu, remote } from 'electron';
 import * as React from 'react';
 import PageCalendar from 'src/view/page/calendar';
 import PageImport from 'src/view/page/import';
@@ -16,12 +17,21 @@ interface IProps {
 }
 
 class SideBar extends React.Component<IProps> {
+  private settingMenu: Menu;
+
   public constructor(props: IProps) {
     super(props);
-  }
 
-  public componentDidMount() {
-    // ...
+    // 設定メニューの作成
+    this.settingMenu = new remote.Menu();
+    this.settingMenu.append(
+      new remote.MenuItem({
+        label: '口座設定',
+        click: () => {
+          console.log('item 1 clicked');
+        },
+      }),
+    );
   }
 
   public render() {
@@ -70,7 +80,7 @@ class SideBar extends React.Component<IProps> {
   }
 
   private onSettingBtnClicked() {
-    //...
+    this.settingMenu.popup();
   }
 }
 
