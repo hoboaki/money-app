@@ -1,40 +1,36 @@
-import ClassNames from 'classnames';
 import * as React from 'react';
+import * as ReactRedux from 'react-redux';
+import IStoreState from 'src/state/IStoreState';
+import * as UiStates from 'src/state/ui/States';
 
-import * as PageStyles from '../Page.css';
-import * as Styles from './Main.css';
-import SettingBtn from './SettingBtn';
+import Account from './Account';
 
-class Main extends React.Component {
+interface IProps {
+  states: UiStates.IPageSetting;
+}
+
+class Main extends React.Component<IProps> {
   public static PageId = 'Setting';
+  public static SubPageIdAccount = 'Account';
+  public static SubPageIdCategory = 'Category';
 
-  public render() {
-    const rootClass = ClassNames(PageStyles.Base, Styles.Root);
-
-    const btnInfos = [];
-    btnInfos.push({ settingId: 'Account', title: '口座管理（準備中）', iconName: 'payment' });
-    btnInfos.push({ settingId: 'Category', title: 'カテゴリ管理（準備中）', iconName: 'class' });
-
-    const btns: JSX.Element[] = [];
-    btnInfos.forEach((btnInfo) => {
-      btns.push(
-        <SettingBtn
-          key={btnInfo.settingId}
-          onClicked={() => {
-            this.onClicked(btnInfo.settingId);
-          }}
-          title={btnInfo.title}
-          iconName={btnInfo.iconName}
-        />,
-      );
-    });
-
-    return <div className={rootClass}>{btns}</div>;
+  public constructor(props: IProps) {
+    super(props);
   }
 
-  private onClicked(settingId: string) {
-    // ...
+  public render() {
+    switch (this.props.states.subPageId) {
+      case Main.SubPageIdAccount:
+        return <Account />;
+      default:
+        return <div />;
+    }
   }
 }
 
-export default Main;
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    states: state.ui.pageSetting,
+  };
+};
+export default ReactRedux.connect(mapStateToProps)(Main);

@@ -114,8 +114,8 @@ class MainWindow extends React.Component<any, IState> {
         {titleBar}
         <div className={LayoutStyle.LeftToRight}>
           <SideBar
-            onBtnClicked={(pageId) => {
-              this.onPageBtnClicked(pageId);
+            onBtnClicked={(pageId, subPageId) => {
+              this.onPageBtnClicked(pageId, subPageId);
             }}
             currentPageId={this.state.currentPageId}
           />
@@ -271,7 +271,15 @@ class MainWindow extends React.Component<any, IState> {
     NativeDialogUtils.showErrorDialog('スタートページ', msg, detail);
   }
 
-  private onPageBtnClicked(pageId: string) {
+  private onPageBtnClicked(pageId: string, subPageId: string | null) {
+    // もし設定ページならサブページを設定
+    if (pageId === PageSetting.PageId) {
+      if (subPageId === null) {
+        throw new Error();
+      }
+      Store.dispatch(UiActions.settingUpdateSubPage(subPageId));
+    }
+
     // 変更がなければ何もしない
     if (this.state.currentPageId === pageId) {
       return;
@@ -282,6 +290,7 @@ class MainWindow extends React.Component<any, IState> {
   }
 
   private activatePage(pageId: string) {
+    // ページ変更
     this.setState({ currentPageId: pageId });
   }
 }

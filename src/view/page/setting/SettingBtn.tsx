@@ -1,5 +1,6 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+import Materialicon from 'src/view/widget/material-icon';
 
 import * as BasicStyles from '../../Basic.css';
 import * as Styles from './SettingBtn.css';
@@ -8,6 +9,7 @@ interface IProps {
   onClicked: () => void;
   title: string;
   iconName: string;
+  disabled: boolean;
 }
 
 class SideBarBtn extends React.Component<IProps> {
@@ -17,10 +19,14 @@ class SideBarBtn extends React.Component<IProps> {
 
   public render() {
     const rootClass = ClassNames(Styles.Root, BasicStyles.StdBtnPrimary);
-    const iconClass = ClassNames('material-icons', 'md-36', 'md-dark');
     return (
-      <button className={rootClass} onClick={this.props.onClicked} disabled={true} title={this.props.title}>
-        <i className={iconClass}>{this.props.iconName}</i>
+      <button
+        className={rootClass}
+        onClick={this.props.onClicked}
+        disabled={this.props.disabled}
+        title={this.props.title}
+      >
+        <Materialicon name={this.props.iconName} darkMode={false} classNames={[]} />
         <span>{this.props.title}</span>
       </button>
     );

@@ -1,4 +1,5 @@
 import ClassNames from 'classnames';
+import { Menu, remote } from 'electron';
 import * as React from 'react';
 import PageCalendar from 'src/view/page/calendar';
 import PageImport from 'src/view/page/import';
@@ -12,12 +13,25 @@ import SideBarBtn from './SideBarBtn';
 
 interface IProps {
   currentPageId: string;
-  onBtnClicked: (pageId: string) => void;
+  onBtnClicked: (pageId: string, subPageId: string | null) => void;
 }
 
 class SideBar extends React.Component<IProps> {
+  private settingMenu: Menu;
+
   public constructor(props: IProps) {
     super(props);
+
+    // 設定メニューの作成
+    this.settingMenu = new remote.Menu();
+    this.settingMenu.append(
+      new remote.MenuItem({
+        label: '口座設定',
+        click: () => {
+          this.onSettingPageSelected(PageSetting.SubPageIdAccount);
+        },
+      }),
+    );
   }
 
   public render() {
@@ -28,7 +42,6 @@ class SideBar extends React.Component<IProps> {
     btnInfos.push({ pageId: PageSheet.PageId, title: 'ワークシート', iconName: 'view_week' });
     btnInfos.push({ pageId: 'Find', title: 'レコードの検索（準備中）', iconName: 'search' });
     btnInfos.push({ pageId: PageImport.PageId, title: 'レコードのインポート', iconName: 'input' });
-    btnInfos.push({ pageId: PageSetting.PageId, title: '設定', iconName: 'settings' });
 
     const btns = [];
     for (const btnInfo of btnInfos) {
@@ -46,11 +59,32 @@ class SideBar extends React.Component<IProps> {
       );
     }
 
-    return <div className={rootClass}>{btns}</div>;
+    return (
+      <div className={rootClass}>
+        {btns}
+        <div className={Styles.SettingBtnHolder}>
+          <SideBarBtn
+            onClicked={() => this.onSettingBtnClicked()}
+            isActive={this.props.currentPageId === PageSetting.PageId}
+            isEnabled={this.props.currentPageId !== PageStart.PageId}
+            title="設定"
+            iconName="settings"
+          />
+        </div>
+      </div>
+    );
   }
 
   private onClicked(pageId: string) {
-    this.props.onBtnClicked(pageId);
+    this.props.onBtnClicked(pageId, null);
+  }
+
+  private onSettingBtnClicked() {
+    this.settingMenu.popup();
+  }
+
+  private onSettingPageSelected(subPageId: string) {
+    this.props.onBtnClicked(PageSetting.PageId, subPageId);
   }
 }
 
