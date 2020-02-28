@@ -17,8 +17,8 @@ interface IProps {
 
 class Main extends React.Component<IProps> {
   public static PageId = 'Setting';
-  private static SubPageIdAccount = 'Account';
-  private static SubPageIdCategory = 'Category';
+  public static SubPageIdAccount = 'Account';
+  public static SubPageIdCategory = 'Category';
 
   public constructor(props: IProps) {
     super(props);

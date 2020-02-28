@@ -13,7 +13,7 @@ import SideBarBtn from './SideBarBtn';
 
 interface IProps {
   currentPageId: string;
-  onBtnClicked: (pageId: string) => void;
+  onBtnClicked: (pageId: string, subPageId: string | null) => void;
 }
 
 class SideBar extends React.Component<IProps> {
@@ -28,7 +28,7 @@ class SideBar extends React.Component<IProps> {
       new remote.MenuItem({
         label: '口座設定',
         click: () => {
-          console.log('item 1 clicked');
+          this.onSettingPageSelected(PageSetting.SubPageIdAccount);
         },
       }),
     );
@@ -76,11 +76,15 @@ class SideBar extends React.Component<IProps> {
   }
 
   private onClicked(pageId: string) {
-    this.props.onBtnClicked(pageId);
+    this.props.onBtnClicked(pageId, null);
   }
 
   private onSettingBtnClicked() {
     this.settingMenu.popup();
+  }
+
+  private onSettingPageSelected(subPageId: string) {
+    this.props.onBtnClicked(PageSetting.PageId, subPageId);
   }
 }
 

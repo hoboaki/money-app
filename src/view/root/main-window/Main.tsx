@@ -114,8 +114,8 @@ class MainWindow extends React.Component<any, IState> {
         {titleBar}
         <div className={LayoutStyle.LeftToRight}>
           <SideBar
-            onBtnClicked={(pageId) => {
-              this.onPageBtnClicked(pageId);
+            onBtnClicked={(pageId, subPageId) => {
+              this.onPageBtnClicked(pageId, subPageId);
             }}
             currentPageId={this.state.currentPageId}
           />
@@ -271,10 +271,13 @@ class MainWindow extends React.Component<any, IState> {
     NativeDialogUtils.showErrorDialog('スタートページ', msg, detail);
   }
 
-  private onPageBtnClicked(pageId: string) {
-    // もし設定ページならトップ画面に戻す
+  private onPageBtnClicked(pageId: string, subPageId: string | null) {
+    // もし設定ページならサブページを設定
     if (pageId === PageSetting.PageId) {
-      Store.dispatch(UiActions.settingUpdateSubPage(null));
+      if (subPageId === null) {
+        throw new Error();
+      }
+      Store.dispatch(UiActions.settingUpdateSubPage(subPageId));
     }
 
     // 変更がなければ何もしない
