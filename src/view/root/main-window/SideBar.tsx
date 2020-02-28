@@ -20,6 +20,10 @@ class SideBar extends React.Component<IProps> {
     super(props);
   }
 
+  public componentDidMount() {
+    // ...
+  }
+
   public render() {
     const rootClass = ClassNames(Styles.Root, LayoutStyles.TopToBottom);
 
@@ -28,7 +32,6 @@ class SideBar extends React.Component<IProps> {
     btnInfos.push({ pageId: PageSheet.PageId, title: 'ワークシート', iconName: 'view_week' });
     btnInfos.push({ pageId: 'Find', title: 'レコードの検索（準備中）', iconName: 'search' });
     btnInfos.push({ pageId: PageImport.PageId, title: 'レコードのインポート', iconName: 'input' });
-    btnInfos.push({ pageId: PageSetting.PageId, title: '設定', iconName: 'settings' });
 
     const btns = [];
     for (const btnInfo of btnInfos) {
@@ -46,11 +49,28 @@ class SideBar extends React.Component<IProps> {
       );
     }
 
-    return <div className={rootClass}>{btns}</div>;
+    return (
+      <div className={rootClass}>
+        {btns}
+        <div className={Styles.SettingBtnHolder}>
+          <SideBarBtn
+            onClicked={() => this.onSettingBtnClicked()}
+            isActive={this.props.currentPageId === PageSetting.PageId}
+            isEnabled={this.props.currentPageId !== PageStart.PageId}
+            title="設定"
+            iconName="settings"
+          />
+        </div>
+      </div>
+    );
   }
 
   private onClicked(pageId: string) {
     this.props.onBtnClicked(pageId);
+  }
+
+  private onSettingBtnClicked() {
+    //...
   }
 }
 
