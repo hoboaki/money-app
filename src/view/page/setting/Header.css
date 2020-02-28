@@ -11,18 +11,28 @@
   width: 100%;
 }
 
+.SideSpace {
+  width: 40px;
+}
+
+.CenterSpace {
+  display: flex;
+  flex-grow: 1;
+  font-size: 14pt;
+  justify-content: center;
+}
+
+.CenterSpace i {
+  font-size: 21pt;
+}
+
 .Btn {
   height: 26px;
 }
 
-.MoveBtn {
-  width: 52px;
-}
-.MoveBtn i {
-  font-size: 20px;
-}
-
-.MovePrevBtn {
-  margin-right: 1px;
+.BackBtn {
   width: 30px;
+}
+.BackBtn i {
+  font-size: 20px;
 }

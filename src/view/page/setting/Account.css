@@ -2,3 +2,9 @@
   align-items: center;
   justify-content: center;
 }
+
+.BodyRoot {
+  display: block;
+  height: calc(100% - 46px);
+  width: 100%;
+}

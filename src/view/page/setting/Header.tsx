@@ -11,6 +11,7 @@ import * as Styles from './Header.css';
 interface IProps {
   states: UiStates.IPageSetting;
   title: string;
+  iconName: string;
 }
 
 class Header extends React.Component<IProps> {
@@ -20,14 +21,20 @@ class Header extends React.Component<IProps> {
 
   public render() {
     const rootClass = ClassNames(Styles.Root);
-    const movePrevBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MovePrevBtn);
+    const backBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.BackBtn);
 
     return (
       <div className={rootClass}>
-        <button className={movePrevBtnClass} onClick={(e) => this.onMovePrevBtnPushed(e)}>
-          <MaterialIcon name="chevron_left" classNames={[]} darkMode={true} />
-        </button>
-        <span>{this.props.title}</span>
+        <div className={Styles.SideSpace}>
+          <button className={backBtnClass} onClick={(e) => this.onMovePrevBtnPushed(e)}>
+            <MaterialIcon name="chevron_left" classNames={[]} darkMode={true} />
+          </button>
+        </div>
+        <div className={Styles.CenterSpace}>
+          <MaterialIcon name={this.props.iconName} classNames={[]} darkMode={false} />
+          <span>{this.props.title}</span>
+        </div>
+        <div className={Styles.SideSpace}></div>
       </div>
     );
   }
