@@ -22,13 +22,18 @@ class SideBarBtn extends React.Component<IProps> {
     return (
       <button
         className={rootClass}
-        onClick={this.props.onClicked}
+        onClick={(e) => this.onClicked(e)}
         disabled={!this.props.isEnabled}
         title={this.props.title}
       >
         <i className={iconClass}>{this.props.iconName}</i>
       </button>
     );
+  }
+
+  private onClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    e.stopPropagation();
+    this.props.onClicked();
   }
 }
 
