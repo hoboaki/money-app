@@ -974,6 +974,7 @@ class Main extends React.Component<ILocalProps, IState> {
     this.setState({
       formKind: kind,
     });
+    $(`#${this.elementIdFormDate}`).focus();
   }
 
   /// 日付変更時の処理。
