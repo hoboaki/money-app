@@ -168,8 +168,6 @@
 
 .FormTabsRoot {
   background: #eeeeee;
-  border-bottom: 1px solid #cccccc;
-  border-collapse: collapse;
   color: rgba(0, 0, 0, 0.87);
   height: 40px;
   padding-top: 8px;
@@ -179,7 +177,6 @@
 .FormTabsBase {
   align-items: center;
   background: #eeeeee;
-  border-collapse: collapse;
   display: flex;
   flex-direction: row;
   height: 100%;
@@ -188,7 +185,7 @@
 }
 
 .FormTab {
-  border-collapse: collapse;
+  border-bottom: 1px solid #cccccc;
   border-top: 1px solid #cccccc;
   display: flex;
   flex-direction: row;
@@ -211,6 +208,14 @@
 
 .FormTabBorder[data-hidden='true'] {
   visibility: hidden;
+}
+
+.FormTabSideSpace {
+  border-bottom: 1px solid #cccccc;
+  flex-grow: 1;
+  height: 100%;
+  margin-bottom: -1px;
+  padding-top: 2px;
 }
 
 .FormTabButton {
@@ -236,6 +241,10 @@
 }
 
 .FormTabHidden {
+  border-top: 1px solid transparent;
+}
+
+.FormTabHidden button {
   visibility: hidden;
 }
 

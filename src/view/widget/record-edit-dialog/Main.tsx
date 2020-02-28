@@ -498,6 +498,7 @@ class Main extends React.Component<ILocalProps, IState> {
     const formTabs = (
       <div className={formTabsRootClass}>
         <div className={formTabsBaseClass}>
+          <div className={Styles.FormTabSideSpace} />
           <div className={formTabBorder} data-hidden={formTabBorderHiddenTransfer} />
           <div className={formTabTransferClass} data-update-mode={isUpdateMode}>
             <button
@@ -538,6 +539,7 @@ class Main extends React.Component<ILocalProps, IState> {
             </button>
           </div>
           <div className={formTabBorder} data-hidden={formTabBorderHiddenOutgo} />
+          <div className={Styles.FormTabSideSpace} />
         </div>
       </div>
     );
