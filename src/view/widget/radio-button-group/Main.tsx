@@ -1,4 +1,4 @@
-import ClassNames from 'classnames';
+// import ClassNames from 'classnames';
 import * as React from 'react';
 
 import * as Styles from './Main.css';
@@ -28,10 +28,9 @@ class Main extends React.Component<IProps> {
   public render() {
     const btns = this.props.btns.map((btnInfo, idx) => {
       return (
-        <div key={idx}>
-          <input type="radio" name="title" />
-          <label>{btnInfo.label}</label>
-        </div>
+        <button key={idx} data-selected={idx === this.props.selectedBtnIndex}>
+          <span>{btnInfo.label}</span>
+        </button>
       );
     });
     return <div className={Styles.Root}>{btns}</div>;
