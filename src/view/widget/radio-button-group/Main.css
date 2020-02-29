@@ -1,4 +1,3 @@
-
 .Root {
   border: 1px solid #b6b6b6;
   border-radius: 3px;
@@ -9,10 +8,12 @@
 .Root div {
   flex: 1;
   position: relative;
+  height: 26px;
+  width: 60px;
 }
 
 .Root input {
-  height: 60px;
+  height: 100%;
   opacity: 0;
   width: 100%;
 }
@@ -27,7 +28,8 @@
   justify-content: center;
   pointer-events: none;
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
 }
 
@@ -37,6 +39,5 @@
 
 .Root input:checked + label {
   background: #d81b60;
-  font-weight: 500;
   color: #fff;
 }

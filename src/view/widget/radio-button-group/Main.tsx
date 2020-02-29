@@ -6,6 +6,9 @@ import * as Styles from './Main.css';
 interface IBtnInfo {
   /** ラベル。 */
   label: string;
+
+  /** 選択されたときのコールバック。 */
+  onChanged: (btnIndex: number) => void;
 }
 
 interface IProps {
@@ -14,9 +17,6 @@ interface IProps {
 
   /** 選択されているボタンの index 値。 */
   selectedBtnIndex: number;
-
-  /** 変更時のコールバック。 */
-  onChanged: (btnIndex: number) => void;
 }
 
 /** ラジオボタングループ。 */
@@ -26,8 +26,13 @@ class Main extends React.Component<IProps> {
   }
 
   public render() {
-    const btns = this.props.btns.map((btnInfo) => {
-      return <div><input type="radio" name="title" /><label>{btnInfo.label}</label></div>;
+    const btns = this.props.btns.map((btnInfo, idx) => {
+      return (
+        <div key={idx}>
+          <input type="radio" name="title" />
+          <label>{btnInfo.label}</label>
+        </div>
+      );
     });
     return <div className={Styles.Root}>{btns}</div>;
   }
