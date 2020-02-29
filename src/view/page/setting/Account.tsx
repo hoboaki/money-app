@@ -70,7 +70,9 @@ class Account extends React.Component<IProps, IState> {
             <MaterialIcon name="reorder" classNames={[]} darkMode={false} />
             <span>{account.name}</span>
             <div className={Styles.AccountCardTailSpace}>
-              <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />
+              <button className={BasicStyles.IconBtn}>
+                <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />
+              </button>
             </div>
           </div>,
         );

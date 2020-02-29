@@ -52,6 +52,15 @@
   margin-left: 4px;
 }
 
+/* .AccountCard[data-selected='true'] {
+  background: #1976d2;
+  color: rgba(255, 255, 255, 0.87);
+} */
+
+.AccountCard:hover {
+  background: #eeeeee;
+}
+
 .AccountCardTailSpace {
   display: flex;
   flex-direction: row-reverse;
