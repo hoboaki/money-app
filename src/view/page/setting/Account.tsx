@@ -1,5 +1,9 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
+import * as ReactRedux from 'react-redux';
+import * as DocStates from 'src/state/doc/States';
+import IStoreState from 'src/state/IStoreState';
+// import Store from 'src/state/Store';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
@@ -15,14 +19,16 @@ enum TabKind {
   Aggregate,
 }
 
+interface IProps {
+  doc: DocStates.IState;
+}
+
 interface IState {
   selectedTab: TabKind;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-class Account extends React.Component<any, IState> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public constructor(props: any) {
+class Account extends React.Component<IProps, IState> {
+  public constructor(props: IProps) {
     super(props);
     this.state = {
       selectedTab: TabKind.Assets,
@@ -51,7 +57,26 @@ class Account extends React.Component<any, IState> {
       </div>
     );
 
-    const accountList = <div className={Styles.AccountList}>口座リスト</div>;
+    const cards: JSX.Element[] = [];
+    if (this.state.selectedTab !== TabKind.Aggregate) {
+      const accounts =
+        this.state.selectedTab === TabKind.Assets
+          ? this.props.doc.account.orderAssets
+          : this.props.doc.account.orderLiabilities;
+      accounts.forEach((id) => {
+        const account = this.props.doc.account.accounts[id];
+        cards.push(
+          <div key={`${this.state.selectedTab}-${id}`} className={Styles.AccountCard}>
+            <MaterialIcon name="reorder" classNames={[]} darkMode={false} />
+            <span>{account.name}</span>
+            <div className={Styles.AccountCardTailSpace}>
+              <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />
+            </div>
+          </div>,
+        );
+      });
+    }
+    const accountList = <div className={Styles.AccountList}>{cards}</div>;
 
     const body = (
       <div className={Styles.BodyRoot}>
@@ -75,4 +100,9 @@ class Account extends React.Component<any, IState> {
   }
 }
 
-export default Account;
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    doc: state.doc,
+  };
+};
+export default ReactRedux.connect(mapStateToProps)(Account);

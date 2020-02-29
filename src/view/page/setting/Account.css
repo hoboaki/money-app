@@ -28,5 +28,32 @@
 }
 
 .AccountList {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  height: calc(100% - 38px);
+  overflow-y: auto;
   width: 100%;
+}
+
+.AccountCard {
+  border-bottom: 1px solid #cccccc;
+  display: flex;
+  height: 38px;
+  padding: 9px 6px;
+  width: 100%;
+}
+
+.AccountCard i {
+  color: rgba(0, 0, 0, 0.61);
+  font-size: 15pt;
+}
+
+.AccountCard span {
+  font-size: 10pt;
+  margin-left: 4px;
+}
+
+.AccountCardTailSpace {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-grow: 1;
 }
