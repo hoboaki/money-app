@@ -6,5 +6,27 @@
 .BodyRoot {
   display: block;
   height: calc(100% - 46px);
+  padding: 20px;
+  width: 100%;
+}
+
+.ControlBar {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.ControlBarAreaLeft {
+  display: flex;
+}
+
+.ControlBarAreaRight {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-grow: 1;
+}
+
+.AccountList {
   width: 100%;
 }
