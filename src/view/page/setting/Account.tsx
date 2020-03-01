@@ -82,7 +82,7 @@ class Account extends React.Component<IProps, IState> {
 
   public render() {
     const rootClass = ClassNames(PageStyles.Base, LayoutStyles.TopToBottom);
-    const header = <Header title={'口座管理'} iconName="payment" />;
+    const header = <Header title={'口座設定'} iconName="payment" />;
 
     const btnInfos = [
       { label: '資産', onChanged: () => this.onTabChanged(TabKind.Assets) },
