@@ -11,6 +11,10 @@ a2RMapper.addWork<Actions.IResetDocument>(Actions.RESET_DOCUMENT, (state, action
   Object.assign(state, action.doc);
 });
 
+a2RMapper.addWork<Actions.IUpdateAccountOrder>(Actions.UPDATE_ACCOUNT_ORDER, (state, action) => {
+  StateMethods.accountOrderUpdate(state, action.accountGroup, action.oldIndex, action.newIndex);
+});
+
 a2RMapper.addWork<Actions.IAddRecordIncome>(Actions.ADD_RECORD_INCOME, (state, action) => {
   StateMethods.incomeRecordAdd(
     state,
@@ -110,6 +114,10 @@ a2RMapper.addWork<Actions.IDeleteRecords>(Actions.DELETE_RECORDS, (state, action
 
 a2RMapper.addWork<Actions.IUpdateCategoryCollapse>(Actions.UPDATE_CATEGORY_COLLAPSE, (state, action) => {
   StateMethods.categoryCollapsedStateUpdate(state, action.categoryId, action.isCollapsed);
+});
+
+a2RMapper.addWork<Actions.IUpdateAggregateAccountOrder>(Actions.UPDATE_AGGREGATE_ACCOUNT_ORDER, (state, action) => {
+  StateMethods.aggregateAccountOrderUpdate(state, action.oldIndex, action.newIndex);
 });
 
 a2RMapper.addWork<Actions.IAddPalmCategoryInfoIncome>(Actions.ADD_PALM_CATEGORY_INFO_INCOME, (state, action) => {
