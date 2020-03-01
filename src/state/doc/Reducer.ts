@@ -11,6 +11,10 @@ a2RMapper.addWork<Actions.IResetDocument>(Actions.RESET_DOCUMENT, (state, action
   Object.assign(state, action.doc);
 });
 
+a2RMapper.addWork<Actions.IUpdateAccountOrder>(Actions.UPDATE_ACCOUNT_ORDER, (state, action) => {
+  StateMethods.accountOrderUpdate(state, action.accountGroup, action.oldIndex, action.newIndex);
+});
+
 a2RMapper.addWork<Actions.IAddRecordIncome>(Actions.ADD_RECORD_INCOME, (state, action) => {
   StateMethods.incomeRecordAdd(
     state,

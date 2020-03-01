@@ -2,9 +2,11 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Sortable from 'sortablejs';
+import * as DocActions from 'src/state/doc/Actions';
 import * as DocStates from 'src/state/doc/States';
+import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
-// import Store from 'src/state/Store';
+import Store from 'src/state/Store';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
@@ -49,6 +51,24 @@ class Account extends React.Component<IProps, IState> {
       animation: 150,
       ghostClass: Styles.AccountCardGhost,
       handle: `.${Styles.AccountCardHandle}`,
+      onEnd: (evt) => {
+        if (evt.newIndex === undefined || evt.oldIndex === undefined) {
+          throw new Error();
+        }
+        const oldIndex = evt.oldIndex;
+        const newIndex = evt.newIndex;
+        if (this.state.selectedTab !== TabKind.Aggregate) {
+          Store.dispatch(
+            DocActions.updateAccountOrder(
+              this.state.selectedTab === TabKind.Assets
+                ? DocTypes.AccountGroup.Assets
+                : DocTypes.AccountGroup.Liabilities,
+              oldIndex,
+              newIndex,
+            ),
+          );
+        }
+      },
     });
   }
 

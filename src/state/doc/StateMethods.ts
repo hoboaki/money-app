@@ -400,6 +400,34 @@ export const accountAdd = (
   return obj.id;
 };
 
+/**
+ * 口座の順番の変更。
+ * @param accountGroup 変更対象となるグループ。
+ * @param oldIndex 移動する口座のインデックス値。
+ * @param newIndex 移動後のインデックス値。
+ */
+export const accountOrderUpdate = (
+  state: States.IState,
+  accountGroup: Types.AccountGroup,
+  oldIndex: number,
+  newIndex: number,
+) => {
+  let orders = [];
+  switch (accountGroup) {
+    case Types.AccountGroup.Assets:
+      orders = state.account.orderAssets;
+      break;
+    case Types.AccountGroup.Liabilities:
+      orders = state.account.orderLiabilities;
+      break;
+    default:
+      throw new Error();
+  }
+  const moveId = orders[oldIndex];
+  orders.splice(oldIndex, 1);
+  orders.splice(newIndex, 0, moveId);
+};
+
 /** 指定の名前の口座オブジェクトを取得。見つからなければエラー。 */
 export const accountByName = (state: States.IState, name: string): States.IAccount => {
   const account = Object.values(state.account.accounts).find((ac) => ac.name === name);

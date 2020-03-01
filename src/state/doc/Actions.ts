@@ -3,6 +3,7 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import { v4 as UUID } from 'uuid';
 
 import * as States from './States';
+import * as Types from './Types';
 
 /// ドキュメントをリセット。
 export const RESET_DOCUMENT = UUID();
@@ -13,6 +14,27 @@ export const resetDocument = (state: States.IState): IResetDocument => {
   return {
     type: RESET_DOCUMENT,
     doc: state,
+  };
+};
+
+/// 口座の並び順更新。
+export const UPDATE_ACCOUNT_ORDER = UUID();
+export interface IUpdateAccountOrder extends Action {
+  // 各変数の使用は StateMethods.accountOrderUpdate を参照。
+  accountGroup: Types.AccountGroup;
+  oldIndex: number;
+  newIndex: number;
+}
+export const updateAccountOrder = (
+  accountGroup: Types.AccountGroup,
+  oldIndex: number,
+  newIndex: number,
+): IUpdateAccountOrder => {
+  return {
+    type: UPDATE_ACCOUNT_ORDER,
+    accountGroup,
+    oldIndex,
+    newIndex,
   };
 };
 
