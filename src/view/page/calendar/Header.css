@@ -6,8 +6,18 @@
   display: flex;
   flex-direction: row;
   height: 46px;
+  justify-content: center;
   padding-left: 12px;
   padding-right: 12px;
+  width: 100%;
+}
+
+.Body {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  max-width: 728px;
   width: 100%;
 }
 

@@ -1,7 +1,15 @@
 .Root {
   background: #f5f5f6;
-  display: block;
+  display: flex;
+  justify-content: center;
   padding: 12px;
+  width: 100%;
+}
+
+.Body {
+  display: block;
+  height: 100%;
+  max-width: 728px;
   width: 100%;
 }
 
