@@ -1,4 +1,3 @@
-import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import IStoreState from 'src/state/IStoreState';
@@ -19,12 +18,12 @@ class Header extends React.Component<IProps> {
   }
 
   public render() {
-    const rootClass = ClassNames(Styles.Root);
-
     return (
-      <div className={rootClass}>
-        <MaterialIcon name={this.props.iconName} classNames={[]} darkMode={false} />
-        <span>{this.props.title}</span>
+      <div className={Styles.Root}>
+        <div className={Styles.Body}>
+          <MaterialIcon name={this.props.iconName} classNames={[]} darkMode={false} />
+          <span>{this.props.title}</span>
+        </div>
       </div>
     );
   }

@@ -150,8 +150,10 @@ class Account extends React.Component<IProps, IState> {
 
     const body = (
       <div className={Styles.BodyRoot}>
-        {controlBar}
-        {accountList}
+        <div className={Styles.Body}>
+          {controlBar}
+          {accountList}
+        </div>
       </div>
     );
 
