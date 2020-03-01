@@ -7,6 +7,7 @@ import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
+import * as UiActions from 'src/state/ui/Actions';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
@@ -43,6 +44,7 @@ class Account extends React.Component<IProps, IState> {
   }
 
   public componentDidMount() {
+    // 並び替えUIのセットアップ
     const elem = document.getElementById(`${this.elemIdAccountList}`);
     if (elem === null) {
       throw new Error();
@@ -52,9 +54,12 @@ class Account extends React.Component<IProps, IState> {
       ghostClass: Styles.AccountCardGhost,
       handle: `.${Styles.AccountCardHandle}`,
       onEnd: (evt) => {
+        // 値チェック
         if (evt.newIndex === undefined || evt.oldIndex === undefined) {
           throw new Error();
         }
+
+        // 順番変更を反映
         const oldIndex = evt.oldIndex;
         const newIndex = evt.newIndex;
         if (this.state.selectedTab !== TabKind.Aggregate) {
@@ -68,6 +73,9 @@ class Account extends React.Component<IProps, IState> {
             ),
           );
         }
+
+        // 自動保存リクエスト
+        Store.dispatch(UiActions.documentRequestAutoSave());
       },
     });
   }
