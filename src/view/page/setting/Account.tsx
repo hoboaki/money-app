@@ -1,6 +1,7 @@
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
+import Sortable from 'sortablejs';
 import * as DocStates from 'src/state/doc/States';
 import IStoreState from 'src/state/IStoreState';
 // import Store from 'src/state/Store';
@@ -9,6 +10,7 @@ import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
 import MaterialIcon from 'src/view/widget/material-icon';
 import RadioButtonGroup from 'src/view/widget/radio-button-group';
+import { v4 as UUID } from 'uuid';
 
 import * as Styles from './Account.css';
 import Header from './Header';
@@ -28,11 +30,26 @@ interface IState {
 }
 
 class Account extends React.Component<IProps, IState> {
+  private elemIdAccountList: string;
+
   public constructor(props: IProps) {
     super(props);
     this.state = {
       selectedTab: TabKind.Assets,
     };
+    this.elemIdAccountList = `elem-${UUID}`;
+  }
+
+  public componentDidMount() {
+    const elem = document.getElementById(`${this.elemIdAccountList}`);
+    if (elem === null) {
+      throw new Error();
+    }
+    Sortable.create(elem, {
+      animation: 150,
+      ghostClass: Styles.AccountCardGhost,
+      handle: `.${Styles.AccountCardHandle}`,
+    });
   }
 
   public render() {
@@ -66,19 +83,23 @@ class Account extends React.Component<IProps, IState> {
       accounts.forEach((id) => {
         const account = this.props.doc.account.accounts[id];
         cards.push(
-          <div key={`${this.state.selectedTab}-${id}`} className={Styles.AccountCard}>
-            <MaterialIcon name="reorder" classNames={[]} darkMode={false} />
+          <li key={`${this.state.selectedTab}-${id}`} className={Styles.AccountCard}>
+            <MaterialIcon name="reorder" classNames={[Styles.AccountCardHandle]} darkMode={false} />
             <span>{account.name}</span>
             <div className={Styles.AccountCardTailSpace}>
               <button className={BasicStyles.IconBtn}>
                 <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />
               </button>
             </div>
-          </div>,
+          </li>,
         );
       });
     }
-    const accountList = <div className={Styles.AccountList}>{cards}</div>;
+    const accountList = (
+      <ol id={this.elemIdAccountList} className={Styles.AccountList}>
+        {cards}
+      </ol>
+    );
 
     const body = (
       <div className={Styles.BodyRoot}>
