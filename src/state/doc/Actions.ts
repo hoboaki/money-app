@@ -250,6 +250,21 @@ export const updateCategoryCollapse = (categoryId: number, isCollapsed: boolean)
   };
 };
 
+/// 集計口座の並び順更新。
+export const UPDATE_AGGREGATE_ACCOUNT_ORDER = UUID();
+export interface IUpdateAggregateAccountOrder extends Action {
+  // 各変数の使用は StateMethods.aggregateAccountOrderUpdate を参照。
+  oldIndex: number;
+  newIndex: number;
+}
+export const updateAggregateAccountOrder = (oldIndex: number, newIndex: number): IUpdateAggregateAccountOrder => {
+  return {
+    type: UPDATE_AGGREGATE_ACCOUNT_ORDER,
+    oldIndex,
+    newIndex,
+  };
+};
+
 /** 入金Palmカテゴリ情報を追加。 */
 export const ADD_PALM_CATEGORY_INFO_INCOME = UUID();
 export interface IAddPalmCategoryInfoIncome extends Action {

@@ -116,6 +116,10 @@ a2RMapper.addWork<Actions.IUpdateCategoryCollapse>(Actions.UPDATE_CATEGORY_COLLA
   StateMethods.categoryCollapsedStateUpdate(state, action.categoryId, action.isCollapsed);
 });
 
+a2RMapper.addWork<Actions.IUpdateAggregateAccountOrder>(Actions.UPDATE_AGGREGATE_ACCOUNT_ORDER, (state, action) => {
+  StateMethods.aggregateAccountOrderUpdate(state, action.oldIndex, action.newIndex);
+});
+
 a2RMapper.addWork<Actions.IAddPalmCategoryInfoIncome>(Actions.ADD_PALM_CATEGORY_INFO_INCOME, (state, action) => {
   StateMethods.palmCategoryInfoIncomeAdd(state, action.name, action.accountId, action.categoryId);
 });

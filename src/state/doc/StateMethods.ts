@@ -770,6 +770,17 @@ export const aggregateAccountAdd = (state: States.IState, name: string, accounts
 };
 
 /**
+ * 集計口座の順番の変更。
+ * @param accountGroup 変更対象となるグループ。
+ */
+export const aggregateAccountOrderUpdate = (state: States.IState, oldIndex: number, newIndex: number) => {
+  const orders = state.aggregateAccount.order;
+  const moveId = orders[oldIndex];
+  orders.splice(oldIndex, 1);
+  orders.splice(newIndex, 0, moveId);
+};
+
+/**
  * パス形式文字列でカテゴリを検索し ICategory オブジェクトで返す。見つからない場合はエラー。
  * @param categories incomeCategories もしくは outgoCategories の参照。
  * @param path 階層をスラッシュで区切った文字列。（例：'家事費/食費'）

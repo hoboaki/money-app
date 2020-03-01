@@ -72,6 +72,8 @@ class Account extends React.Component<IProps, IState> {
               newIndex,
             ),
           );
+        } else {
+          Store.dispatch(DocActions.updateAggregateAccountOrder(oldIndex, newIndex));
         }
 
         // 自動保存リクエスト
@@ -103,15 +105,32 @@ class Account extends React.Component<IProps, IState> {
     );
 
     const cards: JSX.Element[] = [];
-    if (this.state.selectedTab !== TabKind.Aggregate) {
-      const accounts =
-        this.state.selectedTab === TabKind.Assets
-          ? this.props.doc.account.orderAssets
-          : this.props.doc.account.orderLiabilities;
-      accounts.forEach((id) => {
-        const account = this.props.doc.account.accounts[id];
+    {
+      const accountsSelector = () => {
+        if (this.state.selectedTab !== TabKind.Aggregate) {
+          const orders =
+            this.state.selectedTab === TabKind.Assets
+              ? this.props.doc.account.orderAssets
+              : this.props.doc.account.orderLiabilities;
+          return orders.map((id) => {
+            const account = this.props.doc.account.accounts[id];
+            return {
+              id: account.id,
+              name: account.name,
+            };
+          });
+        }
+        return this.props.doc.aggregateAccount.order.map((id) => {
+          const account = this.props.doc.aggregateAccount.accounts[id];
+          return {
+            id: account.id,
+            name: account.name,
+          };
+        });
+      };
+      accountsSelector().forEach((account) => {
         cards.push(
-          <li key={`${this.state.selectedTab}-${id}`} className={Styles.AccountCard}>
+          <li key={`${this.state.selectedTab}-${account.id}`} className={Styles.AccountCard}>
             <MaterialIcon name="reorder" classNames={[Styles.AccountCardHandle]} darkMode={false} />
             <span>{account.name}</span>
             <div className={Styles.AccountCardTailSpace}>
