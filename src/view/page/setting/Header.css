@@ -4,17 +4,26 @@
   border-bottom: 1px solid #cccccc;
   color: rgba(0, 0, 0, 0.87);
   display: flex;
-  flex-direction: row;
   height: 46px;
+  justify-content: center;
   padding-left: 12px;
   padding-right: 12px;
   width: 100%;
 }
 
-.Root span {
+.Body {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  max-width: 728px;
+  width: 100%;
+}
+
+.Body span {
   font-size: 14pt;
 }
 
-.Root i {
+.Body i {
   font-size: 21pt;
 }

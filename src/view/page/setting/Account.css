@@ -4,9 +4,16 @@
 }
 
 .BodyRoot {
-  display: block;
+  display: flex;
   height: calc(100% - 46px);
-  padding: 20px;
+  justify-content: center;
+  padding: 20px 12px;
+  width: 100%;
+}
+
+.Body {
+  height: 100%;
+  max-width: 728px;
   width: 100%;
 }
 

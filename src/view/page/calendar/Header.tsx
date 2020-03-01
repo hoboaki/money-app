@@ -33,7 +33,6 @@ class Header extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const rootClass = ClassNames(Styles.Root);
     const currentDateClass = ClassNames(Styles.CurrentDate);
     const movePrevBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MovePrevBtn);
     const moveTodayBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn);
@@ -63,63 +62,65 @@ class Header extends React.Component<IProps, IState> {
     }
     const currentDate = `${this.props.page.currentDate.year}年${this.props.page.currentDate.month}月`;
     return (
-      <div className={rootClass}>
-        <span className={currentDateClass}>{currentDate}</span>
-        <button
-          className={movePrevBtnClass}
-          onClick={() => {
-            this.onMovePrevBtnPushed();
-          }}
-        >
-          <MaterialIcon name="chevron_left" classNames={[]} darkMode={true} />
-        </button>
-        <button
-          className={moveTodayBtnClass}
-          onClick={() => {
-            this.onMoveTodayBtnPushed();
-          }}
-        >
-          今月
-        </button>
-        <button
-          className={moveNextBtnClass}
-          onClick={() => {
-            this.onMoveNextBtnPushed();
-          }}
-        >
-          <MaterialIcon name="chevron_right" classNames={[]} darkMode={true} />
-        </button>
-        {/* <button className={jumpBtnClass} onClick={this.onJumpBtnPushed}>移動</button> */}
-        <select
-          className={viewUnitSelectClass}
-          defaultValue="month"
-          onChange={() => {
-            this.onViewUnitChanged();
-          }}
-        >
-          <option value="month">月表示</option>
-        </select>
-        <button
-          className={filterBtnClass}
-          onClick={() => {
-            this.onFilterBtnPushed();
-          }}
-          title={'フィルター（準備中）'}
-        >
-          <i className={iconClass}>filter_list</i>
-        </button>
-        <div className={rightAreaClass}>
+      <div className={Styles.Root}>
+        <div className={Styles.Body}>
+          <span className={currentDateClass}>{currentDate}</span>
           <button
-            className={newRecordBtnClass}
+            className={movePrevBtnClass}
             onClick={() => {
-              this.onNewRecordBtnPushed();
+              this.onMovePrevBtnPushed();
             }}
           >
-            <i className={iconClass}>note_add</i>
+            <MaterialIcon name="chevron_left" classNames={[]} darkMode={true} />
           </button>
-          <div style={{ width: '100%' }} />
+          <button
+            className={moveTodayBtnClass}
+            onClick={() => {
+              this.onMoveTodayBtnPushed();
+            }}
+          >
+            今月
+          </button>
+          <button
+            className={moveNextBtnClass}
+            onClick={() => {
+              this.onMoveNextBtnPushed();
+            }}
+          >
+            <MaterialIcon name="chevron_right" classNames={[]} darkMode={true} />
+          </button>
+          {/* <button className={jumpBtnClass} onClick={this.onJumpBtnPushed}>移動</button> */}
+          <select
+            className={viewUnitSelectClass}
+            defaultValue="month"
+            onChange={() => {
+              this.onViewUnitChanged();
+            }}
+          >
+            <option value="month">月表示</option>
+          </select>
+          <button
+            className={filterBtnClass}
+            onClick={() => {
+              this.onFilterBtnPushed();
+            }}
+            title={'フィルター（準備中）'}
+          >
+            <i className={iconClass}>filter_list</i>
+          </button>
+          <div className={rightAreaClass}>
+            <button
+              className={newRecordBtnClass}
+              onClick={() => {
+                this.onNewRecordBtnPushed();
+              }}
+            >
+              <i className={iconClass}>note_add</i>
+            </button>
+            <div style={{ width: '100%' }} />
+          </div>
+          {modalDialog}
         </div>
-        {modalDialog}
       </div>
     );
   }

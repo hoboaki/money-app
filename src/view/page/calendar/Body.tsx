@@ -1,4 +1,3 @@
-import ClassNames from 'classnames';
 import * as React from 'react';
 
 import Balance from './Balance';
@@ -7,11 +6,12 @@ import Calendar from './Calendar';
 
 class Body extends React.Component {
   public render() {
-    const rootClass = ClassNames(Styles.Root);
     return (
-      <div className={rootClass}>
-        <Calendar />
-        <Balance />
+      <div className={Styles.Root}>
+        <div className={Styles.Body}>
+          <Calendar />
+          <Balance />
+        </div>
       </div>
     );
   }
