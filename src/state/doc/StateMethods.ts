@@ -761,9 +761,9 @@ export const aggregateAccountAdd = (state: States.IState, name: string, accounts
     throw new Error('Include not exists account id on aggregateAccountAdd().');
   }
 
-  // 追加)
-  obj.id = state.nextId.aggregateAccount;
-  state.nextId.aggregateAccount++;
+  // 追加
+  obj.id = state.nextId.account;
+  state.nextId.account++;
   state.aggregateAccount.accounts[obj.id] = obj;
   state.aggregateAccount.order.push(obj.id);
   return obj.id;
