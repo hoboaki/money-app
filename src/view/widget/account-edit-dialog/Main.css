@@ -1,0 +1,175 @@
+.DialogRoot {
+  margin-left: 6%;
+  margin-right: 6%;
+  max-width: none;
+}
+
+.DialogContent {
+  height: calc(100vh - 60px);
+}
+
+.DialogHeader {
+  background: #f5f5f6;
+  border-bottom: 1px solid #cccccc;
+  color: rgba(0, 0, 0, 0.87);
+  height: 52px;
+}
+
+.BodyAndFooter {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 52px);
+}
+
+.TargetAccountRoot {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 42px;
+}
+
+.TargetAccountRoot,
+.FooterRoot {
+  padding: 4px 14px;
+}
+
+.TargetAccountRoot select {
+  flex-grow: 1;
+  height: 26px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.TableRoot {
+  height: calc(100% - 82px);
+}
+
+.TableRoot td[data-col-category='date'] {
+  min-width: 88px;
+  width: 88px;
+}
+
+.TableRoot td[data-col-category='palm-category'] {
+  min-width: 140px;
+  width: 140px;
+}
+
+.TableRoot td[data-col-category='memo'] {
+  min-width: 140px;
+  width: 140px;
+}
+
+.TableRoot td[data-col-category='income'] {
+  min-width: 100px;
+  width: 100px;
+}
+
+.TableRoot td[data-col-category='outgo'] {
+  min-width: 100px;
+  width: 100px;
+}
+
+.TableRoot td[data-col-category='group'] {
+  /* メモ：100vw から ダイアログの左右余白 6% を引いたのがダイアログ本体の 100% の幅。 */
+  width: calc((100vw * (1 - 0.06 * 2) - 88px - 140px - 140px - 100px - 100px - 15px - 1px));
+}
+
+.TableRoot td[data-col-category='tail-space'] {
+  min-width: 15px;
+  width: 15px;
+}
+
+.TableHeader {
+  background: #f5f5f6;
+  border-bottom: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+  color: rgba(0, 0, 0, 0.61);
+  font-size: 8pt;
+  height: 22px;
+  text-align: center;
+  width: 100%;
+}
+
+.TableHeader td {
+  border-right: 1px solid #cccccc;
+}
+
+.TableHeader td[data-col-category='tail-space'] {
+  border-right: 0px;
+}
+
+.TableBody {
+  border-bottom: 1px solid #cccccc;
+  height: calc(100% - 22px);
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.TableBody table {
+  width: 100%;
+}
+
+.TableBody td {
+  font-size: 9pt;
+  overflow: hidden;
+  padding: 2px 4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.TableBody td[data-col-category='income'],
+.TableBody td[data-col-category='outgo'] {
+  text-align: right;
+}
+
+.TableBody td[data-clickable='true'] {
+  cursor: pointer;
+}
+
+.TableBody td[data-clickable='false'] {
+  color: #e44;
+}
+
+.TableBody td[data-col-category='group'] {
+  display: flex;
+  flex-direction: row;
+}
+
+.TableBody td[data-col-category='group'][data-selected='true'] {
+  background: #1976d2;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.TableGroupIcon {
+  background: white;
+  border: 1px solid white;
+  border-radius: 9px;
+  height: 18px;
+  margin-right: 2px;
+  width: 18px;
+}
+
+.TableGroupLabel {
+  flex-grow: 1;
+}
+
+.TableGroupSelectIcon {
+  color: rgba(0, 0, 0, 0.61);
+}
+
+.ContextMenuRoot {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial,
+    sans-serif;
+  font-size: 0.8rem;
+}
+
+.FooterRoot {
+  align-items: center;
+  display: flex;
+  flex-direction: row-reverse;
+  height: 40px;
+}
+
+.FooterRoot button {
+  min-width: 100px;
+}
