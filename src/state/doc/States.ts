@@ -136,10 +136,9 @@ export interface IState {
 
   /** 次に使用するId。0(Types.INVALID_ID) は無効値。 */
   nextId: {
-    account: number;
+    account: number; // 集計口座もこの番号を使用。
     category: number;
     record: number;
-    aggregateAccount: number;
   };
 }
 
@@ -176,6 +175,5 @@ export const defaultState: IState = {
     account: 1,
     category: 1,
     record: 1,
-    aggregateAccount: 1,
   },
 };

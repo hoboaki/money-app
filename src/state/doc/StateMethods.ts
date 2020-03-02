@@ -401,6 +401,28 @@ export const accountAdd = (
 };
 
 /**
+ * 口座更新。
+ */
+export const accountUpdate = (
+  state: States.IState,
+  accountId: number,
+  name: string,
+  kind: Types.AccountKind,
+  initialAmount: number,
+  startDate: IYearMonthDayDate,
+) => {
+  const obj = {
+    id: accountId,
+    name,
+    kind,
+    initialAmount,
+    startDate,
+  };
+  state.account.accounts[accountId] = obj;
+  return obj.id;
+};
+
+/**
  * 口座の順番の変更。
  * @param accountGroup 変更対象となるグループ。
  * @param oldIndex 移動する口座のインデックス値。
@@ -761,9 +783,9 @@ export const aggregateAccountAdd = (state: States.IState, name: string, accounts
     throw new Error('Include not exists account id on aggregateAccountAdd().');
   }
 
-  // 追加)
-  obj.id = state.nextId.aggregateAccount;
-  state.nextId.aggregateAccount++;
+  // 追加
+  obj.id = state.nextId.account;
+  state.nextId.account++;
   state.aggregateAccount.accounts[obj.id] = obj;
   state.aggregateAccount.order.push(obj.id);
   return obj.id;
