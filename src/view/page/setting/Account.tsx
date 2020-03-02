@@ -11,6 +11,7 @@ import * as UiActions from 'src/state/ui/Actions';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
+import AccountEditDialog from 'src/view/widget/account-edit-dialog';
 import MaterialIcon from 'src/view/widget/material-icon';
 import RadioButtonGroup from 'src/view/widget/radio-button-group';
 import { v4 as UUID } from 'uuid';
@@ -29,7 +30,14 @@ interface IProps {
 }
 
 interface IState {
+  /** 選択中のタブ。 */
   selectedTab: TabKind;
+
+  /** 口座編集対象。 */
+  editAccountId: number | null;
+
+  /** 口座編集ダイアログをモーダル中か。 */
+  modalAccountEdit: boolean;
 }
 
 class Account extends React.Component<IProps, IState> {
@@ -39,6 +47,8 @@ class Account extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       selectedTab: TabKind.Assets,
+      editAccountId: null,
+      modalAccountEdit: false,
     };
     this.elemIdAccountList = `elem-${UUID}`;
   }
@@ -97,7 +107,7 @@ class Account extends React.Component<IProps, IState> {
           <RadioButtonGroup btns={btnInfos} selectedBtnIndex={this.state.selectedTab} />
         </div>
         <div className={Styles.ControlBarAreaRight}>
-          <button className={BasicStyles.IconBtn}>
+          <button className={BasicStyles.IconBtn} onClick={(e) => this.onAddBtnClicked(e)}>
             <MaterialIcon name={'add'} classNames={[]} darkMode={false} />
           </button>
         </div>
@@ -148,11 +158,33 @@ class Account extends React.Component<IProps, IState> {
       </ol>
     );
 
+    const modalDialog = ((): JSX.Element | null => {
+      if (!this.state.modalAccountEdit) {
+        return null;
+      }
+      if (this.state.selectedTab !== TabKind.Aggregate) {
+        return (
+          <AccountEditDialog
+            accountGroup={
+              this.state.selectedTab === TabKind.Assets
+                ? DocTypes.AccountGroup.Assets
+                : DocTypes.AccountGroup.Liabilities
+            }
+            editAccountId={this.state.editAccountId}
+            onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
+          />
+        );
+      } else {
+        return null;
+      }
+    })();
+
     const body = (
       <div className={Styles.BodyRoot}>
         <div className={Styles.Body}>
           {controlBar}
           {accountList}
+          {modalDialog}
         </div>
       </div>
     );
@@ -168,6 +200,31 @@ class Account extends React.Component<IProps, IState> {
   private onTabChanged(tabKind: TabKind) {
     this.setState({
       selectedTab: tabKind,
+    });
+  }
+
+  private onAddBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    e.stopPropagation();
+
+    if (this.state.selectedTab !== TabKind.Aggregate) {
+      this.setState({
+        modalAccountEdit: true,
+      });
+    } else {
+      //...
+    }
+  }
+
+  private onAccountEditDialogClosed(isCanceled: boolean): void {
+    // 変更がなある場合は口座に関する前回入力値をリセットする
+    if (!isCanceled) {
+      // ...
+    }
+
+    // 後始末
+    this.setState({
+      editAccountId: null,
+      modalAccountEdit: false,
     });
   }
 }
