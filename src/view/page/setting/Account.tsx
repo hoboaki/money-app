@@ -216,7 +216,7 @@ class Account extends React.Component<IProps, IState> {
   }
 
   private onAccountEditDialogClosed(isCanceled: boolean): void {
-    // 変更がなある場合は口座に関する前回入力値をリセットする
+    // 変更がある場合は口座に関する前回入力値をリセットする
     if (!isCanceled) {
       // ...
     }
