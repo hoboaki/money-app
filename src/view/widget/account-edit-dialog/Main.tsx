@@ -142,6 +142,39 @@ class Main extends React.Component<ILocalProps, IState> {
         </td>
       </tr>
     );
+    const inputKind = (
+      <tr className={Styles.InputKind}>
+        <th scope="row">種類</th>
+        <td>
+          <select
+            value={this.state.inputKind.toString()}
+            onChange={(e) => {
+              this.onInputKindChanged(e);
+            }}
+          >
+            {(() => {
+              const kinds: DocTypes.AccountKind[] = [];
+              if (this.props.accountGroup === DocTypes.AccountGroup.Assets) {
+                kinds.push(DocTypes.AccountKind.AssetsCash);
+                kinds.push(DocTypes.AccountKind.AssetsBank);
+                kinds.push(DocTypes.AccountKind.AssetsInvesting);
+                kinds.push(DocTypes.AccountKind.AssetsOther);
+              } else {
+                kinds.push(DocTypes.AccountKind.LiabilitiesCard);
+                kinds.push(DocTypes.AccountKind.LiabilitiesOther);
+              }
+              return kinds.map((kind) => {
+                return (
+                  <option key={kind} value={kind}>
+                    {DocTypes.localizedAccountKind(kind)}
+                  </option>
+                );
+              });
+            })()}
+          </select>
+        </td>
+      </tr>
+    );
     const inputStartDate = (
       <tr className={Styles.InputStartDate}>
         <th scope="row">開始日</th>
@@ -186,6 +219,7 @@ class Main extends React.Component<ILocalProps, IState> {
         <table>
           <tbody>
             {inputName}
+            {inputKind}
             {inputStartDate}
             {inputInitialAmount}
           </tbody>
@@ -261,10 +295,16 @@ class Main extends React.Component<ILocalProps, IState> {
     $(`#${this.elementIdRoot}`).modal('hide');
   }
 
-  /// 名前：値変更。
+  /// 名前：値更新。
   private onInputNameChanged(e: React.ChangeEvent<HTMLInputElement>) {
     e.stopPropagation();
     this.setState({ inputName: e.target.value });
+  }
+
+  /// 種類：値更新。
+  private onInputKindChanged(e: React.ChangeEvent<HTMLSelectElement>) {
+    e.stopPropagation();
+    this.setState({ inputKind: Number(e.target.value) });
   }
 
   /// 開始日：クリックイベント。
@@ -280,7 +320,7 @@ class Main extends React.Component<ILocalProps, IState> {
     });
   }
 
-  /// 初期残高変更時の処理。
+  /// 初期残高：値更新。
   private onInputInitialAmountChanged(e: React.ChangeEvent<HTMLInputElement>) {
     const newValue = Number(e.target.value.replace(/[^\d]/, ''));
     if (!isNaN(newValue)) {
