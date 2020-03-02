@@ -401,6 +401,28 @@ export const accountAdd = (
 };
 
 /**
+ * 口座更新。
+ */
+export const accountUpdate = (
+  state: States.IState,
+  accountId: number,
+  name: string,
+  kind: Types.AccountKind,
+  initialAmount: number,
+  startDate: IYearMonthDayDate,
+) => {
+  const obj = {
+    id: accountId,
+    name,
+    kind,
+    initialAmount,
+    startDate,
+  };
+  state.account.accounts[accountId] = obj;
+  return obj.id;
+};
+
+/**
  * 口座の順番の変更。
  * @param accountGroup 変更対象となるグループ。
  * @param oldIndex 移動する口座のインデックス値。

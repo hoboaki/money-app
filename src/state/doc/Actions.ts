@@ -17,6 +17,57 @@ export const resetDocument = (state: States.IState): IResetDocument => {
   };
 };
 
+/// 口座の追加。
+export const ADD_ACCOUNT = UUID();
+export interface IAddAccount extends Action {
+  // 各変数の使用は StateMethods.accountAdd を参照。
+  name: string;
+  kind: Types.AccountKind;
+  initialAmount: number;
+  startDate: IYearMonthDayDate;
+}
+export const addAccount = (
+  name: string,
+  kind: Types.AccountKind,
+  initialAmount: number,
+  startDate: IYearMonthDayDate,
+): IAddAccount => {
+  return {
+    type: ADD_ACCOUNT,
+    name,
+    kind,
+    initialAmount,
+    startDate,
+  };
+};
+
+/// 口座の更新。
+export const UPDATE_ACCOUNT = UUID();
+export interface IUpdateAccount extends Action {
+  // 各変数の使用は StateMethods.accountUpdate を参照。
+  accountId: number;
+  name: string;
+  kind: Types.AccountKind;
+  initialAmount: number;
+  startDate: IYearMonthDayDate;
+}
+export const updateAccount = (
+  accountId: number,
+  name: string,
+  kind: Types.AccountKind,
+  initialAmount: number,
+  startDate: IYearMonthDayDate,
+): IUpdateAccount => {
+  return {
+    type: UPDATE_ACCOUNT,
+    accountId,
+    name,
+    kind,
+    initialAmount,
+    startDate,
+  };
+};
+
 /// 口座の並び順更新。
 export const UPDATE_ACCOUNT_ORDER = UUID();
 export interface IUpdateAccountOrder extends Action {

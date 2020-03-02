@@ -11,6 +11,14 @@ a2RMapper.addWork<Actions.IResetDocument>(Actions.RESET_DOCUMENT, (state, action
   Object.assign(state, action.doc);
 });
 
+a2RMapper.addWork<Actions.IAddAccount>(Actions.ADD_ACCOUNT, (state, action) => {
+  StateMethods.accountAdd(state, action.name, action.kind, action.initialAmount, action.startDate);
+});
+
+a2RMapper.addWork<Actions.IUpdateAccount>(Actions.UPDATE_ACCOUNT, (state, action) => {
+  StateMethods.accountUpdate(state, action.accountId, action.name, action.kind, action.initialAmount, action.startDate);
+});
+
 a2RMapper.addWork<Actions.IUpdateAccountOrder>(Actions.UPDATE_ACCOUNT_ORDER, (state, action) => {
   StateMethods.accountOrderUpdate(state, action.accountGroup, action.oldIndex, action.newIndex);
 });
