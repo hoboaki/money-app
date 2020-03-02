@@ -3,15 +3,12 @@ import 'src/@types/mdb/modal';
 import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-// import * as DocActions from 'src/state/doc/Actions';
-// import * as DocStateMethods from 'src/state/doc/StateMethods';
+import * as DocActions from 'src/state/doc/Actions';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
-// import Store from 'src/state/Store';
-// import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
+import Store from 'src/state/Store';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
-// import * as PriceUtils from 'src/util/PriceUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import { v4 as UUID } from 'uuid';
 
@@ -289,6 +286,25 @@ class Main extends React.Component<ILocalProps, IState> {
   /// 取込ボタンが押されたときの処理。
   private onSubmitBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     e.stopPropagation();
+
+    // 追加or更新
+    {
+      const initialAmount = (this.state.inputInitialAmountIsNegative ? -1 : 1) * this.state.inputInitialAmount;
+      const startDate = IYearMonthDayDateUtils.fromText(this.state.inputStartDate);
+      if (this.props.editAccountId === null) {
+        Store.dispatch(DocActions.addAccount(this.state.inputName, this.state.inputKind, initialAmount, startDate));
+      } else {
+        Store.dispatch(
+          DocActions.updateAccount(
+            this.props.editAccountId,
+            this.state.inputName,
+            this.state.inputKind,
+            initialAmount,
+            startDate,
+          ),
+        );
+      }
+    }
 
     // ダイアログ閉じる
     this.setState({ isCanceled: false });
