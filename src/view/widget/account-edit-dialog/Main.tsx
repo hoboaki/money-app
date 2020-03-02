@@ -120,11 +120,10 @@ class Main extends React.Component<ILocalProps, IState> {
 
     // 本体
     const inputName = (
-      <tr>
+      <tr className={Styles.InputName}>
         <th scope="row">名前</th>
         <td>
           <input
-            className={Styles.InputName}
             type="text"
             value={this.state.inputName}
             onChange={(e) => {
@@ -144,7 +143,7 @@ class Main extends React.Component<ILocalProps, IState> {
       </tr>
     );
     const inputStartDate = (
-      <tr>
+      <tr className={Styles.InputStartDate}>
         <th scope="row">開始日</th>
         <td>
           <input

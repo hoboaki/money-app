@@ -1,11 +1,9 @@
 .DialogRoot {
-  margin-left: 6%;
-  margin-right: 6%;
-  max-width: none;
+  max-width: 420px;
 }
 
 .DialogContent {
-  height: calc(100vh - 60px);
+  height: auto;
 }
 
 .DialogHeader {
@@ -29,12 +27,16 @@
 .InputRoot table {
   border: none;
   margin-top: 20px;
-  margin-bottom: -1px;
   width: 100%;
 }
 
 .InputRoot tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   height: 42px;
+}
+
+.InputRoot tr:first-child {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .FormInputRowHide {
@@ -42,8 +44,7 @@
 }
 
 .InputRoot th {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-left: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
   color: #707070;
   font-weight: normal;
   padding: 8px;
@@ -53,7 +54,6 @@
 
 .InputRoot td {
   align-items: center;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
   display: flex;
   padding: 8px;
 }
@@ -78,8 +78,12 @@
   cursor: pointer;
 }
 
-.InputName {
+.InputName input {
   width: 60%;
+}
+
+.InputStartDate {
+  /* */
 }
 
 .InputInitialAmount[data-is-negative='true'] input {
@@ -90,7 +94,7 @@
   align-items: center;
   display: flex;
   flex-direction: row-reverse;
-  height: 40px;
+  height: 64px;
   padding: 4px 14px;
   width: 100%;
 }
