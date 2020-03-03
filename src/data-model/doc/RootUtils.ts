@@ -9,7 +9,8 @@ interface IJsonRoot {
   version: number;
 
   /** データのルート。 */
-  data: Root;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
 }
 
 /** Json テキストを Root に変換する。 */
