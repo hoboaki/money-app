@@ -89,6 +89,18 @@ export const updateAccountOrder = (
   };
 };
 
+/// 口座の削除。
+export const DELETE_ACCOUNT = UUID();
+export interface IDeleteAccount extends Action {
+  accountId: number;
+}
+export const deleteAccount = (accountId: number): IDeleteAccount => {
+  return {
+    type: DELETE_ACCOUNT,
+    accountId,
+  };
+};
+
 /// 入金レコードの追加。
 export const ADD_RECORD_INCOME = UUID();
 export interface IAddRecordIncome extends Action {

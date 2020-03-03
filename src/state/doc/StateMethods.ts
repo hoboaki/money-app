@@ -450,6 +450,52 @@ export const accountOrderUpdate = (
   orders.splice(newIndex, 0, moveId);
 };
 
+/**
+ * 口座削除。
+ */
+export const accountDelete = (state: States.IState, accountId: number) => {
+  // 口座に紐付くレコードを削除
+  {
+    let records: number[] = [];
+    records = records.concat(
+      Object.keys(state.income.records)
+        .map((textId) => Number(textId))
+        .filter((id) => state.income.records[id].account === accountId),
+    );
+    records = records.concat(
+      Object.keys(state.outgo.records)
+        .map((textId) => Number(textId))
+        .filter((id) => state.outgo.records[id].account === accountId),
+    );
+    records = records.concat(
+      Object.keys(state.transfer.records)
+        .map((textId) => Number(textId))
+        .filter((id) => {
+          const record = state.transfer.records[id];
+          return record.accountFrom === accountId || record.accountTo === accountId;
+        }),
+    );
+    deleteRecords(state, records);
+  }
+
+  // 集計口座から対象を外す
+  state.aggregateAccount.order.forEach((id) => {
+    const account = state.aggregateAccount.accounts[id];
+    account.accounts = account.accounts.filter((targetId) => targetId != accountId);
+  });
+
+  // 口座自体の削除
+  state.account.orderAssets = state.account.orderAssets.filter((id) => id !== accountId);
+  state.account.orderLiabilities = state.account.orderLiabilities.filter((id) => id !== accountId);
+  state.aggregateAccount.order = state.aggregateAccount.order.filter((id) => id !== accountId);
+  if (accountId in state.account.accounts) {
+    delete state.account.accounts[accountId];
+  }
+  if (accountId in state.aggregateAccount.accounts) {
+    delete state.aggregateAccount.accounts[accountId];
+  }
+};
+
 /** 指定の名前の口座オブジェクトを取得。見つからなければエラー。 */
 export const accountByName = (state: States.IState, name: string): States.IAccount => {
   const account = Object.values(state.account.accounts).find((ac) => ac.name === name);

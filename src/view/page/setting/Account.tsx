@@ -1,4 +1,5 @@
 import ClassNames from 'classnames';
+import { Menu, remote } from 'electron';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Sortable from 'sortablejs';
@@ -13,6 +14,7 @@ import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
 import AccountEditDialog from 'src/view/widget/account-edit-dialog';
 import MaterialIcon from 'src/view/widget/material-icon';
+import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 import RadioButtonGroup from 'src/view/widget/radio-button-group';
 import { v4 as UUID } from 'uuid';
 
@@ -36,11 +38,15 @@ interface IState {
   /** 口座編集対象。 */
   editAccountId: number | null;
 
+  /** カードのコンテキストメニュー表示中か。 */
+  cardActionMenuActive: boolean;
+
   /** 口座編集ダイアログをモーダル中か。 */
   modalAccountEdit: boolean;
 }
 
 class Account extends React.Component<IProps, IState> {
+  private cardActionMenu: Menu;
   private elemIdAccountList: string;
 
   public constructor(props: IProps) {
@@ -49,8 +55,28 @@ class Account extends React.Component<IProps, IState> {
       selectedTab: TabKind.Assets,
       editAccountId: null,
       modalAccountEdit: false,
+      cardActionMenuActive: false,
     };
     this.elemIdAccountList = `elem-${UUID}`;
+
+    // Menu セットアップ
+    this.cardActionMenu = new remote.Menu();
+    this.cardActionMenu.append(
+      new remote.MenuItem({
+        label: '編集...',
+        click: () => {
+          this.setState({ modalAccountEdit: true });
+        },
+      }),
+    );
+    this.cardActionMenu.append(
+      new remote.MenuItem({
+        label: '削除...',
+        click: () => {
+          this.accountDelete();
+        },
+      }),
+    );
   }
 
   public componentDidMount() {
@@ -140,11 +166,15 @@ class Account extends React.Component<IProps, IState> {
       };
       accountsSelector().forEach((account) => {
         cards.push(
-          <li key={`${this.state.selectedTab}-${account.id}`} className={Styles.AccountCard}>
+          <li
+            key={`${this.state.selectedTab}-${account.id}`}
+            className={Styles.AccountCard}
+            data-selected={this.state.cardActionMenuActive && this.state.editAccountId === account.id}
+          >
             <MaterialIcon name="reorder" classNames={[Styles.AccountCardHandle]} darkMode={false} />
             <span>{account.name}</span>
             <div className={Styles.AccountCardTailSpace}>
-              <button className={BasicStyles.IconBtn}>
+              <button className={BasicStyles.IconBtn} onClick={(e) => this.onCardActionBtnClicked(e, account.id)}>
                 <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />
               </button>
             </div>
@@ -215,17 +245,48 @@ class Account extends React.Component<IProps, IState> {
     }
   }
 
-  private onAccountEditDialogClosed(isCanceled: boolean): void {
-    // 変更がある場合は口座に関する前回入力値をリセットする
-    if (!isCanceled) {
-      // ...
-    }
+  private onCardActionBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number): void {
+    e.stopPropagation();
+    this.setState({ cardActionMenuActive: true, editAccountId: id });
+    this.cardActionMenu.popup({
+      callback: () => {
+        this.setState({ cardActionMenuActive: false });
+      },
+    });
+  }
 
+  private onAccountEditDialogClosed(isCanceled: boolean): void {
     // 後始末
     this.setState({
       editAccountId: null,
       modalAccountEdit: false,
     });
+  }
+
+  private accountDelete() {
+    // 値チェック
+    if (this.state.editAccountId === null) {
+      throw new Error();
+    }
+
+    // 確認
+    if (
+      !NativeDialogUtils.showOkCancelDialog(
+        '口座の削除',
+        `${this.props.doc.account.accounts[this.state.editAccountId].name}を削除しますか？`,
+        '口座に紐付くレコードは削除されます。',
+        '口座を削除',
+      )
+    ) {
+      return;
+    }
+
+    // 削除を実行
+    Store.dispatch(DocActions.deleteAccount(this.state.editAccountId));
+    Store.dispatch(UiActions.recordEditDialogUpdateLatestValue(null, null, null)); // 前回入力値情報をリセット
+
+    // 自動保存
+    Store.dispatch(UiActions.documentRequestAutoSave());
   }
 }
 
