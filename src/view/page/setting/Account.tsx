@@ -35,6 +35,9 @@ interface IState {
   /** 選択中のタブ。 */
   selectedTab: TabKind;
 
+  /** 口座編集ダイアログの口座グループ。 */
+  dialogAccountGroup: DocTypes.AccountGroup;
+
   /** 口座編集対象。 */
   editAccountId: number | null;
 
@@ -46,6 +49,7 @@ interface IState {
 }
 
 class Account extends React.Component<IProps, IState> {
+  private addActionMenu: Menu;
   private cardActionMenu: Menu;
   private elemIdAccountList: string;
 
@@ -53,13 +57,46 @@ class Account extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       selectedTab: TabKind.Assets,
+      dialogAccountGroup: DocTypes.AccountGroup.Assets,
       editAccountId: null,
       modalAccountEdit: false,
       cardActionMenuActive: false,
     };
     this.elemIdAccountList = `elem-${UUID}`;
 
-    // Menu セットアップ
+    // 追加アクションMenu
+    const addAction = (accountGroup: DocTypes.AccountGroup) => {
+      this.setState({
+        dialogAccountGroup: accountGroup,
+        editAccountId: null,
+        modalAccountEdit: true,
+      });
+    };
+    this.addActionMenu = new remote.Menu();
+    this.addActionMenu.append(
+      new remote.MenuItem({
+        label: '資産口座を作成...',
+        click: () => {
+          addAction(DocTypes.AccountGroup.Assets);
+        },
+      }),
+    );
+    this.addActionMenu.append(
+      new remote.MenuItem({
+        label: '負債口座を作成...',
+        click: () => {
+          addAction(DocTypes.AccountGroup.Liabilities);
+        },
+      }),
+    );
+    this.addActionMenu.append(
+      new remote.MenuItem({
+        label: '集計口座を作成...（準備中）',
+        enabled: false,
+      }),
+    );
+
+    // カードアクションMenu
     this.cardActionMenu = new remote.Menu();
     this.cardActionMenu.append(
       new remote.MenuItem({
@@ -192,21 +229,16 @@ class Account extends React.Component<IProps, IState> {
       if (!this.state.modalAccountEdit) {
         return null;
       }
-      if (this.state.selectedTab !== TabKind.Aggregate) {
-        return (
-          <AccountEditDialog
-            accountGroup={
-              this.state.selectedTab === TabKind.Assets
-                ? DocTypes.AccountGroup.Assets
-                : DocTypes.AccountGroup.Liabilities
-            }
-            editAccountId={this.state.editAccountId}
-            onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
-          />
-        );
-      } else {
+      if (this.state.dialogAccountGroup === DocTypes.AccountGroup.Invalid) {
         return null;
       }
+      return (
+        <AccountEditDialog
+          accountGroup={this.state.dialogAccountGroup}
+          editAccountId={this.state.editAccountId}
+          onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
+        />
+      );
     })();
 
     const body = (
@@ -235,19 +267,22 @@ class Account extends React.Component<IProps, IState> {
 
   private onAddBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     e.stopPropagation();
-
-    if (this.state.selectedTab !== TabKind.Aggregate) {
-      this.setState({
-        modalAccountEdit: true,
-      });
-    } else {
-      //...
-    }
+    this.addActionMenu.popup();
   }
 
   private onCardActionBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number): void {
     e.stopPropagation();
-    this.setState({ cardActionMenuActive: true, editAccountId: id });
+    const dialogAccountGroupSelector = () => {
+      switch (this.state.selectedTab) {
+        case TabKind.Assets:
+          return DocTypes.AccountGroup.Assets;
+        case TabKind.Liabilities:
+          return DocTypes.AccountGroup.Liabilities;
+        default:
+          return DocTypes.AccountGroup.Invalid;
+      }
+    };
+    this.setState({ cardActionMenuActive: true, dialogAccountGroup: dialogAccountGroupSelector(), editAccountId: id });
     this.cardActionMenu.popup({
       callback: () => {
         this.setState({ cardActionMenuActive: false });
