@@ -106,7 +106,7 @@ class Main extends React.Component<ILocalProps, IState> {
       <div className={dialogHeaderClass}>
         <h5 className="modal-title" id="exampleModalLabel">
           {`${this.props.accountGroup === DocTypes.AccountGroup.Assets ? '資産口座' : '負債口座'}の${
-            this.props.editAccountId !== null ? '編集' : '追加'
+            this.props.editAccountId !== null ? '編集' : '作成'
           }`}
         </h5>
         <button type="button" id={this.elementIdCloseBtn} className="close" data-dismiss="modal" aria-label="Close">
