@@ -291,8 +291,27 @@ class Account extends React.Component<IProps, IState> {
   }
 
   private onAccountEditDialogClosed(isCanceled: boolean): void {
+    // タブを更新
+    const selectedTabSelector = () => {
+      // キャンセル時は変更無し
+      if (isCanceled) {
+        return this.state.selectedTab;
+      }
+
+      // 追加・更新があった場合はその口座のタブを選択
+      switch (this.state.dialogAccountGroup) {
+        case DocTypes.AccountGroup.Assets:
+          return TabKind.Assets;
+        case DocTypes.AccountGroup.Liabilities:
+          return TabKind.Liabilities;
+        default:
+          return this.state.selectedTab;
+      }
+    };
+
     // 後始末
     this.setState({
+      selectedTab: selectedTabSelector(),
       editAccountId: null,
       modalAccountEdit: false,
     });
