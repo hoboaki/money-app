@@ -256,11 +256,6 @@ class Account extends React.Component<IProps, IState> {
   }
 
   private onAccountEditDialogClosed(isCanceled: boolean): void {
-    // 変更がある場合は口座に関する前回入力値をリセットする
-    if (!isCanceled) {
-      // ...
-    }
-
     // 後始末
     this.setState({
       editAccountId: null,
@@ -269,9 +264,12 @@ class Account extends React.Component<IProps, IState> {
   }
 
   private accountDelete() {
+    // 値チェック
     if (this.state.editAccountId === null) {
       throw new Error();
     }
+
+    // 確認
     if (
       !NativeDialogUtils.showOkCancelDialog(
         '口座の削除',
@@ -282,6 +280,13 @@ class Account extends React.Component<IProps, IState> {
     ) {
       return;
     }
+
+    // 削除を実行
+    Store.dispatch(DocActions.deleteAccount(this.state.editAccountId));
+    Store.dispatch(UiActions.recordEditDialogUpdateLatestValue(null, null, null)); // 前回入力値情報をリセット
+
+    // 自動保存
+    Store.dispatch(UiActions.documentRequestAutoSave());
   }
 }
 

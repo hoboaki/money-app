@@ -23,6 +23,10 @@ a2RMapper.addWork<Actions.IUpdateAccountOrder>(Actions.UPDATE_ACCOUNT_ORDER, (st
   StateMethods.accountOrderUpdate(state, action.accountGroup, action.oldIndex, action.newIndex);
 });
 
+a2RMapper.addWork<Actions.IDeleteAccount>(Actions.DELETE_ACCOUNT, (state, action) => {
+  StateMethods.accountDelete(state, action.accountId);
+});
+
 a2RMapper.addWork<Actions.IAddRecordIncome>(Actions.ADD_RECORD_INCOME, (state, action) => {
   StateMethods.incomeRecordAdd(
     state,
