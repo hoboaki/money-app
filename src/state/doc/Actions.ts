@@ -17,23 +17,23 @@ export const resetDocument = (state: States.IState): IResetDocument => {
   };
 };
 
-/// 口座の追加。
-export const ADD_ACCOUNT = UUID();
-export interface IAddAccount extends Action {
-  // 各変数の使用は StateMethods.accountAdd を参照。
+/// 基本口座の追加。
+export const ADD_BASIC_ACCOUNT = UUID();
+export interface IAddBasicAccount extends Action {
+  // 各変数の使用は StateMethods.basicAccountAdd を参照。
   name: string;
-  kind: Types.AccountKind;
+  kind: Types.BasicAccountKind;
   initialAmount: number;
   startDate: IYearMonthDayDate;
 }
-export const addAccount = (
+export const addBasicAccount = (
   name: string,
-  kind: Types.AccountKind,
+  kind: Types.BasicAccountKind,
   initialAmount: number,
   startDate: IYearMonthDayDate,
-): IAddAccount => {
+): IAddBasicAccount => {
   return {
-    type: ADD_ACCOUNT,
+    type: ADD_BASIC_ACCOUNT,
     name,
     kind,
     initialAmount,
@@ -41,25 +41,25 @@ export const addAccount = (
   };
 };
 
-/// 口座の更新。
-export const UPDATE_ACCOUNT = UUID();
-export interface IUpdateAccount extends Action {
-  // 各変数の使用は StateMethods.accountUpdate を参照。
+/// 基本口座の更新。
+export const UPDATE_BASIC_ACCOUNT = UUID();
+export interface IUpdateBasicAccount extends Action {
+  // 各変数の使用は StateMethods.basicAccountUpdate を参照。
   accountId: number;
   name: string;
-  kind: Types.AccountKind;
+  kind: Types.BasicAccountKind;
   initialAmount: number;
   startDate: IYearMonthDayDate;
 }
-export const updateAccount = (
+export const updateBasicAccount = (
   accountId: number,
   name: string,
-  kind: Types.AccountKind,
+  kind: Types.BasicAccountKind,
   initialAmount: number,
   startDate: IYearMonthDayDate,
-): IUpdateAccount => {
+): IUpdateBasicAccount => {
   return {
-    type: UPDATE_ACCOUNT,
+    type: UPDATE_BASIC_ACCOUNT,
     accountId,
     name,
     kind,
@@ -68,22 +68,37 @@ export const updateAccount = (
   };
 };
 
-/// 口座の並び順更新。
-export const UPDATE_ACCOUNT_ORDER = UUID();
-export interface IUpdateAccountOrder extends Action {
-  // 各変数の使用は StateMethods.accountOrderUpdate を参照。
-  accountGroup: Types.AccountGroup;
+/// 基本口座の並び順更新。
+export const UPDATE_BASIC_ACCOUNT_ORDER = UUID();
+export interface IUpdateBasicAccountOrder extends Action {
+  // 各変数の使用は StateMethods.basicAccountOrderUpdate を参照。
+  accountGroup: Types.BasicAccountGroup;
   oldIndex: number;
   newIndex: number;
 }
-export const updateAccountOrder = (
-  accountGroup: Types.AccountGroup,
+export const updateBasicAccountOrder = (
+  accountGroup: Types.BasicAccountGroup,
   oldIndex: number,
   newIndex: number,
-): IUpdateAccountOrder => {
+): IUpdateBasicAccountOrder => {
   return {
-    type: UPDATE_ACCOUNT_ORDER,
+    type: UPDATE_BASIC_ACCOUNT_ORDER,
     accountGroup,
+    oldIndex,
+    newIndex,
+  };
+};
+
+/// 集計口座の並び順更新。
+export const UPDATE_AGGREGATE_ACCOUNT_ORDER = UUID();
+export interface IUpdateAggregateAccountOrder extends Action {
+  // 各変数の使用は StateMethods.aggregateAccountOrderUpdate を参照。
+  oldIndex: number;
+  newIndex: number;
+}
+export const updateAggregateAccountOrder = (oldIndex: number, newIndex: number): IUpdateAggregateAccountOrder => {
+  return {
+    type: UPDATE_AGGREGATE_ACCOUNT_ORDER,
     oldIndex,
     newIndex,
   };
@@ -310,21 +325,6 @@ export const updateCategoryCollapse = (categoryId: number, isCollapsed: boolean)
     type: UPDATE_CATEGORY_COLLAPSE,
     categoryId,
     isCollapsed,
-  };
-};
-
-/// 集計口座の並び順更新。
-export const UPDATE_AGGREGATE_ACCOUNT_ORDER = UUID();
-export interface IUpdateAggregateAccountOrder extends Action {
-  // 各変数の使用は StateMethods.aggregateAccountOrderUpdate を参照。
-  oldIndex: number;
-  newIndex: number;
-}
-export const updateAggregateAccountOrder = (oldIndex: number, newIndex: number): IUpdateAggregateAccountOrder => {
-  return {
-    type: UPDATE_AGGREGATE_ACCOUNT_ORDER,
-    oldIndex,
-    newIndex,
   };
 };
 

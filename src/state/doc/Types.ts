@@ -1,12 +1,12 @@
-/** 口座グループ。 */
-export enum AccountGroup {
+/** 基本口座グループ。 */
+export enum BasicAccountGroup {
   Invalid = 0,
   Assets = 1, // 資産。
   Liabilities = 2, // 負債。
 }
 
-/** 口座の種類。 */
-export enum AccountKind {
+/** 基本口座の種類。 */
+export enum BasicAccountKind {
   Invalid = 0,
   AssetsCash = 10, // 資産：現金。
   AssetsBank = 11, // 資産：銀行口座。
@@ -17,63 +17,63 @@ export enum AccountKind {
   LiabilitiesOther = 29, // 負債：その他。
 }
 
-/** AccountKind -> AccountGroup 変換関数。 */
-export const accountKindToAccountGroup = (kind: AccountKind) => {
+/** BasicAccountKind -> BasicAccountGroup 変換関数。 */
+export const basicAccountKindToGroup = (kind: BasicAccountKind) => {
   switch (kind) {
-    case AccountKind.AssetsCash:
-    case AccountKind.AssetsBank:
-    case AccountKind.AssetsInvesting:
-    case AccountKind.AssetsOther:
-      return AccountGroup.Assets;
+    case BasicAccountKind.AssetsCash:
+    case BasicAccountKind.AssetsBank:
+    case BasicAccountKind.AssetsInvesting:
+    case BasicAccountKind.AssetsOther:
+      return BasicAccountGroup.Assets;
 
-    case AccountKind.LiabilitiesLoan:
-    case AccountKind.LiabilitiesCard:
-    case AccountKind.LiabilitiesOther:
-      return AccountGroup.Liabilities;
+    case BasicAccountKind.LiabilitiesLoan:
+    case BasicAccountKind.LiabilitiesCard:
+    case BasicAccountKind.LiabilitiesOther:
+      return BasicAccountGroup.Liabilities;
 
     default:
-      return AccountGroup.Invalid;
+      return BasicAccountGroup.Invalid;
   }
 };
 
-/** AccountKind の種類を示す日本語を取得する。 */
-export const localizedAccountKind = (kind: AccountKind) => {
+/** BasicAccountKind の種類を示す日本語を取得する。 */
+export const localizedBasicAccountKind = (kind: BasicAccountKind) => {
   switch (kind) {
-    case AccountKind.AssetsCash:
+    case BasicAccountKind.AssetsCash:
       return '現金';
-    case AccountKind.AssetsBank:
+    case BasicAccountKind.AssetsBank:
       return '銀行口座';
-    case AccountKind.AssetsInvesting:
+    case BasicAccountKind.AssetsInvesting:
       return '投資';
-    case AccountKind.AssetsOther:
+    case BasicAccountKind.AssetsOther:
       return 'その他';
-    case AccountKind.LiabilitiesLoan:
+    case BasicAccountKind.LiabilitiesLoan:
       return 'ローン';
-    case AccountKind.LiabilitiesCard:
+    case BasicAccountKind.LiabilitiesCard:
       return 'クレジットカード';
-    case AccountKind.LiabilitiesOther:
+    case BasicAccountKind.LiabilitiesOther:
       return 'その他';
     default:
       return '#';
   }
 };
 
-/** AccountKind の種類を示す省略形日本語を取得する。 */
-export const shortLocalizedAccountKind = (kind: AccountKind) => {
+/** BasicAccountKind の種類を示す省略形日本語を取得する。 */
+export const shortLocalizedBasicAccountKind = (kind: BasicAccountKind) => {
   switch (kind) {
-    case AccountKind.AssetsCash:
+    case BasicAccountKind.AssetsCash:
       return '現';
-    case AccountKind.AssetsBank:
+    case BasicAccountKind.AssetsBank:
       return '銀';
-    case AccountKind.AssetsInvesting:
+    case BasicAccountKind.AssetsInvesting:
       return '投';
-    case AccountKind.AssetsOther:
+    case BasicAccountKind.AssetsOther:
       return '他';
-    case AccountKind.LiabilitiesLoan:
+    case BasicAccountKind.LiabilitiesLoan:
       return 'ロ';
-    case AccountKind.LiabilitiesCard:
+    case BasicAccountKind.LiabilitiesCard:
       return 'ク';
-    case AccountKind.LiabilitiesOther:
+    case BasicAccountKind.LiabilitiesOther:
       return '他';
     default:
       return '#';

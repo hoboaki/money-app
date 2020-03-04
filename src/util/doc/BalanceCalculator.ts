@@ -40,7 +40,7 @@ class BalanceCalculator {
     this.endDate = endDate;
     this.allRecords = cache != null && cache.allRecords != null ? cache.allRecords : new RecordCollection(state);
     if (accounts == null) {
-      accounts = StateMethods.accountOrderMixed(state);
+      accounts = StateMethods.basicAccountOrderMixed(state);
     }
 
     // 処理最適化のためまず日付で絞り込んでおく
@@ -95,7 +95,7 @@ class BalanceCalculator {
         transfers: accountData.transfers,
       });
       const cacheBalance = cache != null && allAccountCacheEnabled ? cache.balances[accountId] : 0;
-      const account = state.account.accounts[accountId];
+      const account = state.basicAccount.accounts[accountId];
       const addInitialAmount =
         IYearMonthDayDateUtils.less(account.startDate, this.endDate) &&
         (preCalculateStartDate == null || IYearMonthDayDateUtils.lessEq(preCalculateStartDate, account.startDate));

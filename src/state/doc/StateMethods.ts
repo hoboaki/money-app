@@ -1,12 +1,12 @@
 import Clone from 'clone';
-import DataAccount from 'src/data-model/doc/Account';
 import DataAggregateAccount from 'src/data-model/doc/AggregateAccount';
+import DataAccount from 'src/data-model/doc/BasicAccount';
 import DataCategory from 'src/data-model/doc/Category';
+import DataRecordIncome from 'src/data-model/doc/IncomeRecord';
+import DataRecordOutgo from 'src/data-model/doc/OutgoRecord';
 import DataPalmCategoryInfo from 'src/data-model/doc/PalmCategoryInfo';
-import DataRecordIncome from 'src/data-model/doc/RecordIncome';
-import DataRecordOutgo from 'src/data-model/doc/RecordOutgo';
-import DataRecordTransfer from 'src/data-model/doc/RecordTransfer';
 import DataRoot from 'src/data-model/doc/Root';
+import DataRecordTransfer from 'src/data-model/doc/TransferRecord';
 import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 
@@ -16,10 +16,10 @@ import * as Types from './Types';
 /** DataRoot から State を作成。 */
 export const fromData = (src: DataRoot) => {
   // enum デシリアライズ
-  const enumPraseAccountKind = (targetKey: string): Types.AccountKind => {
-    for (const key in Types.AccountKind) {
+  const enumPraseAccountKind = (targetKey: string): Types.BasicAccountKind => {
+    for (const key in Types.BasicAccountKind) {
       if (key === targetKey) {
-        return +Types.AccountKind[key] as Types.AccountKind;
+        return +Types.BasicAccountKind[key] as Types.BasicAccountKind;
       }
     }
     throw new Error(`Error: Not found key named '${targetKey}'.`);
@@ -28,12 +28,27 @@ export const fromData = (src: DataRoot) => {
   // 結果
   const r = Clone(States.defaultState);
 
-  // 口座
-  const accountIdDict: { [key: number]: number } = {}; // Data内Id → オブジェクトId 変換テーブル
+  // 基本口座
+  const basicAccountIdDict: { [key: number]: number } = {}; // Data内Id → オブジェクトId 変換テーブル
   for (const data of src.accounts) {
     const kind = enumPraseAccountKind(data.kind);
-    const key = accountAdd(r, data.name, kind, data.initialAmount, IYearMonthDayDateUtils.fromText(data.startDate));
-    accountIdDict[data.id] = key;
+    const key = basicAccountAdd(
+      r,
+      data.name,
+      kind,
+      data.initialAmount,
+      IYearMonthDayDateUtils.fromText(data.startDate),
+    );
+    basicAccountIdDict[data.id] = key;
+  }
+
+  // 集計口座
+  for (const data of src.aggregateAccounts) {
+    aggregateAccountAdd(
+      r,
+      data.name,
+      data.accounts.map((accountId) => basicAccountIdDict[accountId]),
+    );
   }
 
   // 入金
@@ -59,7 +74,7 @@ export const fromData = (src: DataRoot) => {
       if (categoryId == null) {
         throw new Error(`Error: Invalid category value(${data.category}) in income record.`);
       }
-      const accountId = accountIdDict[data.account];
+      const accountId = basicAccountIdDict[data.account];
       if (accountId == null) {
         throw new Error(`Error: Invalid account value(${data.account}) in income record.`);
       }
@@ -99,7 +114,7 @@ export const fromData = (src: DataRoot) => {
       if (categoryId == null) {
         throw new Error(`Error: Invalid category value(${data.category}) in outgo record.`);
       }
-      const accountId = accountIdDict[data.account];
+      const accountId = basicAccountIdDict[data.account];
       if (accountId == null) {
         throw new Error(`Error: Invalid account value(${data.account}) in outgo record.`);
       }
@@ -119,11 +134,11 @@ export const fromData = (src: DataRoot) => {
   // 送金
   {
     for (const data of src.transfer.records) {
-      const accountFromId = accountIdDict[data.accountFrom];
+      const accountFromId = basicAccountIdDict[data.accountFrom];
       if (accountFromId == null) {
         throw new Error(`Error: Invalid account value(${data.accountFrom}) in transfer record.`);
       }
-      const accountToId = accountIdDict[data.accountTo];
+      const accountToId = basicAccountIdDict[data.accountTo];
       if (accountToId == null) {
         throw new Error(`Error: Invalid account value(${data.accountTo}) in transfer record.`);
       }
@@ -140,21 +155,12 @@ export const fromData = (src: DataRoot) => {
     }
   }
 
-  // 集計口座
-  for (const data of src.aggregateAccounts) {
-    aggregateAccountAdd(
-      r,
-      data.name,
-      data.accounts.map((accountId) => accountIdDict[accountId]),
-    );
-  }
-
   // Palmカテゴリデータ
   src.importTool.palmCategories.income.forEach((data) => {
     palmCategoryInfoIncomeAdd(
       r,
       data.name,
-      data.account === 0 ? Types.INVALID_ID : accountIdDict[data.account],
+      data.account === 0 ? Types.INVALID_ID : basicAccountIdDict[data.account],
       data.category === 0 ? Types.INVALID_ID : incomeCategoryIdDict[data.category],
     );
   });
@@ -162,7 +168,7 @@ export const fromData = (src: DataRoot) => {
     palmCategoryInfoOutgoAdd(
       r,
       data.name,
-      data.account === 0 ? Types.INVALID_ID : accountIdDict[data.account],
+      data.account === 0 ? Types.INVALID_ID : basicAccountIdDict[data.account],
       data.category === 0 ? Types.INVALID_ID : outgoCategoryIdDict[data.category],
     );
   });
@@ -175,18 +181,28 @@ export const toData = (state: States.IState) => {
   // 結果オブジェクト
   const result = new DataRoot();
 
-  // 口座
-  const accountIdDict: { [key: number]: number } = {}; // AccountId -> エクスポート先のId 辞書
-  accountOrderMixed(state).forEach((key) => {
-    const src = state.account.accounts[key];
+  // 基本口座
+  const basicAccountIdDict: { [key: number]: number } = {}; // AccountId -> エクスポート先のId 辞書
+  basicAccountOrderMixed(state).forEach((key) => {
+    const src = state.basicAccount.accounts[key];
     const data = new DataAccount();
     data.id = result.accounts.length + 1;
     data.name = src.name;
-    data.kind = Types.AccountKind[src.kind];
+    data.kind = Types.BasicAccountKind[src.kind];
     data.initialAmount = src.initialAmount;
     data.startDate = IYearMonthDayDateUtils.toDataFormatText(src.startDate);
     result.accounts.push(data);
-    accountIdDict[src.id] = data.id;
+    basicAccountIdDict[src.id] = data.id;
+  });
+
+  // 集計口座
+  state.aggregateAccount.order.forEach((id) => {
+    const src = state.aggregateAccount.accounts[id];
+    const data = new DataAggregateAccount();
+    data.id = result.aggregateAccounts.length + 1;
+    data.name = src.name;
+    data.accounts = src.accounts.map((accountId) => basicAccountIdDict[accountId]);
+    result.aggregateAccounts.push(data);
   });
 
   // 入金
@@ -235,7 +251,7 @@ export const toData = (state: States.IState) => {
       data.memo = src.memo;
       data.amount = src.amount;
       data.category = categoryIdDict[src.category];
-      data.account = accountIdDict[src.account];
+      data.account = basicAccountIdDict[src.account];
       result.income.records.push(data);
     }
   }
@@ -286,7 +302,7 @@ export const toData = (state: States.IState) => {
       data.memo = src.memo;
       data.amount = src.amount;
       data.category = categoryIdDict[src.category];
-      data.account = accountIdDict[src.account];
+      data.account = basicAccountIdDict[src.account];
       result.outgo.records.push(data);
     }
   }
@@ -306,21 +322,11 @@ export const toData = (state: States.IState) => {
       data.date = IYearMonthDayDateUtils.toDataFormatText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
-      data.accountFrom = accountIdDict[src.accountFrom];
-      data.accountTo = accountIdDict[src.accountTo];
+      data.accountFrom = basicAccountIdDict[src.accountFrom];
+      data.accountTo = basicAccountIdDict[src.accountTo];
       result.transfer.records.push(data);
     }
   }
-
-  // 集計口座
-  state.aggregateAccount.order.forEach((id) => {
-    const src = state.aggregateAccount.accounts[id];
-    const data = new DataAggregateAccount();
-    data.id = result.aggregateAccounts.length + 1;
-    data.name = src.name;
-    data.accounts = src.accounts.map((accountId) => accountIdDict[accountId]);
-    result.aggregateAccounts.push(data);
-  });
 
   // Palmカテゴリ情報
   for (const key in state.importTool.palmCategories.income) {
@@ -332,7 +338,7 @@ export const toData = (state: States.IState) => {
     const data = new DataPalmCategoryInfo();
     data.name = key;
     if (src.account !== Types.INVALID_ID) {
-      data.account = accountIdDict[src.account];
+      data.account = basicAccountIdDict[src.account];
     }
     if (src.category !== Types.INVALID_ID) {
       data.category = incomeCategoryIdDict[src.category];
@@ -348,7 +354,7 @@ export const toData = (state: States.IState) => {
     const data = new DataPalmCategoryInfo();
     data.name = key;
     if (src.account !== Types.INVALID_ID) {
-      data.account = accountIdDict[src.account];
+      data.account = basicAccountIdDict[src.account];
     }
     if (src.category !== Types.INVALID_ID) {
       data.category = outgoCategoryIdDict[src.category];
@@ -361,13 +367,13 @@ export const toData = (state: States.IState) => {
 };
 
 /**
- * 口座追加。
+ * 基本口座追加。
  * @return {number} 追加した口座のId。
  */
-export const accountAdd = (
+export const basicAccountAdd = (
   state: States.IState,
   name: string,
-  kind: Types.AccountKind,
+  kind: Types.BasicAccountKind,
   initialAmount: number,
   startDate: IYearMonthDayDate,
 ) => {
@@ -381,16 +387,16 @@ export const accountAdd = (
   };
 
   // 追加
-  const accountGroup = Types.accountKindToAccountGroup(kind);
+  const accountGroup = Types.basicAccountKindToGroup(kind);
   obj.id = state.nextId.account;
   state.nextId.account++;
-  state.account.accounts[obj.id] = obj;
+  state.basicAccount.accounts[obj.id] = obj;
   switch (accountGroup) {
-    case Types.AccountGroup.Assets:
-      state.account.orderAssets.push(obj.id);
+    case Types.BasicAccountGroup.Assets:
+      state.basicAccount.orderAssets.push(obj.id);
       break;
-    case Types.AccountGroup.Liabilities:
-      state.account.orderLiabilities.push(obj.id);
+    case Types.BasicAccountGroup.Liabilities:
+      state.basicAccount.orderLiabilities.push(obj.id);
       break;
     default:
       throw new Error();
@@ -401,13 +407,13 @@ export const accountAdd = (
 };
 
 /**
- * 口座更新。
+ * 基本口座更新。
  */
-export const accountUpdate = (
+export const basicAccountUpdate = (
   state: States.IState,
   accountId: number,
   name: string,
-  kind: Types.AccountKind,
+  kind: Types.BasicAccountKind,
   initialAmount: number,
   startDate: IYearMonthDayDate,
 ) => {
@@ -418,33 +424,74 @@ export const accountUpdate = (
     initialAmount,
     startDate,
   };
-  state.account.accounts[accountId] = obj;
+  state.basicAccount.accounts[accountId] = obj;
   return obj.id;
 };
 
 /**
- * 口座の順番の変更。
+ * 基本口座の順番の変更。
  * @param accountGroup 変更対象となるグループ。
  * @param oldIndex 移動する口座のインデックス値。
  * @param newIndex 移動後のインデックス値。
  */
-export const accountOrderUpdate = (
+export const basicAccountOrderUpdate = (
   state: States.IState,
-  accountGroup: Types.AccountGroup,
+  accountGroup: Types.BasicAccountGroup,
   oldIndex: number,
   newIndex: number,
 ) => {
   let orders = [];
   switch (accountGroup) {
-    case Types.AccountGroup.Assets:
-      orders = state.account.orderAssets;
+    case Types.BasicAccountGroup.Assets:
+      orders = state.basicAccount.orderAssets;
       break;
-    case Types.AccountGroup.Liabilities:
-      orders = state.account.orderLiabilities;
+    case Types.BasicAccountGroup.Liabilities:
+      orders = state.basicAccount.orderLiabilities;
       break;
     default:
       throw new Error();
   }
+  const moveId = orders[oldIndex];
+  orders.splice(oldIndex, 1);
+  orders.splice(newIndex, 0, moveId);
+};
+
+/** 資産口座と負債口座のそれぞれの並び順を結合した AccountId 配列を取得。 */
+export const basicAccountOrderMixed = (state: States.IState): number[] => {
+  return state.basicAccount.orderAssets.concat(state.basicAccount.orderLiabilities);
+};
+
+/**
+ * 集計口座追加。
+ * @return {number} 追加した集計口座のId。
+ */
+export const aggregateAccountAdd = (state: States.IState, name: string, accounts: number[]) => {
+  // オブジェクト作成
+  const obj = {
+    id: 0,
+    name,
+    accounts,
+  };
+
+  // 対象の口座があるかチェック
+  if (accounts.filter((id) => id in state.basicAccount.accounts).length !== accounts.length) {
+    throw new Error('Include not exists account id on aggregateAccountAdd().');
+  }
+
+  // 追加
+  obj.id = state.nextId.account;
+  state.nextId.account++;
+  state.aggregateAccount.accounts[obj.id] = obj;
+  state.aggregateAccount.order.push(obj.id);
+  return obj.id;
+};
+
+/**
+ * 集計口座の順番の変更。
+ * @param accountGroup 変更対象となるグループ。
+ */
+export const aggregateAccountOrderUpdate = (state: States.IState, oldIndex: number, newIndex: number) => {
+  const orders = state.aggregateAccount.order;
   const moveId = orders[oldIndex];
   orders.splice(oldIndex, 1);
   orders.splice(newIndex, 0, moveId);
@@ -485,30 +532,25 @@ export const accountDelete = (state: States.IState, accountId: number) => {
   });
 
   // 口座自体の削除
-  state.account.orderAssets = state.account.orderAssets.filter((id) => id !== accountId);
-  state.account.orderLiabilities = state.account.orderLiabilities.filter((id) => id !== accountId);
+  state.basicAccount.orderAssets = state.basicAccount.orderAssets.filter((id) => id !== accountId);
+  state.basicAccount.orderLiabilities = state.basicAccount.orderLiabilities.filter((id) => id !== accountId);
   state.aggregateAccount.order = state.aggregateAccount.order.filter((id) => id !== accountId);
-  if (accountId in state.account.accounts) {
-    delete state.account.accounts[accountId];
+  if (accountId in state.basicAccount.accounts) {
+    delete state.basicAccount.accounts[accountId];
   }
   if (accountId in state.aggregateAccount.accounts) {
     delete state.aggregateAccount.accounts[accountId];
   }
 };
 
-/** 指定の名前の口座オブジェクトを取得。見つからなければエラー。 */
-export const accountByName = (state: States.IState, name: string): States.IAccount => {
-  const account = Object.values(state.account.accounts).find((ac) => ac.name === name);
+/** 指定の名前の基本口座オブジェクトを取得。見つからなければエラー。 */
+export const basicAccountByName = (state: States.IState, name: string): States.IBasicAccount => {
+  const account = Object.values(state.basicAccount.accounts).find((ac) => ac.name === name);
   if (account === undefined) {
-    global.console.log(state.account.accounts);
+    global.console.log(state.basicAccount.accounts);
     throw new Error(`Not found account named '${name}'.`);
   }
   return account;
-};
-
-/** 資産口座と負債口座のそれぞれの並び順を結合した AccountId 配列を取得。 */
-export const accountOrderMixed = (state: States.IState): number[] => {
-  return state.account.orderAssets.concat(state.account.orderLiabilities);
 };
 
 /// 入金カテゴリ追加。
@@ -810,42 +852,6 @@ export const categoryCollapsedStateUpdate = (state: States.IState, categoryId: n
       cat.collapse = isCollapsed;
     }
   }
-};
-
-/**
- * 集計口座追加。
- * @return {number} 追加した集計口座のId。
- */
-export const aggregateAccountAdd = (state: States.IState, name: string, accounts: number[]) => {
-  // オブジェクト作成
-  const obj = {
-    id: 0,
-    name,
-    accounts,
-  };
-
-  // 対象の口座があるかチェック
-  if (accounts.filter((id) => id in state.account.accounts).length !== accounts.length) {
-    throw new Error('Include not exists account id on aggregateAccountAdd().');
-  }
-
-  // 追加
-  obj.id = state.nextId.account;
-  state.nextId.account++;
-  state.aggregateAccount.accounts[obj.id] = obj;
-  state.aggregateAccount.order.push(obj.id);
-  return obj.id;
-};
-
-/**
- * 集計口座の順番の変更。
- * @param accountGroup 変更対象となるグループ。
- */
-export const aggregateAccountOrderUpdate = (state: States.IState, oldIndex: number, newIndex: number) => {
-  const orders = state.aggregateAccount.order;
-  const moveId = orders[oldIndex];
-  orders.splice(oldIndex, 1);
-  orders.splice(newIndex, 0, moveId);
 };
 
 /**

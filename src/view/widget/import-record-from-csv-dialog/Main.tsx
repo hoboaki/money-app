@@ -170,9 +170,9 @@ class Main extends React.Component<ILocalProps, IState> {
       const groupItems: { [key: string]: any } = {};
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const accountItems: { [key: string]: any } = {};
-      DocStateMethods.accountOrderMixed(this.props.doc).forEach((accountId) => {
+      DocStateMethods.basicAccountOrderMixed(this.props.doc).forEach((accountId) => {
         const key = `account-${accountId}`;
-        const name = this.props.doc.account.accounts[accountId].name;
+        const name = this.props.doc.basicAccount.accounts[accountId].name;
         accountItems[key] = {
           name,
           items: null,
@@ -331,14 +331,16 @@ class Main extends React.Component<ILocalProps, IState> {
 
     // 取込先口座
     const targetAccountSelectClass = ClassNames(BasicStyles.StdSelect);
-    const targetAccountOptions = [INVALID_ID].concat(DocStateMethods.accountOrderMixed(this.props.doc)).map((id) => {
-      const name = id === INVALID_ID ? '（未選択）' : this.props.doc.account.accounts[id].name;
-      return (
-        <option key={id} value={id}>
-          {name}
-        </option>
-      );
-    });
+    const targetAccountOptions = [INVALID_ID]
+      .concat(DocStateMethods.basicAccountOrderMixed(this.props.doc))
+      .map((id) => {
+        const name = id === INVALID_ID ? '（未選択）' : this.props.doc.basicAccount.accounts[id].name;
+        return (
+          <option key={id} value={id}>
+            {name}
+          </option>
+        );
+      });
     const targetAccount = (
       <div className={Styles.TargetAccountRoot}>
         <span>取込先口座:</span>
@@ -411,7 +413,7 @@ class Main extends React.Component<ILocalProps, IState> {
         }
         if (row.group.accountId !== null) {
           return {
-            label: this.props.doc.account.accounts[row.group.accountId].name,
+            label: this.props.doc.basicAccount.accounts[row.group.accountId].name,
             recordKind: DocTypes.RecordKind.Transfer,
           };
         }

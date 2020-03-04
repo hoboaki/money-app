@@ -39,12 +39,12 @@ class SampleDoc {
     const accountStartDate = IYearMonthDayDateUtils.prevMonth(
       IYearMonthDayDateUtils.prevMonth(IYearMonthDayDateUtils.today()),
     );
-    StateMethods.accountAdd(state, '財布', Types.AccountKind.AssetsCash, 2020, accountStartDate);
-    StateMethods.accountAdd(state, 'アデリー銀行', Types.AccountKind.AssetsBank, 504000, accountStartDate);
-    StateMethods.accountAdd(state, 'コウテイ銀行', Types.AccountKind.AssetsBank, 12036756, accountStartDate);
-    StateMethods.accountAdd(state, 'PPPカード', Types.AccountKind.LiabilitiesCard, 0, accountStartDate);
-    StateMethods.accountAdd(state, 'キングカード', Types.AccountKind.LiabilitiesCard, 0, accountStartDate);
-    global.console.assert(StateMethods.accountOrderMixed(state).length === 5);
+    StateMethods.basicAccountAdd(state, '財布', Types.BasicAccountKind.AssetsCash, 2020, accountStartDate);
+    StateMethods.basicAccountAdd(state, 'アデリー銀行', Types.BasicAccountKind.AssetsBank, 504000, accountStartDate);
+    StateMethods.basicAccountAdd(state, 'コウテイ銀行', Types.BasicAccountKind.AssetsBank, 12036756, accountStartDate);
+    StateMethods.basicAccountAdd(state, 'PPPカード', Types.BasicAccountKind.LiabilitiesCard, 0, accountStartDate);
+    StateMethods.basicAccountAdd(state, 'キングカード', Types.BasicAccountKind.LiabilitiesCard, 0, accountStartDate);
+    global.console.assert(StateMethods.basicAccountOrderMixed(state).length === 5);
 
     // 入金
     {
@@ -140,7 +140,7 @@ class SampleDoc {
           currentDate,
           IYearMonthDayDateUtils.fromDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), rec.day)),
           rec.memo,
-          StateMethods.accountByName(state, rec.account).id,
+          StateMethods.basicAccountByName(state, rec.account).id,
           StateMethods.categoryByPath(state.income.categories, rec.category).id,
           rec.amount,
         );
@@ -230,7 +230,7 @@ class SampleDoc {
           currentDate,
           IYearMonthDayDateUtils.fromDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), rec.day)),
           rec.memo,
-          StateMethods.accountByName(state, rec.account).id,
+          StateMethods.basicAccountByName(state, rec.account).id,
           StateMethods.categoryByPath(state.outgo.categories, rec.category).id,
           rec.amount,
         );
@@ -263,8 +263,8 @@ class SampleDoc {
           currentDate,
           IYearMonthDayDateUtils.fromDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), rec.day)),
           rec.memo,
-          StateMethods.accountByName(state, rec.accountFrom).id,
-          StateMethods.accountByName(state, rec.accountTo).id,
+          StateMethods.basicAccountByName(state, rec.accountFrom).id,
+          StateMethods.basicAccountByName(state, rec.accountTo).id,
           rec.amount,
         );
       });
@@ -272,8 +272,8 @@ class SampleDoc {
 
     // 集計口座
     StateMethods.aggregateAccountAdd(state, '全銀行', [
-      StateMethods.accountByName(state, 'アデリー銀行').id,
-      StateMethods.accountByName(state, 'コウテイ銀行').id,
+      StateMethods.basicAccountByName(state, 'アデリー銀行').id,
+      StateMethods.basicAccountByName(state, 'コウテイ銀行').id,
     ]);
     global.console.assert(state.aggregateAccount.order.length === 1);
 
@@ -293,7 +293,7 @@ class SampleDoc {
     StateMethods.palmCategoryInfoOutgoAdd(
       state,
       '引き落とし',
-      StateMethods.accountByName(state, '財布').id,
+      StateMethods.basicAccountByName(state, '財布').id,
       Types.INVALID_ID,
     );
 

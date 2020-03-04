@@ -126,7 +126,7 @@ export const createAccountFilter = (data: IAccountFilterData): IRecordFilter => 
       }
 
       // 全口座の場合は結果は変わらないのでそのまま返す
-      const accountCount = StateMethods.accountOrderMixed(state).length;
+      const accountCount = StateMethods.basicAccountOrderMixed(state).length;
       const targetAccountDict: { [key: number]: number } = {};
       const targetAccountCount = data.accounts.reduce((current, id) => {
         if (id in targetAccountDict) {
@@ -208,12 +208,12 @@ const filteredCollection = (
 const filteredCollectionEach = (
   collection: IRecordCollection,
   state: States.IState,
-  checkerIncome: (record: States.IRecordIncome) => boolean,
-  checkerOutgo: (record: States.IRecordOutgo) => boolean,
-  checkerTransfer: (record: States.IRecordTransfer) => boolean,
+  checkerIncome: (record: States.IIncomeRecord) => boolean,
+  checkerOutgo: (record: States.IOutgoRecord) => boolean,
+  checkerTransfer: (record: States.ITransferRecord) => boolean,
 ): IRecordCollection => {
   return {
-    incomes: filteredArray<States.IRecordIncome>(collection.incomes, state.income.records, checkerIncome),
+    incomes: filteredArray<States.IIncomeRecord>(collection.incomes, state.income.records, checkerIncome),
     outgos: filteredArray(collection.outgos, state.outgo.records, checkerOutgo),
     transfers: filteredArray(collection.transfers, state.transfer.records, checkerTransfer),
   };

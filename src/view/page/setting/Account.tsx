@@ -12,7 +12,7 @@ import * as UiActions from 'src/state/ui/Actions';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
-import AccountEditDialog from 'src/view/widget/account-edit-dialog';
+import BasicAccountEditDialog from 'src/view/widget/basic-account-edit-dialog';
 import MaterialIcon from 'src/view/widget/material-icon';
 import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 import RadioButtonGroup from 'src/view/widget/radio-button-group';
@@ -36,7 +36,7 @@ interface IState {
   selectedTab: TabKind;
 
   /** 口座編集ダイアログの口座グループ。 */
-  dialogAccountGroup: DocTypes.AccountGroup;
+  dialogAccountGroup: DocTypes.BasicAccountGroup;
 
   /** 口座編集対象。 */
   editAccountId: number | null;
@@ -57,7 +57,7 @@ class Account extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       selectedTab: TabKind.Assets,
-      dialogAccountGroup: DocTypes.AccountGroup.Assets,
+      dialogAccountGroup: DocTypes.BasicAccountGroup.Assets,
       editAccountId: null,
       modalAccountEdit: false,
       cardActionMenuActive: false,
@@ -65,7 +65,7 @@ class Account extends React.Component<IProps, IState> {
     this.elemIdAccountList = `elem-${UUID}`;
 
     // 追加アクションMenu
-    const addAction = (accountGroup: DocTypes.AccountGroup) => {
+    const addAction = (accountGroup: DocTypes.BasicAccountGroup) => {
       this.setState({
         dialogAccountGroup: accountGroup,
         editAccountId: null,
@@ -77,7 +77,7 @@ class Account extends React.Component<IProps, IState> {
       new remote.MenuItem({
         label: '資産口座を作成...',
         click: () => {
-          addAction(DocTypes.AccountGroup.Assets);
+          addAction(DocTypes.BasicAccountGroup.Assets);
         },
       }),
     );
@@ -85,7 +85,7 @@ class Account extends React.Component<IProps, IState> {
       new remote.MenuItem({
         label: '負債口座を作成...',
         click: () => {
-          addAction(DocTypes.AccountGroup.Liabilities);
+          addAction(DocTypes.BasicAccountGroup.Liabilities);
         },
       }),
     );
@@ -137,10 +137,10 @@ class Account extends React.Component<IProps, IState> {
         const newIndex = evt.newIndex;
         if (this.state.selectedTab !== TabKind.Aggregate) {
           Store.dispatch(
-            DocActions.updateAccountOrder(
+            DocActions.updateBasicAccountOrder(
               this.state.selectedTab === TabKind.Assets
-                ? DocTypes.AccountGroup.Assets
-                : DocTypes.AccountGroup.Liabilities,
+                ? DocTypes.BasicAccountGroup.Assets
+                : DocTypes.BasicAccountGroup.Liabilities,
               oldIndex,
               newIndex,
             ),
@@ -183,10 +183,10 @@ class Account extends React.Component<IProps, IState> {
         if (this.state.selectedTab !== TabKind.Aggregate) {
           const orders =
             this.state.selectedTab === TabKind.Assets
-              ? this.props.doc.account.orderAssets
-              : this.props.doc.account.orderLiabilities;
+              ? this.props.doc.basicAccount.orderAssets
+              : this.props.doc.basicAccount.orderLiabilities;
           return orders.map((id) => {
-            const account = this.props.doc.account.accounts[id];
+            const account = this.props.doc.basicAccount.accounts[id];
             return {
               id: account.id,
               name: account.name,
@@ -229,11 +229,11 @@ class Account extends React.Component<IProps, IState> {
       if (!this.state.modalAccountEdit) {
         return null;
       }
-      if (this.state.dialogAccountGroup === DocTypes.AccountGroup.Invalid) {
+      if (this.state.dialogAccountGroup === DocTypes.BasicAccountGroup.Invalid) {
         return null;
       }
       return (
-        <AccountEditDialog
+        <BasicAccountEditDialog
           accountGroup={this.state.dialogAccountGroup}
           editAccountId={this.state.editAccountId}
           onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
@@ -275,11 +275,11 @@ class Account extends React.Component<IProps, IState> {
     const dialogAccountGroupSelector = () => {
       switch (this.state.selectedTab) {
         case TabKind.Assets:
-          return DocTypes.AccountGroup.Assets;
+          return DocTypes.BasicAccountGroup.Assets;
         case TabKind.Liabilities:
-          return DocTypes.AccountGroup.Liabilities;
+          return DocTypes.BasicAccountGroup.Liabilities;
         default:
-          return DocTypes.AccountGroup.Invalid;
+          return DocTypes.BasicAccountGroup.Invalid;
       }
     };
     this.setState({ cardActionMenuActive: true, dialogAccountGroup: dialogAccountGroupSelector(), editAccountId: id });
@@ -300,9 +300,9 @@ class Account extends React.Component<IProps, IState> {
 
       // 追加・更新があった場合はその口座のタブを選択
       switch (this.state.dialogAccountGroup) {
-        case DocTypes.AccountGroup.Assets:
+        case DocTypes.BasicAccountGroup.Assets:
           return TabKind.Assets;
-        case DocTypes.AccountGroup.Liabilities:
+        case DocTypes.BasicAccountGroup.Liabilities:
           return TabKind.Liabilities;
         default:
           return this.state.selectedTab;
@@ -327,7 +327,7 @@ class Account extends React.Component<IProps, IState> {
     if (
       !NativeDialogUtils.showOkCancelDialog(
         '口座の削除',
-        `${this.props.doc.account.accounts[this.state.editAccountId].name}を削除しますか？`,
+        `${this.props.doc.basicAccount.accounts[this.state.editAccountId].name}を削除しますか？`,
         '口座に紐付くレコードは削除されます。',
         '口座を削除',
       )
