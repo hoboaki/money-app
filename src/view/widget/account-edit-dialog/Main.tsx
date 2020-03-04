@@ -17,7 +17,7 @@ import * as Styles from './Main.css';
 
 interface IProps {
   /** 追加・編集する口座グループ。 */
-  accountGroup: DocTypes.AccountGroup;
+  accountGroup: DocTypes.BasicAccountGroup;
 
   /** 編集する場合は口座のIDを指定。 */
   editAccountId: number | null;
@@ -32,7 +32,7 @@ interface ILocalProps extends IProps {
 
 interface IState {
   inputName: string;
-  inputKind: DocTypes.AccountKind;
+  inputKind: DocTypes.BasicAccountKind;
   inputStartDate: string;
   inputInitialAmount: number;
   inputInitialAmountIsNegative: boolean;
@@ -48,7 +48,7 @@ class Main extends React.Component<ILocalProps, IState> {
   constructor(props: ILocalProps) {
     super(props);
     if (props.editAccountId !== null) {
-      const account = props.doc.account.accounts[props.editAccountId];
+      const account = props.doc.basicAccount.accounts[props.editAccountId];
       this.state = {
         inputName: account.name,
         inputKind: account.kind,
@@ -61,9 +61,9 @@ class Main extends React.Component<ILocalProps, IState> {
       this.state = {
         inputName: '',
         inputKind:
-          props.accountGroup === DocTypes.AccountGroup.Assets
-            ? DocTypes.AccountKind.AssetsCash
-            : DocTypes.AccountKind.LiabilitiesCard,
+          props.accountGroup === DocTypes.BasicAccountGroup.Assets
+            ? DocTypes.BasicAccountKind.AssetsCash
+            : DocTypes.BasicAccountKind.LiabilitiesCard,
         inputStartDate: IYearMonthDayDateUtils.toDisplayFormatText(IYearMonthDayDateUtils.today()),
         inputInitialAmount: 0,
         inputInitialAmountIsNegative: false,
@@ -106,7 +106,7 @@ class Main extends React.Component<ILocalProps, IState> {
     const header = (
       <div className={dialogHeaderClass}>
         <h5 className="modal-title" id="exampleModalLabel">
-          {`${this.props.accountGroup === DocTypes.AccountGroup.Assets ? '資産口座' : '負債口座'}の${
+          {`${this.props.accountGroup === DocTypes.BasicAccountGroup.Assets ? '資産口座' : '負債口座'}の${
             this.props.editAccountId !== null ? '編集' : '作成'
           }`}
         </h5>
@@ -151,20 +151,20 @@ class Main extends React.Component<ILocalProps, IState> {
             }}
           >
             {(() => {
-              const kinds: DocTypes.AccountKind[] = [];
-              if (this.props.accountGroup === DocTypes.AccountGroup.Assets) {
-                kinds.push(DocTypes.AccountKind.AssetsCash);
-                kinds.push(DocTypes.AccountKind.AssetsBank);
-                kinds.push(DocTypes.AccountKind.AssetsInvesting);
-                kinds.push(DocTypes.AccountKind.AssetsOther);
+              const kinds: DocTypes.BasicAccountKind[] = [];
+              if (this.props.accountGroup === DocTypes.BasicAccountGroup.Assets) {
+                kinds.push(DocTypes.BasicAccountKind.AssetsCash);
+                kinds.push(DocTypes.BasicAccountKind.AssetsBank);
+                kinds.push(DocTypes.BasicAccountKind.AssetsInvesting);
+                kinds.push(DocTypes.BasicAccountKind.AssetsOther);
               } else {
-                kinds.push(DocTypes.AccountKind.LiabilitiesCard);
-                kinds.push(DocTypes.AccountKind.LiabilitiesOther);
+                kinds.push(DocTypes.BasicAccountKind.LiabilitiesCard);
+                kinds.push(DocTypes.BasicAccountKind.LiabilitiesOther);
               }
               return kinds.map((kind) => {
                 return (
                   <option key={kind} value={kind}>
-                    {DocTypes.localizedAccountKind(kind)}
+                    {DocTypes.localizedBasicAccountKind(kind)}
                   </option>
                 );
               });
@@ -293,10 +293,12 @@ class Main extends React.Component<ILocalProps, IState> {
       const initialAmount = (this.state.inputInitialAmountIsNegative ? -1 : 1) * this.state.inputInitialAmount;
       const startDate = IYearMonthDayDateUtils.fromText(this.state.inputStartDate);
       if (this.props.editAccountId === null) {
-        Store.dispatch(DocActions.addAccount(this.state.inputName, this.state.inputKind, initialAmount, startDate));
+        Store.dispatch(
+          DocActions.addBasicAccount(this.state.inputName, this.state.inputKind, initialAmount, startDate),
+        );
       } else {
         Store.dispatch(
-          DocActions.updateAccount(
+          DocActions.updateBasicAccount(
             this.props.editAccountId,
             this.state.inputName,
             this.state.inputKind,

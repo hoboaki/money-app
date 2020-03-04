@@ -112,7 +112,7 @@ class Main extends React.Component<ILocalProps, IState> {
         ? formDefaultValue.accountId
         : this.props.dialogRecordAdd.latestFormAccount !== DocTypes.INVALID_ID
         ? this.props.dialogRecordAdd.latestFormAccount
-        : DocStateMethods.accountOrderMixed(this.props.doc)[0];
+        : DocStateMethods.basicAccountOrderMixed(this.props.doc)[0];
     this.state = {
       formKind: formDefaultValue.recordKind,
       formDate: IYearMonthDayDateUtils.toDisplayFormatText(formDefaultValue.date),
@@ -303,7 +303,7 @@ class Main extends React.Component<ILocalProps, IState> {
               classNames={[Styles.ListCardTopIcon]}
               darkMode={true}
             />,
-            <span key={`${record.id}-3`}>{this.props.doc.account.accounts[record.account].name}</span>,
+            <span key={`${record.id}-3`}>{this.props.doc.basicAccount.accounts[record.account].name}</span>,
           ];
           break;
         }
@@ -328,7 +328,7 @@ class Main extends React.Component<ILocalProps, IState> {
               classNames={[Styles.ListCardTopIcon]}
               darkMode={true}
             />,
-            <span key={`${record.id}-3`}>{this.props.doc.account.accounts[record.account].name}</span>,
+            <span key={`${record.id}-3`}>{this.props.doc.basicAccount.accounts[record.account].name}</span>,
           ];
           break;
         }
@@ -346,7 +346,7 @@ class Main extends React.Component<ILocalProps, IState> {
               classNames={[Styles.ListCardTopIcon]}
               darkMode={true}
             />,
-            <span key={`${record.id}-1`}>{this.props.doc.account.accounts[record.accountFrom].name}</span>,
+            <span key={`${record.id}-1`}>{this.props.doc.basicAccount.accounts[record.accountFrom].name}</span>,
             <MaterialIcon
               key={`${record.id}-2`}
               name={'forward'}
@@ -359,7 +359,7 @@ class Main extends React.Component<ILocalProps, IState> {
               classNames={[Styles.ListCardTopIcon]}
               darkMode={true}
             />,
-            <span key={`${record.id}-4`}>{this.props.doc.account.accounts[record.accountTo].name}</span>,
+            <span key={`${record.id}-4`}>{this.props.doc.basicAccount.accounts[record.accountTo].name}</span>,
           ];
           break;
         }
@@ -616,8 +616,8 @@ class Main extends React.Component<ILocalProps, IState> {
                     this.onKeyDownCommon(event);
                   }}
                 >
-                  {DocStateMethods.accountOrderMixed(this.props.doc).map((accountId) => {
-                    const account = this.props.doc.account.accounts[accountId];
+                  {DocStateMethods.basicAccountOrderMixed(this.props.doc).map((accountId) => {
+                    const account = this.props.doc.basicAccount.accounts[accountId];
                     return (
                       <option key={account.id} value={account.id}>
                         {account.name}
@@ -642,8 +642,8 @@ class Main extends React.Component<ILocalProps, IState> {
                   }}
                 >
                   <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                  {DocStateMethods.accountOrderMixed(this.props.doc).map((accountId) => {
-                    const account = this.props.doc.account.accounts[accountId];
+                  {DocStateMethods.basicAccountOrderMixed(this.props.doc).map((accountId) => {
+                    const account = this.props.doc.basicAccount.accounts[accountId];
                     return (
                       <option key={account.id} value={account.id}>
                         {account.name}
@@ -669,8 +669,8 @@ class Main extends React.Component<ILocalProps, IState> {
                   }}
                 >
                   <option value={DocTypes.INVALID_ID}>（未選択）</option>
-                  {DocStateMethods.accountOrderMixed(this.props.doc).map((accountId) => {
-                    const account = this.props.doc.account.accounts[accountId];
+                  {DocStateMethods.basicAccountOrderMixed(this.props.doc).map((accountId) => {
+                    const account = this.props.doc.basicAccount.accounts[accountId];
                     return (
                       <option key={account.id} value={account.id}>
                         {account.name}

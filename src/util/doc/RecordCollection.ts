@@ -53,13 +53,13 @@ class RecordCollection implements IRecordCollection {
    * @param accounts 対象となる口座の AccountId。 null の場合は全口座。
    */
   public totalDiffTransfer(accounts: number[] | null = null) {
-    let accountsDict: { [key: number]: States.IAccount } = {};
+    let accountsDict: { [key: number]: States.IBasicAccount } = {};
     if (accounts != null) {
       accounts.forEach((id) => {
-        accountsDict[id] = this.state.account.accounts[id];
+        accountsDict[id] = this.state.basicAccount.accounts[id];
       });
     } else {
-      accountsDict = this.state.account.accounts;
+      accountsDict = this.state.basicAccount.accounts;
     }
     return this.transfers.reduce((current, id) => {
       let result = current;

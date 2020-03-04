@@ -2,14 +2,14 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 
 import * as Types from './Types';
 
-/** 口座。 */
-export interface IAccount {
+/** 基本口座。 */
+export interface IBasicAccount {
   /** AccountId。 */
   id: number;
   /** 口座名 */
   name: string;
   /** 種類。 */
-  kind: Types.AccountKind;
+  kind: Types.BasicAccountKind;
   /** 初期金額。プラスが貯蓄。マイナスが負債。 */
   initialAmount: number;
   /** 口座開設日。initialAmount が加算される日。 */
@@ -45,25 +45,25 @@ export interface IRecord {
 }
 
 /** 出金レコード。 */
-export interface IRecordOutgo extends IRecord {
-  account: number; // AccountId。
-  category: number; // CategoryId。
+export interface IOutgoRecord extends IRecord {
+  account: number; // 基本口座の AccountId。
+  category: number; // 出金カテゴリの CategoryId。
   /** 金額。(出金がプラス・入金がマイナス) */
   amount: number;
 }
 
 /** 入金レコード。 */
-export interface IRecordIncome extends IRecord {
-  account: number; // AccountId。
-  category: number; // CategoryId。
+export interface IIncomeRecord extends IRecord {
+  account: number; // 基本口座の AccountId。
+  category: number; // 入金カテゴリの CategoryId。
   /** 金額。(入金がプラス・出金がマイナス) */
   amount: number;
 }
 
 /** 資金移動レコード。 */
-export interface IRecordTransfer extends IRecord {
-  accountFrom: number; // 送金元口座の AccountId。
-  accountTo: number; // 送金先口座の AccountId。
+export interface ITransferRecord extends IRecord {
+  accountFrom: number; // 送金元基本口座の AccountId。
+  accountTo: number; // 送金先基本口座の AccountId。
   /** 金額。送金元口座からは減算され送金先口座に加算される。 */
   amount: number;
 }
@@ -79,8 +79,8 @@ export interface IPalmCategoryInfo {
 
 /** ドキュメントルート。 */
 export interface IState {
-  /** 口座。 */
-  account: {
+  /** 基本口座。 */
+  basicAccount: {
     /** 資産口座の並び順（AccountId の配列）定義。 */
     orderAssets: number[];
 
@@ -88,7 +88,7 @@ export interface IState {
     orderLiabilities: number[];
 
     /** AccountId がキーの口座群。 */
-    accounts: { [key: number]: IAccount };
+    accounts: { [key: number]: IBasicAccount };
   };
 
   /** 入金。 */
@@ -96,7 +96,7 @@ export interface IState {
     /** 入金カテゴリの CategoryId がキーの入金カテゴリ郡。 */
     categories: { [key: number]: ICategory };
     /** 入金レコードの RecordId がキーの入金レコード。 */
-    records: { [key: number]: IRecordIncome };
+    records: { [key: number]: IIncomeRecord };
     /** ルートカテゴリの CategoryId。 */
     rootCategoryId: number;
   };
@@ -106,7 +106,7 @@ export interface IState {
     /** 出金カテゴリの CategoryId がキーの出金カテゴリ郡。 */
     categories: { [key: number]: ICategory };
     /** 出金レコードの RecordId がキーの出金レコード郡。 */
-    records: { [key: number]: IRecordOutgo };
+    records: { [key: number]: IOutgoRecord };
     /** ルートカテゴリの CategoryId。 */
     rootCategoryId: number;
   };
@@ -114,7 +114,7 @@ export interface IState {
   /** 資金移動。 */
   transfer: {
     /** 資金移動レコードの RecordId がキーの資金移動レコード郡。 */
-    records: { [key: number]: IRecordTransfer };
+    records: { [key: number]: ITransferRecord };
   };
 
   /** 集計口座。 */
@@ -143,7 +143,7 @@ export interface IState {
 }
 
 export const defaultState: IState = {
-  account: {
+  basicAccount: {
     orderAssets: [],
     orderLiabilities: [],
     accounts: {},

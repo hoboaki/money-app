@@ -50,7 +50,7 @@ export const importFile = (filePath: string): IImportResult => {
   // 口座
   const toAccountIdDict: { [key: string]: number } = {}; // node_cache id -> accountId の辞書
   {
-    const registerAccountFunc = (node: Element, accountKind: Types.AccountKind) => {
+    const registerAccountFunc = (node: Element, accountKind: Types.BasicAccountKind) => {
       const id = (node.attributes.getNamedItem('id') as Attr).value;
       const currency = (node.attributes.getNamedItem('currency') as Attr).value;
       const dateAttr = node.attributes.getNamedItem('date');
@@ -64,29 +64,29 @@ export const importFile = (filePath: string): IImportResult => {
       if (currency !== jpyCurrencyId) {
         result.errorMsgs.push(`アカウント（名前＝'${title}'）は日本円ではない通貨が設定されていました。`);
       }
-      const accountId = StateMethods.accountAdd(doc, title, accountKind, value, dateTextToYearMonthDate(dateText));
+      const accountId = StateMethods.basicAccountAdd(doc, title, accountKind, value, dateTextToYearMonthDate(dateText));
       toAccountIdDict[id] = accountId;
     };
 
     // 資産
     (Xpath.select('//asset/*', xmlDoc) as Element[]).forEach((node) => {
       const tagName = node.tagName;
-      let accountKind = Types.AccountKind.Invalid;
+      let accountKind = Types.BasicAccountKind.Invalid;
       switch (tagName) {
         case 'node_cache':
-          accountKind = Types.AccountKind.AssetsCash;
+          accountKind = Types.BasicAccountKind.AssetsCash;
           break;
         case 'node_bank':
-          accountKind = Types.AccountKind.AssetsBank;
+          accountKind = Types.BasicAccountKind.AssetsBank;
           break;
         case 'node_invest':
-          accountKind = Types.AccountKind.AssetsInvesting;
+          accountKind = Types.BasicAccountKind.AssetsInvesting;
           break;
         case 'node_asset':
-          accountKind = Types.AccountKind.AssetsOther;
+          accountKind = Types.BasicAccountKind.AssetsOther;
           break;
       }
-      if (accountKind === Types.AccountKind.Invalid) {
+      if (accountKind === Types.BasicAccountKind.Invalid) {
         result.errorMsgs.push(`asset 以下に未対応の要素（名前='${tagName}'）が見つかりました。`);
       } else {
         registerAccountFunc(node, accountKind);
@@ -96,19 +96,19 @@ export const importFile = (filePath: string): IImportResult => {
     // 負債
     (Xpath.select('//debt/*', xmlDoc) as Element[]).forEach((node) => {
       const tagName = node.tagName;
-      let accountKind = Types.AccountKind.Invalid;
+      let accountKind = Types.BasicAccountKind.Invalid;
       switch (tagName) {
         case 'node_loan':
           result.errorMsgs.push('種類がローンの口座は未対応です。');
           break;
         case 'node_credit':
-          accountKind = Types.AccountKind.LiabilitiesCard;
+          accountKind = Types.BasicAccountKind.LiabilitiesCard;
           break;
         case 'node_other':
-          accountKind = Types.AccountKind.LiabilitiesOther;
+          accountKind = Types.BasicAccountKind.LiabilitiesOther;
           break;
       }
-      if (accountKind === Types.AccountKind.Invalid) {
+      if (accountKind === Types.BasicAccountKind.Invalid) {
         result.errorMsgs.push(`debt 以下に未対応の要素（名前='${tagName}'）が見つかりました。`);
       } else {
         registerAccountFunc(node, accountKind);
