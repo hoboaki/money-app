@@ -148,6 +148,10 @@ export const defaultState: IState = {
     orderLiabilities: [],
     accounts: {},
   },
+  aggregateAccount: {
+    order: [],
+    accounts: {},
+  },
   income: {
     categories: {},
     records: {},
@@ -160,10 +164,6 @@ export const defaultState: IState = {
   },
   transfer: {
     records: {},
-  },
-  aggregateAccount: {
-    order: [],
-    accounts: {},
   },
   importTool: {
     palmCategories: {
