@@ -428,34 +428,6 @@ export const basicAccountUpdate = (
   return obj.id;
 };
 
-/**
- * 基本口座の順番の変更。
- * @param accountGroup 変更対象となるグループ。
- * @param oldIndex 移動する口座のインデックス値。
- * @param newIndex 移動後のインデックス値。
- */
-export const basicAccountOrderUpdate = (
-  state: States.IState,
-  accountGroup: Types.BasicAccountGroup,
-  oldIndex: number,
-  newIndex: number,
-) => {
-  let orders = [];
-  switch (accountGroup) {
-    case Types.BasicAccountGroup.Assets:
-      orders = state.basicAccount.orderAssets;
-      break;
-    case Types.BasicAccountGroup.Liabilities:
-      orders = state.basicAccount.orderLiabilities;
-      break;
-    default:
-      throw new Error();
-  }
-  const moveId = orders[oldIndex];
-  orders.splice(oldIndex, 1);
-  orders.splice(newIndex, 0, moveId);
-};
-
 /** 資産口座と負債口座のそれぞれの並び順を結合した AccountId 配列を取得。 */
 export const basicAccountOrderMixed = (state: States.IState): number[] => {
   return state.basicAccount.orderAssets.concat(state.basicAccount.orderLiabilities);
@@ -492,6 +464,37 @@ export const aggregateAccountAdd = (state: States.IState, name: string, accounts
  */
 export const aggregateAccountOrderUpdate = (state: States.IState, oldIndex: number, newIndex: number) => {
   const orders = state.aggregateAccount.order;
+  const moveId = orders[oldIndex];
+  orders.splice(oldIndex, 1);
+  orders.splice(newIndex, 0, moveId);
+};
+
+/**
+ * 口座の順番の変更。
+ * @param accountKind 変更対象となる口座タイプ。
+ * @param oldIndex 移動する口座のインデックス値。
+ * @param newIndex 移動後のインデックス値。
+ */
+export const accountOrderUpdate = (
+  state: States.IState,
+  accountKind: Types.AccountKind,
+  oldIndex: number,
+  newIndex: number,
+) => {
+  let orders = [];
+  switch (accountKind) {
+    case Types.AccountKind.Assets:
+      orders = state.basicAccount.orderAssets;
+      break;
+    case Types.AccountKind.Liabilities:
+      orders = state.basicAccount.orderLiabilities;
+      break;
+    case Types.AccountKind.Aggregate:
+      orders = state.aggregateAccount.order;
+      break;
+    default:
+      throw new Error();
+  }
   const moveId = orders[oldIndex];
   orders.splice(oldIndex, 1);
   orders.splice(newIndex, 0, moveId);
@@ -551,6 +554,31 @@ export const basicAccountByName = (state: States.IState, name: string): States.I
     throw new Error(`Not found account named '${name}'.`);
   }
   return account;
+};
+
+/** AccountKind に対応した並び順を AccountId 配列として取得する。 */
+export const accountOrder = (state: States.IState, accountKind: Types.AccountKind) => {
+  switch (accountKind) {
+    case Types.AccountKind.Assets:
+      return state.basicAccount.orderAssets;
+    case Types.AccountKind.Liabilities:
+      return state.basicAccount.orderLiabilities;
+    case Types.AccountKind.Aggregate:
+      return state.aggregateAccount.order;
+    default:
+      throw new Error(`Invalid accountKind '${accountKind}.`);
+  }
+};
+
+/** 指定の AccountId に対応する IAccount オブジェクトを取得する。見つからなければエラー。 */
+export const accountById = (state: States.IState, accountId: number) => {
+  if (accountId in state.basicAccount.accounts) {
+    return state.basicAccount.accounts[accountId];
+  }
+  if (accountId in state.aggregateAccount.accounts) {
+    return state.aggregateAccount.accounts[accountId];
+  }
+  throw new Error(`Not found account (id: ${accountId}).`);
 };
 
 /// 入金カテゴリ追加。

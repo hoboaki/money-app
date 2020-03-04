@@ -68,37 +68,22 @@ export const updateBasicAccount = (
   };
 };
 
-/// 基本口座の並び順更新。
-export const UPDATE_BASIC_ACCOUNT_ORDER = UUID();
-export interface IUpdateBasicAccountOrder extends Action {
-  // 各変数の使用は StateMethods.basicAccountOrderUpdate を参照。
-  accountGroup: Types.BasicAccountGroup;
+/// 口座の並び順更新。
+export const UPDATE_ACCOUNT_ORDER = UUID();
+export interface IUpdateAccountOrder extends Action {
+  // 各変数の使用は StateMethods.accountOrderUpdate を参照。
+  accountKind: Types.AccountKind;
   oldIndex: number;
   newIndex: number;
 }
-export const updateBasicAccountOrder = (
-  accountGroup: Types.BasicAccountGroup,
+export const updateAccountOrder = (
+  accountKind: Types.AccountKind,
   oldIndex: number,
   newIndex: number,
-): IUpdateBasicAccountOrder => {
+): IUpdateAccountOrder => {
   return {
-    type: UPDATE_BASIC_ACCOUNT_ORDER,
-    accountGroup,
-    oldIndex,
-    newIndex,
-  };
-};
-
-/// 集計口座の並び順更新。
-export const UPDATE_AGGREGATE_ACCOUNT_ORDER = UUID();
-export interface IUpdateAggregateAccountOrder extends Action {
-  // 各変数の使用は StateMethods.aggregateAccountOrderUpdate を参照。
-  oldIndex: number;
-  newIndex: number;
-}
-export const updateAggregateAccountOrder = (oldIndex: number, newIndex: number): IUpdateAggregateAccountOrder => {
-  return {
-    type: UPDATE_AGGREGATE_ACCOUNT_ORDER,
+    type: UPDATE_ACCOUNT_ORDER,
+    accountKind,
     oldIndex,
     newIndex,
   };
