@@ -89,6 +89,21 @@ export const updateBasicAccountOrder = (
   };
 };
 
+/// 集計口座の並び順更新。
+export const UPDATE_AGGREGATE_ACCOUNT_ORDER = UUID();
+export interface IUpdateAggregateAccountOrder extends Action {
+  // 各変数の使用は StateMethods.aggregateAccountOrderUpdate を参照。
+  oldIndex: number;
+  newIndex: number;
+}
+export const updateAggregateAccountOrder = (oldIndex: number, newIndex: number): IUpdateAggregateAccountOrder => {
+  return {
+    type: UPDATE_AGGREGATE_ACCOUNT_ORDER,
+    oldIndex,
+    newIndex,
+  };
+};
+
 /// 口座の削除。
 export const DELETE_ACCOUNT = UUID();
 export interface IDeleteAccount extends Action {
@@ -310,21 +325,6 @@ export const updateCategoryCollapse = (categoryId: number, isCollapsed: boolean)
     type: UPDATE_CATEGORY_COLLAPSE,
     categoryId,
     isCollapsed,
-  };
-};
-
-/// 集計口座の並び順更新。
-export const UPDATE_AGGREGATE_ACCOUNT_ORDER = UUID();
-export interface IUpdateAggregateAccountOrder extends Action {
-  // 各変数の使用は StateMethods.aggregateAccountOrderUpdate を参照。
-  oldIndex: number;
-  newIndex: number;
-}
-export const updateAggregateAccountOrder = (oldIndex: number, newIndex: number): IUpdateAggregateAccountOrder => {
-  return {
-    type: UPDATE_AGGREGATE_ACCOUNT_ORDER,
-    oldIndex,
-    newIndex,
   };
 };
 

@@ -91,6 +91,14 @@ export interface IState {
     accounts: { [key: number]: IBasicAccount };
   };
 
+  /** 集計口座。 */
+  aggregateAccount: {
+    /** 集計口座の並び順（AggregateAccountId の配列）定義。 */
+    order: number[];
+    /** AggregateAccountId がキーの口座群。 */
+    accounts: { [key: number]: IAggregateAccount };
+  };
+
   /** 入金。 */
   income: {
     /** 入金カテゴリの CategoryId がキーの入金カテゴリ郡。 */
@@ -115,14 +123,6 @@ export interface IState {
   transfer: {
     /** 資金移動レコードの RecordId がキーの資金移動レコード郡。 */
     records: { [key: number]: ITransferRecord };
-  };
-
-  /** 集計口座。 */
-  aggregateAccount: {
-    /** 集計口座の並び順（AggregateAccountId の配列）定義。 */
-    order: number[];
-    /** AggregateAccountId がキーの口座群。 */
-    accounts: { [key: number]: IAggregateAccount };
   };
 
   /** インポートツール用データ。 */

@@ -456,6 +456,47 @@ export const basicAccountOrderUpdate = (
   orders.splice(newIndex, 0, moveId);
 };
 
+/** 資産口座と負債口座のそれぞれの並び順を結合した AccountId 配列を取得。 */
+export const basicAccountOrderMixed = (state: States.IState): number[] => {
+  return state.basicAccount.orderAssets.concat(state.basicAccount.orderLiabilities);
+};
+
+/**
+ * 集計口座追加。
+ * @return {number} 追加した集計口座のId。
+ */
+export const aggregateAccountAdd = (state: States.IState, name: string, accounts: number[]) => {
+  // オブジェクト作成
+  const obj = {
+    id: 0,
+    name,
+    accounts,
+  };
+
+  // 対象の口座があるかチェック
+  if (accounts.filter((id) => id in state.basicAccount.accounts).length !== accounts.length) {
+    throw new Error('Include not exists account id on aggregateAccountAdd().');
+  }
+
+  // 追加
+  obj.id = state.nextId.account;
+  state.nextId.account++;
+  state.aggregateAccount.accounts[obj.id] = obj;
+  state.aggregateAccount.order.push(obj.id);
+  return obj.id;
+};
+
+/**
+ * 集計口座の順番の変更。
+ * @param accountGroup 変更対象となるグループ。
+ */
+export const aggregateAccountOrderUpdate = (state: States.IState, oldIndex: number, newIndex: number) => {
+  const orders = state.aggregateAccount.order;
+  const moveId = orders[oldIndex];
+  orders.splice(oldIndex, 1);
+  orders.splice(newIndex, 0, moveId);
+};
+
 /**
  * 口座削除。
  */
@@ -510,11 +551,6 @@ export const basicAccountByName = (state: States.IState, name: string): States.I
     throw new Error(`Not found account named '${name}'.`);
   }
   return account;
-};
-
-/** 資産口座と負債口座のそれぞれの並び順を結合した AccountId 配列を取得。 */
-export const basicAccountOrderMixed = (state: States.IState): number[] => {
-  return state.basicAccount.orderAssets.concat(state.basicAccount.orderLiabilities);
 };
 
 /// 入金カテゴリ追加。
@@ -816,42 +852,6 @@ export const categoryCollapsedStateUpdate = (state: States.IState, categoryId: n
       cat.collapse = isCollapsed;
     }
   }
-};
-
-/**
- * 集計口座追加。
- * @return {number} 追加した集計口座のId。
- */
-export const aggregateAccountAdd = (state: States.IState, name: string, accounts: number[]) => {
-  // オブジェクト作成
-  const obj = {
-    id: 0,
-    name,
-    accounts,
-  };
-
-  // 対象の口座があるかチェック
-  if (accounts.filter((id) => id in state.basicAccount.accounts).length !== accounts.length) {
-    throw new Error('Include not exists account id on aggregateAccountAdd().');
-  }
-
-  // 追加
-  obj.id = state.nextId.account;
-  state.nextId.account++;
-  state.aggregateAccount.accounts[obj.id] = obj;
-  state.aggregateAccount.order.push(obj.id);
-  return obj.id;
-};
-
-/**
- * 集計口座の順番の変更。
- * @param accountGroup 変更対象となるグループ。
- */
-export const aggregateAccountOrderUpdate = (state: States.IState, oldIndex: number, newIndex: number) => {
-  const orders = state.aggregateAccount.order;
-  const moveId = orders[oldIndex];
-  orders.splice(oldIndex, 1);
-  orders.splice(newIndex, 0, moveId);
 };
 
 /**
