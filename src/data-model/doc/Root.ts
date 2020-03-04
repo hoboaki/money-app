@@ -1,27 +1,27 @@
-import Account from './Account';
 import AggregateAccount from './AggregateAccount';
+import BasicAccount from './BasicAccount';
 import Category from './Category';
+import IncomeRecord from './IncomeRecord';
+import OutgoRecord from './OutgoRecord';
 import PalmCategoryInfo from './PalmCategoryInfo';
-import RecordIncome from './RecordIncome';
-import RecordOutgo from './RecordOutgo';
-import RecordTransfer from './RecordTransfer';
+import TransferRecord from './TransferRecord';
 
 /// ドキュメントルートデータ。
 class Root {
-  public accounts: Account[] = []; /// 全口座。
+  public accounts: BasicAccount[] = []; /// 全口座。
 
   public income: {
     categories: Category[]; /// 入金カテゴリの配列。
-    records: RecordIncome[]; /// 入金レコードの配列。
+    records: IncomeRecord[]; /// 入金レコードの配列。
   } = { categories: [], records: [] };
 
   public outgo: {
     categories: Category[]; /// 出金カテゴリの配列。
-    records: RecordOutgo[]; /// 出金レコードの配列。
+    records: OutgoRecord[]; /// 出金レコードの配列。
   } = { categories: [], records: [] };
 
   public transfer: {
-    records: RecordTransfer[]; /// 資金移動レコードの配列。
+    records: TransferRecord[]; /// 資金移動レコードの配列。
   } = { records: [] };
 
   public aggregateAccounts: AggregateAccount[] = []; /// 全集計口座。

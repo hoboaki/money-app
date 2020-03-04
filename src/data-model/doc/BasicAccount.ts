@@ -1,5 +1,5 @@
-/// 口座データ。
-class Account {
+/// 基本口座データ。
+class BasicAccount {
   public id = 0; // Id。
   public name = ''; // 口座名。
   public kind = ''; // 種類。
@@ -7,4 +7,4 @@ class Account {
   public startDate = ''; // 口座開設日付。(YYYY-MM-DD形式)
 }
 
-export default Account;
+export default BasicAccount;
