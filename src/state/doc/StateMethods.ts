@@ -195,6 +195,16 @@ export const toData = (state: States.IState) => {
     accountIdDict[src.id] = data.id;
   });
 
+  // 集計口座
+  state.aggregateAccount.order.forEach((id) => {
+    const src = state.aggregateAccount.accounts[id];
+    const data = new DataAggregateAccount();
+    data.id = result.aggregateAccounts.length + 1;
+    data.name = src.name;
+    data.accounts = src.accounts.map((accountId) => accountIdDict[accountId]);
+    result.aggregateAccounts.push(data);
+  });
+
   // 入金
   const incomeCategoryIdDict: { [key: number]: number } = {}; // CategoryId -> エクスポート先のId 辞書
   {
@@ -317,16 +327,6 @@ export const toData = (state: States.IState) => {
       result.transfer.records.push(data);
     }
   }
-
-  // 集計口座
-  state.aggregateAccount.order.forEach((id) => {
-    const src = state.aggregateAccount.accounts[id];
-    const data = new DataAggregateAccount();
-    data.id = result.aggregateAccounts.length + 1;
-    data.name = src.name;
-    data.accounts = src.accounts.map((accountId) => accountIdDict[accountId]);
-    result.aggregateAccounts.push(data);
-  });
 
   // Palmカテゴリ情報
   for (const key in state.importTool.palmCategories.income) {
