@@ -2,12 +2,16 @@ import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 
 import * as Types from './Types';
 
-/** 基本口座。 */
-export interface IBasicAccount {
+/** 全口座共通インターフェース。 */
+export interface IAccount {
   /** AccountId。 */
   id: number;
   /** 口座名 */
   name: string;
+}
+
+/** 基本口座。 */
+export interface IBasicAccount extends IAccount {
   /** 種類。 */
   kind: Types.BasicAccountKind;
   /** 初期金額。プラスが貯蓄。マイナスが負債。 */
@@ -17,11 +21,7 @@ export interface IBasicAccount {
 }
 
 /** 集計口座。 */
-export interface IAggregateAccount {
-  /** AggregateAccountId。 */
-  id: number;
-  /** 口座名 */
-  name: string;
+export interface IAggregateAccount extends IAccount {
   /** 集計対象となる AccountId の配列。 */
   accounts: number[];
 }
