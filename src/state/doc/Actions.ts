@@ -72,18 +72,18 @@ export const updateBasicAccount = (
 export const UPDATE_ACCOUNT_ORDER = UUID();
 export interface IUpdateAccountOrder extends Action {
   // 各変数の使用は StateMethods.accountOrderUpdate を参照。
-  accountType: Types.AccountType;
+  accountKind: Types.AccountKind;
   oldIndex: number;
   newIndex: number;
 }
 export const updateAccountOrder = (
-  accountType: Types.AccountType,
+  accountKind: Types.AccountKind,
   oldIndex: number,
   newIndex: number,
 ): IUpdateAccountOrder => {
   return {
     type: UPDATE_ACCOUNT_ORDER,
-    accountType,
+    accountKind,
     oldIndex,
     newIndex,
   };

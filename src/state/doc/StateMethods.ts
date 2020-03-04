@@ -471,25 +471,25 @@ export const aggregateAccountOrderUpdate = (state: States.IState, oldIndex: numb
 
 /**
  * 口座の順番の変更。
- * @param accountType 変更対象となる口座タイプ。
+ * @param accountKind 変更対象となる口座タイプ。
  * @param oldIndex 移動する口座のインデックス値。
  * @param newIndex 移動後のインデックス値。
  */
 export const accountOrderUpdate = (
   state: States.IState,
-  accountType: Types.AccountType,
+  accountKind: Types.AccountKind,
   oldIndex: number,
   newIndex: number,
 ) => {
   let orders = [];
-  switch (accountType) {
-    case Types.AccountType.Assets:
+  switch (accountKind) {
+    case Types.AccountKind.Assets:
       orders = state.basicAccount.orderAssets;
       break;
-    case Types.AccountType.Liabilities:
+    case Types.AccountKind.Liabilities:
       orders = state.basicAccount.orderLiabilities;
       break;
-    case Types.AccountType.Aggregate:
+    case Types.AccountKind.Aggregate:
       orders = state.aggregateAccount.order;
       break;
     default:
@@ -556,17 +556,17 @@ export const basicAccountByName = (state: States.IState, name: string): States.I
   return account;
 };
 
-/** AccountType に対応した並び順を AccountId 配列として取得する。 */
-export const accountOrder = (state: States.IState, accountType: Types.AccountType) => {
-  switch (accountType) {
-    case Types.AccountType.Assets:
+/** AccountKind に対応した並び順を AccountId 配列として取得する。 */
+export const accountOrder = (state: States.IState, accountKind: Types.AccountKind) => {
+  switch (accountKind) {
+    case Types.AccountKind.Assets:
       return state.basicAccount.orderAssets;
-    case Types.AccountType.Liabilities:
+    case Types.AccountKind.Liabilities:
       return state.basicAccount.orderLiabilities;
-    case Types.AccountType.Aggregate:
+    case Types.AccountKind.Aggregate:
       return state.aggregateAccount.order;
     default:
-      throw new Error(`Invalid accountType '${accountType}.`);
+      throw new Error(`Invalid accountKind '${accountKind}.`);
   }
 };
 

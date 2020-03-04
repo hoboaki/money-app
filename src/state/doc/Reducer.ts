@@ -27,7 +27,7 @@ a2RMapper.addWork<Actions.IUpdateBasicAccount>(Actions.UPDATE_BASIC_ACCOUNT, (st
 });
 
 a2RMapper.addWork<Actions.IUpdateAccountOrder>(Actions.UPDATE_ACCOUNT_ORDER, (state, action) => {
-  StateMethods.accountOrderUpdate(state, action.accountType, action.oldIndex, action.newIndex);
+  StateMethods.accountOrderUpdate(state, action.accountKind, action.oldIndex, action.newIndex);
 });
 
 a2RMapper.addWork<Actions.IDeleteAccount>(Actions.DELETE_ACCOUNT, (state, action) => {

@@ -28,10 +28,10 @@ interface IProps {
 
 interface IState {
   /** 選択中のタブ。 */
-  selectedTab: DocTypes.AccountType;
+  selectedTab: DocTypes.AccountKind;
 
-  /** 口座編集ダイアログの口座グループ。 */
-  dialogAccountType: DocTypes.AccountType;
+  /** 口座編集ダイアログの口座種類。 */
+  dialogAccountKind: DocTypes.AccountKind;
 
   /** 口座編集対象。 */
   editAccountId: number | null;
@@ -51,8 +51,8 @@ class Account extends React.Component<IProps, IState> {
   public constructor(props: IProps) {
     super(props);
     this.state = {
-      selectedTab: DocTypes.AccountType.Assets,
-      dialogAccountType: DocTypes.AccountType.Assets,
+      selectedTab: DocTypes.AccountKind.Assets,
+      dialogAccountKind: DocTypes.AccountKind.Assets,
       editAccountId: null,
       modalAccountEdit: false,
       cardActionMenuActive: false,
@@ -60,9 +60,9 @@ class Account extends React.Component<IProps, IState> {
     this.elemIdAccountList = `elem-${UUID}`;
 
     // 追加アクションMenu
-    const addAction = (accountType: DocTypes.AccountType) => {
+    const addAction = (kind: DocTypes.AccountKind) => {
       this.setState({
-        dialogAccountType: accountType,
+        dialogAccountKind: kind,
         editAccountId: null,
         modalAccountEdit: true,
       });
@@ -72,7 +72,7 @@ class Account extends React.Component<IProps, IState> {
       new remote.MenuItem({
         label: '資産口座を作成...',
         click: () => {
-          addAction(DocTypes.AccountType.Assets);
+          addAction(DocTypes.AccountKind.Assets);
         },
       }),
     );
@@ -80,7 +80,7 @@ class Account extends React.Component<IProps, IState> {
       new remote.MenuItem({
         label: '負債口座を作成...',
         click: () => {
-          addAction(DocTypes.AccountType.Liabilities);
+          addAction(DocTypes.AccountKind.Liabilities);
         },
       }),
     );
@@ -143,9 +143,9 @@ class Account extends React.Component<IProps, IState> {
     const header = <Header title={'口座設定'} iconName="payment" />;
 
     const btnInfos = [
-      { label: '資産', onChanged: () => this.onTabChanged(DocTypes.AccountType.Assets) },
-      { label: '負債', onChanged: () => this.onTabChanged(DocTypes.AccountType.Liabilities) },
-      { label: '集計', onChanged: () => this.onTabChanged(DocTypes.AccountType.Aggregate) },
+      { label: '資産', onChanged: () => this.onTabChanged(DocTypes.AccountKind.Assets) },
+      { label: '負債', onChanged: () => this.onTabChanged(DocTypes.AccountKind.Liabilities) },
+      { label: '集計', onChanged: () => this.onTabChanged(DocTypes.AccountKind.Aggregate) },
     ];
     const controlBar = (
       <div className={Styles.ControlBar}>
@@ -199,13 +199,13 @@ class Account extends React.Component<IProps, IState> {
       if (!this.state.modalAccountEdit) {
         return null;
       }
-      switch (this.state.dialogAccountType) {
-        case DocTypes.AccountType.Assets:
-        case DocTypes.AccountType.Liabilities:
+      switch (this.state.dialogAccountKind) {
+        case DocTypes.AccountKind.Assets:
+        case DocTypes.AccountKind.Liabilities:
           return (
             <BasicAccountEditDialog
               accountGroup={
-                this.state.dialogAccountType === DocTypes.AccountType.Assets
+                this.state.dialogAccountKind === DocTypes.AccountKind.Assets
                   ? DocTypes.BasicAccountGroup.Assets
                   : DocTypes.BasicAccountGroup.Liabilities
               }
@@ -236,9 +236,9 @@ class Account extends React.Component<IProps, IState> {
     );
   }
 
-  private onTabChanged(accountType: DocTypes.AccountType) {
+  private onTabChanged(kind: DocTypes.AccountKind) {
     this.setState({
-      selectedTab: accountType,
+      selectedTab: kind,
     });
   }
 
@@ -249,7 +249,7 @@ class Account extends React.Component<IProps, IState> {
 
   private onCardActionBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number): void {
     e.stopPropagation();
-    this.setState({ cardActionMenuActive: true, dialogAccountType: this.state.selectedTab, editAccountId: id });
+    this.setState({ cardActionMenuActive: true, dialogAccountKind: this.state.selectedTab, editAccountId: id });
     this.cardActionMenu.popup({
       callback: () => {
         this.setState({ cardActionMenuActive: false });
@@ -266,7 +266,7 @@ class Account extends React.Component<IProps, IState> {
       }
 
       // 追加・更新があった場合はその口座のタブを選択
-      return this.state.dialogAccountType;
+      return this.state.dialogAccountKind;
     };
 
     // 後始末

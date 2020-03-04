@@ -1,9 +1,9 @@
-/** 口座タイプ。 */
-export enum AccountType {
+/** 口座種類。 */
+export enum AccountKind {
   Invalid = 0,
-  /** 基本口座：資産。 */
+  /** 資産口座。 */
   Assets = 1,
-  /** 基本口座：負債。 */
+  /** 負債口座。 */
   Liabilities = 2,
   /** 集計口座。 */
   Aggregate = 3,
@@ -28,15 +28,15 @@ export enum BasicAccountKind {
   LiabilitiesOther = 29, // 負債：その他。
 }
 
-/** BasicAccountKind -> AccountType 変換関数。 */
-export const basicAccountKindToType = (kind: BasicAccountKind) => {
+/** BasicAccountKind -> AccountKind 変換関数。 */
+export const basicAccountKindToAccountKind = (kind: BasicAccountKind) => {
   switch (basicAccountKindToGroup(kind)) {
     case BasicAccountGroup.Assets:
-      return AccountType.Assets;
+      return AccountKind.Assets;
     case BasicAccountGroup.Liabilities:
-      return AccountType.Liabilities;
+      return AccountKind.Liabilities;
     default:
-      return AccountType.Invalid;
+      return AccountKind.Invalid;
   }
 };
 
