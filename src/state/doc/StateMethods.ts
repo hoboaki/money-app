@@ -28,8 +28,8 @@ export const fromData = (src: DataRoot) => {
   // 結果
   const r = Clone(States.defaultState);
 
-  // 口座
-  const accountIdDict: { [key: number]: number } = {}; // Data内Id → オブジェクトId 変換テーブル
+  // 基本口座
+  const basicAccountIdDict: { [key: number]: number } = {}; // Data内Id → オブジェクトId 変換テーブル
   for (const data of src.accounts) {
     const kind = enumPraseAccountKind(data.kind);
     const key = basicAccountAdd(
@@ -39,7 +39,7 @@ export const fromData = (src: DataRoot) => {
       data.initialAmount,
       IYearMonthDayDateUtils.fromText(data.startDate),
     );
-    accountIdDict[data.id] = key;
+    basicAccountIdDict[data.id] = key;
   }
 
   // 集計口座
@@ -47,7 +47,7 @@ export const fromData = (src: DataRoot) => {
     aggregateAccountAdd(
       r,
       data.name,
-      data.accounts.map((accountId) => accountIdDict[accountId]),
+      data.accounts.map((accountId) => basicAccountIdDict[accountId]),
     );
   }
 
@@ -74,7 +74,7 @@ export const fromData = (src: DataRoot) => {
       if (categoryId == null) {
         throw new Error(`Error: Invalid category value(${data.category}) in income record.`);
       }
-      const accountId = accountIdDict[data.account];
+      const accountId = basicAccountIdDict[data.account];
       if (accountId == null) {
         throw new Error(`Error: Invalid account value(${data.account}) in income record.`);
       }
@@ -114,7 +114,7 @@ export const fromData = (src: DataRoot) => {
       if (categoryId == null) {
         throw new Error(`Error: Invalid category value(${data.category}) in outgo record.`);
       }
-      const accountId = accountIdDict[data.account];
+      const accountId = basicAccountIdDict[data.account];
       if (accountId == null) {
         throw new Error(`Error: Invalid account value(${data.account}) in outgo record.`);
       }
@@ -134,11 +134,11 @@ export const fromData = (src: DataRoot) => {
   // 送金
   {
     for (const data of src.transfer.records) {
-      const accountFromId = accountIdDict[data.accountFrom];
+      const accountFromId = basicAccountIdDict[data.accountFrom];
       if (accountFromId == null) {
         throw new Error(`Error: Invalid account value(${data.accountFrom}) in transfer record.`);
       }
-      const accountToId = accountIdDict[data.accountTo];
+      const accountToId = basicAccountIdDict[data.accountTo];
       if (accountToId == null) {
         throw new Error(`Error: Invalid account value(${data.accountTo}) in transfer record.`);
       }
@@ -160,7 +160,7 @@ export const fromData = (src: DataRoot) => {
     palmCategoryInfoIncomeAdd(
       r,
       data.name,
-      data.account === 0 ? Types.INVALID_ID : accountIdDict[data.account],
+      data.account === 0 ? Types.INVALID_ID : basicAccountIdDict[data.account],
       data.category === 0 ? Types.INVALID_ID : incomeCategoryIdDict[data.category],
     );
   });
@@ -168,7 +168,7 @@ export const fromData = (src: DataRoot) => {
     palmCategoryInfoOutgoAdd(
       r,
       data.name,
-      data.account === 0 ? Types.INVALID_ID : accountIdDict[data.account],
+      data.account === 0 ? Types.INVALID_ID : basicAccountIdDict[data.account],
       data.category === 0 ? Types.INVALID_ID : outgoCategoryIdDict[data.category],
     );
   });
@@ -182,7 +182,7 @@ export const toData = (state: States.IState) => {
   const result = new DataRoot();
 
   // 基本口座
-  const accountIdDict: { [key: number]: number } = {}; // AccountId -> エクスポート先のId 辞書
+  const basicAccountIdDict: { [key: number]: number } = {}; // AccountId -> エクスポート先のId 辞書
   basicAccountOrderMixed(state).forEach((key) => {
     const src = state.basicAccount.accounts[key];
     const data = new DataAccount();
@@ -192,7 +192,7 @@ export const toData = (state: States.IState) => {
     data.initialAmount = src.initialAmount;
     data.startDate = IYearMonthDayDateUtils.toDataFormatText(src.startDate);
     result.accounts.push(data);
-    accountIdDict[src.id] = data.id;
+    basicAccountIdDict[src.id] = data.id;
   });
 
   // 集計口座
@@ -201,7 +201,7 @@ export const toData = (state: States.IState) => {
     const data = new DataAggregateAccount();
     data.id = result.aggregateAccounts.length + 1;
     data.name = src.name;
-    data.accounts = src.accounts.map((accountId) => accountIdDict[accountId]);
+    data.accounts = src.accounts.map((accountId) => basicAccountIdDict[accountId]);
     result.aggregateAccounts.push(data);
   });
 
@@ -251,7 +251,7 @@ export const toData = (state: States.IState) => {
       data.memo = src.memo;
       data.amount = src.amount;
       data.category = categoryIdDict[src.category];
-      data.account = accountIdDict[src.account];
+      data.account = basicAccountIdDict[src.account];
       result.income.records.push(data);
     }
   }
@@ -302,7 +302,7 @@ export const toData = (state: States.IState) => {
       data.memo = src.memo;
       data.amount = src.amount;
       data.category = categoryIdDict[src.category];
-      data.account = accountIdDict[src.account];
+      data.account = basicAccountIdDict[src.account];
       result.outgo.records.push(data);
     }
   }
@@ -322,8 +322,8 @@ export const toData = (state: States.IState) => {
       data.date = IYearMonthDayDateUtils.toDataFormatText(src.date);
       data.memo = src.memo;
       data.amount = src.amount;
-      data.accountFrom = accountIdDict[src.accountFrom];
-      data.accountTo = accountIdDict[src.accountTo];
+      data.accountFrom = basicAccountIdDict[src.accountFrom];
+      data.accountTo = basicAccountIdDict[src.accountTo];
       result.transfer.records.push(data);
     }
   }
@@ -338,7 +338,7 @@ export const toData = (state: States.IState) => {
     const data = new DataPalmCategoryInfo();
     data.name = key;
     if (src.account !== Types.INVALID_ID) {
-      data.account = accountIdDict[src.account];
+      data.account = basicAccountIdDict[src.account];
     }
     if (src.category !== Types.INVALID_ID) {
       data.category = incomeCategoryIdDict[src.category];
@@ -354,7 +354,7 @@ export const toData = (state: States.IState) => {
     const data = new DataPalmCategoryInfo();
     data.name = key;
     if (src.account !== Types.INVALID_ID) {
-      data.account = accountIdDict[src.account];
+      data.account = basicAccountIdDict[src.account];
     }
     if (src.category !== Types.INVALID_ID) {
       data.category = outgoCategoryIdDict[src.category];
