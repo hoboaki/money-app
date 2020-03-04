@@ -42,6 +42,15 @@ export const fromData = (src: DataRoot) => {
     accountIdDict[data.id] = key;
   }
 
+  // 集計口座
+  for (const data of src.aggregateAccounts) {
+    aggregateAccountAdd(
+      r,
+      data.name,
+      data.accounts.map((accountId) => accountIdDict[accountId]),
+    );
+  }
+
   // 入金
   const incomeCategoryIdDict: { [key: number]: number } = {}; // Data内Id -> オブジェクトId 変換テーブル
   {
@@ -144,15 +153,6 @@ export const fromData = (src: DataRoot) => {
         data.amount,
       );
     }
-  }
-
-  // 集計口座
-  for (const data of src.aggregateAccounts) {
-    aggregateAccountAdd(
-      r,
-      data.name,
-      data.accounts.map((accountId) => accountIdDict[accountId]),
-    );
   }
 
   // Palmカテゴリデータ
