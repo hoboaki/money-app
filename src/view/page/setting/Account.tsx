@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Sortable from 'sortablejs';
 import * as DocActions from 'src/state/doc/Actions';
+import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
@@ -21,22 +22,16 @@ import { v4 as UUID } from 'uuid';
 import * as Styles from './Account.css';
 import Header from './Header';
 
-enum TabKind {
-  Assets,
-  Liabilities,
-  Aggregate,
-}
-
 interface IProps {
   doc: DocStates.IState;
 }
 
 interface IState {
   /** 選択中のタブ。 */
-  selectedTab: TabKind;
+  selectedTab: DocTypes.AccountType;
 
   /** 口座編集ダイアログの口座グループ。 */
-  dialogAccountGroup: DocTypes.BasicAccountGroup;
+  dialogAccountType: DocTypes.AccountType;
 
   /** 口座編集対象。 */
   editAccountId: number | null;
@@ -56,8 +51,8 @@ class Account extends React.Component<IProps, IState> {
   public constructor(props: IProps) {
     super(props);
     this.state = {
-      selectedTab: TabKind.Assets,
-      dialogAccountGroup: DocTypes.BasicAccountGroup.Assets,
+      selectedTab: DocTypes.AccountType.Assets,
+      dialogAccountType: DocTypes.AccountType.Assets,
       editAccountId: null,
       modalAccountEdit: false,
       cardActionMenuActive: false,
@@ -65,9 +60,9 @@ class Account extends React.Component<IProps, IState> {
     this.elemIdAccountList = `elem-${UUID}`;
 
     // 追加アクションMenu
-    const addAction = (accountGroup: DocTypes.BasicAccountGroup) => {
+    const addAction = (accountType: DocTypes.AccountType) => {
       this.setState({
-        dialogAccountGroup: accountGroup,
+        dialogAccountType: accountType,
         editAccountId: null,
         modalAccountEdit: true,
       });
@@ -77,7 +72,7 @@ class Account extends React.Component<IProps, IState> {
       new remote.MenuItem({
         label: '資産口座を作成...',
         click: () => {
-          addAction(DocTypes.BasicAccountGroup.Assets);
+          addAction(DocTypes.AccountType.Assets);
         },
       }),
     );
@@ -85,7 +80,7 @@ class Account extends React.Component<IProps, IState> {
       new remote.MenuItem({
         label: '負債口座を作成...',
         click: () => {
-          addAction(DocTypes.BasicAccountGroup.Liabilities);
+          addAction(DocTypes.AccountType.Liabilities);
         },
       }),
     );
@@ -135,19 +130,7 @@ class Account extends React.Component<IProps, IState> {
         // 順番変更を反映
         const oldIndex = evt.oldIndex;
         const newIndex = evt.newIndex;
-        if (this.state.selectedTab !== TabKind.Aggregate) {
-          Store.dispatch(
-            DocActions.updateBasicAccountOrder(
-              this.state.selectedTab === TabKind.Assets
-                ? DocTypes.BasicAccountGroup.Assets
-                : DocTypes.BasicAccountGroup.Liabilities,
-              oldIndex,
-              newIndex,
-            ),
-          );
-        } else {
-          Store.dispatch(DocActions.updateAggregateAccountOrder(oldIndex, newIndex));
-        }
+        Store.dispatch(DocActions.updateAccountOrder(this.state.selectedTab, oldIndex, newIndex));
 
         // 自動保存リクエスト
         Store.dispatch(UiActions.documentRequestAutoSave());
@@ -160,14 +143,14 @@ class Account extends React.Component<IProps, IState> {
     const header = <Header title={'口座設定'} iconName="payment" />;
 
     const btnInfos = [
-      { label: '資産', onChanged: () => this.onTabChanged(TabKind.Assets) },
-      { label: '負債', onChanged: () => this.onTabChanged(TabKind.Liabilities) },
-      { label: '集計', onChanged: () => this.onTabChanged(TabKind.Aggregate) },
+      { label: '資産', onChanged: () => this.onTabChanged(DocTypes.AccountType.Assets) },
+      { label: '負債', onChanged: () => this.onTabChanged(DocTypes.AccountType.Liabilities) },
+      { label: '集計', onChanged: () => this.onTabChanged(DocTypes.AccountType.Aggregate) },
     ];
     const controlBar = (
       <div className={Styles.ControlBar}>
         <div className={Styles.ControlBarAreaLeft}>
-          <RadioButtonGroup btns={btnInfos} selectedBtnIndex={this.state.selectedTab} />
+          <RadioButtonGroup btns={btnInfos} selectedBtnIndex={this.state.selectedTab - 1} />
         </div>
         <div className={Styles.ControlBarAreaRight}>
           <button className={BasicStyles.IconBtn} onClick={(e) => this.onAddBtnClicked(e)}>
@@ -180,21 +163,8 @@ class Account extends React.Component<IProps, IState> {
     const cards: JSX.Element[] = [];
     {
       const accountsSelector = () => {
-        if (this.state.selectedTab !== TabKind.Aggregate) {
-          const orders =
-            this.state.selectedTab === TabKind.Assets
-              ? this.props.doc.basicAccount.orderAssets
-              : this.props.doc.basicAccount.orderLiabilities;
-          return orders.map((id) => {
-            const account = this.props.doc.basicAccount.accounts[id];
-            return {
-              id: account.id,
-              name: account.name,
-            };
-          });
-        }
-        return this.props.doc.aggregateAccount.order.map((id) => {
-          const account = this.props.doc.aggregateAccount.accounts[id];
+        return DocStateMethods.accountOrder(this.props.doc, this.state.selectedTab).map((id) => {
+          const account = DocStateMethods.accountById(this.props.doc, id);
           return {
             id: account.id,
             name: account.name,
@@ -229,16 +199,23 @@ class Account extends React.Component<IProps, IState> {
       if (!this.state.modalAccountEdit) {
         return null;
       }
-      if (this.state.dialogAccountGroup === DocTypes.BasicAccountGroup.Invalid) {
-        return null;
+      switch (this.state.dialogAccountType) {
+        case DocTypes.AccountType.Assets:
+        case DocTypes.AccountType.Liabilities:
+          return (
+            <BasicAccountEditDialog
+              accountGroup={
+                this.state.dialogAccountType === DocTypes.AccountType.Assets
+                  ? DocTypes.BasicAccountGroup.Assets
+                  : DocTypes.BasicAccountGroup.Liabilities
+              }
+              editAccountId={this.state.editAccountId}
+              onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
+            />
+          );
+        default:
+          return null;
       }
-      return (
-        <BasicAccountEditDialog
-          accountGroup={this.state.dialogAccountGroup}
-          editAccountId={this.state.editAccountId}
-          onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
-        />
-      );
     })();
 
     const body = (
@@ -259,9 +236,9 @@ class Account extends React.Component<IProps, IState> {
     );
   }
 
-  private onTabChanged(tabKind: TabKind) {
+  private onTabChanged(accountType: DocTypes.AccountType) {
     this.setState({
-      selectedTab: tabKind,
+      selectedTab: accountType,
     });
   }
 
@@ -272,17 +249,7 @@ class Account extends React.Component<IProps, IState> {
 
   private onCardActionBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number): void {
     e.stopPropagation();
-    const dialogAccountGroupSelector = () => {
-      switch (this.state.selectedTab) {
-        case TabKind.Assets:
-          return DocTypes.BasicAccountGroup.Assets;
-        case TabKind.Liabilities:
-          return DocTypes.BasicAccountGroup.Liabilities;
-        default:
-          return DocTypes.BasicAccountGroup.Invalid;
-      }
-    };
-    this.setState({ cardActionMenuActive: true, dialogAccountGroup: dialogAccountGroupSelector(), editAccountId: id });
+    this.setState({ cardActionMenuActive: true, dialogAccountType: this.state.selectedTab, editAccountId: id });
     this.cardActionMenu.popup({
       callback: () => {
         this.setState({ cardActionMenuActive: false });
@@ -299,14 +266,7 @@ class Account extends React.Component<IProps, IState> {
       }
 
       // 追加・更新があった場合はその口座のタブを選択
-      switch (this.state.dialogAccountGroup) {
-        case DocTypes.BasicAccountGroup.Assets:
-          return TabKind.Assets;
-        case DocTypes.BasicAccountGroup.Liabilities:
-          return TabKind.Liabilities;
-        default:
-          return this.state.selectedTab;
-      }
+      return this.state.dialogAccountType;
     };
 
     // 後始末

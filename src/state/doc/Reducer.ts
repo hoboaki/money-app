@@ -26,8 +26,8 @@ a2RMapper.addWork<Actions.IUpdateBasicAccount>(Actions.UPDATE_BASIC_ACCOUNT, (st
   );
 });
 
-a2RMapper.addWork<Actions.IUpdateBasicAccountOrder>(Actions.UPDATE_BASIC_ACCOUNT_ORDER, (state, action) => {
-  StateMethods.basicAccountOrderUpdate(state, action.accountGroup, action.oldIndex, action.newIndex);
+a2RMapper.addWork<Actions.IUpdateAccountOrder>(Actions.UPDATE_ACCOUNT_ORDER, (state, action) => {
+  StateMethods.accountOrderUpdate(state, action.accountType, action.oldIndex, action.newIndex);
 });
 
 a2RMapper.addWork<Actions.IDeleteAccount>(Actions.DELETE_ACCOUNT, (state, action) => {
@@ -133,10 +133,6 @@ a2RMapper.addWork<Actions.IDeleteRecords>(Actions.DELETE_RECORDS, (state, action
 
 a2RMapper.addWork<Actions.IUpdateCategoryCollapse>(Actions.UPDATE_CATEGORY_COLLAPSE, (state, action) => {
   StateMethods.categoryCollapsedStateUpdate(state, action.categoryId, action.isCollapsed);
-});
-
-a2RMapper.addWork<Actions.IUpdateAggregateAccountOrder>(Actions.UPDATE_AGGREGATE_ACCOUNT_ORDER, (state, action) => {
-  StateMethods.aggregateAccountOrderUpdate(state, action.oldIndex, action.newIndex);
 });
 
 a2RMapper.addWork<Actions.IAddPalmCategoryInfoIncome>(Actions.ADD_PALM_CATEGORY_INFO_INCOME, (state, action) => {
