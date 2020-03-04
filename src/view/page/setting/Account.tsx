@@ -12,7 +12,7 @@ import * as UiActions from 'src/state/ui/Actions';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
-import AccountEditDialog from 'src/view/widget/account-edit-dialog';
+import BasicAccountEditDialog from 'src/view/widget/basic-account-edit-dialog';
 import MaterialIcon from 'src/view/widget/material-icon';
 import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 import RadioButtonGroup from 'src/view/widget/radio-button-group';
@@ -233,7 +233,7 @@ class Account extends React.Component<IProps, IState> {
         return null;
       }
       return (
-        <AccountEditDialog
+        <BasicAccountEditDialog
           accountGroup={this.state.dialogAccountGroup}
           editAccountId={this.state.editAccountId}
           onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
