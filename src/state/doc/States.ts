@@ -84,7 +84,7 @@ export interface IState {
     /** 資産口座の並び順（AccountId の配列）定義。 */
     order: number[];
     /** AccountId がキーの口座群。 */
-    accounts: { [key: number]: IAggregateAccount };
+    accounts: { [key: number]: IBasicAccount };
   };
 
   /** 負債口座。 */
@@ -92,7 +92,7 @@ export interface IState {
     /** 資産口座の並び順（AccountId の配列）定義。 */
     order: number[];
     /** AccountId がキーの口座群。 */
-    accounts: { [key: number]: IAggregateAccount };
+    accounts: { [key: number]: IBasicAccount };
   };
 
   /** 集計口座。 */
