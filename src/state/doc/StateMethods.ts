@@ -181,10 +181,10 @@ export const toData = (state: States.IState) => {
   // 結果オブジェクト
   const result = new DataRoot();
 
-  // 基本口座
+  // 資産口座・負債口座
   const basicAccountIdDict: { [key: number]: number } = {}; // AccountId -> エクスポート先のId 辞書
-  basicAccountOrderMixed(state).forEach((key) => {
-    const src = state.basicAccount.accounts[key];
+  const basicAccountProcess = (account: States.IBasicAccount) => {
+    const src = account;
     const data = new DataAccount();
     data.id = result.accounts.length + 1;
     data.name = src.name;
@@ -193,6 +193,12 @@ export const toData = (state: States.IState) => {
     data.startDate = IYearMonthDayDateUtils.toDataFormatText(src.startDate);
     result.accounts.push(data);
     basicAccountIdDict[src.id] = data.id;
+  };
+  state.assetsAccount.order.forEach((key) => {
+    basicAccountProcess(state.assetsAccount.accounts[key]);
+  });
+  state.liabilitiesAccount.order.forEach((key) => {
+    basicAccountProcess(state.liabilitiesAccount.accounts[key]);
   });
 
   // 集計口座
@@ -390,13 +396,14 @@ export const basicAccountAdd = (
   const accountGroup = Types.basicAccountKindToGroup(kind);
   obj.id = state.nextId.account;
   state.nextId.account++;
-  state.basicAccount.accounts[obj.id] = obj;
   switch (accountGroup) {
     case Types.BasicAccountGroup.Assets:
-      state.basicAccount.orderAssets.push(obj.id);
+      state.assetsAccount.accounts[obj.id] = obj;
+      state.assetsAccount.order.push(obj.id);
       break;
     case Types.BasicAccountGroup.Liabilities:
-      state.basicAccount.orderLiabilities.push(obj.id);
+      state.liabilitiesAccount.accounts[obj.id] = obj;
+      state.liabilitiesAccount.order.push(obj.id);
       break;
     default:
       throw new Error();
@@ -424,13 +431,30 @@ export const basicAccountUpdate = (
     initialAmount,
     startDate,
   };
-  state.basicAccount.accounts[accountId] = obj;
+  const accountGroup = Types.basicAccountKindToGroup(kind);
+  switch (accountGroup) {
+    case Types.BasicAccountGroup.Assets:
+      global.console.assert(accountId in state.assetsAccount.accounts);
+      state.assetsAccount.accounts[accountId] = obj;
+      break;
+    case Types.BasicAccountGroup.Liabilities:
+      global.console.assert(accountId in state.liabilitiesAccount.accounts);
+      state.liabilitiesAccount.accounts[accountId] = obj;
+      break;
+    default:
+      throw new Error();
+  }
   return obj.id;
+};
+
+/** 資産口座と負債口座を結合した IBasicAccount 配列を取得。 */
+export const basicAccounts = (state: States.IState): { [key: number]: States.IBasicAccount } => {
+  return Object.assign(state.assetsAccount.accounts, state.liabilitiesAccount.accounts);
 };
 
 /** 資産口座と負債口座のそれぞれの並び順を結合した AccountId 配列を取得。 */
 export const basicAccountOrderMixed = (state: States.IState): number[] => {
-  return state.basicAccount.orderAssets.concat(state.basicAccount.orderLiabilities);
+  return state.assetsAccount.order.concat(state.liabilitiesAccount.order);
 };
 
 /**
@@ -446,7 +470,8 @@ export const aggregateAccountAdd = (state: States.IState, name: string, accounts
   };
 
   // 対象の口座があるかチェック
-  if (accounts.filter((id) => id in state.basicAccount.accounts).length !== accounts.length) {
+  const localBasicAccounts = basicAccounts(state);
+  if (accounts.filter((id) => id in localBasicAccounts).length !== accounts.length) {
     throw new Error('Include not exists account id on aggregateAccountAdd().');
   }
 
@@ -484,10 +509,10 @@ export const accountOrderUpdate = (
   let orders = [];
   switch (accountKind) {
     case Types.AccountKind.Assets:
-      orders = state.basicAccount.orderAssets;
+      orders = state.assetsAccount.order;
       break;
     case Types.AccountKind.Liabilities:
-      orders = state.basicAccount.orderLiabilities;
+      orders = state.liabilitiesAccount.order;
       break;
     case Types.AccountKind.Aggregate:
       orders = state.aggregateAccount.order;
@@ -535,11 +560,14 @@ export const accountDelete = (state: States.IState, accountId: number) => {
   });
 
   // 口座自体の削除
-  state.basicAccount.orderAssets = state.basicAccount.orderAssets.filter((id) => id !== accountId);
-  state.basicAccount.orderLiabilities = state.basicAccount.orderLiabilities.filter((id) => id !== accountId);
+  state.assetsAccount.order = state.assetsAccount.order.filter((id) => id !== accountId);
+  state.liabilitiesAccount.order = state.liabilitiesAccount.order.filter((id) => id !== accountId);
   state.aggregateAccount.order = state.aggregateAccount.order.filter((id) => id !== accountId);
-  if (accountId in state.basicAccount.accounts) {
-    delete state.basicAccount.accounts[accountId];
+  if (accountId in state.assetsAccount.accounts) {
+    delete state.assetsAccount.accounts[accountId];
+  }
+  if (accountId in state.liabilitiesAccount.accounts) {
+    delete state.liabilitiesAccount.accounts[accountId];
   }
   if (accountId in state.aggregateAccount.accounts) {
     delete state.aggregateAccount.accounts[accountId];
@@ -548,9 +576,10 @@ export const accountDelete = (state: States.IState, accountId: number) => {
 
 /** 指定の名前の基本口座オブジェクトを取得。見つからなければエラー。 */
 export const basicAccountByName = (state: States.IState, name: string): States.IBasicAccount => {
-  const account = Object.values(state.basicAccount.accounts).find((ac) => ac.name === name);
+  const accounts = basicAccounts(state);
+  const account = Object.values(accounts).find((ac) => ac.name === name);
   if (account === undefined) {
-    global.console.log(state.basicAccount.accounts);
+    global.console.log(accounts);
     throw new Error(`Not found account named '${name}'.`);
   }
   return account;
@@ -560,9 +589,9 @@ export const basicAccountByName = (state: States.IState, name: string): States.I
 export const accountOrder = (state: States.IState, accountKind: Types.AccountKind) => {
   switch (accountKind) {
     case Types.AccountKind.Assets:
-      return state.basicAccount.orderAssets;
+      return state.assetsAccount.order;
     case Types.AccountKind.Liabilities:
-      return state.basicAccount.orderLiabilities;
+      return state.liabilitiesAccount.order;
     case Types.AccountKind.Aggregate:
       return state.aggregateAccount.order;
     default:
@@ -572,8 +601,11 @@ export const accountOrder = (state: States.IState, accountKind: Types.AccountKin
 
 /** 指定の AccountId に対応する IAccount オブジェクトを取得する。見つからなければエラー。 */
 export const accountById = (state: States.IState, accountId: number) => {
-  if (accountId in state.basicAccount.accounts) {
-    return state.basicAccount.accounts[accountId];
+  if (accountId in state.assetsAccount.accounts) {
+    return state.assetsAccount.accounts[accountId];
+  }
+  if (accountId in state.liabilitiesAccount.accounts) {
+    return state.liabilitiesAccount.accounts[accountId];
   }
   if (accountId in state.aggregateAccount.accounts) {
     return state.aggregateAccount.accounts[accountId];
