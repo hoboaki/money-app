@@ -212,6 +212,7 @@ class Body extends React.Component<IProps, IState> {
     // 使い回す値の定義
     const basicAccountGroups = [DocTypes.BasicAccountGroup.Assets, DocTypes.BasicAccountGroup.Liabilities];
     const recordKinds = [DocTypes.RecordKind.Transfer, DocTypes.RecordKind.Income, DocTypes.RecordKind.Outgo];
+    const basicAccounts = DocStateMethods.basicAccounts(this.props.doc);
 
     // 基本口座テーブルのデータ作成
     const basicAccountTableBuildTimeBegin = performance.now();
@@ -247,7 +248,7 @@ class Body extends React.Component<IProps, IState> {
     );
     DocStateMethods.basicAccountOrderMixed(this.props.doc).forEach((accountId) => {
       // 繰り越しデータ代入
-      const account = this.props.doc.basicAccount.accounts[accountId];
+      const account = basicAccounts[accountId];
       const sign = DocTypes.basicAccountKindToGroup(account.kind) !== DocTypes.BasicAccountGroup.Liabilities ? 1 : -1;
       basicAccountCarriedData[accountId] = sign * calculateCarriedResult.balances[accountId];
 
@@ -271,8 +272,7 @@ class Body extends React.Component<IProps, IState> {
     basicAccountGroups.forEach((accountGroup) => {
       // メモ
       const accountIdArray = Object.keys(basicAccountCarriedData).filter(
-        (data) =>
-          DocTypes.basicAccountKindToGroup(this.props.doc.basicAccount.accounts[Number(data)].kind) === accountGroup,
+        (data) => DocTypes.basicAccountKindToGroup(basicAccounts[Number(data)].kind) === accountGroup,
       );
 
       // 繰り越しデータ計算
@@ -307,8 +307,7 @@ class Body extends React.Component<IProps, IState> {
       // 繰り越しデータ計算
       aggregateAccountCarriedData[aggregateAccount] = accountIdArray.reduce((prev, accountId) => {
         const sign =
-          DocTypes.basicAccountKindToGroup(this.props.doc.basicAccount.accounts[accountId].kind) !==
-          DocTypes.BasicAccountGroup.Liabilities
+          DocTypes.basicAccountKindToGroup(basicAccounts[accountId].kind) !== DocTypes.BasicAccountGroup.Liabilities
             ? 1
             : -1;
         return prev + sign * basicAccountCarriedData[Number(accountId)];
@@ -319,8 +318,7 @@ class Body extends React.Component<IProps, IState> {
       colInfos.forEach((colInfo, colIdx) => {
         cellDataArray[colIdx] = accountIdArray.reduce((prev, accountId) => {
           const sign =
-            DocTypes.basicAccountKindToGroup(this.props.doc.basicAccount.accounts[accountId].kind) !==
-            DocTypes.BasicAccountGroup.Liabilities
+            DocTypes.basicAccountKindToGroup(basicAccounts[accountId].kind) !== DocTypes.BasicAccountGroup.Liabilities
               ? 1
               : -1;
           return prev + sign * basicAccountCellDataArray[Number(accountId)][colIdx];
@@ -331,8 +329,7 @@ class Body extends React.Component<IProps, IState> {
       // 残高データ計算
       aggregateAccountBalanceData[aggregateAccount] = accountIdArray.reduce((prev, accountId) => {
         const sign =
-          DocTypes.basicAccountKindToGroup(this.props.doc.basicAccount.accounts[accountId].kind) !==
-          DocTypes.BasicAccountGroup.Liabilities
+          DocTypes.basicAccountKindToGroup(basicAccounts[accountId].kind) !== DocTypes.BasicAccountGroup.Liabilities
             ? 1
             : -1;
         return prev + sign * basicAccountBalanceData[Number(accountId)];
@@ -673,7 +670,7 @@ class Body extends React.Component<IProps, IState> {
       basicAccountRowDict[accountGroup] = new Array<JSX.Element>();
     });
     DocStateMethods.basicAccountOrderMixed(this.props.doc).forEach((accountId) => {
-      const account = this.props.doc.basicAccount.accounts[accountId];
+      const account = basicAccounts[accountId];
       const accountGroup = DocTypes.basicAccountKindToGroup(account.kind);
       const targetArray = basicAccountRowDict[accountGroup];
       const cols: JSX.Element[] = [];
@@ -1152,11 +1149,12 @@ class Body extends React.Component<IProps, IState> {
       let accountId = cellInfo.accountId;
       if (accountId === null && cellInfo.accountGroup !== null) {
         // ルートを選択中なら１つめの口座を選択
-        const targets = DocStateMethods.basicAccountOrderMixed(this.props.doc)
-          .map((id) => this.props.doc.basicAccount.accounts[id])
-          .filter((account) => DocTypes.basicAccountKindToGroup(account.kind) === cellInfo.accountGroup);
+        const targets =
+          cellInfo.accountGroup === DocTypes.BasicAccountGroup.Assets
+            ? this.props.doc.assetsAccount.order
+            : this.props.doc.liabilitiesAccount.order;
         if (0 < targets.length) {
-          accountId = targets[0].id;
+          accountId = targets[0];
         }
       }
 
@@ -1201,13 +1199,10 @@ class Body extends React.Component<IProps, IState> {
           accounts.push(cellInfo.accountId);
         } else {
           // 指定の種類の口座全部
-          accounts = accounts.concat(
-            DocStateMethods.basicAccountOrderMixed(this.props.doc).filter(
-              (id) =>
-                DocTypes.basicAccountKindToGroup(this.props.doc.basicAccount.accounts[id].kind) ===
-                cellInfo.accountGroup,
-            ),
-          );
+          accounts =
+            cellInfo.accountGroup === DocTypes.BasicAccountGroup.Assets
+              ? this.props.doc.assetsAccount.order
+              : this.props.doc.liabilitiesAccount.order;
         }
         filters.push(RecordFilters.createAccountFilter({ accounts }));
       }

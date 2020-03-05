@@ -4,6 +4,7 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import * as DocActions from 'src/state/doc/Actions';
+import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
@@ -48,7 +49,7 @@ class Main extends React.Component<ILocalProps, IState> {
   constructor(props: ILocalProps) {
     super(props);
     if (props.editAccountId !== null) {
-      const account = props.doc.basicAccount.accounts[props.editAccountId];
+      const account = DocStateMethods.basicAccounts(props.doc)[props.editAccountId];
       this.state = {
         inputName: account.name,
         inputKind: account.kind,

@@ -170,9 +170,10 @@ class Main extends React.Component<ILocalProps, IState> {
       const groupItems: { [key: string]: any } = {};
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const accountItems: { [key: string]: any } = {};
+      const basicAccounts = DocStateMethods.basicAccounts(this.props.doc);
       DocStateMethods.basicAccountOrderMixed(this.props.doc).forEach((accountId) => {
         const key = `account-${accountId}`;
-        const name = this.props.doc.basicAccount.accounts[accountId].name;
+        const name = basicAccounts[accountId].name;
         accountItems[key] = {
           name,
           items: null,
@@ -316,6 +317,9 @@ class Main extends React.Component<ILocalProps, IState> {
   }
 
   public render() {
+    // メモ
+    const basicAccounts = DocStateMethods.basicAccounts(this.props.doc);
+
     // ヘッダ
     const dialogHeaderClass = ClassNames('modal-header', Styles.DialogHeader);
     const header = (
@@ -334,7 +338,7 @@ class Main extends React.Component<ILocalProps, IState> {
     const targetAccountOptions = [INVALID_ID]
       .concat(DocStateMethods.basicAccountOrderMixed(this.props.doc))
       .map((id) => {
-        const name = id === INVALID_ID ? '（未選択）' : this.props.doc.basicAccount.accounts[id].name;
+        const name = id === INVALID_ID ? '（未選択）' : basicAccounts[id].name;
         return (
           <option key={id} value={id}>
             {name}
@@ -413,7 +417,7 @@ class Main extends React.Component<ILocalProps, IState> {
         }
         if (row.group.accountId !== null) {
           return {
-            label: this.props.doc.basicAccount.accounts[row.group.accountId].name,
+            label: basicAccounts[row.group.accountId].name,
             recordKind: DocTypes.RecordKind.Transfer,
           };
         }
