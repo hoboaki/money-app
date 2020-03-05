@@ -393,15 +393,15 @@ export const basicAccountAdd = (
   };
 
   // 追加
-  const accountGroup = Types.basicAccountKindToGroup(kind);
+  const accountGroup = Types.basicAccountKindToAccountKind(kind);
   obj.id = state.nextId.account;
   state.nextId.account++;
   switch (accountGroup) {
-    case Types.BasicAccountGroup.Assets:
+    case Types.AccountKind.Assets:
       state.assetsAccount.accounts[obj.id] = obj;
       state.assetsAccount.order.push(obj.id);
       break;
-    case Types.BasicAccountGroup.Liabilities:
+    case Types.AccountKind.Liabilities:
       state.liabilitiesAccount.accounts[obj.id] = obj;
       state.liabilitiesAccount.order.push(obj.id);
       break;
@@ -431,13 +431,13 @@ export const basicAccountUpdate = (
     initialAmount,
     startDate,
   };
-  const accountGroup = Types.basicAccountKindToGroup(kind);
+  const accountGroup = Types.basicAccountKindToAccountKind(kind);
   switch (accountGroup) {
-    case Types.BasicAccountGroup.Assets:
+    case Types.AccountKind.Assets:
       global.console.assert(accountId in state.assetsAccount.accounts);
       state.assetsAccount.accounts[accountId] = obj;
       break;
-    case Types.BasicAccountGroup.Liabilities:
+    case Types.AccountKind.Liabilities:
       global.console.assert(accountId in state.liabilitiesAccount.accounts);
       state.liabilitiesAccount.accounts[accountId] = obj;
       break;

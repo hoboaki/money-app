@@ -204,10 +204,10 @@ class Account extends React.Component<IProps, IState> {
         case DocTypes.AccountKind.Liabilities:
           return (
             <BasicAccountEditDialog
-              accountGroup={
+              accountKind={
                 this.state.dialogAccountKind === DocTypes.AccountKind.Assets
-                  ? DocTypes.BasicAccountGroup.Assets
-                  : DocTypes.BasicAccountGroup.Liabilities
+                  ? DocTypes.AccountKind.Assets
+                  : DocTypes.AccountKind.Liabilities
               }
               editAccountId={this.state.editAccountId}
               onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
