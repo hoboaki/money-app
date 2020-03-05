@@ -208,15 +208,20 @@ class Body extends React.Component<IProps, IState> {
     }
 
     // 使い回す値の定義
+    const accountKinds = [
+      DocTypes.AccountKind.Assets,
+      DocTypes.AccountKind.Liabilities,
+      DocTypes.AccountKind.Aggregate,
+    ];
     const basicAccountKinds = [DocTypes.AccountKind.Assets, DocTypes.AccountKind.Liabilities];
     const recordKinds = [DocTypes.RecordKind.Transfer, DocTypes.RecordKind.Income, DocTypes.RecordKind.Outgo];
     const basicAccounts = DocStateMethods.basicAccounts(this.props.doc);
 
     // 基本口座テーブルのデータ作成
     const basicAccountTableBuildTimeBegin = performance.now();
-    const basicAccountCarriedData: { [key: number]: number } = {};
-    const basicAccountCellDataArray: { [key: number]: number[] } = {};
-    const basicAccountBalanceData: { [key: number]: number } = {};
+    const accountCarriedData: { [key: number]: number } = {};
+    const accountCellDataArray: { [key: number]: number[] } = {};
+    const accountBalanceData: { [key: number]: number } = {};
     const calculateCarriedResult = new BalanceCalculator(
       this.props.doc,
       colBeginDate,
@@ -248,99 +253,101 @@ class Body extends React.Component<IProps, IState> {
       // 繰り越しデータ代入
       const account = basicAccounts[accountId];
       const sign = DocTypes.basicAccountKindToAccountKind(account.kind) !== DocTypes.AccountKind.Liabilities ? 1 : -1;
-      basicAccountCarriedData[accountId] = sign * calculateCarriedResult.balances[accountId];
+      accountCarriedData[accountId] = sign * calculateCarriedResult.balances[accountId];
 
       // 各列のデータ代入
       const cellDataArray: number[] = [];
       colInfos.forEach((colInfo, colIdx) => {
         cellDataArray[colIdx] = sign * calculateColResults[colIdx].balances[accountId];
       });
-      basicAccountCellDataArray[accountId] = cellDataArray;
+      accountCellDataArray[accountId] = cellDataArray;
 
       // 残高データ代入
-      basicAccountBalanceData[accountId] = sign * calculateBalanceResult.balances[accountId];
+      accountBalanceData[accountId] = sign * calculateBalanceResult.balances[accountId];
     });
     const basicAccountTableBuildTimeEnd = performance.now();
 
     // 基本口座ルート行のデータ作成
     const basicAccountRootsBuildTimeBegin = performance.now();
-    const basicAccountGroupCarriedData: { [key: number]: number } = {};
-    const basicAccountGroupCellDataArray: { [key: number]: number[] } = {};
-    const basicAccountGroupBalanceData: { [key: number]: number } = {};
+    const accountKindCarriedData: { [key: number]: number } = {};
+    const accountKindCellDataArray: { [key: number]: number[] } = {};
+    const accountKindBalanceData: { [key: number]: number } = {};
     basicAccountKinds.forEach((accountKind) => {
       // メモ
-      const accountIdArray = Object.keys(basicAccountCarriedData).filter(
+      const accountIdArray = Object.keys(accountCarriedData).filter(
         (data) => DocTypes.basicAccountKindToAccountKind(basicAccounts[Number(data)].kind) === accountKind,
       );
 
       // 繰り越しデータ計算
-      basicAccountGroupCarriedData[accountKind] = accountIdArray
-        .map((accountId) => basicAccountCarriedData[Number(accountId)])
+      accountKindCarriedData[accountKind] = accountIdArray
+        .map((accountId) => accountCarriedData[Number(accountId)])
         .reduce((prev, current) => prev + current);
 
       // 各列のデータ
       const cellDataArray: number[] = [];
       colInfos.forEach((colInfo, colIdx) => {
         cellDataArray[colIdx] = accountIdArray
-          .map((accountId) => basicAccountCellDataArray[Number(accountId)][colIdx])
+          .map((accountId) => accountCellDataArray[Number(accountId)][colIdx])
           .reduce((prev, current) => prev + current);
       });
-      basicAccountGroupCellDataArray[accountKind] = cellDataArray;
+      accountKindCellDataArray[accountKind] = cellDataArray;
 
       // 残高データ計算
-      basicAccountGroupBalanceData[accountKind] = accountIdArray
-        .map((accountId) => basicAccountBalanceData[Number(accountId)])
+      accountKindBalanceData[accountKind] = accountIdArray
+        .map((accountId) => accountBalanceData[Number(accountId)])
         .reduce((prev, current) => prev + current);
     });
     const basicAccountRootsBuildTimeEnd = performance.now();
 
     // 集計口座のデータ作成
-    const aggregateAccountCarriedData: { [key: number]: number } = {};
-    const aggregateAccountCellDataArray: { [key: number]: number[] } = {};
-    const aggregateAccountBalanceData: { [key: number]: number } = {};
-    this.props.doc.aggregateAccount.order.forEach((aggregateAccount) => {
+    this.props.doc.aggregateAccount.order.forEach((accountId) => {
       // メモ
-      const accountIdArray = this.props.doc.aggregateAccount.accounts[aggregateAccount].accounts;
+      const basicAccountIdArray = this.props.doc.aggregateAccount.accounts[accountId].accounts;
 
       // 繰り越しデータ計算
-      aggregateAccountCarriedData[aggregateAccount] = accountIdArray.reduce((prev, accountId) => {
+      accountCarriedData[accountId] = basicAccountIdArray.reduce((prev, basicAccountId) => {
         const sign =
-          DocTypes.basicAccountKindToAccountKind(basicAccounts[accountId].kind) !== DocTypes.AccountKind.Liabilities
+          DocTypes.basicAccountKindToAccountKind(basicAccounts[basicAccountId].kind) !==
+          DocTypes.AccountKind.Liabilities
             ? 1
             : -1;
-        return prev + sign * basicAccountCarriedData[Number(accountId)];
+        return prev + sign * accountCarriedData[Number(basicAccountId)];
       }, 0);
 
       // 各列のデータ
       const cellDataArray: number[] = [];
       colInfos.forEach((colInfo, colIdx) => {
-        cellDataArray[colIdx] = accountIdArray.reduce((prev, accountId) => {
+        cellDataArray[colIdx] = basicAccountIdArray.reduce((prev, basicAccountId) => {
           const sign =
-            DocTypes.basicAccountKindToAccountKind(basicAccounts[accountId].kind) !== DocTypes.AccountKind.Liabilities
+            DocTypes.basicAccountKindToAccountKind(basicAccounts[basicAccountId].kind) !==
+            DocTypes.AccountKind.Liabilities
               ? 1
               : -1;
-          return prev + sign * basicAccountCellDataArray[Number(accountId)][colIdx];
+          return prev + sign * accountCellDataArray[Number(basicAccountId)][colIdx];
         }, 0);
       });
-      aggregateAccountCellDataArray[aggregateAccount] = cellDataArray;
+      accountCellDataArray[accountId] = cellDataArray;
 
       // 残高データ計算
-      aggregateAccountBalanceData[aggregateAccount] = accountIdArray.reduce((prev, accountId) => {
+      accountBalanceData[accountId] = basicAccountIdArray.reduce((prev, accountId) => {
         const sign =
           DocTypes.basicAccountKindToAccountKind(basicAccounts[accountId].kind) !== DocTypes.AccountKind.Liabilities
             ? 1
             : -1;
-        return prev + sign * basicAccountBalanceData[Number(accountId)];
+        return prev + sign * accountBalanceData[Number(accountId)];
       }, 0);
     });
-    const aggregateAccountSumCarried = Object.values(aggregateAccountCarriedData).reduce((prev, cur) => prev + cur, 0);
-    const aggregateAccountSumCellDataArray: number[] = [];
-    colInfos.forEach((colInfo, colIdx) => {
-      aggregateAccountSumCellDataArray[colIdx] = Object.keys(aggregateAccountCellDataArray)
-        .map((id) => aggregateAccountCellDataArray[Number(id)][colIdx])
+    accountKindCarriedData[DocTypes.AccountKind.Aggregate] = this.props.doc.aggregateAccount.order
+      .map((id) => accountCarriedData[id])
+      .reduce((prev, cur) => prev + cur, 0);
+    accountKindCellDataArray[DocTypes.AccountKind.Aggregate] = colInfos.map((colInfo, colIdx) => {
+      return this.props.doc.aggregateAccount.order
+        .map((id) => accountCellDataArray[Number(id)][colIdx])
         .reduce((prev, cur) => prev + cur, 0);
     });
-    const aggregateAccountSumBalance = Object.values(aggregateAccountBalanceData).reduce((prev, cur) => prev + cur, 0);
+    accountKindBalanceData[DocTypes.AccountKind.Aggregate] = this.props.doc.aggregateAccount.order
+      .map((id) => accountBalanceData[id])
+      .reduce((prev, cur) => prev + cur, 0);
 
     // カテゴリテーブルのデータ生成の準備
     const categoryPrepareTimeBegin = performance.now();
@@ -598,9 +605,9 @@ class Body extends React.Component<IProps, IState> {
       );
     });
 
-    // 基本口座テーブルのルート行生成
-    const basicAccountRootRowDict: { [key: number]: JSX.Element } = {};
-    basicAccountKinds.forEach((accountKind) => {
+    // 口座テーブルのルート行生成
+    const accountRootRowDict: { [key: number]: JSX.Element } = {};
+    accountKinds.forEach((accountKind) => {
       let label = '#';
       switch (accountKind) {
         case DocTypes.AccountKind.Assets:
@@ -608,6 +615,9 @@ class Body extends React.Component<IProps, IState> {
           break;
         case DocTypes.AccountKind.Liabilities:
           label = '負債';
+          break;
+        case DocTypes.AccountKind.Aggregate:
+          label = '集計';
           break;
       }
       const cols: JSX.Element[] = [];
@@ -631,11 +641,11 @@ class Body extends React.Component<IProps, IState> {
             data-selected={this.isSelectedCell(cellInfo)}
             onClick={(e) => this.onCellClicked(e, cellInfo)}
           >
-            {PriceUtils.numToLocaleString(basicAccountGroupCellDataArray[accountKind][colIdx])}
+            {PriceUtils.numToLocaleString(accountKindCellDataArray[accountKind][colIdx])}
           </td>,
         );
       });
-      basicAccountRootRowDict[accountKind] = (
+      accountRootRowDict[accountKind] = (
         <tr key={`account-root-${accountKind}`}>
           <td className={rowHeadHolderAccountClass}>
             <div className={Styles.Holder} data-root-row={true}>
@@ -649,178 +659,99 @@ class Body extends React.Component<IProps, IState> {
           </td>
           <td className={rowHeadAccountCategoryClass} data-root-row={true}></td>
           <td className={rowHeadAccountCarriedClass} data-root-row={true}>
-            {carriedVisible ? PriceUtils.numToLocaleString(basicAccountGroupCarriedData[accountKind]) : ''}
+            {carriedVisible ? PriceUtils.numToLocaleString(accountKindCarriedData[accountKind]) : ''}
           </td>
           {cols}
           <td className={Styles.TableCellSpace} data-root-row={true} />
           <td className={rowTailAccountBalance} data-root-row={true}>
-            {PriceUtils.numToLocaleString(basicAccountGroupBalanceData[accountKind])}
+            {PriceUtils.numToLocaleString(accountKindBalanceData[accountKind])}
           </td>
         </tr>
       );
     });
 
-    // 基本口座テーブルの非ルート行生成
-    const basicAccountRowDict: { [key: number]: JSX.Element[] } = {};
-    basicAccountKinds.forEach((accountGroup) => {
-      basicAccountRowDict[accountGroup] = new Array<JSX.Element>();
+    // 口座テーブルの非ルート行生成
+    const accountRowDict: { [key: number]: JSX.Element[] } = {};
+    accountKinds.forEach((accountKind) => {
+      accountRowDict[accountKind] = new Array<JSX.Element>();
     });
-    DocStateMethods.basicAccountOrderMixed(this.props.doc).forEach((accountId) => {
-      const account = basicAccounts[accountId];
-      const accountKind = DocTypes.basicAccountKindToAccountKind(account.kind);
-      const targetArray = basicAccountRowDict[accountKind];
-      const cols: JSX.Element[] = [];
-      colInfos.forEach((colInfo, colIdx) => {
-        const cellInfo: ISelectedCellInfo = {
-          colIdx,
-          date: colInfo.date,
-          accountKind: accountKind,
-          accountId,
-          recordKind: null,
-          categoryId: null,
+    this.props.doc.assetsAccount.order
+      .map((id) => {
+        return {
+          kind: DocTypes.AccountKind.Assets,
+          id: id,
         };
-        cols.push(
-          <td
-            key={`account-${accountId}-col-${colIdx}`}
-            className={Styles.TableCell}
-            data-account-kind={accountKind}
-            data-account-id={account.id}
-            data-cell-even={targetArray.length % 2 === 0}
-            data-col-idx={colIdx}
-            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
-            data-selected={this.isSelectedCell(cellInfo)}
-            onClick={(e) => this.onCellClicked(e, cellInfo)}
-          >
-            {PriceUtils.numToLocaleString(basicAccountCellDataArray[accountId][colIdx])}
-          </td>,
-        );
-      });
-      targetArray.push(
-        <tr key={`account-${accountId}`}>
-          <td className={rowHeadHolderAccountClass}>
-            <div className={Styles.Holder}>
-              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={1} />
-              <span className={holderEntryAccountNameClass}>{account.name}</span>
-            </div>
-          </td>
-          <td className={rowHeadAccountCategoryClass}>
-            {DocTypes.shortLocalizedBasicAccountKind(account.kind).slice(0, 1)}
-          </td>
-          <td className={rowHeadAccountCarriedClass}>
-            {carriedVisible ? PriceUtils.numToLocaleString(basicAccountCarriedData[accountId]) : ''}
-          </td>
-          {cols}
-          <td className={Styles.TableCellSpace}></td>
-          <td className={rowTailAccountBalance}>{PriceUtils.numToLocaleString(basicAccountBalanceData[accountId])}</td>
-        </tr>,
-      );
-    });
-
-    // 集計口座テーブルのルート行生成
-    let aggregateAccountRootRow: JSX.Element | null = null;
-    {
-      const accountKind = DocTypes.AccountKind.Aggregate;
-      const cols: JSX.Element[] = [];
-      colInfos.forEach((colInfo, colIdx) => {
-        const cellInfo: ISelectedCellInfo = {
-          colIdx,
-          date: colInfo.date,
-          accountKind,
-          accountId: null,
-          recordKind: null,
-          categoryId: null,
-        };
-        cols.push(
-          <td
-            key={`account-root-${accountKind}-col-${colIdx}`}
-            className={Styles.TableCell}
-            data-account-kind={accountKind}
-            data-account-root={true}
-            data-col-idx={colIdx}
-            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
-            data-root-row={true}
-            data-selected={this.isSelectedCell(cellInfo)}
-            onClick={(e) => this.onCellClicked(e, cellInfo)}
-          >
-            {PriceUtils.numToLocaleString(aggregateAccountSumCellDataArray[colIdx])}
-          </td>,
-        );
-      });
-      aggregateAccountRootRow = (
-        <tr key={`account-root-${accountKind}`}>
-          <td className={rowHeadHolderAccountClass}>
-            <div className={Styles.Holder} data-root-row={true}>
-              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={0} data-root-row={true}>
-                <button className={expanderBtnClass}>▼</button>
+      })
+      .concat(
+        this.props.doc.liabilitiesAccount.order
+          .map((id) => {
+            return {
+              kind: DocTypes.AccountKind.Liabilities,
+              id: id,
+            };
+          })
+          .concat(
+            this.props.doc.aggregateAccount.order.map((id) => {
+              return {
+                kind: DocTypes.AccountKind.Aggregate,
+                id: id,
+              };
+            }),
+          ),
+      )
+      .forEach((accountKey) => {
+        const accountId = accountKey.id;
+        const account = DocStateMethods.accountById(this.props.doc, accountId);
+        const accountKind = accountKey.kind;
+        const targetArray = accountRowDict[accountKind];
+        const cols: JSX.Element[] = [];
+        colInfos.forEach((colInfo, colIdx) => {
+          const cellInfo: ISelectedCellInfo = {
+            colIdx,
+            date: colInfo.date,
+            accountKind,
+            accountId,
+            recordKind: null,
+            categoryId: null,
+          };
+          cols.push(
+            <td
+              key={`account-${accountId}-col-${colIdx}`}
+              className={Styles.TableCell}
+              data-account-kind={accountKind}
+              data-account-id={account.id}
+              data-cell-even={targetArray.length % 2 === 0}
+              data-col-idx={colIdx}
+              data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
+              data-selected={this.isSelectedCell(cellInfo)}
+              onClick={(e) => this.onCellClicked(e, cellInfo)}
+            >
+              {PriceUtils.numToLocaleString(accountCellDataArray[accountId][colIdx])}
+            </td>,
+          );
+        });
+        targetArray.push(
+          <tr key={`account-${accountId}`}>
+            <td className={rowHeadHolderAccountClass}>
+              <div className={Styles.Holder}>
+                <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={1} />
+                <span className={holderEntryAccountNameClass}>{account.name}</span>
               </div>
-              <span className={holderEntryAccountNameClass} data-root-row={true}>
-                {'集計口座'}
-              </span>
-            </div>
-          </td>
-          <td className={rowHeadAccountCategoryClass} data-root-row={true}></td>
-          <td className={rowHeadAccountCarriedClass} data-root-row={true}>
-            {carriedVisible ? PriceUtils.numToLocaleString(aggregateAccountSumCarried) : ''}
-          </td>
-          {cols}
-          <td className={Styles.TableCellSpace} data-root-row={true} />
-          <td className={rowTailAccountBalance} data-root-row={true}>
-            {PriceUtils.numToLocaleString(aggregateAccountSumBalance)}
-          </td>
-        </tr>
-      );
-    }
-
-    // 集計口座テーブルの非ルート行生成
-    const aggregateAccountRows: JSX.Element[] = [];
-    this.props.doc.aggregateAccount.order.forEach((accountId) => {
-      const accountKind = DocTypes.AccountKind.Aggregate;
-      const account = this.props.doc.aggregateAccount.accounts[accountId];
-      const cols: JSX.Element[] = [];
-      colInfos.forEach((colInfo, colIdx) => {
-        const cellInfo: ISelectedCellInfo = {
-          colIdx,
-          date: colInfo.date,
-          accountKind,
-          accountId,
-          recordKind: null,
-          categoryId: null,
-        };
-        cols.push(
-          <td
-            key={`account-${accountId}-col-${colIdx}`}
-            className={Styles.TableCell}
-            data-account-id={accountId}
-            data-cell-even={aggregateAccountRows.length % 2 === 0}
-            data-col-idx={colIdx}
-            data-date={IYearMonthDateUtils.toDataFormatText(colInfo.date)}
-            data-selected={this.isSelectedCell(cellInfo)}
-            onClick={(e) => this.onCellClicked(e, cellInfo)}
-          >
-            {PriceUtils.numToLocaleString(aggregateAccountCellDataArray[accountId][colIdx])}
-          </td>,
+            </td>
+            <td className={rowHeadAccountCategoryClass}>
+              {accountKind !== DocTypes.AccountKind.Aggregate
+                ? DocTypes.shortLocalizedBasicAccountKind(basicAccounts[accountId].kind).slice(0, 1)
+                : 0}
+            </td>
+            <td className={rowHeadAccountCarriedClass}>
+              {carriedVisible ? PriceUtils.numToLocaleString(accountCarriedData[accountId]) : ''}
+            </td>
+            {cols}
+            <td className={Styles.TableCellSpace}></td>
+            <td className={rowTailAccountBalance}>{PriceUtils.numToLocaleString(accountBalanceData[accountId])}</td>
+          </tr>,
         );
       });
-      aggregateAccountRows.push(
-        <tr key={`account-${accountId}`}>
-          <td className={rowHeadHolderAccountClass}>
-            <div className={Styles.Holder}>
-              <div className={holderEntryNormalExpanderSpaceClass} data-indent-level={1} />
-              <span className={holderEntryAccountNameClass}>{account.name}</span>
-            </div>
-          </td>
-          <td className={rowHeadAccountCategoryClass}></td>
-          <td className={rowHeadAccountCarriedClass}>
-            {carriedVisible ? PriceUtils.numToLocaleString(aggregateAccountCarriedData[accountId]) : ''}
-          </td>
-          {cols}
-          <td className={Styles.TableCellSpace}></td>
-          <td className={rowTailAccountBalance}>
-            {PriceUtils.numToLocaleString(aggregateAccountBalanceData[accountId])}
-          </td>
-        </tr>,
-      );
-    });
 
     // カテゴリテーブルの列ヘッダ生成
     const categoryColHeadCells: JSX.Element[] = [];
@@ -1055,12 +986,12 @@ class Body extends React.Component<IProps, IState> {
           <section className={Styles.AccountTableSection}>
             <table className={Styles.Table}>
               <tbody>
-                {basicAccountRootRowDict[DocTypes.AccountKind.Assets]}
-                {basicAccountRowDict[DocTypes.AccountKind.Assets]}
-                {basicAccountRootRowDict[DocTypes.AccountKind.Liabilities]}
-                {basicAccountRowDict[DocTypes.AccountKind.Liabilities]}
-                {aggregateAccountRootRow}
-                {aggregateAccountRows}
+                {accountRootRowDict[DocTypes.AccountKind.Assets]}
+                {accountRowDict[DocTypes.AccountKind.Assets]}
+                {accountRootRowDict[DocTypes.AccountKind.Liabilities]}
+                {accountRowDict[DocTypes.AccountKind.Liabilities]}
+                {accountRootRowDict[DocTypes.AccountKind.Aggregate]}
+                {accountRowDict[DocTypes.AccountKind.Aggregate]}
               </tbody>
             </table>
           </section>
