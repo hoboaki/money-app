@@ -204,10 +204,10 @@ class Account extends React.Component<IProps, IState> {
         case DocTypes.AccountKind.Liabilities:
           return (
             <BasicAccountEditDialog
-              accountGroup={
+              accountKind={
                 this.state.dialogAccountKind === DocTypes.AccountKind.Assets
-                  ? DocTypes.BasicAccountGroup.Assets
-                  : DocTypes.BasicAccountGroup.Liabilities
+                  ? DocTypes.AccountKind.Assets
+                  : DocTypes.AccountKind.Liabilities
               }
               editAccountId={this.state.editAccountId}
               onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
@@ -287,7 +287,7 @@ class Account extends React.Component<IProps, IState> {
     if (
       !NativeDialogUtils.showOkCancelDialog(
         '口座の削除',
-        `${this.props.doc.basicAccount.accounts[this.state.editAccountId].name}を削除しますか？`,
+        `${DocStateMethods.accountById(this.props.doc, this.state.editAccountId).name}を削除しますか？`,
         '口座に紐付くレコードは削除されます。',
         '口座を削除',
       )

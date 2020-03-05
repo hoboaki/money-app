@@ -275,6 +275,7 @@ class Main extends React.Component<ILocalProps, IState> {
     // 左側関連
     const records = this.listRecords();
     const recordElems: JSX.Element[] = [];
+    const basicAccounts = DocStateMethods.basicAccounts(this.props.doc);
     records.forEach((recordKey) => {
       const selected = recordKey.id === this.state.selectedRecordId;
       let date = IYearMonthDayDateUtils.today();
@@ -303,7 +304,7 @@ class Main extends React.Component<ILocalProps, IState> {
               classNames={[Styles.ListCardTopIcon]}
               darkMode={true}
             />,
-            <span key={`${record.id}-3`}>{this.props.doc.basicAccount.accounts[record.account].name}</span>,
+            <span key={`${record.id}-3`}>{basicAccounts[record.account].name}</span>,
           ];
           break;
         }
@@ -328,7 +329,7 @@ class Main extends React.Component<ILocalProps, IState> {
               classNames={[Styles.ListCardTopIcon]}
               darkMode={true}
             />,
-            <span key={`${record.id}-3`}>{this.props.doc.basicAccount.accounts[record.account].name}</span>,
+            <span key={`${record.id}-3`}>{basicAccounts[record.account].name}</span>,
           ];
           break;
         }
@@ -346,7 +347,7 @@ class Main extends React.Component<ILocalProps, IState> {
               classNames={[Styles.ListCardTopIcon]}
               darkMode={true}
             />,
-            <span key={`${record.id}-1`}>{this.props.doc.basicAccount.accounts[record.accountFrom].name}</span>,
+            <span key={`${record.id}-1`}>{basicAccounts[record.accountFrom].name}</span>,
             <MaterialIcon
               key={`${record.id}-2`}
               name={'forward'}
@@ -359,7 +360,7 @@ class Main extends React.Component<ILocalProps, IState> {
               classNames={[Styles.ListCardTopIcon]}
               darkMode={true}
             />,
-            <span key={`${record.id}-4`}>{this.props.doc.basicAccount.accounts[record.accountTo].name}</span>,
+            <span key={`${record.id}-4`}>{basicAccounts[record.accountTo].name}</span>,
           ];
           break;
         }
@@ -617,7 +618,7 @@ class Main extends React.Component<ILocalProps, IState> {
                   }}
                 >
                   {DocStateMethods.basicAccountOrderMixed(this.props.doc).map((accountId) => {
-                    const account = this.props.doc.basicAccount.accounts[accountId];
+                    const account = basicAccounts[accountId];
                     return (
                       <option key={account.id} value={account.id}>
                         {account.name}
@@ -643,7 +644,7 @@ class Main extends React.Component<ILocalProps, IState> {
                 >
                   <option value={DocTypes.INVALID_ID}>（未選択）</option>
                   {DocStateMethods.basicAccountOrderMixed(this.props.doc).map((accountId) => {
-                    const account = this.props.doc.basicAccount.accounts[accountId];
+                    const account = basicAccounts[accountId];
                     return (
                       <option key={account.id} value={account.id}>
                         {account.name}
@@ -670,7 +671,7 @@ class Main extends React.Component<ILocalProps, IState> {
                 >
                   <option value={DocTypes.INVALID_ID}>（未選択）</option>
                   {DocStateMethods.basicAccountOrderMixed(this.props.doc).map((accountId) => {
-                    const account = this.props.doc.basicAccount.accounts[accountId];
+                    const account = basicAccounts[accountId];
                     return (
                       <option key={account.id} value={account.id}>
                         {account.name}

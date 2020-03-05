@@ -79,23 +79,27 @@ export interface IPalmCategoryInfo {
 
 /** ドキュメントルート。 */
 export interface IState {
-  /** 基本口座。 */
-  basicAccount: {
+  /** 資産口座。 */
+  assetsAccount: {
     /** 資産口座の並び順（AccountId の配列）定義。 */
-    orderAssets: number[];
+    order: number[];
+    /** AccountId がキーの口座群。 */
+    accounts: { [key: number]: IBasicAccount };
+  };
 
-    /** 負債口座の並び順（AccountId の配列）定義。 */
-    orderLiabilities: number[];
-
+  /** 負債口座。 */
+  liabilitiesAccount: {
+    /** 資産口座の並び順（AccountId の配列）定義。 */
+    order: number[];
     /** AccountId がキーの口座群。 */
     accounts: { [key: number]: IBasicAccount };
   };
 
   /** 集計口座。 */
   aggregateAccount: {
-    /** 集計口座の並び順（AggregateAccountId の配列）定義。 */
+    /** 集計口座の並び順（AccountId の配列）定義。 */
     order: number[];
-    /** AggregateAccountId がキーの口座群。 */
+    /** AccountId がキーの口座群。 */
     accounts: { [key: number]: IAggregateAccount };
   };
 
@@ -143,9 +147,12 @@ export interface IState {
 }
 
 export const defaultState: IState = {
-  basicAccount: {
-    orderAssets: [],
-    orderLiabilities: [],
+  assetsAccount: {
+    order: [],
+    accounts: {},
+  },
+  liabilitiesAccount: {
+    order: [],
     accounts: {},
   },
   aggregateAccount: {

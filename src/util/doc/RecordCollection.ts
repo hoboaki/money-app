@@ -1,7 +1,8 @@
+import * as StateMethods from 'src/state/doc/StateMethods';
 import * as States from 'src/state/doc/States';
 import { RecordKind } from 'src/state/doc/Types';
+import IYearMonthDayDate from 'src/util/IYearMonthDayDate';
 
-import IYearMonthDayDate from '../IYearMonthDayDate';
 import IRecordCollection from './IRecordCollection';
 import IRecordFilter from './IRecordFilter';
 import IRecordKey from './IRecordKey';
@@ -50,16 +51,17 @@ class RecordCollection implements IRecordCollection {
 
   /**
    * コレクションにおける振替レコードの差額を求める。
-   * @param accounts 対象となる口座の AccountId。 null の場合は全口座。
+   * @param basicAccounts 対象となる基本口座の AccountId。 null の場合は全基本口座。
    */
-  public totalDiffTransfer(accounts: number[] | null = null) {
+  public totalDiffTransfer(basicAccounts: number[] | null = null) {
+    const basicAccountsDict = StateMethods.basicAccounts(this.state);
     let accountsDict: { [key: number]: States.IBasicAccount } = {};
-    if (accounts != null) {
-      accounts.forEach((id) => {
-        accountsDict[id] = this.state.basicAccount.accounts[id];
+    if (basicAccounts != null) {
+      basicAccounts.forEach((id) => {
+        accountsDict[id] = basicAccountsDict[id];
       });
     } else {
-      accountsDict = this.state.basicAccount.accounts;
+      accountsDict = basicAccountsDict;
     }
     return this.transfers.reduce((current, id) => {
       let result = current;

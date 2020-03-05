@@ -4,6 +4,7 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import * as DocActions from 'src/state/doc/Actions';
+import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
@@ -16,8 +17,8 @@ import { v4 as UUID } from 'uuid';
 import * as Styles from './Main.css';
 
 interface IProps {
-  /** 追加・編集する口座グループ。 */
-  accountGroup: DocTypes.BasicAccountGroup;
+  /** 追加・編集する口座種類。(Assets or Liabilities) */
+  accountKind: DocTypes.AccountKind;
 
   /** 編集する場合は口座のIDを指定。 */
   editAccountId: number | null;
@@ -47,8 +48,12 @@ class Main extends React.Component<ILocalProps, IState> {
 
   constructor(props: ILocalProps) {
     super(props);
+    global.console.assert(
+      this.props.accountKind === DocTypes.AccountKind.Assets ||
+        this.props.accountKind === DocTypes.AccountKind.Liabilities,
+    );
     if (props.editAccountId !== null) {
-      const account = props.doc.basicAccount.accounts[props.editAccountId];
+      const account = DocStateMethods.basicAccounts(props.doc)[props.editAccountId];
       this.state = {
         inputName: account.name,
         inputKind: account.kind,
@@ -61,7 +66,7 @@ class Main extends React.Component<ILocalProps, IState> {
       this.state = {
         inputName: '',
         inputKind:
-          props.accountGroup === DocTypes.BasicAccountGroup.Assets
+          props.accountKind === DocTypes.AccountKind.Assets
             ? DocTypes.BasicAccountKind.AssetsCash
             : DocTypes.BasicAccountKind.LiabilitiesCard,
         inputStartDate: IYearMonthDayDateUtils.toDisplayFormatText(IYearMonthDayDateUtils.today()),
@@ -106,7 +111,7 @@ class Main extends React.Component<ILocalProps, IState> {
     const header = (
       <div className={dialogHeaderClass}>
         <h5 className="modal-title" id="exampleModalLabel">
-          {`${this.props.accountGroup === DocTypes.BasicAccountGroup.Assets ? '資産口座' : '負債口座'}の${
+          {`${this.props.accountKind === DocTypes.AccountKind.Assets ? '資産口座' : '負債口座'}の${
             this.props.editAccountId !== null ? '編集' : '作成'
           }`}
         </h5>
@@ -152,7 +157,7 @@ class Main extends React.Component<ILocalProps, IState> {
           >
             {(() => {
               const kinds: DocTypes.BasicAccountKind[] = [];
-              if (this.props.accountGroup === DocTypes.BasicAccountGroup.Assets) {
+              if (this.props.accountKind === DocTypes.AccountKind.Assets) {
                 kinds.push(DocTypes.BasicAccountKind.AssetsCash);
                 kinds.push(DocTypes.BasicAccountKind.AssetsBank);
                 kinds.push(DocTypes.BasicAccountKind.AssetsInvesting);

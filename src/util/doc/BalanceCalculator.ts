@@ -19,13 +19,13 @@ class BalanceCalculator {
    * コンストラクタ。
    * @param state データベース。
    * @param endDate 残高の決算日。この日の前日まで（この日を含めない）の残高を求める。null の場合は 99999年12月31日。
-   * @param accounts 調査対象とする口座の AccountId 郡。null の場合は全口座が対象。
+   * @param basicAccounts 調査対象とする基本口座の AccountId 郡。null の場合は全基本口座が対象。
    * @param cache 計算結果を再利用するためのオブジェクト。endDate が cache.endDate より後ろの場合，このオブジェクトの結果を使って不要な計算処理をスキップする。
    */
   public constructor(
     state: States.IState,
     endDate: IYearMonthDayDate | null,
-    accounts: number[] | null = null,
+    basicAccounts: number[] | null = null,
     cache: BalanceCalculator | null = null,
   ) {
     // 変数初期化
@@ -39,14 +39,14 @@ class BalanceCalculator {
     }
     this.endDate = endDate;
     this.allRecords = cache != null && cache.allRecords != null ? cache.allRecords : new RecordCollection(state);
-    if (accounts == null) {
-      accounts = StateMethods.basicAccountOrderMixed(state);
+    if (basicAccounts == null) {
+      basicAccounts = StateMethods.basicAccountOrderMixed(state);
     }
 
     // 処理最適化のためまず日付で絞り込んでおく
     const allAccountCacheEnabled =
       cache != null &&
-      accounts.filter((id) => id in cache.balances).length === accounts.length &&
+      basicAccounts.filter((id) => id in cache.balances).length === basicAccounts.length &&
       cache.endDate < this.endDate;
     const preCalculateStartDate: IYearMonthDayDate | null =
       cache != null && allAccountCacheEnabled ? cache.endDate : null;
@@ -64,7 +64,7 @@ class BalanceCalculator {
     // レコードを各口座毎に振り分ける
     // RecordCollection.filter の機能を使うよりも更に高速化するためにカスタム実装する
     const accountDataMap: { [key: number]: { incomes: number[]; outgos: number[]; transfers: number[] } } = {};
-    accounts.forEach((accountId) => {
+    basicAccounts.forEach((accountId) => {
       accountDataMap[accountId] = {
         incomes: [],
         outgos: [],
@@ -87,7 +87,8 @@ class BalanceCalculator {
     });
 
     // 口座毎の結果を代入
-    accounts.forEach((accountId) => {
+    const basicAccountsDict = StateMethods.basicAccounts(state);
+    basicAccounts.forEach((accountId) => {
       const accountData = accountDataMap[accountId];
       const records = new RecordCollection(state, {
         incomes: accountData.incomes,
@@ -95,7 +96,7 @@ class BalanceCalculator {
         transfers: accountData.transfers,
       });
       const cacheBalance = cache != null && allAccountCacheEnabled ? cache.balances[accountId] : 0;
-      const account = state.basicAccount.accounts[accountId];
+      const account = basicAccountsDict[accountId];
       const addInitialAmount =
         IYearMonthDayDateUtils.less(account.startDate, this.endDate) &&
         (preCalculateStartDate == null || IYearMonthDayDateUtils.lessEq(preCalculateStartDate, account.startDate));
