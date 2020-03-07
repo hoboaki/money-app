@@ -13,6 +13,7 @@ import * as UiActions from 'src/state/ui/Actions';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
+import AggregateAccountEditDialog from 'src/view/widget/aggregate-account-edit-dialog';
 import BasicAccountEditDialog from 'src/view/widget/basic-account-edit-dialog';
 import MaterialIcon from 'src/view/widget/material-icon';
 import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
@@ -86,8 +87,10 @@ class Account extends React.Component<IProps, IState> {
     );
     this.addActionMenu.append(
       new remote.MenuItem({
-        label: '集計口座を作成...（準備中）',
-        enabled: false,
+        label: '集計口座を作成...',
+        click: () => {
+          addAction(DocTypes.AccountKind.Aggregate);
+        },
       }),
     );
 
@@ -209,6 +212,13 @@ class Account extends React.Component<IProps, IState> {
                   ? DocTypes.AccountKind.Assets
                   : DocTypes.AccountKind.Liabilities
               }
+              editAccountId={this.state.editAccountId}
+              onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
+            />
+          );
+        case DocTypes.AccountKind.Aggregate:
+          return (
+            <AggregateAccountEditDialog
               editAccountId={this.state.editAccountId}
               onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
             />

@@ -68,6 +68,42 @@ export const updateBasicAccount = (
   };
 };
 
+/// 集計口座の追加。
+export const ADD_AGGREGATE_ACCOUNT = UUID();
+export interface IAddAggregateAccount extends Action {
+  // 各変数の使用は StateMethods.aggregateAccountAdd を参照。
+  name: string;
+  accounts: number[];
+}
+export const addAggregateAccount = (name: string, accounts: number[]): IAddAggregateAccount => {
+  return {
+    type: ADD_AGGREGATE_ACCOUNT,
+    name,
+    accounts,
+  };
+};
+
+/// 基本口座の更新。
+export const UPDATE_AGGREGATE_ACCOUNT = UUID();
+export interface IUpdateAggregateAccount extends Action {
+  // 各変数の使用は StateMethods.aggregateAccountUpdate を参照。
+  accountId: number;
+  name: string;
+  accounts: number[];
+}
+export const updateAggregateAccount = (
+  accountId: number,
+  name: string,
+  accounts: number[],
+): IUpdateAggregateAccount => {
+  return {
+    type: UPDATE_AGGREGATE_ACCOUNT,
+    accountId,
+    name,
+    accounts,
+  };
+};
+
 /// 口座の並び順更新。
 export const UPDATE_ACCOUNT_ORDER = UUID();
 export interface IUpdateAccountOrder extends Action {
