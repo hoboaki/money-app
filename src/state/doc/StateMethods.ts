@@ -484,14 +484,26 @@ export const aggregateAccountAdd = (state: States.IState, name: string, accounts
 };
 
 /**
- * 集計口座の順番の変更。
- * @param accountGroup 変更対象となるグループ。
+ * 集計口座更新。
  */
-export const aggregateAccountOrderUpdate = (state: States.IState, oldIndex: number, newIndex: number) => {
-  const orders = state.aggregateAccount.order;
-  const moveId = orders[oldIndex];
-  orders.splice(oldIndex, 1);
-  orders.splice(newIndex, 0, moveId);
+export const aggregateAccountUpdate = (state: States.IState, accountId: number, name: string, accounts: number[]) => {
+  // オブジェクト作成
+  const obj = {
+    id: accountId,
+    name,
+    accounts,
+  };
+
+  // 対象の口座があるかチェック
+  const localBasicAccounts = basicAccounts(state);
+  if (accounts.filter((id) => id in localBasicAccounts).length !== accounts.length) {
+    throw new Error('Include not exists account id on aggregateAccountUpdate().');
+  }
+
+  // 追加
+  global.console.assert(obj.id in state.aggregateAccount.accounts);
+  state.aggregateAccount.accounts[obj.id] = obj;
+  return obj.id;
 };
 
 /**

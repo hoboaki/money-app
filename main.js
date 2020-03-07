@@ -138,7 +138,7 @@ function createWindow() {
     width: state.width,
     height: state.height,
     minWidth: 600,
-    minHeight: 300,
+    minHeight: 460,
     titleBarStyle: 'hidden',
     backgroundColor: '#f5f5f6',
     webPreferences: {

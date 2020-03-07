@@ -26,6 +26,14 @@ a2RMapper.addWork<Actions.IUpdateBasicAccount>(Actions.UPDATE_BASIC_ACCOUNT, (st
   );
 });
 
+a2RMapper.addWork<Actions.IAddAggregateAccount>(Actions.ADD_AGGREGATE_ACCOUNT, (state, action) => {
+  StateMethods.aggregateAccountAdd(state, action.name, action.accounts);
+});
+
+a2RMapper.addWork<Actions.IUpdateAggregateAccount>(Actions.UPDATE_AGGREGATE_ACCOUNT, (state, action) => {
+  StateMethods.aggregateAccountUpdate(state, action.accountId, action.name, action.accounts);
+});
+
 a2RMapper.addWork<Actions.IUpdateAccountOrder>(Actions.UPDATE_ACCOUNT_ORDER, (state, action) => {
   StateMethods.accountOrderUpdate(state, action.accountKind, action.oldIndex, action.newIndex);
 });
