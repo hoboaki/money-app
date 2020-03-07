@@ -4,6 +4,7 @@ import ClassNames from 'classnames';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import * as DocActions from 'src/state/doc/Actions';
+import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
@@ -34,6 +35,7 @@ interface IState {
 class Main extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdCloseBtn: string;
+  private elementIdAccountPrefix: string;
   private elementIdSubmitBtn: string;
 
   constructor(props: ILocalProps) {
@@ -54,6 +56,7 @@ class Main extends React.Component<ILocalProps, IState> {
     }
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
+    this.elementIdAccountPrefix = `elem-${UUID()}`;
     this.elementIdSubmitBtn = `elem-${UUID()}`;
   }
 
@@ -106,9 +109,22 @@ class Main extends React.Component<ILocalProps, IState> {
       </tr>
     );
     const inputAccounts = (
-      <tr className={Styles.InputKind}>
+      <tr className={Styles.InputAccounts}>
         <th scope="row">口座</th>
-        <td></td>
+        <td>
+          <div className={Styles.InputAccountListView}>
+            {DocStateMethods.basicAccountOrderMixed(this.props.doc).map((accountId) => {
+              const account = DocStateMethods.basicAccounts(this.props.doc)[accountId];
+              const inputId = `${this.elementIdAccountPrefix}-${account.id}`;
+              return (
+                <div key={account.id}>
+                  <input type="checkbox" id={inputId} />
+                  <label htmlFor={inputId}>{account.name}</label>
+                </div>
+              );
+            })}
+          </div>
+        </td>
       </tr>
     );
     const body = (
