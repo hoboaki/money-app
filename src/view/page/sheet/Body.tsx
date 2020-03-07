@@ -741,7 +741,7 @@ class Body extends React.Component<IProps, IState> {
             <td className={rowHeadAccountCategoryClass}>
               {accountKind !== DocTypes.AccountKind.Aggregate
                 ? DocTypes.shortLocalizedBasicAccountKind(basicAccounts[accountId].kind).slice(0, 1)
-                : 0}
+                : ''}
             </td>
             <td className={rowHeadAccountCarriedClass}>
               {carriedVisible ? PriceUtils.numToLocaleString(accountCarriedData[accountId]) : ''}
