@@ -118,7 +118,12 @@ class Main extends React.Component<ILocalProps, IState> {
               const inputId = `${this.elementIdAccountPrefix}-${account.id}`;
               return (
                 <div key={account.id}>
-                  <input type="checkbox" id={inputId} />
+                  <input
+                    type="checkbox"
+                    id={inputId}
+                    checked={this.state.inputAccounts.filter((id) => id === accountId).length === 1}
+                    onChange={(e) => this.onAccountsToggled(e, accountId)}
+                  />
                   <label htmlFor={inputId}>{account.name}</label>
                 </div>
               );
@@ -224,6 +229,20 @@ class Main extends React.Component<ILocalProps, IState> {
   private onInputNameChanged(e: React.ChangeEvent<HTMLInputElement>) {
     e.stopPropagation();
     this.setState({ inputName: e.target.value });
+  }
+
+  /// 口座：値反転。
+  private onAccountsToggled(e: React.ChangeEvent<HTMLInputElement>, accountId: number): void {
+    e.stopPropagation();
+    let newAccounts = this.state.inputAccounts;
+    if (this.state.inputAccounts.filter((id) => id === accountId).length === 0) {
+      // 追加
+      newAccounts.push(accountId);
+    } else {
+      // 削除
+      newAccounts = this.state.inputAccounts.filter((id) => id !== accountId);
+    }
+    this.setState({ inputAccounts: newAccounts });
   }
 }
 
