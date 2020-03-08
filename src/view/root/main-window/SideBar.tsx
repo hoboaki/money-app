@@ -32,6 +32,14 @@ class SideBar extends React.Component<IProps> {
         },
       }),
     );
+    this.settingMenu.append(
+      new remote.MenuItem({
+        label: 'カテゴリ設定',
+        click: () => {
+          this.onSettingPageSelected(PageSetting.SubPageIdCategory);
+        },
+      }),
+    );
   }
 
   public render() {
