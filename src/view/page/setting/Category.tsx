@@ -101,6 +101,10 @@ class Category extends React.Component<IProps, IState> {
     // });
   }
 
+  public componentDidUpdate() {
+    //...
+  }
+
   public render() {
     const rootClass = ClassNames(PageStyles.Base, LayoutStyles.TopToBottom);
     const header = <Header title={'カテゴリ設定'} iconName="class" />;
@@ -135,6 +139,10 @@ class Category extends React.Component<IProps, IState> {
         const self = categories[categoryId];
         const selfName =
           indentLevel === 0 ? (this.state.selectedTab === DocTypes.CategoryKind.Income ? '収入' : '支出') : self.name;
+        const reorder =
+          indentLevel === 0 ? null : (
+            <MaterialIcon name="reorder" classNames={[Styles.CategoryCardHeaderHandle]} darkMode={false} />
+          );
 
         // 子
         const childElems = self.childs.map((id) => categoryConverter(id, indentLevel + 1));
@@ -146,7 +154,7 @@ class Category extends React.Component<IProps, IState> {
             data-selected={this.state.cardActionMenuActive && this.state.editCategoryId === categoryId}
           >
             <div className={Styles.CategoryCardHeader}>
-              <MaterialIcon name="reorder" classNames={[Styles.CategoryCardHeaderHandle]} darkMode={false} />
+              {reorder}
               <span>{selfName}</span>
               <div className={Styles.CategoryCardHeaderTailSpace}>
                 <button className={BasicStyles.IconBtn} onClick={(e) => this.onCardActionBtnClicked(e, categoryId)}>
