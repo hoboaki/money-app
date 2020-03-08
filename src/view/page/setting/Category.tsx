@@ -2,7 +2,7 @@ import ClassNames from 'classnames';
 import { Menu, remote } from 'electron';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-// import Sortable from 'sortablejs';
+import Sortable from 'sortablejs';
 // import * as DocActions from 'src/state/doc/Actions';
 // import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
@@ -42,6 +42,7 @@ interface IState {
 class Category extends React.Component<IProps, IState> {
   private cardActionMenu: Menu;
   private elemIdCategoryList: string;
+  private sortedGroup: string;
 
   public constructor(props: IProps) {
     super(props);
@@ -52,6 +53,7 @@ class Category extends React.Component<IProps, IState> {
       cardActionMenuActive: false,
     };
     this.elemIdCategoryList = `elem-${UUID}`;
+    this.sortedGroup = `sorted-group-${UUID}`;
 
     // カードアクションMenu
     this.cardActionMenu = new remote.Menu();
@@ -74,35 +76,11 @@ class Category extends React.Component<IProps, IState> {
   }
 
   public componentDidMount() {
-    // 並び替えUIのセットアップ
-    const elem = document.getElementById(`${this.elemIdCategoryList}`);
-    if (elem === null) {
-      throw new Error();
-    }
-    // Sortable.create(elem, {
-    //   animation: 150,
-    //   fallbackOnBody: true,
-    //   ghostClass: Styles.CategoryCardGhost,
-    //   handle: `.${Styles.CategoryCardHandle}`,
-    //   onEnd: (evt) => {
-    //     // 値チェック
-    //     if (evt.newIndex === undefined || evt.oldIndex === undefined) {
-    //       throw new Error();
-    //     }
-
-    //     // // 順番変更を反映
-    //     // const oldIndex = evt.oldIndex;
-    //     // const newIndex = evt.newIndex;
-    //     // Store.dispatch(DocActions.updateCategoryOrder(this.state.selectedTab, oldIndex, newIndex));
-
-    //     // // 自動保存リクエスト
-    //     // Store.dispatch(UiActions.documentRequestAutoSave());
-    //   },
-    // });
+    this.setupSortable();
   }
 
   public componentDidUpdate() {
-    //...
+    this.setupSortable();
   }
 
   public render() {
@@ -146,7 +124,12 @@ class Category extends React.Component<IProps, IState> {
 
         // 子
         const childElems = self.childs.map((id) => categoryConverter(id, indentLevel + 1));
-        const childs = childElems.length === 0 ? null : <div className={Styles.CategoryList}>{childElems}</div>;
+        const childs =
+          childElems.length === 0 ? null : (
+            <div id={`${this.elemIdCategoryList}-${categoryId}`} className={Styles.CategoryList}>
+              {childElems}
+            </div>
+          );
         return (
           <div
             key={`${this.state.selectedTab}-${categoryId}`}
@@ -203,6 +186,46 @@ class Category extends React.Component<IProps, IState> {
         {body}
       </div>
     );
+  }
+
+  private setupSortable() {
+    const categories =
+      this.state.selectedTab === DocTypes.CategoryKind.Income
+        ? this.props.doc.income.categories
+        : this.props.doc.outgo.categories;
+    Object.keys(categories)
+      .map((keyText) => Number(keyText))
+      .forEach((id) => {
+        const category = categories[id];
+        if (category.childs.length === 0) {
+          return;
+        }
+        const elem = document.getElementById(`${this.elemIdCategoryList}-${id}`);
+        if (elem === null) {
+          throw new Error();
+        }
+        Sortable.create(elem, {
+          animation: 150,
+          fallbackOnBody: true,
+          ghostClass: Styles.CategoryCardGhost,
+          group: this.sortedGroup,
+          handle: `.${Styles.CategoryCardHeaderHandle}`,
+          onEnd: (evt) => {
+            // 値チェック
+            if (evt.newIndex === undefined || evt.oldIndex === undefined) {
+              throw new Error();
+            }
+
+            // // 順番変更を反映
+            // const oldIndex = evt.oldIndex;
+            // const newIndex = evt.newIndex;
+            // Store.dispatch(DocActions.updateCategoryOrder(this.state.selectedTab, oldIndex, newIndex));
+
+            // // 自動保存リクエスト
+            // Store.dispatch(UiActions.documentRequestAutoSave());
+          },
+        });
+      });
   }
 
   private onTabChanged(kind: DocTypes.CategoryKind) {
