@@ -34,7 +34,7 @@
   flex-grow: 1;
 }
 
-.AccountList {
+.CategoryList {
   border: 1px solid rgba(0, 0, 0, 0.12);
   height: calc(100% - 39px);
   overflow-y: auto;
@@ -42,7 +42,7 @@
   width: 100%;
 }
 
-.AccountCard {
+.CategoryCard {
   border-bottom: 1px solid #cccccc;
   display: flex;
   height: 38px;
@@ -50,34 +50,34 @@
   width: 100%;
 }
 
-.AccountCard[data-selected='true'] {
+.CategoryCard[data-selected='true'] {
   background: #eeeeee;
 }
 
-.AccountCardGhost {
+.CategoryCardGhost {
   background: #eeeeee;
 }
 
-.AccountCardHandle {
+.CategoryCardHandle {
   cursor: grab;
 }
 
-.AccountCard i {
+.CategoryCard i {
   color: rgba(0, 0, 0, 0.61);
   font-size: 15pt;
 }
 
-.AccountCard span {
+.CategoryCard span {
   font-size: 10pt;
   margin-left: 4px;
 }
 
-/* .AccountCard[data-selected='true'] {
+/* .CategoryCard[data-selected='true'] {
   background: #1976d2;
   color: rgba(255, 255, 255, 0.87);
 } */
 
-.AccountCardTailSpace {
+.CategoryCardTailSpace {
   display: flex;
   flex-direction: row-reverse;
   flex-grow: 1;

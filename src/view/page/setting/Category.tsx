@@ -3,24 +3,22 @@ import { Menu, remote } from 'electron';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Sortable from 'sortablejs';
-import * as DocActions from 'src/state/doc/Actions';
-import * as DocStateMethods from 'src/state/doc/StateMethods';
+// import * as DocActions from 'src/state/doc/Actions';
+// import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
-import Store from 'src/state/Store';
-import * as UiActions from 'src/state/ui/Actions';
+// import Store from 'src/state/Store';
+// import * as UiActions from 'src/state/ui/Actions';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
-import AggregateAccountEditDialog from 'src/view/widget/aggregate-account-edit-dialog';
-import BasicAccountEditDialog from 'src/view/widget/basic-account-edit-dialog';
 import MaterialIcon from 'src/view/widget/material-icon';
-import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
+// import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 import RadioButtonGroup from 'src/view/widget/radio-button-group';
 import { v4 as UUID } from 'uuid';
 
-import * as Styles from './Account.css';
+import * as Styles from './Category.css';
 import Header from './Header';
 
 interface IProps {
@@ -29,70 +27,31 @@ interface IProps {
 
 interface IState {
   /** 選択中のタブ。 */
-  selectedTab: DocTypes.AccountKind;
+  selectedTab: DocTypes.CategoryKind;
 
-  /** 口座編集ダイアログの口座種類。 */
-  dialogAccountKind: DocTypes.AccountKind;
-
-  /** 口座編集対象。 */
-  editAccountId: number | null;
+  /** カテゴリ編集対象。 */
+  editCategoryId: number | null;
 
   /** カードのコンテキストメニュー表示中か。 */
   cardActionMenuActive: boolean;
 
-  /** 口座編集ダイアログをモーダル中か。 */
-  modalAccountEdit: boolean;
+  /** 編集ダイアログをモーダル中か。 */
+  modalCategoryEdit: boolean;
 }
 
-class Account extends React.Component<IProps, IState> {
-  private addActionMenu: Menu;
+class Category extends React.Component<IProps, IState> {
   private cardActionMenu: Menu;
-  private elemIdAccountList: string;
+  private elemIdCategoryList: string;
 
   public constructor(props: IProps) {
     super(props);
     this.state = {
-      selectedTab: DocTypes.AccountKind.Assets,
-      dialogAccountKind: DocTypes.AccountKind.Assets,
-      editAccountId: null,
-      modalAccountEdit: false,
+      selectedTab: DocTypes.CategoryKind.Income,
+      editCategoryId: null,
+      modalCategoryEdit: false,
       cardActionMenuActive: false,
     };
-    this.elemIdAccountList = `elem-${UUID}`;
-
-    // 追加アクションMenu
-    const addAction = (kind: DocTypes.AccountKind) => {
-      this.setState({
-        dialogAccountKind: kind,
-        editAccountId: null,
-        modalAccountEdit: true,
-      });
-    };
-    this.addActionMenu = new remote.Menu();
-    this.addActionMenu.append(
-      new remote.MenuItem({
-        label: '資産口座を作成...',
-        click: () => {
-          addAction(DocTypes.AccountKind.Assets);
-        },
-      }),
-    );
-    this.addActionMenu.append(
-      new remote.MenuItem({
-        label: '負債口座を作成...',
-        click: () => {
-          addAction(DocTypes.AccountKind.Liabilities);
-        },
-      }),
-    );
-    this.addActionMenu.append(
-      new remote.MenuItem({
-        label: '集計口座を作成...',
-        click: () => {
-          addAction(DocTypes.AccountKind.Aggregate);
-        },
-      }),
-    );
+    this.elemIdCategoryList = `elem-${UUID}`;
 
     // カードアクションMenu
     this.cardActionMenu = new remote.Menu();
@@ -100,7 +59,7 @@ class Account extends React.Component<IProps, IState> {
       new remote.MenuItem({
         label: '編集...',
         click: () => {
-          this.setState({ modalAccountEdit: true });
+          this.setState({ modalCategoryEdit: true });
         },
       }),
     );
@@ -108,7 +67,7 @@ class Account extends React.Component<IProps, IState> {
       new remote.MenuItem({
         label: '削除...',
         click: () => {
-          this.accountDelete();
+          this.categoryDelete();
         },
       }),
     );
@@ -116,123 +75,111 @@ class Account extends React.Component<IProps, IState> {
 
   public componentDidMount() {
     // 並び替えUIのセットアップ
-    const elem = document.getElementById(`${this.elemIdAccountList}`);
+    const elem = document.getElementById(`${this.elemIdCategoryList}`);
     if (elem === null) {
       throw new Error();
     }
     Sortable.create(elem, {
       animation: 150,
-      ghostClass: Styles.AccountCardGhost,
-      handle: `.${Styles.AccountCardHandle}`,
+      ghostClass: Styles.CategoryCardGhost,
+      handle: `.${Styles.CategoryCardHandle}`,
       onEnd: (evt) => {
         // 値チェック
         if (evt.newIndex === undefined || evt.oldIndex === undefined) {
           throw new Error();
         }
 
-        // 順番変更を反映
-        const oldIndex = evt.oldIndex;
-        const newIndex = evt.newIndex;
-        Store.dispatch(DocActions.updateAccountOrder(this.state.selectedTab, oldIndex, newIndex));
+        // // 順番変更を反映
+        // const oldIndex = evt.oldIndex;
+        // const newIndex = evt.newIndex;
+        // Store.dispatch(DocActions.updateCategoryOrder(this.state.selectedTab, oldIndex, newIndex));
 
-        // 自動保存リクエスト
-        Store.dispatch(UiActions.documentRequestAutoSave());
+        // // 自動保存リクエスト
+        // Store.dispatch(UiActions.documentRequestAutoSave());
       },
     });
   }
 
   public render() {
     const rootClass = ClassNames(PageStyles.Base, LayoutStyles.TopToBottom);
-    const header = <Header title={'口座設定'} iconName="payment" />;
+    const header = <Header title={'カテゴリ設定'} iconName="class" />;
 
     const btnInfos = [
-      { label: '資産', onChanged: () => this.onTabChanged(DocTypes.AccountKind.Assets) },
-      { label: '負債', onChanged: () => this.onTabChanged(DocTypes.AccountKind.Liabilities) },
-      { label: '集計', onChanged: () => this.onTabChanged(DocTypes.AccountKind.Aggregate) },
+      { label: '収入', onChanged: () => this.onTabChanged(DocTypes.CategoryKind.Income) },
+      { label: '支出', onChanged: () => this.onTabChanged(DocTypes.CategoryKind.Outgo) },
     ];
     const controlBar = (
       <div className={Styles.ControlBar}>
         <div className={Styles.ControlBarAreaLeft}>
           <RadioButtonGroup btns={btnInfos} selectedBtnIndex={this.state.selectedTab - 1} />
         </div>
-        <div className={Styles.ControlBarAreaRight}>
-          <button className={BasicStyles.IconBtn} onClick={(e) => this.onAddBtnClicked(e)}>
-            <MaterialIcon name={'add'} classNames={[]} darkMode={false} />
-          </button>
-        </div>
+        <div className={Styles.ControlBarAreaRight}></div>
       </div>
     );
 
     const cards: JSX.Element[] = [];
     {
-      const accountsSelector = () => {
-        return DocStateMethods.accountOrder(this.props.doc, this.state.selectedTab).map((id) => {
-          const account = DocStateMethods.accountById(this.props.doc, id);
-          return {
-            id: account.id,
-            name: account.name,
-          };
-        });
-      };
-      accountsSelector().forEach((account) => {
+      const categories =
+        this.state.selectedTab === DocTypes.CategoryKind.Income
+          ? this.props.doc.income.categories
+          : this.props.doc.outgo.categories;
+
+      // let recordExistsLeafCategories: number[] = [];
+      // if (this.state.selectedTab === DocTypes.CategoryKind.Income) {
+      //   const categoryIds = Object.values(this.props.doc.income.records).map((record) => record.category);
+      //   recordExistsLeafCategories = categoryIds.filter((id, idx) => categoryIds.indexOf(id) === idx);
+      // }
+
+      const categoryConverter = (categoryId: number) => {
+        // 自身
+        const self = categories[categoryId];
+
+        // 子
+        const childElems = self.childs.map((id) => categoryConverter(id));
+        const childs = childElems.length === 0 ? null : <ol className={Styles.CategoryList}>{childElems}</ol>;
         cards.push(
           <li
-            key={`${this.state.selectedTab}-${account.id}`}
-            className={Styles.AccountCard}
-            data-selected={this.state.cardActionMenuActive && this.state.editAccountId === account.id}
+            key={`${this.state.selectedTab}-${categoryId}`}
+            className={Styles.CategoryCard}
+            data-selected={this.state.cardActionMenuActive && this.state.editCategoryId === categoryId}
           >
-            <MaterialIcon name="reorder" classNames={[Styles.AccountCardHandle]} darkMode={false} />
-            <span>{account.name}</span>
-            <div className={Styles.AccountCardTailSpace}>
-              <button className={BasicStyles.IconBtn} onClick={(e) => this.onCardActionBtnClicked(e, account.id)}>
-                <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />
-              </button>
+            <div>
+              <MaterialIcon name="reorder" classNames={[Styles.CategoryCardHandle]} darkMode={false} />
+              <span>{self.name}</span>
+              <div className={Styles.CategoryCardTailSpace}>
+                <button className={BasicStyles.IconBtn} onClick={(e) => this.onCardActionBtnClicked(e, categoryId)}>
+                  <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />
+                </button>
+              </div>
             </div>
+            {childs}
           </li>,
         );
-      });
+      };
+      categoryConverter(
+        this.state.selectedTab === DocTypes.CategoryKind.Income
+          ? this.props.doc.income.rootCategoryId
+          : this.props.doc.outgo.rootCategoryId,
+      );
     }
-    const accountList = (
-      <ol id={this.elemIdAccountList} className={Styles.AccountList}>
+    const categoryList = (
+      <ol id={this.elemIdCategoryList} className={Styles.CategoryList}>
         {cards}
       </ol>
     );
 
     const modalDialog = ((): JSX.Element | null => {
-      if (!this.state.modalAccountEdit) {
+      if (!this.state.modalCategoryEdit) {
         return null;
       }
-      switch (this.state.dialogAccountKind) {
-        case DocTypes.AccountKind.Assets:
-        case DocTypes.AccountKind.Liabilities:
-          return (
-            <BasicAccountEditDialog
-              accountKind={
-                this.state.dialogAccountKind === DocTypes.AccountKind.Assets
-                  ? DocTypes.AccountKind.Assets
-                  : DocTypes.AccountKind.Liabilities
-              }
-              editAccountId={this.state.editAccountId}
-              onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
-            />
-          );
-        case DocTypes.AccountKind.Aggregate:
-          return (
-            <AggregateAccountEditDialog
-              editAccountId={this.state.editAccountId}
-              onClosed={(isCanceled) => this.onAccountEditDialogClosed(isCanceled)}
-            />
-          );
-        default:
-          return null;
-      }
+      return null;
     })();
 
     const body = (
       <div className={Styles.BodyRoot}>
         <div className={Styles.Body}>
           {controlBar}
-          {accountList}
+          {categoryList}
           {modalDialog}
         </div>
       </div>
@@ -246,20 +193,15 @@ class Account extends React.Component<IProps, IState> {
     );
   }
 
-  private onTabChanged(kind: DocTypes.AccountKind) {
+  private onTabChanged(kind: DocTypes.CategoryKind) {
     this.setState({
       selectedTab: kind,
     });
   }
 
-  private onAddBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    e.stopPropagation();
-    this.addActionMenu.popup();
-  }
-
   private onCardActionBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number): void {
     e.stopPropagation();
-    this.setState({ cardActionMenuActive: true, dialogAccountKind: this.state.selectedTab, editAccountId: id });
+    this.setState({ cardActionMenuActive: true, editCategoryId: id });
     this.cardActionMenu.popup({
       callback: () => {
         this.setState({ cardActionMenuActive: false });
@@ -267,50 +209,30 @@ class Account extends React.Component<IProps, IState> {
     });
   }
 
-  private onAccountEditDialogClosed(isCanceled: boolean): void {
-    // タブを更新
-    const selectedTabSelector = () => {
-      // キャンセル時は変更無し
-      if (isCanceled) {
-        return this.state.selectedTab;
-      }
-
-      // 追加・更新があった場合はその口座のタブを選択
-      return this.state.dialogAccountKind;
-    };
-
-    // 後始末
-    this.setState({
-      selectedTab: selectedTabSelector(),
-      editAccountId: null,
-      modalAccountEdit: false,
-    });
-  }
-
-  private accountDelete() {
+  private categoryDelete() {
     // 値チェック
-    if (this.state.editAccountId === null) {
+    if (this.state.editCategoryId === null) {
       throw new Error();
     }
+    return;
+    // // 確認
+    // if (
+    //   !NativeDialogUtils.showOkCancelDialog(
+    //     '口座の削除',
+    //     `口座“${DocStateMethods.categoryById(this.props.doc, this.state.editCategoryId).name}"を削除しますか？`,
+    //     this.state.selectedTab !== DocTypes.CategoryKind.Aggregate ? '口座に紐付くレコードは削除されます。' : undefined,
+    //     '口座を削除',
+    //   )
+    // ) {
+    //   return;
+    // }
 
-    // 確認
-    if (
-      !NativeDialogUtils.showOkCancelDialog(
-        '口座の削除',
-        `口座“${DocStateMethods.accountById(this.props.doc, this.state.editAccountId).name}"を削除しますか？`,
-        this.state.selectedTab !== DocTypes.AccountKind.Aggregate ? '口座に紐付くレコードは削除されます。' : undefined,
-        '口座を削除',
-      )
-    ) {
-      return;
-    }
+    // // 削除を実行
+    // Store.dispatch(DocActions.deleteCategory(this.state.editCategoryId));
+    // Store.dispatch(UiActions.recordEditDialogUpdateLatestValue(null, null, null)); // 前回入力値情報をリセット
 
-    // 削除を実行
-    Store.dispatch(DocActions.deleteAccount(this.state.editAccountId));
-    Store.dispatch(UiActions.recordEditDialogUpdateLatestValue(null, null, null)); // 前回入力値情報をリセット
-
-    // 自動保存
-    Store.dispatch(UiActions.documentRequestAutoSave());
+    // // 自動保存
+    // Store.dispatch(UiActions.documentRequestAutoSave());
   }
 }
 
@@ -319,4 +241,4 @@ const mapStateToProps = (state: IStoreState) => {
     doc: state.doc,
   };
 };
-export default ReactRedux.connect(mapStateToProps)(Account);
+export default ReactRedux.connect(mapStateToProps)(Category);
