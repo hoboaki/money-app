@@ -2,7 +2,7 @@ import ClassNames from 'classnames';
 import { Menu, remote } from 'electron';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
-import Sortable from 'sortablejs';
+// import Sortable from 'sortablejs';
 // import * as DocActions from 'src/state/doc/Actions';
 // import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
@@ -79,25 +79,26 @@ class Category extends React.Component<IProps, IState> {
     if (elem === null) {
       throw new Error();
     }
-    Sortable.create(elem, {
-      animation: 150,
-      ghostClass: Styles.CategoryCardGhost,
-      handle: `.${Styles.CategoryCardHandle}`,
-      onEnd: (evt) => {
-        // 値チェック
-        if (evt.newIndex === undefined || evt.oldIndex === undefined) {
-          throw new Error();
-        }
+    // Sortable.create(elem, {
+    //   animation: 150,
+    //   fallbackOnBody: true,
+    //   ghostClass: Styles.CategoryCardGhost,
+    //   handle: `.${Styles.CategoryCardHandle}`,
+    //   onEnd: (evt) => {
+    //     // 値チェック
+    //     if (evt.newIndex === undefined || evt.oldIndex === undefined) {
+    //       throw new Error();
+    //     }
 
-        // // 順番変更を反映
-        // const oldIndex = evt.oldIndex;
-        // const newIndex = evt.newIndex;
-        // Store.dispatch(DocActions.updateCategoryOrder(this.state.selectedTab, oldIndex, newIndex));
+    //     // // 順番変更を反映
+    //     // const oldIndex = evt.oldIndex;
+    //     // const newIndex = evt.newIndex;
+    //     // Store.dispatch(DocActions.updateCategoryOrder(this.state.selectedTab, oldIndex, newIndex));
 
-        // // 自動保存リクエスト
-        // Store.dispatch(UiActions.documentRequestAutoSave());
-      },
-    });
+    //     // // 自動保存リクエスト
+    //     // Store.dispatch(UiActions.documentRequestAutoSave());
+    //   },
+    // });
   }
 
   public render() {
@@ -117,8 +118,7 @@ class Category extends React.Component<IProps, IState> {
       </div>
     );
 
-    const cards: JSX.Element[] = [];
-    {
+    const rootCard = (() => {
       const categories =
         this.state.selectedTab === DocTypes.CategoryKind.Income
           ? this.props.doc.income.categories
@@ -130,42 +130,46 @@ class Category extends React.Component<IProps, IState> {
       //   recordExistsLeafCategories = categoryIds.filter((id, idx) => categoryIds.indexOf(id) === idx);
       // }
 
-      const categoryConverter = (categoryId: number) => {
+      const categoryConverter = (categoryId: number, indentLevel: number) => {
         // 自身
         const self = categories[categoryId];
+        const selfName =
+          indentLevel === 0 ? (this.state.selectedTab === DocTypes.CategoryKind.Income ? '収入' : '支出') : self.name;
 
         // 子
-        const childElems = self.childs.map((id) => categoryConverter(id));
-        const childs = childElems.length === 0 ? null : <ol className={Styles.CategoryList}>{childElems}</ol>;
-        cards.push(
-          <li
+        const childElems = self.childs.map((id) => categoryConverter(id, indentLevel + 1));
+        const childs = childElems.length === 0 ? null : <div className={Styles.CategoryList}>{childElems}</div>;
+        return (
+          <div
             key={`${this.state.selectedTab}-${categoryId}`}
             className={Styles.CategoryCard}
             data-selected={this.state.cardActionMenuActive && this.state.editCategoryId === categoryId}
           >
-            <div>
-              <MaterialIcon name="reorder" classNames={[Styles.CategoryCardHandle]} darkMode={false} />
-              <span>{self.name}</span>
-              <div className={Styles.CategoryCardTailSpace}>
+            <div className={Styles.CategoryCardHeader}>
+              <MaterialIcon name="reorder" classNames={[Styles.CategoryCardHeaderHandle]} darkMode={false} />
+              <span>{selfName}</span>
+              <div className={Styles.CategoryCardHeaderTailSpace}>
                 <button className={BasicStyles.IconBtn} onClick={(e) => this.onCardActionBtnClicked(e, categoryId)}>
                   <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />
                 </button>
               </div>
             </div>
             {childs}
-          </li>,
+          </div>
         );
       };
-      categoryConverter(
-        this.state.selectedTab === DocTypes.CategoryKind.Income
+
+      return categoryConverter(
+        this.state.selectedTab == DocTypes.CategoryKind.Income
           ? this.props.doc.income.rootCategoryId
           : this.props.doc.outgo.rootCategoryId,
+        0,
       );
-    }
+    })();
     const categoryList = (
-      <ol id={this.elemIdCategoryList} className={Styles.CategoryList}>
-        {cards}
-      </ol>
+      <div id={this.elemIdCategoryList} className={Styles.CategoryList}>
+        {rootCard}
+      </div>
     );
 
     const modalDialog = ((): JSX.Element | null => {
