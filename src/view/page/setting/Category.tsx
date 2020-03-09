@@ -4,12 +4,11 @@ import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Sortable from 'sortablejs';
 import * as DocActions from 'src/state/doc/Actions';
-// import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
-// import * as UiActions from 'src/state/ui/Actions';
+import * as UiActions from 'src/state/ui/Actions';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
@@ -130,9 +129,14 @@ class Category extends React.Component<IProps, IState> {
               {childElems}
             </div>
           );
+
+        // key には子供の数を入れておくことで
+        // 親が変わるような移動が発生した場合に親カテゴリ毎Reactに再レンダリングさせる
+        // そうすることで SortableJS が消した要素を React 側も消そうとする際に発生する例外を防ぐ
+        const key = `${this.state.selectedTab}-childs${self.childs.length}-${categoryId}`;
         return (
           <div
-            key={`${this.state.selectedTab}-${categoryId}`}
+            key={key}
             className={Styles.CategoryCard}
             data-selected={this.state.cardActionMenuActive && this.state.editCategoryId === categoryId}
           >
@@ -230,10 +234,6 @@ class Category extends React.Component<IProps, IState> {
                 : this.props.doc.outgo.categories;
             const categoryId = categories[oldParentCategoryId].childs[evt.oldIndex];
 
-            // もし親を移動する場合は React を正しく動作させるために
-            // 既に消えてしまっている元の親に要素を追加しておく
-            // ...
-
             // 移動
             Store.dispatch(
               DocActions.moveCategory(this.state.selectedTab, categoryId, newParentCategoryId, evt.newIndex),
@@ -244,13 +244,8 @@ class Category extends React.Component<IProps, IState> {
             global.console.log(`oldParent: ${oldParentCategoryId}`);
             global.console.log(`newParent: ${newParentCategoryId}`);
 
-            // // 順番変更を反映
-            // const oldIndex = evt.oldIndex;
-            // const newIndex = evt.newIndex;
-            // Store.dispatch(DocActions.updateCategoryOrder(this.state.selectedTab, oldIndex, newIndex));
-
-            // // 自動保存リクエスト
-            // Store.dispatch(UiActions.documentRequestAutoSave());
+            // 自動保存リクエスト
+            Store.dispatch(UiActions.documentRequestAutoSave());
           },
         });
       });
