@@ -58,7 +58,7 @@ class Account extends React.Component<IProps, IState> {
       modalAccountEdit: false,
       cardActionMenuActive: false,
     };
-    this.elemIdAccountList = `elem-${UUID}`;
+    this.elemIdAccountList = `elem-${UUID()}`;
 
     // 追加アクションMenu
     const addAction = (kind: DocTypes.AccountKind) => {

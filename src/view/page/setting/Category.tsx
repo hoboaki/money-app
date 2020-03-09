@@ -52,8 +52,8 @@ class Category extends React.Component<IProps, IState> {
       modalCategoryEdit: false,
       cardActionMenuActive: false,
     };
-    this.elemIdCategoryList = `elem-${UUID}`;
-    this.sortedGroup = `sorted-group-${UUID}`;
+    this.elemIdCategoryList = `elem-${UUID()}`;
+    this.sortedGroup = `sorted-group-${UUID()}`;
 
     // カードアクションMenu
     this.cardActionMenu = new remote.Menu();
