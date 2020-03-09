@@ -4,6 +4,7 @@ import IStoreState from 'src/state/IStoreState';
 import * as UiStates from 'src/state/ui/States';
 
 import Account from './Account';
+import Category from './Category';
 
 interface IProps {
   states: UiStates.IPageSetting;
@@ -22,6 +23,8 @@ class Main extends React.Component<IProps> {
     switch (this.props.states.subPageId) {
       case Main.SubPageIdAccount:
         return <Account />;
+      case Main.SubPageIdCategory:
+        return <Category />;
       default:
         return <div />;
     }

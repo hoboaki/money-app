@@ -663,6 +663,88 @@ export const incomeCategoryAdd = (state: States.IState, name: string, parentId: 
   return obj.id;
 };
 
+/// 出金カテゴリ追加。
+/// @return {number} 追加したカテゴリの CategoryId。
+export const outgoCategoryAdd = (state: States.IState, name: string, parentId: number | null) => {
+  // オブジェクト作成
+  const obj = {
+    id: 0,
+    name: parentId == null ? '' : name,
+    parent: parentId,
+    childs: [],
+    collapse: false,
+  };
+  const parent = parentId != null ? state.outgo.categories[parentId] : null;
+
+  // ルート要素なら１つ目であることを保証
+  if (parent == null && Object.keys(state.outgo.categories).length !== 0) {
+    throw new Error('Outgo root category is already exists.');
+  }
+
+  // 追加
+  obj.id = state.nextId.category;
+  state.nextId.category++;
+  state.outgo.categories[obj.id] = obj;
+  if (parentId != null) {
+    if (parent != null) {
+      parent.childs.push(obj.id);
+    } else {
+      throw new Error(`Category parent (id: ${parentId}) is not exist.`);
+    }
+  }
+
+  // ルートの場合は ID を記録
+  if (parent == null) {
+    state.outgo.rootCategoryId = obj.id;
+  }
+
+  return obj.id;
+};
+
+/**
+ * カテゴリの移動。
+ * @param categoryId 移動するカテゴリ。
+ * @param newParentId 移動後の親カテゴリ。
+ * @param newChildIndex 移動後の親カテゴリからみた子インデックス値。
+ */
+export const categoryMove = (
+  state: States.IState,
+  categoryKind: Types.CategoryKind,
+  categoryId: number,
+  newParentId: number,
+  newChildIndex: number,
+) => {
+  const categories = categoryKind === Types.CategoryKind.Income ? state.income.categories : state.outgo.categories;
+  global.console.assert(categoryId in categories);
+  const category = categories[categoryId];
+  const oldParentId = category.parent;
+  if (oldParentId === null) {
+    throw new Error();
+  }
+  const oldParent = categories[oldParentId];
+  oldParent.childs = oldParent.childs.filter((id) => id !== categoryId);
+  global.console.assert(newParentId in categories);
+  const newParent = categories[newParentId];
+  newParent.childs.splice(newChildIndex, 0, categoryId);
+  category.parent = newParentId;
+};
+
+/** カテゴリの展開状態の更新。 */
+export const categoryCollapsedStateUpdate = (state: States.IState, categoryId: number, isCollapsed: boolean) => {
+  {
+    const cat = state.income.categories[categoryId];
+    if (cat != null) {
+      cat.collapse = isCollapsed;
+    }
+  }
+  {
+    const cat = state.outgo.categories[categoryId];
+    if (cat != null) {
+      cat.collapse = isCollapsed;
+    }
+  }
+};
+
 /**
  * 入金レコードの追加。
  * @param amount 金額。(入金がプラス・出金がマイナス)
@@ -724,44 +806,6 @@ export const incomeRecordUpdate = (
 
   // 更新
   state.income.records[obj.id] = obj;
-  return obj.id;
-};
-
-/// 出金カテゴリ追加。
-/// @return {number} 追加したカテゴリの CategoryId。
-export const outgoCategoryAdd = (state: States.IState, name: string, parentId: number | null) => {
-  // オブジェクト作成
-  const obj = {
-    id: 0,
-    name: parentId == null ? '' : name,
-    parent: parentId,
-    childs: [],
-    collapse: false,
-  };
-  const parent = parentId != null ? state.outgo.categories[parentId] : null;
-
-  // ルート要素なら１つ目であることを保証
-  if (parent == null && Object.keys(state.outgo.categories).length !== 0) {
-    throw new Error('Outgo root category is already exists.');
-  }
-
-  // 追加
-  obj.id = state.nextId.category;
-  state.nextId.category++;
-  state.outgo.categories[obj.id] = obj;
-  if (parentId != null) {
-    if (parent != null) {
-      parent.childs.push(obj.id);
-    } else {
-      throw new Error(`Category parent (id: ${parentId}) is not exist.`);
-    }
-  }
-
-  // ルートの場合は ID を記録
-  if (parent == null) {
-    state.outgo.rootCategoryId = obj.id;
-  }
-
   return obj.id;
 };
 
@@ -908,22 +952,6 @@ export const deleteRecords = (state: States.IState, recordIdArray: number[]) => 
       delete state.transfer.records[id];
     }
   });
-};
-
-/** カテゴリの展開状態の更新。 */
-export const categoryCollapsedStateUpdate = (state: States.IState, categoryId: number, isCollapsed: boolean) => {
-  {
-    const cat = state.income.categories[categoryId];
-    if (cat != null) {
-      cat.collapse = isCollapsed;
-    }
-  }
-  {
-    const cat = state.outgo.categories[categoryId];
-    if (cat != null) {
-      cat.collapse = isCollapsed;
-    }
-  }
 };
 
 /**

@@ -137,6 +137,30 @@ export const deleteAccount = (accountId: number): IDeleteAccount => {
   };
 };
 
+/// カテゴリの移動。
+export const MOVE_CATEGORY = UUID();
+export interface IMoveCategory extends Action {
+  // 各変数の使用は StateMethods.moveCategory を参照。
+  categoryKind: Types.CategoryKind;
+  categoryId: number;
+  newParentId: number;
+  newChildIndex: number;
+}
+export const moveCategory = (
+  categoryKind: Types.CategoryKind,
+  categoryId: number,
+  newParentId: number,
+  newChildIndex: number,
+): IMoveCategory => {
+  return {
+    type: MOVE_CATEGORY,
+    categoryKind,
+    categoryId,
+    newParentId,
+    newChildIndex,
+  };
+};
+
 /// 入金レコードの追加。
 export const ADD_RECORD_INCOME = UUID();
 export interface IAddRecordIncome extends Action {
