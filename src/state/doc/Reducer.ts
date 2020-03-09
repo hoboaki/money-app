@@ -42,6 +42,10 @@ a2RMapper.addWork<Actions.IDeleteAccount>(Actions.DELETE_ACCOUNT, (state, action
   StateMethods.accountDelete(state, action.accountId);
 });
 
+a2RMapper.addWork<Actions.IMoveCategory>(Actions.MOVE_CATEGORY, (state, action) => {
+  StateMethods.categoryMove(state, action.categoryKind, action.categoryId, action.newParentId, action.newChildIndex);
+});
+
 a2RMapper.addWork<Actions.IAddRecordIncome>(Actions.ADD_RECORD_INCOME, (state, action) => {
   StateMethods.incomeRecordAdd(
     state,

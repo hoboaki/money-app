@@ -3,12 +3,12 @@ import { Menu, remote } from 'electron';
 import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Sortable from 'sortablejs';
-// import * as DocActions from 'src/state/doc/Actions';
+import * as DocActions from 'src/state/doc/Actions';
 // import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
-// import Store from 'src/state/Store';
+import Store from 'src/state/Store';
 // import * as UiActions from 'src/state/ui/Actions';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
@@ -215,6 +215,34 @@ class Category extends React.Component<IProps, IState> {
             if (evt.newIndex === undefined || evt.oldIndex === undefined) {
               throw new Error();
             }
+
+            // 操作するカテゴリに関する情報をメモ
+            const oldParentRegexpResult = evt.from.id.match(/-(\d+)$/);
+            const newParentRegexpResult = evt.to.id.match(/-(\d+)$/);
+            if (oldParentRegexpResult === null || newParentRegexpResult === null) {
+              throw new Error();
+            }
+            const oldParentCategoryId = Number(oldParentRegexpResult[1]);
+            const newParentCategoryId = Number(newParentRegexpResult[1]);
+            const categories =
+              this.state.selectedTab === DocTypes.CategoryKind.Income
+                ? this.props.doc.income.categories
+                : this.props.doc.outgo.categories;
+            const categoryId = categories[oldParentCategoryId].childs[evt.oldIndex];
+
+            // もし親を移動する場合は React を正しく動作させるために
+            // 既に消えてしまっている元の親に要素を追加しておく
+            // ...
+
+            // 移動
+            Store.dispatch(
+              DocActions.moveCategory(this.state.selectedTab, categoryId, newParentCategoryId, evt.newIndex),
+            );
+            global.console.log(`move: ${categoryId}`);
+            global.console.log(`oldIndex: ${evt.oldIndex}`);
+            global.console.log(`newIndex: ${evt.newIndex}`);
+            global.console.log(`oldParent: ${oldParentCategoryId}`);
+            global.console.log(`newParent: ${newParentCategoryId}`);
 
             // // 順番変更を反映
             // const oldIndex = evt.oldIndex;
