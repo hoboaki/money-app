@@ -13,6 +13,7 @@ import * as UiActions from 'src/state/ui/Actions';
 import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
+import CategoryEditDialog from 'src/view/widget/category-edit-dialog';
 import MaterialIcon from 'src/view/widget/material-icon';
 import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 import RadioButtonGroup from 'src/view/widget/radio-button-group';
@@ -20,6 +21,12 @@ import { v4 as UUID } from 'uuid';
 
 import * as Styles from './Category.css';
 import Header from './Header';
+
+enum ModalState {
+  None,
+  Add,
+  Edit,
+}
 
 interface IProps {
   doc: DocStates.IState;
@@ -32,15 +39,18 @@ interface IState {
   /** カテゴリ編集対象。 */
   editCategoryId: number | null;
 
+  /** カテゴリ追加時の親カテゴリID。 */
+  categoryIdForAddChild: number | null;
+
   /** カードのコンテキストメニュー表示中か。 */
   cardActionMenuActive: boolean;
 
-  /** 編集ダイアログをモーダル中か。 */
-  modalCategoryEdit: boolean;
+  /** 編集ダイアログのモーダル状態。。 */
+  modalState: ModalState;
 }
 
 class Category extends React.Component<IProps, IState> {
-  private cardActionMenu: Menu;
+  private cardActionMenu: Menu | null = null;
   private elemIdCategoryList: string;
   private sortedGroup: string;
 
@@ -49,30 +59,12 @@ class Category extends React.Component<IProps, IState> {
     this.state = {
       selectedTab: DocTypes.CategoryKind.Income,
       editCategoryId: null,
-      modalCategoryEdit: false,
+      categoryIdForAddChild: null,
+      modalState: ModalState.None,
       cardActionMenuActive: false,
     };
     this.elemIdCategoryList = `elem-${UUID()}`;
     this.sortedGroup = `sorted-group-${UUID()}`;
-
-    // カードアクションMenu
-    this.cardActionMenu = new remote.Menu();
-    this.cardActionMenu.append(
-      new remote.MenuItem({
-        label: '編集...',
-        click: () => {
-          this.setState({ modalCategoryEdit: true });
-        },
-      }),
-    );
-    this.cardActionMenu.append(
-      new remote.MenuItem({
-        label: '削除...',
-        click: () => {
-          this.categoryDelete();
-        },
-      }),
-    );
   }
 
   public componentDidMount() {
@@ -169,10 +161,17 @@ class Category extends React.Component<IProps, IState> {
     );
 
     const modalDialog = ((): JSX.Element | null => {
-      if (!this.state.modalCategoryEdit) {
+      if (!this.state.modalState) {
         return null;
       }
-      return null;
+      return (
+        <CategoryEditDialog
+          categoryKind={this.state.selectedTab}
+          editCategoryId={this.state.editCategoryId}
+          parentCategoryId={this.state.categoryIdForAddChild}
+          onClosed={(isCanceled) => this.onCategoryEditDialogClosed(isCanceled)}
+        />
+      );
     })();
 
     const body = (
@@ -239,11 +238,6 @@ class Category extends React.Component<IProps, IState> {
             Store.dispatch(
               DocActions.moveCategory(this.state.selectedTab, categoryId, newParentCategoryId, evt.newIndex),
             );
-            global.console.log(`move: ${categoryId}`);
-            global.console.log(`oldIndex: ${evt.oldIndex}`);
-            global.console.log(`newIndex: ${evt.newIndex}`);
-            global.console.log(`oldParent: ${oldParentCategoryId}`);
-            global.console.log(`newParent: ${newParentCategoryId}`);
 
             // 自動保存リクエスト
             Store.dispatch(UiActions.documentRequestAutoSave());
@@ -260,11 +254,50 @@ class Category extends React.Component<IProps, IState> {
 
   private onCardActionBtnClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number): void {
     e.stopPropagation();
-    this.setState({ cardActionMenuActive: true, editCategoryId: id });
+
+    // カードアクションMenu作成
+    const recordCountsDict = this.recordCountsDict();
+    this.cardActionMenu = new remote.Menu();
+    this.cardActionMenu.append(
+      new remote.MenuItem({
+        label: '子カテゴリを作成...',
+        enabled: !(id in recordCountsDict),
+        click: () => {
+          this.setState({ categoryIdForAddChild: id, modalState: ModalState.Add });
+        },
+      }),
+    );
+    this.cardActionMenu.append(
+      new remote.MenuItem({
+        label: '編集...',
+        click: () => {
+          this.setState({ editCategoryId: id, modalState: ModalState.Edit });
+        },
+      }),
+    );
+    this.cardActionMenu.append(
+      new remote.MenuItem({
+        label: '削除...',
+        click: () => {
+          this.categoryDelete();
+        },
+      }),
+    );
+
+    this.setState({ cardActionMenuActive: true });
     this.cardActionMenu.popup({
       callback: () => {
         this.setState({ cardActionMenuActive: false });
       },
+    });
+  }
+
+  private onCategoryEditDialogClosed(isCanceled: boolean): void {
+    // 後始末
+    this.setState({
+      editCategoryId: null,
+      categoryIdForAddChild: null,
+      modalState: ModalState.None,
     });
   }
 
