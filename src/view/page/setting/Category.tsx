@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as ReactRedux from 'react-redux';
 import Sortable from 'sortablejs';
 import * as DocActions from 'src/state/doc/Actions';
+import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
@@ -13,7 +14,7 @@ import * as BasicStyles from 'src/view/Basic.css';
 import * as LayoutStyles from 'src/view/Layout.css';
 import * as PageStyles from 'src/view/page/Page.css';
 import MaterialIcon from 'src/view/widget/material-icon';
-// import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
+import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 import RadioButtonGroup from 'src/view/widget/radio-button-group';
 import { v4 as UUID } from 'uuid';
 
@@ -272,25 +273,49 @@ class Category extends React.Component<IProps, IState> {
     if (this.state.editCategoryId === null) {
       throw new Error();
     }
-    return;
-    // // 確認
-    // if (
-    //   !NativeDialogUtils.showOkCancelDialog(
-    //     '口座の削除',
-    //     `口座“${DocStateMethods.categoryById(this.props.doc, this.state.editCategoryId).name}"を削除しますか？`,
-    //     this.state.selectedTab !== DocTypes.CategoryKind.Aggregate ? '口座に紐付くレコードは削除されます。' : undefined,
-    //     '口座を削除',
-    //   )
-    // ) {
-    //   return;
-    // }
 
-    // // 削除を実行
-    // Store.dispatch(DocActions.deleteCategory(this.state.editCategoryId));
-    // Store.dispatch(UiActions.recordEditDialogUpdateLatestValue(null, null, null)); // 前回入力値情報をリセット
+    // 確認
+    const recordCountsDict = this.recordCountsDict();
+    const recordCount =
+      this.state.editCategoryId in recordCountsDict ? recordCountsDict[this.state.editCategoryId] : null;
+    const targetCategory = DocStateMethods.categoryById(this.props.doc, this.state.editCategoryId);
+    const detailMessage = (() => {
+      if (targetCategory.childs.length !== 0) {
+        const totalRecordCount = DocStateMethods.leafCategoryIdArray(
+          targetCategory.id,
+          this.state.selectedTab === DocTypes.CategoryKind.Income
+            ? this.props.doc.income.categories
+            : this.props.doc.outgo.categories,
+        )
+          .map((id) => (id in recordCountsDict ? recordCountsDict[id] : 0))
+          .reduce((prev, cur) => prev + cur, 0);
+        if (totalRecordCount !== 0) {
+          return `すべての子カテゴリと子カテゴリに紐付く${totalRecordCount}件のレコードは削除されます。`;
+        }
+        return `すべての子カテゴリは削除されます。`;
+      }
+      if (recordCount !== null) {
+        return `カテゴリに紐付く${recordCount}件のレコードは削除されます。`;
+      }
+      return undefined;
+    })();
+    if (
+      !NativeDialogUtils.showOkCancelDialog(
+        'カテゴリの削除',
+        `カテゴリ“${targetCategory.name}"を削除しますか？`,
+        detailMessage,
+        'カテゴリを削除',
+      )
+    ) {
+      return;
+    }
 
-    // // 自動保存
-    // Store.dispatch(UiActions.documentRequestAutoSave());
+    // 削除を実行
+    Store.dispatch(DocActions.deleteCategory(this.state.editCategoryId));
+    Store.dispatch(UiActions.recordEditDialogUpdateLatestValue(null, null, null)); // 前回入力値情報をリセット
+
+    // 自動保存
+    Store.dispatch(UiActions.documentRequestAutoSave());
   }
 
   /// 各カテゴリが持つレコード数の辞書を返す。
