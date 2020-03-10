@@ -257,6 +257,7 @@ class Category extends React.Component<IProps, IState> {
 
     // カードアクションMenu作成
     const recordCountsDict = this.recordCountsDict();
+    const isRootCategory = DocStateMethods.categoryById(this.props.doc, id).parent === null;
     this.cardActionMenu = new remote.Menu();
     this.cardActionMenu.append(
       new remote.MenuItem({
@@ -270,6 +271,7 @@ class Category extends React.Component<IProps, IState> {
     this.cardActionMenu.append(
       new remote.MenuItem({
         label: '編集...',
+        enabled: !isRootCategory,
         click: () => {
           this.setState({ editCategoryId: id, modalState: ModalState.Edit });
         },
@@ -278,6 +280,7 @@ class Category extends React.Component<IProps, IState> {
     this.cardActionMenu.append(
       new remote.MenuItem({
         label: '削除...',
+        enabled: !isRootCategory,
         click: () => {
           this.categoryDelete();
         },
