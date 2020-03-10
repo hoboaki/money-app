@@ -10,18 +10,20 @@ import * as DocTypes from 'src/state/doc/Types';
 import IStoreState from 'src/state/IStoreState';
 import Store from 'src/state/Store';
 import * as UiActions from 'src/state/ui/Actions';
-import * as IYearMonthDayDateUtils from 'src/util/IYearMonthDayDateUtils';
 import * as BasicStyles from 'src/view/Basic.css';
 import { v4 as UUID } from 'uuid';
 
 import * as Styles from './Main.css';
 
 interface IProps {
-  /** 追加・編集する口座種類。(Assets or Liabilities) */
-  accountKind: DocTypes.AccountKind;
+  /** 追加・編集するカテゴリ種類。 */
+  categoryKind: DocTypes.CategoryKind;
 
   /** 編集する場合は口座のIDを指定。 */
-  editAccountId: number | null;
+  editCategoryId: number | null;
+
+  /** 親カテゴリID。 */
+  parentCategoryId: number;
 
   /** 閉じる際のコールバック。 */
   onClosed: (isCanceled: boolean) => void;
@@ -33,69 +35,38 @@ interface ILocalProps extends IProps {
 
 interface IState {
   inputName: string;
-  inputKind: DocTypes.BasicAccountKind;
-  inputStartDate: string;
-  inputInitialAmount: number;
-  inputInitialAmountIsNegative: boolean;
   isCanceled: boolean;
 }
 
 class Main extends React.Component<ILocalProps, IState> {
   private elementIdRoot: string;
   private elementIdCloseBtn: string;
-  private elementIdInputStartDate: string;
   private elementIdSubmitBtn: string;
 
   constructor(props: ILocalProps) {
     super(props);
     global.console.assert(
-      this.props.accountKind === DocTypes.AccountKind.Assets ||
-        this.props.accountKind === DocTypes.AccountKind.Liabilities,
+      this.props.categoryKind === DocTypes.CategoryKind.Income ||
+        this.props.categoryKind === DocTypes.CategoryKind.Outgo,
     );
-    if (props.editAccountId !== null) {
-      const account = DocStateMethods.basicAccounts(props.doc)[props.editAccountId];
+    if (props.editCategoryId !== null) {
+      const category = DocStateMethods.categoryById(props.doc, props.editCategoryId);
       this.state = {
-        inputName: account.name,
-        inputKind: account.kind,
-        inputStartDate: IYearMonthDayDateUtils.toDisplayFormatText(account.startDate),
-        inputInitialAmount: account.initialAmount,
-        inputInitialAmountIsNegative: false,
+        inputName: category.name,
         isCanceled: true,
       };
     } else {
       this.state = {
         inputName: '',
-        inputKind:
-          props.accountKind === DocTypes.AccountKind.Assets
-            ? DocTypes.BasicAccountKind.AssetsCash
-            : DocTypes.BasicAccountKind.LiabilitiesCard,
-        inputStartDate: IYearMonthDayDateUtils.toDisplayFormatText(IYearMonthDayDateUtils.today()),
-        inputInitialAmount: 0,
-        inputInitialAmountIsNegative: false,
         isCanceled: true,
       };
     }
     this.elementIdRoot = `elem-${UUID()}`;
     this.elementIdCloseBtn = `elem-${UUID()}`;
-    this.elementIdInputStartDate = `elem-${UUID()}`;
     this.elementIdSubmitBtn = `elem-${UUID()}`;
   }
 
   public componentDidMount() {
-    // DatePicker セットアップ
-    $(`#${this.elementIdInputStartDate}`)
-      .datepicker({
-        format: 'yyyy/mm/dd',
-        todayBtn: 'linked',
-        language: 'ja',
-        autoclose: true,
-        todayHighlight: true,
-        showOnFocus: false,
-      })
-      .on('changeDate', (e) => {
-        this.onInputStartDateChanged(e.format('yyyy/mm/dd'));
-      });
-
     // ダイアログ表示
     $(`#${this.elementIdRoot}`).modal({ show: true, backdrop: false });
 
@@ -111,8 +82,8 @@ class Main extends React.Component<ILocalProps, IState> {
     const header = (
       <div className={dialogHeaderClass}>
         <h5 className="modal-title" id="exampleModalLabel">
-          {`${this.props.accountKind === DocTypes.AccountKind.Assets ? '資産口座' : '負債口座'}の${
-            this.props.editAccountId !== null ? '編集' : '作成'
+          {`${this.props.categoryKind === DocTypes.CategoryKind.Income ? '収入カテゴリ' : '支出カテゴリ'}の${
+            this.props.editCategoryId !== null ? '編集' : '作成'
           }`}
         </h5>
         <button type="button" id={this.elementIdCloseBtn} className="close" data-dismiss="modal" aria-label="Close">
@@ -145,87 +116,10 @@ class Main extends React.Component<ILocalProps, IState> {
         </td>
       </tr>
     );
-    const inputKind = (
-      <tr className={Styles.InputKind}>
-        <th scope="row">種類</th>
-        <td>
-          <select
-            value={this.state.inputKind.toString()}
-            onChange={(e) => {
-              this.onInputKindChanged(e);
-            }}
-          >
-            {(() => {
-              const kinds: DocTypes.BasicAccountKind[] = [];
-              if (this.props.accountKind === DocTypes.AccountKind.Assets) {
-                kinds.push(DocTypes.BasicAccountKind.AssetsCash);
-                kinds.push(DocTypes.BasicAccountKind.AssetsBank);
-                kinds.push(DocTypes.BasicAccountKind.AssetsInvesting);
-                kinds.push(DocTypes.BasicAccountKind.AssetsOther);
-              } else {
-                kinds.push(DocTypes.BasicAccountKind.LiabilitiesCard);
-                kinds.push(DocTypes.BasicAccountKind.LiabilitiesOther);
-              }
-              return kinds.map((kind) => {
-                return (
-                  <option key={kind} value={kind}>
-                    {DocTypes.localizedBasicAccountKind(kind)}
-                  </option>
-                );
-              });
-            })()}
-          </select>
-        </td>
-      </tr>
-    );
-    const inputStartDate = (
-      <tr className={Styles.InputStartDate}>
-        <th scope="row">開始日</th>
-        <td>
-          <input
-            id={this.elementIdInputStartDate}
-            type="text"
-            value={this.state.inputStartDate}
-            readOnly={true}
-            onClick={(e) => {
-              this.onInputStartDateClicked(e);
-            }}
-          />
-        </td>
-      </tr>
-    );
-    const inputInitialAmount = (
-      <tr className={Styles.InputInitialAmount} data-is-negative={this.state.inputInitialAmountIsNegative}>
-        <th scope="row">初期残高</th>
-        <td>
-          <input
-            type="text"
-            value={this.state.inputInitialAmount.toString()}
-            onChange={(e) => {
-              this.onInputInitialAmountChanged(e);
-            }}
-            onFocus={(e) => {
-              e.stopPropagation();
-              e.target.select();
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.currentTarget.select();
-              return false;
-            }}
-          />
-        </td>
-      </tr>
-    );
     const body = (
       <div className={Styles.InputRoot}>
         <table>
-          <tbody>
-            {inputName}
-            {inputKind}
-            {inputStartDate}
-            {inputInitialAmount}
-          </tbody>
+          <tbody>{inputName}</tbody>
         </table>
       </div>
     );
@@ -240,7 +134,7 @@ class Main extends React.Component<ILocalProps, IState> {
           disabled={this.state.inputName === ''}
           onClick={(e) => this.onSubmitBtnClicked(e)}
         >
-          {this.props.editAccountId !== null ? '更新' : '追加'}
+          {this.props.editCategoryId !== null ? '更新' : '追加'}
         </button>
       </div>
     );
@@ -295,22 +189,14 @@ class Main extends React.Component<ILocalProps, IState> {
 
     // 追加or更新
     {
-      const initialAmount = (this.state.inputInitialAmountIsNegative ? -1 : 1) * this.state.inputInitialAmount;
-      const startDate = IYearMonthDayDateUtils.fromText(this.state.inputStartDate);
-      if (this.props.editAccountId === null) {
-        Store.dispatch(
-          DocActions.addBasicAccount(this.state.inputName, this.state.inputKind, initialAmount, startDate),
-        );
+      if (this.props.editCategoryId === null) {
+        if (this.props.categoryKind === DocTypes.CategoryKind.Income) {
+          Store.dispatch(
+            DocActions.addCategory(this.props.categoryKind, this.state.inputName, this.props.parentCategoryId),
+          );
+        }
       } else {
-        Store.dispatch(
-          DocActions.updateBasicAccount(
-            this.props.editAccountId,
-            this.state.inputName,
-            this.state.inputKind,
-            initialAmount,
-            startDate,
-          ),
-        );
+        Store.dispatch(DocActions.updateCategory(this.props.editCategoryId, this.state.inputName));
       }
     }
 
@@ -326,37 +212,6 @@ class Main extends React.Component<ILocalProps, IState> {
   private onInputNameChanged(e: React.ChangeEvent<HTMLInputElement>) {
     e.stopPropagation();
     this.setState({ inputName: e.target.value });
-  }
-
-  /// 種類：値更新。
-  private onInputKindChanged(e: React.ChangeEvent<HTMLSelectElement>) {
-    e.stopPropagation();
-    this.setState({ inputKind: Number(e.target.value) });
-  }
-
-  /// 開始日：クリックイベント。
-  private onInputStartDateClicked(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
-    e.stopPropagation();
-    $(`#${this.elementIdInputStartDate}`).datepicker('show');
-  }
-
-  /// 開始日：値更新。
-  private onInputStartDateChanged(dateText: string) {
-    this.setState({
-      inputStartDate: dateText,
-    });
-  }
-
-  /// 初期残高：値更新。
-  private onInputInitialAmountChanged(e: React.ChangeEvent<HTMLInputElement>) {
-    const newValue = Number(e.target.value.replace(/[^\d]/, ''));
-    if (!isNaN(newValue)) {
-      // '-' の数分フラグを反転させる
-      const negCount = e.target.value.split('-').length - 1;
-      const isNegative =
-        negCount % 2 === 0 ? this.state.inputInitialAmountIsNegative : !this.state.inputInitialAmountIsNegative;
-      this.setState({ inputInitialAmount: newValue, inputInitialAmountIsNegative: isNegative });
-    }
   }
 }
 

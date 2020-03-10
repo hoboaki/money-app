@@ -701,6 +701,24 @@ export const outgoCategoryAdd = (state: States.IState, name: string, parentId: n
   return obj.id;
 };
 
+/// カテゴリ追加。
+/// @return {number} 追加したカテゴリの CategoryId。
+export const categoryAdd = (state: States.IState, kind: Types.CategoryKind, name: string, parentId: number | null) => {
+  switch (kind) {
+    case Types.CategoryKind.Income:
+      return incomeCategoryAdd(state, name, parentId);
+    case Types.CategoryKind.Outgo:
+      return outgoCategoryAdd(state, name, parentId);
+    default:
+      throw new Error(`Category kind (${kind}) is invalid.`);
+  }
+};
+
+/// カテゴリ更新。
+export const categoryUpdate = (state: States.IState, categoryId: number, name: string) => {
+  categoryById(state, categoryId).name = name;
+};
+
 /**
  * カテゴリの移動。
  * @param categoryId 移動するカテゴリ。

@@ -137,6 +137,38 @@ export const deleteAccount = (accountId: number): IDeleteAccount => {
   };
 };
 
+/// カテゴリの追加。
+export const ADD_CATEGORY = UUID();
+export interface IAddCategory extends Action {
+  // 各変数の仕様は StateMethods.categoryAdd を参照。
+  kind: Types.CategoryKind;
+  name: string;
+  parentId: number;
+}
+export const addCategory = (kind: Types.CategoryKind, name: string, parentId: number): IAddCategory => {
+  return {
+    type: ADD_CATEGORY,
+    kind,
+    name,
+    parentId,
+  };
+};
+
+/// カテゴリの更新。
+export const UPDATE_CATEGORY = UUID();
+export interface IUpdateCategory extends Action {
+  // 各変数の仕様は StateMethods.categoryUpdate を参照。
+  categoryId: number;
+  name: string;
+}
+export const updateCategory = (categoryId: number, name: string): IUpdateCategory => {
+  return {
+    type: UPDATE_CATEGORY,
+    categoryId,
+    name,
+  };
+};
+
 /// カテゴリの移動。
 export const MOVE_CATEGORY = UUID();
 export interface IMoveCategory extends Action {
