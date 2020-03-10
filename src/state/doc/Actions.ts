@@ -20,7 +20,7 @@ export const resetDocument = (state: States.IState): IResetDocument => {
 /// 基本口座の追加。
 export const ADD_BASIC_ACCOUNT = UUID();
 export interface IAddBasicAccount extends Action {
-  // 各変数の使用は StateMethods.basicAccountAdd を参照。
+  // 各変数の仕様は StateMethods.basicAccountAdd を参照。
   name: string;
   kind: Types.BasicAccountKind;
   initialAmount: number;
@@ -44,7 +44,7 @@ export const addBasicAccount = (
 /// 基本口座の更新。
 export const UPDATE_BASIC_ACCOUNT = UUID();
 export interface IUpdateBasicAccount extends Action {
-  // 各変数の使用は StateMethods.basicAccountUpdate を参照。
+  // 各変数の仕様は StateMethods.basicAccountUpdate を参照。
   accountId: number;
   name: string;
   kind: Types.BasicAccountKind;
@@ -71,7 +71,7 @@ export const updateBasicAccount = (
 /// 集計口座の追加。
 export const ADD_AGGREGATE_ACCOUNT = UUID();
 export interface IAddAggregateAccount extends Action {
-  // 各変数の使用は StateMethods.aggregateAccountAdd を参照。
+  // 各変数の仕様は StateMethods.aggregateAccountAdd を参照。
   name: string;
   accounts: number[];
 }
@@ -86,7 +86,7 @@ export const addAggregateAccount = (name: string, accounts: number[]): IAddAggre
 /// 基本口座の更新。
 export const UPDATE_AGGREGATE_ACCOUNT = UUID();
 export interface IUpdateAggregateAccount extends Action {
-  // 各変数の使用は StateMethods.aggregateAccountUpdate を参照。
+  // 各変数の仕様は StateMethods.aggregateAccountUpdate を参照。
   accountId: number;
   name: string;
   accounts: number[];
@@ -107,7 +107,7 @@ export const updateAggregateAccount = (
 /// 口座の並び順更新。
 export const UPDATE_ACCOUNT_ORDER = UUID();
 export interface IUpdateAccountOrder extends Action {
-  // 各変数の使用は StateMethods.accountOrderUpdate を参照。
+  // 各変数の仕様は StateMethods.accountOrderUpdate を参照。
   accountKind: Types.AccountKind;
   oldIndex: number;
   newIndex: number;
@@ -140,7 +140,7 @@ export const deleteAccount = (accountId: number): IDeleteAccount => {
 /// カテゴリの移動。
 export const MOVE_CATEGORY = UUID();
 export interface IMoveCategory extends Action {
-  // 各変数の使用は StateMethods.moveCategory を参照。
+  // 各変数の仕様は StateMethods.moveCategory を参照。
   categoryKind: Types.CategoryKind;
   categoryId: number;
   newParentId: number;
@@ -158,6 +158,19 @@ export const moveCategory = (
     categoryId,
     newParentId,
     newChildIndex,
+  };
+};
+
+/// カテゴリの削除。
+export const DELETE_CATEGORY = UUID();
+export interface IDeleteCategory extends Action {
+  // 各変数の仕様は StateMethods.deleteCategory を参照。
+  categoryId: number;
+}
+export const deleteCategory = (categoryId: number): IDeleteCategory => {
+  return {
+    type: DELETE_CATEGORY,
+    categoryId,
   };
 };
 

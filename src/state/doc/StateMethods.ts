@@ -729,6 +729,37 @@ export const categoryMove = (
   category.parent = newParentId;
 };
 
+/**
+ * カテゴリ削除。
+ */
+export const categoryDelete = (state: States.IState, categoryId: number) => {
+  // 子供がいる場合は先に子供を削除
+  const isIncome = categoryId in state.income.categories;
+  const targetCategories = isIncome ? state.income.categories : state.outgo.categories;
+  const targetCategory = targetCategories[categoryId];
+  targetCategory.childs.forEach((id) => {
+    categoryDelete(state, id);
+  });
+  global.console.assert(targetCategory.childs.length === 0);
+
+  // カテゴリに紐付くレコードを削除
+  {
+    const targetRecords = isIncome ? state.income.records : state.outgo.records;
+    const records: number[] = Object.keys(targetRecords)
+      .map((textId) => Number(textId))
+      .filter((id) => targetRecords[id].category === categoryId);
+    deleteRecords(state, records);
+  }
+
+  // カテゴリ自体の削除
+  if (targetCategory.parent === null || targetCategory.parent === Types.INVALID_ID) {
+    throw new Error();
+  }
+  const parentCategory = targetCategories[targetCategory.parent];
+  parentCategory.childs = parentCategory.childs.filter((id) => id !== categoryId);
+  delete targetCategories[categoryId];
+};
+
 /** カテゴリの展開状態の更新。 */
 export const categoryCollapsedStateUpdate = (state: States.IState, categoryId: number, isCollapsed: boolean) => {
   {
@@ -743,6 +774,17 @@ export const categoryCollapsedStateUpdate = (state: States.IState, categoryId: n
       cat.collapse = isCollapsed;
     }
   }
+};
+
+/** 指定の CategoryId に対応する ICategory オブジェクトを取得する。見つからなければエラー。 */
+export const categoryById = (state: States.IState, categoryId: number) => {
+  if (categoryId in state.income.categories) {
+    return state.income.categories[categoryId];
+  }
+  if (categoryId in state.outgo.categories) {
+    return state.outgo.categories[categoryId];
+  }
+  throw new Error(`Not found category (id: ${categoryId}).`);
 };
 
 /**
