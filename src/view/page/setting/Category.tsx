@@ -99,17 +99,12 @@ class Category extends React.Component<IProps, IState> {
       </div>
     );
 
+    const recordCountsDict = this.recordCountsDict();
     const rootCard = (() => {
       const categories =
         this.state.selectedTab === DocTypes.CategoryKind.Income
           ? this.props.doc.income.categories
           : this.props.doc.outgo.categories;
-
-      // let recordExistsLeafCategories: number[] = [];
-      // if (this.state.selectedTab === DocTypes.CategoryKind.Income) {
-      //   const categoryIds = Object.values(this.props.doc.income.records).map((record) => record.category);
-      //   recordExistsLeafCategories = categoryIds.filter((id, idx) => categoryIds.indexOf(id) === idx);
-      // }
 
       const categoryConverter = (categoryId: number, indentLevel: number) => {
         // 自身
@@ -120,6 +115,10 @@ class Category extends React.Component<IProps, IState> {
           indentLevel === 0 ? null : (
             <MaterialIcon name="reorder" classNames={[Styles.CategoryCardHeaderHandle]} darkMode={false} />
           );
+        const existsRecordBadge =
+          self.id in recordCountsDict ? (
+            <span className={Styles.CategoryCardHeaderExistsRecordBadge}>{recordCountsDict[self.id]}件</span>
+          ) : null;
 
         // 子
         const childElems = self.childs.map((id) => categoryConverter(id, indentLevel + 1));
@@ -143,6 +142,7 @@ class Category extends React.Component<IProps, IState> {
             <div className={Styles.CategoryCardHeader}>
               {reorder}
               <span>{selfName}</span>
+              {existsRecordBadge}
               <div className={Styles.CategoryCardHeaderTailSpace}>
                 <button className={BasicStyles.IconBtn} onClick={(e) => this.onCardActionBtnClicked(e, categoryId)}>
                   <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />
@@ -291,6 +291,23 @@ class Category extends React.Component<IProps, IState> {
 
     // // 自動保存
     // Store.dispatch(UiActions.documentRequestAutoSave());
+  }
+
+  /// 各カテゴリが持つレコード数の辞書を返す。
+  private recordCountsDict() {
+    const recordExistsLeafCategories: { [key: number]: number } = {};
+    const records =
+      this.state.selectedTab === DocTypes.CategoryKind.Income
+        ? this.props.doc.income.records
+        : this.props.doc.outgo.records;
+    const categoryIds = Object.values(records).map((record) => record.category);
+    categoryIds.forEach((id) => {
+      if (!(id in recordExistsLeafCategories)) {
+        recordExistsLeafCategories[id] = 0;
+      }
+      ++recordExistsLeafCategories[id];
+    });
+    return recordExistsLeafCategories;
   }
 }
 
