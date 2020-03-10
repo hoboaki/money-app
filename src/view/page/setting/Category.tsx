@@ -290,12 +290,12 @@ class Category extends React.Component<IProps, IState> {
           .map((id) => (id in recordCountsDict ? recordCountsDict[id] : 0))
           .reduce((prev, cur) => prev + cur, 0);
         if (totalRecordCount !== 0) {
-          return `すべての子カテゴリと子カテゴリに紐付く${totalRecordCount}件のレコードは削除されます。`;
+          return `すべての子カテゴリと子カテゴリに紐付く ${totalRecordCount} 件のレコードは削除されます。`;
         }
         return `すべての子カテゴリは削除されます。`;
       }
       if (recordCount !== null) {
-        return `カテゴリに紐付く${recordCount}件のレコードは削除されます。`;
+        return `カテゴリに紐付く ${recordCount} 件のレコードは削除されます。`;
       }
       return undefined;
     })();
