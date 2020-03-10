@@ -190,14 +190,12 @@ class Main extends React.Component<ILocalProps, IState> {
     // 追加or更新
     {
       if (this.props.editCategoryId === null) {
-        if (this.props.categoryKind === DocTypes.CategoryKind.Income) {
-          if (this.props.parentCategoryId === null) {
-            throw new Error();
-          }
-          Store.dispatch(
-            DocActions.addCategory(this.props.categoryKind, this.state.inputName, this.props.parentCategoryId),
-          );
+        if (this.props.parentCategoryId === null) {
+          throw new Error();
         }
+        Store.dispatch(
+          DocActions.addCategory(this.props.categoryKind, this.state.inputName, this.props.parentCategoryId),
+        );
       } else {
         Store.dispatch(DocActions.updateCategory(this.props.editCategoryId, this.state.inputName));
       }
