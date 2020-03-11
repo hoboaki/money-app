@@ -300,11 +300,21 @@ class Account extends React.Component<IProps, IState> {
     }
 
     // 確認
+
+    const recordCountsDict = this.recordCountsDict();
+    const recordCount =
+      this.state.editAccountId in recordCountsDict ? recordCountsDict[this.state.editAccountId] : null;
+    const detailMessage = (() => {
+      if (recordCount !== null) {
+        return `口座に紐付く ${recordCount} 件のレコードは削除されます。`;
+      }
+      return undefined;
+    })();
     if (
       !NativeDialogUtils.showOkCancelDialog(
         '口座の削除',
         `口座“${DocStateMethods.accountById(this.props.doc, this.state.editAccountId).name}"を削除しますか？`,
-        this.state.selectedTab !== DocTypes.AccountKind.Aggregate ? '口座に紐付くレコードは削除されます。' : undefined,
+        detailMessage,
         '口座を削除',
       )
     ) {
