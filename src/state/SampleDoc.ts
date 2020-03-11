@@ -154,7 +154,7 @@ class SampleDoc {
         {
           name: '家事費',
           collapse: false,
-          items: [{ name: '食費' }, { name: '日用品' }, { name: '妻小遣い' }],
+          items: [{ name: '食費' }, { name: '日用品' }],
         },
         {
           name: '光熱・通信費',
