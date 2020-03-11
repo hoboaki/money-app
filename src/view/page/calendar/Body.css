@@ -1,7 +1,9 @@
 .Root {
   background: #f5f5f6;
   display: flex;
+  height: calc(100% - 46px);
   justify-content: center;
+  overflow-y: auto;
   padding: 12px;
   width: 100%;
 }
