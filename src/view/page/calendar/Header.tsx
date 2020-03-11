@@ -39,7 +39,7 @@ class Header extends React.Component<IProps, IState> {
     const moveNextBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.MoveBtn, Styles.MoveNextBtn);
     const viewUnitSelectClass = ClassNames(BasicStyles.StdSelect, Styles.ViewUnitSelect);
     // const jumpBtnClass = ClassNames(BasicStyles.StdBtnPrimary, Styles.Btn, Styles.JumpBtn);
-    const filterBtnClass = ClassNames(BasicStyles.IconBtn, Styles.Btn, Styles.FilterBtn);
+    // const filterBtnClass = ClassNames(BasicStyles.IconBtn, Styles.Btn, Styles.FilterBtn);
     const rightAreaClass = ClassNames(LayoutStyles.RightToLeft, Styles.RightArea);
     const newRecordBtnClass = ClassNames(BasicStyles.IconBtn, Styles.Btn, Styles.NewRecordBtn);
     const iconClass = ClassNames('material-icons', 'md-16');
@@ -99,7 +99,7 @@ class Header extends React.Component<IProps, IState> {
           >
             <option value="month">月表示</option>
           </select>
-          <button
+          {/* <button
             className={filterBtnClass}
             onClick={() => {
               this.onFilterBtnPushed();
@@ -107,7 +107,7 @@ class Header extends React.Component<IProps, IState> {
             title={'フィルター（準備中）'}
           >
             <i className={iconClass}>filter_list</i>
-          </button>
+          </button> */}
           <div className={rightAreaClass}>
             <button
               className={newRecordBtnClass}
