@@ -46,5 +46,5 @@ export const toJson = (root: Root): string => {
     version: versionCurrent,
     data: root,
   };
-  return JSON.stringify(jsonRoot);
+  return JSON.stringify(jsonRoot, null, 2);
 };
