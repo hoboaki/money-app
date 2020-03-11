@@ -108,9 +108,9 @@ class Category extends React.Component<IProps, IState> {
           indentLevel === 0 ? null : (
             <MaterialIcon name="reorder" classNames={[Styles.CategoryCardHeaderHandle]} darkMode={false} />
           );
-        const existsRecordBadge =
+        const recordCountBadge =
           self.id in recordCountsDict ? (
-            <span className={Styles.CategoryCardHeaderExistsRecordBadge}>{recordCountsDict[self.id]}件</span>
+            <span className={Styles.CategoryCardHeaderRecordCountBadge}>{recordCountsDict[self.id]}件</span>
           ) : null;
 
         // 子
@@ -135,7 +135,7 @@ class Category extends React.Component<IProps, IState> {
             <div className={Styles.CategoryCardHeader}>
               {reorder}
               <span>{selfName}</span>
-              {existsRecordBadge}
+              {recordCountBadge}
               <div className={Styles.CategoryCardHeaderTailSpace}>
                 <button className={BasicStyles.IconBtn} onClick={(e) => this.onCardActionBtnClicked(e, categoryId)}>
                   <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />

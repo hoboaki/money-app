@@ -86,7 +86,7 @@
   padding: 0;
 }
 
-span.CategoryCardHeaderExistsRecordBadge {
+span.CategoryCardHeaderRecordCountBadge {
   background: #707070;
   border-radius: 13px;
   font-size: 9pt;

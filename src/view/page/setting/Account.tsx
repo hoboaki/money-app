@@ -174,7 +174,12 @@ class Account extends React.Component<IProps, IState> {
           };
         });
       };
+      const recordCountsDict = this.recordCountsDict();
       accountsSelector().forEach((account) => {
+        const recordCountBaadge =
+          account.id in recordCountsDict ? (
+            <span className={Styles.AccountCardRecordCountBadge}>{recordCountsDict[account.id]}件</span>
+          ) : null;
         cards.push(
           <li
             key={`${this.state.selectedTab}-${account.id}`}
@@ -183,6 +188,7 @@ class Account extends React.Component<IProps, IState> {
           >
             <MaterialIcon name="reorder" classNames={[Styles.AccountCardHandle]} darkMode={false} />
             <span>{account.name}</span>
+            {recordCountBaadge}
             <div className={Styles.AccountCardTailSpace}>
               <button className={BasicStyles.IconBtn} onClick={(e) => this.onCardActionBtnClicked(e, account.id)}>
                 <MaterialIcon name="more_horiz" classNames={[]} darkMode={false} />
@@ -294,11 +300,21 @@ class Account extends React.Component<IProps, IState> {
     }
 
     // 確認
+
+    const recordCountsDict = this.recordCountsDict();
+    const recordCount =
+      this.state.editAccountId in recordCountsDict ? recordCountsDict[this.state.editAccountId] : null;
+    const detailMessage = (() => {
+      if (recordCount !== null) {
+        return `口座に紐付く ${recordCount} 件のレコードは削除されます。`;
+      }
+      return undefined;
+    })();
     if (
       !NativeDialogUtils.showOkCancelDialog(
         '口座の削除',
         `口座“${DocStateMethods.accountById(this.props.doc, this.state.editAccountId).name}"を削除しますか？`,
-        this.state.selectedTab !== DocTypes.AccountKind.Aggregate ? '口座に紐付くレコードは削除されます。' : undefined,
+        detailMessage,
         '口座を削除',
       )
     ) {
@@ -311,6 +327,30 @@ class Account extends React.Component<IProps, IState> {
 
     // 自動保存
     Store.dispatch(UiActions.documentRequestAutoSave());
+  }
+
+  /// 各基本口座が持つレコード数の辞書を返す。
+  private recordCountsDict() {
+    const recordCountsDict: { [key: number]: number } = {};
+    {
+      const incRecordCountFunc = (accountId: number) => {
+        if (!(accountId in recordCountsDict)) {
+          recordCountsDict[accountId] = 0;
+        }
+        recordCountsDict[accountId]++;
+      };
+      Object.values(this.props.doc.income.records).forEach((record) => {
+        incRecordCountFunc(record.account);
+      });
+      Object.values(this.props.doc.outgo.records).forEach((record) => {
+        incRecordCountFunc(record.account);
+      });
+      Object.values(this.props.doc.transfer.records).forEach((record) => {
+        incRecordCountFunc(record.accountFrom);
+        incRecordCountFunc(record.accountTo);
+      });
+    }
+    return recordCountsDict;
   }
 }
 
