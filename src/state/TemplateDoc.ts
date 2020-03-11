@@ -25,7 +25,7 @@ class TemplateDoc {
       month: 1,
       day: 1,
     };
-    StateMethods.basicAccountAdd(state, '財布', Types.BasicAccountKind.AssetsCash, 2020, accountStartDate);
+    StateMethods.basicAccountAdd(state, '財布', Types.BasicAccountKind.AssetsCash, 0, accountStartDate);
     StateMethods.basicAccountAdd(
       state,
       'クレジットカード',

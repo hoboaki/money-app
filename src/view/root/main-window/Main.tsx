@@ -10,6 +10,7 @@ import * as DocStateMethods from 'src/state/doc/StateMethods';
 import * as DocStates from 'src/state/doc/States';
 import SampleDoc from 'src/state/SampleDoc';
 import Store from 'src/state/Store';
+import TemplateDoc from 'src/state/TemplateDoc';
 import * as UiActions from 'src/state/ui/Actions';
 import * as MmxfImporter from 'src/util/doc/MmxfImporter';
 import LayoutStyle from 'src/view/Layout.css';
@@ -83,6 +84,9 @@ class MainWindow extends React.Component<any, IState> {
           <PageStart
             onOpenFileSelected={(filePath) => {
               this.pageStartOnOpenFileSelected(filePath);
+            }}
+            onNewFromTemplate={() => {
+              this.pageStartOnNewFromTemplate();
             }}
             onNewFromMmxfSelected={(filePath) => {
               this.pageStartOnNewFromMmxfSelected(filePath);
@@ -161,6 +165,17 @@ class MainWindow extends React.Component<any, IState> {
     this.startEditDocument(doc, filePath, false);
   }
 
+  private pageStartOnNewFromTemplate() {
+    // 自動保存先を選択
+    const autoSaveFilePath = this.selectAutoSaveFilePath();
+    if (autoSaveFilePath === null) {
+      return;
+    }
+
+    // テンプレートドキュメントでスタート
+    this.startEditDocument(TemplateDoc.Create(), autoSaveFilePath, true);
+  }
+
   private pageStartOnNewFromMmxfSelected(filePath: string) {
     // ファイルを開く
     let resetDoc: DocStates.IState | null = null;
@@ -203,7 +218,6 @@ class MainWindow extends React.Component<any, IState> {
   private pageStartOnNewExampleSelected() {
     // 自動保存先を選択
     const autoSaveFilePath = this.selectAutoSaveFilePath();
-    global.console.log(autoSaveFilePath);
     if (autoSaveFilePath === null) {
       return;
     }

@@ -3,12 +3,14 @@ import { remote } from 'electron';
 import * as Fs from 'fs';
 import * as React from 'react';
 import * as LocalSettingRootUtils from 'src/data-model/local-setting/RootUtils';
+import * as NativeDialogUtils from 'src/view/widget/native-dialog-utils';
 
 import * as PageStyles from '../Page.css';
 import * as Styles from './Main.css';
 import MainBtn from './MainBtn';
 
 interface IProps {
+  onNewFromTemplate: () => void;
   onNewFromMmxfSelected: (filePath: string) => void;
   onNewExampleSelected: () => void;
   onOpenFileSelected: (filePath: string) => void;
@@ -22,8 +24,8 @@ class Main extends React.Component<IProps, IState> {
   public static PageId = 'Start';
   private static BtnIdOpenLatest = 'OpenLatest';
   private static BtnIdOpenFile = 'OpenFile';
+  private static BtnIdNewFromTemplate = 'NewFromTemplate';
   private static BtnIdNewFromMmxf = 'NewFromMmxf';
-  private static BtnIdNewExample = 'NewExample';
 
   public constructor(props: IProps) {
     super(props);
@@ -65,20 +67,14 @@ class Main extends React.Component<IProps, IState> {
 
     const newBtnInfos = [];
     newBtnInfos.push({
-      btnId: Main.BtnIdNewFromMmxf,
-      title: 'MasterMoney ファイル (mmxf) を使って作成',
+      btnId: Main.BtnIdNewFromTemplate,
+      title: 'テンプレートから新規作成',
       iconName: 'class',
       isEnabled: true,
     });
     newBtnInfos.push({
-      btnId: '',
-      title: 'テンプレートを使って作成（準備中）',
-      iconName: 'class',
-      isEnabled: false,
-    });
-    newBtnInfos.push({
-      btnId: Main.BtnIdNewExample,
-      title: 'デモ用データを使って作成',
+      btnId: Main.BtnIdNewFromMmxf,
+      title: 'MasterMoney ファイル (mmxf) から新規作成',
       iconName: 'class',
       isEnabled: true,
     });
@@ -88,8 +84,8 @@ class Main extends React.Component<IProps, IState> {
       openBtns.push(
         <MainBtn
           key={btnInfo.btnId}
-          onClicked={() => {
-            this.onClicked(btnInfo.btnId);
+          onClicked={(metaKey) => {
+            this.onClicked(btnInfo.btnId, metaKey);
           }}
           isEnabled={btnInfo.isEnabled}
           title={btnInfo.title}
@@ -102,8 +98,8 @@ class Main extends React.Component<IProps, IState> {
       newBtns.push(
         <MainBtn
           key={btnInfo.btnId}
-          onClicked={() => {
-            this.onClicked(btnInfo.btnId);
+          onClicked={(metaKey) => {
+            this.onClicked(btnInfo.btnId, metaKey);
           }}
           isEnabled={btnInfo.isEnabled}
           title={btnInfo.title}
@@ -123,7 +119,7 @@ class Main extends React.Component<IProps, IState> {
     );
   }
 
-  private onClicked(btnId: string) {
+  private onClicked(btnId: string, metaKey: boolean) {
     switch (btnId) {
       case Main.BtnIdOpenLatest:
         if (this.state.latestOpenFilePath !== null) {
@@ -149,6 +145,19 @@ class Main extends React.Component<IProps, IState> {
         break;
       }
 
+      case Main.BtnIdNewFromTemplate:
+        if (metaKey) {
+          NativeDialogUtils.showInfoDialog(
+            `新規作成`,
+            'Command キーを押しながらボタンを押したため動作確認用のドキュメントデータを使って作成します。',
+            undefined,
+          );
+          this.props.onNewExampleSelected();
+        } else {
+          this.props.onNewFromTemplate();
+        }
+        break;
+
       case Main.BtnIdNewFromMmxf: {
         const dialog = remote.dialog;
         const filePaths = dialog.showOpenDialogSync(remote.getCurrentWindow(), {
@@ -166,10 +175,6 @@ class Main extends React.Component<IProps, IState> {
         this.props.onNewFromMmxfSelected(filePaths[0]);
         break;
       }
-
-      case Main.BtnIdNewExample:
-        this.props.onNewExampleSelected();
-        break;
     }
   }
 }
