@@ -84,7 +84,7 @@
     "fast-clone": "^1.5.13",
     "flatpickr": "^4.6.3",
     "hard-source-webpack-plugin": "^0.13.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "prettier": "^1.19.1",
     "sortablejs": "^1.10.2",
     "split.js": "^1.5.11",
