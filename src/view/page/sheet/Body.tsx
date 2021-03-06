@@ -166,7 +166,7 @@ class Body extends React.Component<IProps, IState> {
     }
     let colEndDate = colBeginDate;
     {
-      let date = this.props.page.currentDate;
+      let date = colEndDate;
       for (let colIdx = 0; colIdx < colCount; ++colIdx) {
         colInfos.push({
           date,
