@@ -143,6 +143,7 @@ function createWindow() {
     backgroundColor: '#f5f5f6',
     webPreferences: {
       devTools: isDev,
+      enableRemoteModule: true,
       nodeIntegration: true,
     },
   });
