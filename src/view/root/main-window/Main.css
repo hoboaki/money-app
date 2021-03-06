@@ -7,3 +7,7 @@
 button:focus {
   outline: none;
 }
+
+.NonTitleBarArea {
+  max-height: calc(100% - 22px); /* TitleBar.css:.Base.height の値と合わせる必要あり */
+}

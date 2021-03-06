@@ -113,10 +113,11 @@ class MainWindow extends React.Component<any, IState> {
 
     const rootClass = ClassNames(Styles.Root, LayoutStyle.TopToBottom);
     const titleBar = this.state.isFullScreen ? null : <TitleBar isActive={this.state.isActive} />;
+    const nonTitleBarAreaClass = ClassNames(LayoutStyle.LeftToRight, Styles.NonTitleBarArea);
     return (
       <div className={rootClass}>
         {titleBar}
-        <div className={LayoutStyle.LeftToRight}>
+        <div className={nonTitleBarAreaClass}>
           <SideBar
             onBtnClicked={(pageId, subPageId) => {
               this.onPageBtnClicked(pageId, subPageId);
