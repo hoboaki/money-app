@@ -12,7 +12,7 @@ AdelMoney は macOS で動くオーソドックスなスタンドアローン家
 - 編集結果はその都度オートセーブされます。
 - 他社製品アプリケーション Master Money for Mac 2 からデータを移行することができます。（※移行できるデータには制限があります）
 
-<img src="./readme-img/ss-calendar.png" width="280" /><img src="./readme-img/ss-sheet.png" width="280" /><img src="./readme-img/ss-record-edit.png" width="280" />
+<img src="./readme-img/ss-calendar.png" width="240" /><img src="./readme-img/ss-sheet.png" width="240" /><img src="./readme-img/ss-record-edit.png" width="240" />
 
 ## 動作環境
 
